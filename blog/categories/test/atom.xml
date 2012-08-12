@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: test | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/test/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2012-08-13T00:35:47+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[first post]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/12/first-post/"/>
+    <updated>2012-08-12T23:34:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/12/first-post</id>
+    <content type="html"><![CDATA[<p>随便先写一点东西，markdown语法还不熟悉</p>
+]]></content>
+  </entry>
+  
+</feed>
