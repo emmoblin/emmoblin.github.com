@@ -9,8 +9,7 @@
   <meta name="author" content="emmoblin">
 
   
-  <meta name="description" content="随便先写一点东西，markdown语法还不熟悉
-">
+  <meta name="description" content="[转自]http://wowubuntu.com/markdown/ 区块元素 段落和换行 一个 Markdown 段落是由一个或多个连续的文本行组成，它的前后要有一个以上的空行（空行的定义是显示上看起来像是空的，便会被视为空行。比方说，若某一行只包含空格和制表符，则该行也会被视为空行）。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +70,61 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/08/13/markdown/">Markdown</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-13T23:10:00+08:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[转自]<a href="http://wowubuntu.com/markdown/">http://wowubuntu.com/markdown/</a></p>
+
+<h2 id="block">区块元素</h2>
+
+
+
+
+<h3 id="p">段落和换行</h3>
+
+
+<p>一个 Markdown 段落是由一个或多个连续的文本行组成，它的前后要有一个以上的空行（空行的定义是显示上看起来像是空的，便会被视为空行。比方说，若某一行只包含空格和制表符，则该行也会被视为空行）。普通段落不该用空格或制表符来缩进。</p>
+
+<p>「由一个或多个连续的文本行组成」这句话其实暗示了 Markdown 允许段落内的强迫换行（插入换行符），这个特性和其他大部分的 text-to-HTML 格式不一样（包括 Movable Type 的「Convert Line Breaks」选项），其它的格式会把每个换行符都转成 <code>&lt;br /&gt;</code> 标签。</p>
+
+<p>如果你<em>确实</em>想要依赖 Markdown 来插入 <code>&lt;br /&gt;</code> 标签的话，<strong>在插入处先按入两个以上的空格然后回车。</strong></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/13/markdown/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/08/12/first-post/">First Post</a></h1>
     
     
@@ -95,6 +149,15 @@
 
 
   <div class="entry-content"><p>随便先写一点东西，markdown语法还不熟悉</p>
+
+<h3>发现的问题</h3>
+
+<ol>
+<li>即使本地加载也特别慢 <br/>
+原来是要去加载google的font，可能又要翻墙，所以特别慢。<br/>
+注释掉：source/_include/custom/head.html中注释掉fonts.googleapis.com的link</li>
+</ol>
+
 </div>
   
   
@@ -113,6 +176,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/08/13/markdown/">markdown</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/08/12/first-post/">first post</a>

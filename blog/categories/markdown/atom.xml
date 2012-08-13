@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Emmoblin Blog]]></title>
-  <link href="http://emmoblin.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: markdown | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/markdown/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
   <updated>2012-08-14T00:34:22+08:00</updated>
   <id>http://emmoblin.github.com/</id>
@@ -437,7 +437,7 @@ title attribute.&lt;/p&gt;
 [link text][A]
 </code></pre>
 
-<p><em>隐式链接标记</em>功能让你可以省略指定链接标记，这种情形下，链接标记会视为等同于链接文字，要用隐式链接标记只要在链接文字后面加上一个空的方括号，如果你要让 &#8220;Google&#8221; 链接到 google.com，你可以简化成：</p>
+<p><em>隐式链接标记</em>功能让你可以省略指定链接标记，这种情形下，链接标记会视为等同于链接文字，要用隐式链接标记只要在链接文字后面加上一个空的方括号，如果你要让 "Google" 链接到 google.com，你可以简化成：</p>
 
 <pre><code>[Google][]
 </code></pre>
@@ -615,7 +615,7 @@ equivalent of &lt;code&gt;&amp;amp;mdash;&lt;/code&gt;.&lt;/p&gt;
 <li>一个惊叹号 <code>!</code></li>
 <li>接着一个方括号，里面放上图片的替代文字</li>
 <li>接着一个普通括号，里面放上图片的网址，最后还可以用引号包住并加上
-选择性的 &#8216;title&#8217; 文字。</li>
+选择性的 'title' 文字。</li>
 </ul>
 
 
@@ -691,24 +691,6 @@ _   底线
 .   英文句点
 !   惊叹号
 </code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[first post]]></title>
-    <link href="http://emmoblin.github.com/blog/2012/08/12/first-post/"/>
-    <updated>2012-08-12T23:34:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2012/08/12/first-post</id>
-    <content type="html"><![CDATA[<p>随便先写一点东西，markdown语法还不熟悉</p>
-
-<h3>发现的问题</h3>
-
-<ol>
-<li>即使本地加载也特别慢 <br/>
-原来是要去加载google的font，可能又要翻墙，所以特别慢。<br/>
-注释掉：source/_include/custom/head.html中注释掉fonts.googleapis.com的link</li>
-</ol>
-
 ]]></content>
   </entry>
   

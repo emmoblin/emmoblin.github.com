@@ -2,14 +2,18 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://emmoblin.github.com/blog/2012/08/12/first-post/</loc>
-        <lastmod>2012-08-12T23:36:28+08:00</lastmod>
+        <lastmod>2012-08-13T23:08:43+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/08/13/markdown/</loc>
+        <lastmod>2012-08-14T00:34:22+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/blog/archives/</loc>
-        <lastmod>2012-08-12T23:36:28+08:00</lastmod>
+        <lastmod>2012-08-14T00:34:22+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/</loc>
-        <lastmod>2012-08-12T23:36:28+08:00</lastmod>
+        <lastmod>2012-08-14T00:34:22+08:00</lastmod>
     </url>
 </urlset>
