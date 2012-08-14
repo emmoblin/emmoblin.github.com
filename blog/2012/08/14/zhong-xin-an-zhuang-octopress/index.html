@@ -5,14 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - Emmoblin Blog</title>
+  <title>重新安装octopress - Emmoblin Blog</title>
   <meta name="author" content="emmoblin">
 
   
-  <meta name="description" content="Blog Archive 2012 添加微博sidebar
-Aug 15 2012 posted in octopress octopress添加分类栏
-Aug 14 2012 posted in octopress 重新安装octopress
-Aug 14 2012 posted in &hellip;">
+  <meta name="description" content="如果更换机子或者重新安装系统后，要重新获得octopress非常简单。 1.安装ruby就不说了，我喜欢用rben安装。 2.clone已存在的库，需要上传ssh key git clone git@github.com:username/username.github.com.git &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +18,7 @@ Aug 14 2012 posted in &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://emmoblin.github.com/blog/archives/">
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2012/08/14/zhong-xin-an-zhuang-octopress/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -66,92 +63,116 @@ Aug 14 2012 posted in &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">重新安装octopress</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T16:31:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
+<div class="entry-content"><p>如果更换机子或者重新安装系统后，要重新获得octopress非常简单。</p>
 
-  
-  <h2>2012</h2>
+<p>1.安装ruby就不说了，我喜欢用rben安装。</p>
 
-<article>
-  
-<h1><a href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/">添加微博sidebar</a></h1>
-<time datetime="2012-08-15T00:50:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>15</span> <span class='year'>2012</span></time>
+<p>2.clone已存在的库，需要上传ssh key</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>octopress</a></span>
-</footer>
+<pre><code>git clone git@github.com:username/username.github.com.git octopress
+</code></pre>
 
+<p>3.切换到souce分支<br/>
+  查看远程的所有分支。</p>
 
-</article>
+<pre><code>  git branch -r
+</code></pre>
 
+<p>  切换分支</p>
 
+<pre><code>  git checkout origin source
+</code></pre>
 
-<article>
-  
-<h1><a href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">octopress添加分类栏</a></h1>
-<time datetime="2012-08-14T23:09:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>14</span> <span class='year'>2012</span></time>
+<p>4.提交代码</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>octopress</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/08/14/zhong-xin-an-zhuang-octopress/">重新安装octopress</a></h1>
-<time datetime="2012-08-14T16:31:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>14</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/08/13/markdown/">markdown</a></h1>
-<time datetime="2012-08-13T23:10:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>13</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/08/12/first-post/">first post</a></h1>
-<time datetime="2012-08-12T23:34:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>12</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/test/'>test</a></span>
-</footer>
-
-
-</article>
-
+<pre><code>git push origin source
+</code></pre>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T16:31:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/markdown/'>markdown</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/08/13/markdown/" title="Previous Post: markdown">&laquo; markdown</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/" title="Next Post: octopress添加分类栏">octopress添加分类栏 &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -234,7 +255,10 @@ dpc=1"></iframe>
       var disqus_shortname = 'emmoblin';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2012/08/14/zhong-xin-an-zhuang-octopress/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2012/08/14/zhong-xin-an-zhuang-octopress/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

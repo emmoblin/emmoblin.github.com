@@ -4,7 +4,7 @@
   <title><![CDATA[Category: markdown | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/markdown/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2012-08-14T00:58:06+08:00</updated>
+  <updated>2012-08-15T01:05:10+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[重新安装octopress]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/14/zhong-xin-an-zhuang-octopress/"/>
+    <updated>2012-08-14T16:31:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/14/zhong-xin-an-zhuang-octopress</id>
+    <content type="html"><![CDATA[<p>如果更换机子或者重新安装系统后，要重新获得octopress非常简单。</p>
+
+<p>1.安装ruby就不说了，我喜欢用rben安装。</p>
+
+<p>2.clone已存在的库，需要上传ssh key</p>
+
+<pre><code>git clone git@github.com:username/username.github.com.git octopress
+</code></pre>
+
+<p>3.切换到souce分支<br/>
+  查看远程的所有分支。</p>
+
+<pre><code>  git branch -r
+</code></pre>
+
+<p>  切换分支</p>
+
+<pre><code>  git checkout origin source
+</code></pre>
+
+<p>4.提交代码</p>
+
+<pre><code>git push origin source
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[markdown]]></title>

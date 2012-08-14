@@ -5,14 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - Emmoblin Blog</title>
+  <title>octopress添加分类栏 - Emmoblin Blog</title>
   <meta name="author" content="emmoblin">
 
   
-  <meta name="description" content="Blog Archive 2012 添加微博sidebar
-Aug 15 2012 posted in octopress octopress添加分类栏
-Aug 14 2012 posted in octopress 重新安装octopress
-Aug 14 2012 posted in &hellip;">
+  <meta name="description" content="参考：octopress-tagcloud 下载并copy到对应目录 ├─ plugins/ │ └── tag_cloud.rb └─ source/ └─ _includes/ └─ custom/ └─ asides/ ├─ category_list.html └─ tag_cloud. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +18,7 @@ Aug 14 2012 posted in &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://emmoblin.github.com/blog/archives/">
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -66,92 +63,113 @@ Aug 14 2012 posted in &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">Octopress添加分类栏</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T23:09:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
+<div class="entry-content"><p>参考：<a href="https://github.com/tokkonopapa/octopress-tagcloud" title="octopress-tagcloud">octopress-tagcloud</a></p>
 
-  
-  <h2>2012</h2>
+<ul>
+<li><p>下载并copy到对应目录</p>
 
-<article>
-  
-<h1><a href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/">添加微博sidebar</a></h1>
-<time datetime="2012-08-15T00:50:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>15</span> <span class='year'>2012</span></time>
+<pre><code> ├─ plugins/
+ │  └── tag_cloud.rb
+ └─ source/
+    └─ _includes/
+       └─ custom/
+          └─ asides/
+             ├─ category_list.html
+             └─ tag_cloud.html
+</code></pre></li>
+<li><p>在_config.yml中的default_asides中添加</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>octopress</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">octopress添加分类栏</a></h1>
-<time datetime="2012-08-14T23:09:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>14</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>octopress</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/08/14/zhong-xin-an-zhuang-octopress/">重新安装octopress</a></h1>
-<time datetime="2012-08-14T16:31:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>14</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/08/13/markdown/">markdown</a></h1>
-<time datetime="2012-08-13T23:10:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>13</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/08/12/first-post/">first post</a></h1>
-<time datetime="2012-08-12T23:34:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>12</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/test/'>test</a></span>
-</footer>
-
-
-</article>
+<pre><code>  custom/asides/category_list.html
+  custom/asides/tag_cloud.html
+</code></pre></li>
+</ul>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T23:09:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/octopress/'>octopress</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/08/14/zhong-xin-an-zhuang-octopress/" title="Previous Post: 重新安装octopress">&laquo; 重新安装octopress</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/" title="Next Post: 添加微博sidebar">添加微博sidebar &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -234,7 +252,10 @@ dpc=1"></iframe>
       var disqus_shortname = 'emmoblin';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2012/08/14/octopresstian-jia-fen-lei-lan/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2012/08/14/octopresstian-jia-fen-lei-lan/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
