@@ -4,7 +4,7 @@
   <title><![CDATA[Category: markdown | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/markdown/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2012-08-15T01:09:28+08:00</updated>
+  <updated>2012-09-04T00:36:32+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -12,6 +12,65 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[emacs markdown-mode]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/15/emacs-markdown-mode/"/>
+    <updated>2012-08-15T12:38:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/15/emacs-markdown-mode</id>
+    <content type="html"><![CDATA[<h4>锚标签 C-c C-a</h4>
+
+<p><code>C-c C-a l</code> 超链接<br/>
+<code>C-c C-a r</code> 参考链接 text 参考链接放到文件最后 [label]: markdown.html<br/>
+<code>C-c C-a w</code> wiki链接 [[wikilink]]</p>
+
+<h4>常用命令 C-c C-c</h4>
+
+<p><code>C-c C-c m</code> 在另一个Buffer显示输出<br/>
+<code>C-c C-c p</code> 在浏览器中预览输出<br/>
+<code>C-c C-c e</code> 输出html文件到相同前缀的.html文件 eg:basename.html<br/>
+<code>C-c C-c v</code> 输出并且在浏览器中查看<br/>
+<code>C-c C-c c</code> 检查是否有未定义的链接</p>
+
+<h4>插入图片 C-c C-i</h4>
+
+<p><code>C-c C-i i</code> 插入一张图片</p>
+
+<h4>物理样式 C-c C-p</h4>
+
+<p><code>C-c C-p b</code> 将选中的文字加粗 bold <strong>bold</strong> 如果为选中则插入 <em><em>**<br/>
+<code>C-c C-p f</code> 将选中的文字设置成等宽字体 <code>fixed width text</code><br/>
+<code>C-c C-p i</code> 将选中的文字设置成斜体 italic</em>italic</em></p>
+
+<h4>逻辑样式 C-c C-s</h4>
+
+<p><code>C-c C-s b</code> 设置引用 > backquoted<br/>
+<code>C-c C-s p</code> 预格式，在之前插入4个空格默认 <code>&lt;pre&gt;pre text&lt;/pre&gt;</code><br/>
+<code>C-c C-s c</code> 插入代码块 <code>code here</code><br/>
+<code>C-c C-s e</code> 强调 emphasis <em>emphasis</em><br/>
+<code>C-c C-s s</code> 加强 strong <strong>strong</strong></p>
+
+<h4>标题章节 C-c C-t</h4>
+
+<p><code>C-c C-t n</code> 插入标题 1-6<br/>
+<code>C-c C-t t</code> 插入一个title<br/>
+<code>C-c C-t s</code> 插入一个section<br/>
+<code>C-c -</code> 插入一条分割线</p>
+
+<hr />
+
+<h4>导航</h4>
+
+<p><code>TAB</code> 折叠或者展开标题<br/>
+<code>C-M-n &amp; C-M-p</code> 在上下可见的标题中前后移动<br/>
+<code>C-M-f &amp; C-M-b</code> 在同一级的标题中前后移动<br/>
+<code>C-M-u</code> 回到上一级标题</p>
+
+<h2>参考</h2>
+
+<p><a href="http://jblevins.org/projects/markdown-mode/">Emacs Markdown Mode</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[重新安装octopress]]></title>

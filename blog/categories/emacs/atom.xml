@@ -1,129 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Emmoblin Blog</title>
-  <meta name="author" content="emmoblin">
-
-  
-  <meta name="description" content="<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> emacs org mode 学习笔记 <!--*/ html { font &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><![CDATA[Category: emacs | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/emacs/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2012-09-04T00:36:32+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
-  <link rel="canonical" href="http://emmoblin.github.com">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <style type="text/css">
-    body {
-      padding-bottom: 40px;
-    }
-    h1 {
-      margin-bottom: 15px;
-    }
-    img {
-      max-width: 100%;
-    }
-    .sharing, .meta, .pager {
-      margin: 20px 0px 20px 0px;
-    }
-    .page-footer p {
-      text-align: center;
-    }
-  </style>
-  <script src="/javascripts/libs/jquery.js"></script>
-  <script src="/javascripts/libs/modernizr-2.0.js"></script>
-  <script src="/javascripts/libs/bootstrap.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
-  
-  
+  <entry>
+    <title type="html"><![CDATA[org mode note]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/31/org-mode-note/"/>
+    <updated>2012-08-31T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/31/org-mode-note</id>
+    <content type="html"><![CDATA[<p>&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"</p>
 
-</head>
+<pre><code>           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+</code></pre>
 
-<body   >
-  <nav role="navigation"><div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-
-      <a class="brand" href="/">Emmoblin Blog</a>
-
-      <div class="nav-collapse">
-        <ul class="nav">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-
-        <ul class="nav pull-right" data-subscription="rss">
-          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-          
-        </ul>
-
-        
-          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
-            <fieldset role="search">
-              <input type="hidden" name="q" value="site:emmoblin.github.com" />
-              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
-            </fieldset>
-          </form>
-        
-      </div>
-    </div>
-  </div>
-</div>
-</nav>
-  <div class="container">
-    <div class="row-fluid">
-      <div class="span9">
-  
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/31/org-mode-note/">Org Mode Note</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-31T00:00:00+08:00" pubdate data-updated="true">Aug 31<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<p><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>emacs org mode 学习笔记</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
@@ -132,59 +33,15 @@
 <meta name="generated" content="2012-08-16 Thu"/>
 <meta name="author" content="emmoblin"/>
 <meta name="description" content=""/>
-<meta name="keywords" content=""/>
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  html { font-family: Times, serif; font-size: 12pt; }
-  .title  { text-align: center; }
-  .todo   { color: red; }
-  .done   { color: green; }
-  .tag    { background-color: #add8e6; font-weight:normal }
-  .target { }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
-  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
-  .center {margin-left:auto; margin-right:auto; text-align:center;}
-  p.verse { margin-left: 3% }
-  pre {
-	border: 1pt solid #AEBDCC;
-	background-color: #F3F5F7;
-	padding: 5pt;
-	font-family: courier, monospace;
-        font-size: 90%;
-        overflow:auto;
-  }
-  table { border-collapse: collapse; }
-  td, th { vertical-align: top;  }
-  th.right  { text-align:center;  }
-  th.left   { text-align:center;   }
-  th.center { text-align:center; }
-  td.right  { text-align:right;  }
-  td.left   { text-align:left;   }
-  td.center { text-align:center; }
-  dt { font-weight: bold; }
-  div.figure { padding: 0.5em; }
-  div.figure p { text-align: center; }
-  div.inlinetask {
-    padding:10px;
-    border:2px solid gray;
-    margin:10px;
-    background: #ffffcc;
-  }
-  textarea { overflow-x: auto; }
-  .linenr { font-size:smaller }
-  .code-highlighted {background-color:#ffff00;}
-  .org-info-js_info-navigation { border-style:none; }
-  #org-info-js_console-label { font-size:10px; font-weight:bold;
-                               white-space:nowrap; }
-  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
-                                 font-weight:bold; }
-  /*]]>*/&#8211;>
-</style>
+<meta name="keywords" content=""/></p>
+
+
+
 <script type="text/javascript" src="org-info.js"></script>
+
+
 <script type="text/javascript" >
-<!--/*--><![CDATA[/*><!--*/
+<!--/*-->&lt;![CDATA[/*><!--*/
 org_html_manager.set("TOC_DEPTH", "4");
 org_html_manager.set("LINK_HOME", "");
 org_html_manager.set("LINK_UP", "");
@@ -195,10 +52,12 @@ org_html_manager.set("FIXED_TOC", "0");
 org_html_manager.set("TOC", "0");
 org_html_manager.set("VIEW", "content");
 org_html_manager.setup();  // activate after the parameters are set
-/*]]>*///-->
+/*]]&gt;*///-->
 </script>
+
+
 <script type="text/javascript">
-<!--/*--><![CDATA[/*><!--*/
+<!--/*-->&lt;![CDATA[/*><!--*/
  function CodeHighlightOn(elem, id)
  {
    var target = document.getElementById(id);
@@ -217,15 +76,19 @@ org_html_manager.setup();  // activate after the parameters are set
    if(elem.cacheClassTarget)
      target.className = elem.cacheClassTarget;
  }
-/*]]>*///-->
+/*]]&gt;*///-->
 </script>
 
-</head>
-<body>
+
+<p></head>
+<body></p>
 
 <div id="preamble">
 
 </div>
+
+
+
 
 <div id="content">
 <h1 class="title">emacs org mode 学习笔记</h1>
@@ -300,7 +163,7 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/08/31/org-mode-note/">org mode note</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/emacs/atom.xml">org mode note</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -349,7 +212,7 @@ org_html_manager.setup();  // activate after the parameters are set
 
 <p>   <a href="http://orgmode.org/org-mode-download.html">http://orgmode.org/org-mode-download.html</a><br/>
    下载最新的org版本，然后解压到home的emacs目录，在.emacs中添加load-path。<br/>
-   (require &#8216;org)<br/>
+   (require 'org)<br/>
    然后可以使用org-version查看版本号。<br/>
 </p>
 <p><br/>
@@ -820,7 +683,7 @@ org_html_manager.setup();  // activate after the parameters are set
 <p>    <br/>
     exp:<br/>
     (setq org-todo-keywords<br/>
-    &#8216;((sequence &#8220;TODO(t)&#8221; &#8220;WAIT(w@/!)&#8221; &#8220;|&#8221; &#8220;DONE(d!)&#8221; &#8220;CANCELED(c@)&#8221;)))<br/>
+    '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))<br/>
 </p>
 <p><br/>
 </p></div>
@@ -908,7 +771,7 @@ org_html_manager.setup();  // activate after the parameters are set
 <div class="outline-text-3" id="text-1-11">
 
 <p>   设置如下tag可以控制导出和不导出的headline<br/>
-   (:export:) and &#8216;(:noexport:) <br/>
+   (:export:) and '(:noexport:) <br/>
 </p>
 <p>   <br/>
 </p>
@@ -941,7 +804,7 @@ org_html_manager.setup();  // activate after the parameters are set
 <p>    org-export-html-postamble 默认此变量时true，会往结尾添加一些作者信息。<br/>
     css相关：<br/>
     org-export-html-style 或者 <br/>
-    #+STYLE: &lt;link rel=&#8221;stylesheet&#8221; type=&#8221;text/css&#8221; href=&#8221;stylesheet.css&#8221; /&gt;<br/>
+    #+STYLE: &lt;link rel="stylesheet" type="text/css" href="stylesheet.css" /&gt;<br/>
     #+INFOJS<sub>OPT</sub>: 是设置和js相关的一些属性<br/>
     view:   <br/>
     info        Info-like interface with one section per page.<br/>
@@ -964,10 +827,10 @@ org_html_manager.setup();  // activate after the parameters are set
      texlive-fonts-recommended, texlive-fonts-recommended, texlive-latex-extra<br/>
 </p>
 <p>     <br/>
-     LaTeX Error: File `marvosym.sty&#8217; not found. solution: apt-get install texlive-fonts-recommended<br/>
-     LaTeX Error: File `fullpage.sty&#8217; not found. solution: apt-get install texlive-latex-extra<br/>
-     LaTeX Error: File `multibib.sty&#8217; not found. solution: apt-get install texlive-bibtex-extra<br/>
-     LaTeX Error: File `algorithm.sty&#8217; not found. solution: apt-get install texlive-science<br/>
+     LaTeX Error: File `marvosym.sty' not found. solution: apt-get install texlive-fonts-recommended<br/>
+     LaTeX Error: File `fullpage.sty' not found. solution: apt-get install texlive-latex-extra<br/>
+     LaTeX Error: File `multibib.sty' not found. solution: apt-get install texlive-bibtex-extra<br/>
+     LaTeX Error: File `algorithm.sty' not found. solution: apt-get install texlive-science<br/>
 </p>
 <p>     <br/>
      中文问题：<br/>
@@ -1122,47 +985,25 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 </div>
 
+
+
+
 <div id="postamble">
 
 </div>
-</body>
-</html>
-</div>
+
+
+<p></body>
+</html></p>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/15/emacs-markdown-mode/">Emacs Markdown-mode</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-15T12:38:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h4>锚标签 C-c C-a</h4>
+  <entry>
+    <title type="html"><![CDATA[emacs markdown-mode]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/15/emacs-markdown-mode/"/>
+    <updated>2012-08-15T12:38:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/15/emacs-markdown-mode</id>
+    <content type="html"><![CDATA[<h4>锚标签 C-c C-a</h4>
 
 <p><code>C-c C-a l</code> 超链接<br/>
 <code>C-c C-a r</code> 参考链接 text 参考链接放到文件最后 [label]: markdown.html<br/>
@@ -1213,508 +1054,7 @@ org_html_manager.setup();  // activate after the parameters are set
 <h2>参考</h2>
 
 <p><a href="http://jblevins.org/projects/markdown-mode/">Emacs Markdown Mode</a></p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/">Git常用命令总结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-15T11:58:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>我只记录一些我的常用命令，一些不常用的即使写了过一段时间也会忘掉的。实在要用直接help一下就行。</p>
-
-<h3>gitconfig</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[color]
-</span><span class='line'>  status = true
-</span><span class='line'>  branch = auto
-</span><span class='line'>  diff = auto
-</span><span class='line'>  ui = auto
-</span><span class='line'>
-</span><span class='line'>[alias]
-</span><span class='line'>  st = status
-</span><span class='line'>  co = checkout
-</span><span class='line'>  ci = commit -a
-</span><span class='line'>  l = log --graph
-</span><span class='line'>
-</span><span class='line'>[user]
-</span><span class='line'>  name = username
-</span><span class='line'>  email = youremail</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>备忘</h3>
-
-<p><code>git log --all</code></p>
-
-<p>  git log只会显示HEAD及其祖先的log，要产看全部使用&#8211;all</p>
-
-<p><code>git stash</code></p>
-
-<p>  非常有用的命令，把当前work目录做临时保存，并revert到HEAD。
-  使用git stash apply进行恢复。</p>
-
-<p><a href="http://www.worldhello.net/">git权威指南作者blog</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/">添加微博sidebar</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-15T00:50:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>使用<a href="http://weibo.com/tool/weiboshow">微博秀</a>直接生成对应的代码，然后写到custom/asides/weibo.html中。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;section&gt;</span>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>新浪微博<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;weibo&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;li&gt;</span>
-</span><span class='line'><span class="nt">&lt;iframe</span> <span class="na">width=</span><span class="s">&quot;100%&quot;</span> <span class="na">height=</span><span class="s">&quot;550&quot;</span> <span class="na">class=</span><span class="s">&quot;share_self&quot;</span>  <span class="na">frameborder=</span><span class="s">&quot;0&quot;</span> <span class="na">scrolling=</span><span class="s">&quot;no&quot;</span>
-</span><span class='line'><span class="na">src=</span><span class="s">&quot;http://widget.weibo.com/weiboshow/index.php?</span>
-</span><span class='line'><span class="s">language=&amp;</span>
-</span><span class='line'><span class="s">width=0&amp;</span>
-</span><span class='line'><span class="s">height=550&amp;</span>
-</span><span class='line'><span class="s">fansRow=2&amp;</span>
-</span><span class='line'><span class="s">ptype=1&amp;</span>
-</span><span class='line'><span class="s">speed=0&amp;</span>
-</span><span class='line'><span class="s">skin=5&amp;</span>
-</span><span class='line'><span class="s">isTitle=1&amp;</span>
-</span><span class='line'><span class="s">noborder=1&amp;</span>
-</span><span class='line'><span class="s">isWeibo=1&amp;</span>
-</span><span class='line'><span class="s">isFans=0&amp;</span>
-</span><span class='line'><span class="s">uid=1905507693&amp;</span>
-</span><span class='line'><span class="s">verifier=e659651a&amp;</span>
-</span><span class='line'><span class="s">dpc=1&quot;</span><span class="nt">&gt;&lt;/iframe&gt;</span>
-</span><span class='line'><span class="nt">&lt;/li&gt;</span>
-</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
-</span><span class='line'><span class="nt">&lt;/section&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后在_config.yml中添加default_asides中：</p>
-
-<pre><code>    custom/asides/weibo.html
-</code></pre>
-
-<p>参考：<a href="http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/">http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">Octopress添加分类栏</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-14T23:09:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考：<a href="https://github.com/tokkonopapa/octopress-tagcloud" title="octopress-tagcloud">octopress-tagcloud</a></p>
-
-<ul>
-<li><p>下载并copy到对应目录</p>
-
-<pre><code> ├─ plugins/
- │  └── tag_cloud.rb
- └─ source/
-    └─ _includes/
-       └─ custom/
-          └─ asides/
-             ├─ category_list.html
-             └─ tag_cloud.html
-</code></pre></li>
-<li><p>在_config.yml中的default_asides中添加</p>
-
-<pre><code>  custom/asides/category_list.html
-  custom/asides/tag_cloud.html
-</code></pre></li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/14/zhong-xin-an-zhuang-octopress/">重新安装octopress</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-14T16:31:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>如果更换机子或者重新安装系统后，要重新获得octopress非常简单。</p>
-
-<p>1.安装ruby就不说了，我喜欢用rben安装。</p>
-
-<p>2.clone已存在的库，需要上传ssh key</p>
-
-<pre><code>git clone git@github.com:username/username.github.com.git octopress
-</code></pre>
-
-<p>3.切换到souce分支<br/>
-  查看远程的所有分支。</p>
-
-<pre><code>  git branch -r
-</code></pre>
-
-<p>  切换分支</p>
-
-<pre><code>  git checkout origin source
-</code></pre>
-
-<p>4.提交代码</p>
-
-<pre><code>git push origin source
-</code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/13/markdown/">Markdown</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-13T23:10:00+08:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>[转自]<a href="http://wowubuntu.com/markdown/">http://wowubuntu.com/markdown/</a></p>
-
-<h2 id="block">区块元素</h2>
-
-
-
-
-<h3 id="p">段落和换行</h3>
-
-
-<p>一个 Markdown 段落是由一个或多个连续的文本行组成，它的前后要有一个以上的空行（空行的定义是显示上看起来像是空的，便会被视为空行。比方说，若某一行只包含空格和制表符，则该行也会被视为空行）。普通段落不该用空格或制表符来缩进。</p>
-
-<p>「由一个或多个连续的文本行组成」这句话其实暗示了 Markdown 允许段落内的强迫换行（插入换行符），这个特性和其他大部分的 text-to-HTML 格式不一样（包括 Movable Type 的「Convert Line Breaks」选项），其它的格式会把每个换行符都转成 <code>&lt;br /&gt;</code> 标签。</p>
-
-<p>如果你<em>确实</em>想要依赖 Markdown 来插入 <code>&lt;br /&gt;</code> 标签的话，<strong>在插入处先按入两个以上的空格然后回车。</strong></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/08/13/markdown/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/12/first-post/">First Post</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-12T23:34:00+08:00" pubdate data-updated="true">Aug 12<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>随便先写一点东西，markdown语法还不熟悉</p>
-
-<h3>发现的问题</h3>
-
-<ol>
-<li>即使本地加载也特别慢 <br/>
-原来是要去加载google的font，可能又要翻墙，所以特别慢。<br/>
-注释掉：source/_include/custom/head.html中注释掉fonts.googleapis.com的link</li>
-</ol>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  <ul class="pager">
-    
-    <li><a href="/blog/archives">Blog Archives</a></li>
-    
-  </ul>
-</div>
-<aside class="sidebar-nav span3">
-  
-    <section>
-  <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (1)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/test'>test (1)</a></li></ul>
-</section>
-
-<section>
-<h1>新浪微博</h1>
-<ul id="weibo">
-<li>
-<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
-src="http://widget.weibo.com/weiboshow/index.php?
-language=&
-width=0&
-height=550&
-fansRow=2&
-ptype=1&
-speed=0&
-skin=5&
-isTitle=1&
-noborder=1&
-isWeibo=1&
-isFans=0&
-uid=1905507693&
-verifier=e659651a&
-dpc=1"></iframe>
-</li>
-</ul>
-</section>
-
-<section class="well">
-  <ul id="recent_posts" class="nav nav-list">
-    <li class="nav-header">Recent Posts</li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/31/org-mode-note/">org mode note</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/15/emacs-markdown-mode/">emacs markdown-mode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/">git常用命令总结</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/">添加微博sidebar</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">octopress添加分类栏</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
-
-  
-</aside>
-
-    </div>
-  </div>
-  <footer role="contentinfo" class="page-footer"><hr>
-<p>
-  Copyright &copy; 2012 - emmoblin -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
-</footer>
-  
-
-<script type="text/javascript">
-      var disqus_shortname = 'emmoblin';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
-
-
-
-
-
-
-
-
-
-
-
-</body>
-</html>
+</feed>

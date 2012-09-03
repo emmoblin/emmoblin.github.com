@@ -5,14 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - Emmoblin Blog</title>
+  <title>emacs markdown-mode - Emmoblin Blog</title>
   <meta name="author" content="emmoblin">
 
   
-  <meta name="description" content="Blog Archive 2012 org mode note
-Aug 31 2012 posted in emacs, orgmode emacs markdown-mode
-Aug 15 2012 posted in emacs, markdown git常用命令总结
-Aug 15 2012 &hellip;">
+  <meta name="description" content="锚标签 C-c C-a C-c C-a l 超链接
+C-c C-a r 参考链接 text 参考链接放到文件最后 [label]: markdown.html
+C-c C-a w wiki链接 [[wikilink]] 常用命令 C-c C-c C-c C-c m 在另一个Buffer显示输出
+C &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +21,7 @@ Aug 15 2012 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://emmoblin.github.com/blog/archives">
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2012/08/15/emacs-markdown-mode">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -93,148 +93,147 @@ Aug 15 2012 &hellip;">
   <div class="container">
     <div class="row-fluid">
       
-<article role="article" class="span9">
+<article class="hentry span9" role="article">
 
   
   <header class="page-header">
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">Emacs Markdown-mode</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-15T12:38:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
+        
+      </p>
     
   </header>
+
+
+<div class="entry-content"><h4>锚标签 C-c C-a</h4>
+
+<p><code>C-c C-a l</code> 超链接<br/>
+<code>C-c C-a r</code> 参考链接 text 参考链接放到文件最后 [label]: markdown.html<br/>
+<code>C-c C-a w</code> wiki链接 [[wikilink]]</p>
+
+<h4>常用命令 C-c C-c</h4>
+
+<p><code>C-c C-c m</code> 在另一个Buffer显示输出<br/>
+<code>C-c C-c p</code> 在浏览器中预览输出<br/>
+<code>C-c C-c e</code> 输出html文件到相同前缀的.html文件 eg:basename.html<br/>
+<code>C-c C-c v</code> 输出并且在浏览器中查看<br/>
+<code>C-c C-c c</code> 检查是否有未定义的链接</p>
+
+<h4>插入图片 C-c C-i</h4>
+
+<p><code>C-c C-i i</code> 插入一张图片</p>
+
+<h4>物理样式 C-c C-p</h4>
+
+<p><code>C-c C-p b</code> 将选中的文字加粗 bold <strong>bold</strong> 如果为选中则插入 <em><em>**<br/>
+<code>C-c C-p f</code> 将选中的文字设置成等宽字体 <code>fixed width text</code><br/>
+<code>C-c C-p i</code> 将选中的文字设置成斜体 italic</em>italic</em></p>
+
+<h4>逻辑样式 C-c C-s</h4>
+
+<p><code>C-c C-s b</code> 设置引用 > backquoted<br/>
+<code>C-c C-s p</code> 预格式，在之前插入4个空格默认 <code>&lt;pre&gt;pre text&lt;/pre&gt;</code><br/>
+<code>C-c C-s c</code> 插入代码块 <code>code here</code><br/>
+<code>C-c C-s e</code> 强调 emphasis <em>emphasis</em><br/>
+<code>C-c C-s s</code> 加强 strong <strong>strong</strong></p>
+
+<h4>标题章节 C-c C-t</h4>
+
+<p><code>C-c C-t n</code> 插入标题 1-6<br/>
+<code>C-c C-t t</code> 插入一个title<br/>
+<code>C-c C-t s</code> 插入一个section<br/>
+<code>C-c -</code> 插入一条分割线</p>
+
+<hr />
+
+<h4>导航</h4>
+
+<p><code>TAB</code> 折叠或者展开标题<br/>
+<code>C-M-n &amp; C-M-p</code> 在上下可见的标题中前后移动<br/>
+<code>C-M-f &amp; C-M-b</code> 在同一级的标题中前后移动<br/>
+<code>C-M-u</code> 回到上一级标题</p>
+
+<h2>参考</h2>
+
+<p><a href="http://jblevins.org/projects/markdown-mode/">Emacs Markdown Mode</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  
 
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
 
-  
-  <h1>2012</h1>
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/31/org-mode-note/">org mode note</a></h2>
-<time datetime="2012-08-31T00:00:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>31</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/emacs/'>emacs</a>, <a class='category' href='/blog/categories/orgmode/'>orgmode</a></span>
-</footer>
-
-</div>
-
-</article>
+      
 
 
 
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/15/emacs-markdown-mode/">emacs markdown-mode</a></h2>
-<time datetime="2012-08-15T12:38:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>15</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/emacs/'>emacs</a>, <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
-
-</div>
-
-</article>
 
 
 
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/">git常用命令总结</a></h2>
-<time datetime="2012-08-15T11:58:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>15</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/git/'>git</a></span>
-</footer>
-
-</div>
-
-</article>
-
-
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/">添加微博sidebar</a></h2>
-<time datetime="2012-08-15T00:50:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>15</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>octopress</a></span>
-</footer>
-
-</div>
-
-</article>
-
-
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">octopress添加分类栏</a></h2>
-<time datetime="2012-08-14T23:09:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>14</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>octopress</a></span>
-</footer>
-
-</div>
-
-</article>
-
-
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/14/zhong-xin-an-zhuang-octopress/">重新安装octopress</a></h2>
-<time datetime="2012-08-14T16:31:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>14</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
-
-</div>
-
-</article>
-
-
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/13/markdown/">markdown</a></h2>
-<time datetime="2012-08-13T23:10:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>13</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
-
-</div>
-
-</article>
-
-
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/12/first-post/">first post</a></h2>
-<time datetime="2012-08-12T23:34:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>12</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/test/'>test</a></span>
-</footer>
-
-</div>
-
-</article>
 
 
   
+
+
+<time datetime="2012-08-15T12:38:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/emacs/'>emacs</a>, <a class='category' href='/blog/categories/markdown/'>markdown</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/" title="Previous Post:
+        git常用命令总结">&laquo; git常用命令总结</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2012/08/31/org-mode-note/"
+        title="Next Post: org mode note">org mode note
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
 </article>
 
 <aside class="sidebar-nav span3">
@@ -319,7 +318,10 @@ dpc=1"></iframe>
       var disqus_shortname = 'emmoblin';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2012/08/15/emacs-markdown-mode/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2012/08/15/emacs-markdown-mode/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

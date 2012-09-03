@@ -5,14 +5,26 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - Emmoblin Blog</title>
+  <title>git常用命令总结 - Emmoblin Blog</title>
   <meta name="author" content="emmoblin">
 
   
-  <meta name="description" content="Blog Archive 2012 org mode note
-Aug 31 2012 posted in emacs, orgmode emacs markdown-mode
-Aug 15 2012 posted in emacs, markdown git常用命令总结
-Aug 15 2012 &hellip;">
+  <meta name="description" content="我只记录一些我的常用命令，一些不常用的即使写了过一段时间也会忘掉的。实在要用直接help一下就行。 gitconfig 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+[color] status = true branch = auto diff = auto ui = &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +33,7 @@ Aug 15 2012 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://emmoblin.github.com/blog/archives">
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -93,148 +105,144 @@ Aug 15 2012 &hellip;">
   <div class="container">
     <div class="row-fluid">
       
-<article role="article" class="span9">
+<article class="hentry span9" role="article">
 
   
   <header class="page-header">
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">Git常用命令总结</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-15T11:58:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
+        
+      </p>
     
   </header>
+
+
+<div class="entry-content"><p>我只记录一些我的常用命令，一些不常用的即使写了过一段时间也会忘掉的。实在要用直接help一下就行。</p>
+
+<h3>gitconfig</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[color]
+</span><span class='line'>  status = true
+</span><span class='line'>  branch = auto
+</span><span class='line'>  diff = auto
+</span><span class='line'>  ui = auto
+</span><span class='line'>
+</span><span class='line'>[alias]
+</span><span class='line'>  st = status
+</span><span class='line'>  co = checkout
+</span><span class='line'>  ci = commit -a
+</span><span class='line'>  l = log --graph
+</span><span class='line'>
+</span><span class='line'>[user]
+</span><span class='line'>  name = username
+</span><span class='line'>  email = youremail</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>备忘</h3>
+
+<p><code>git log --all</code></p>
+
+<p>  git log只会显示HEAD及其祖先的log，要产看全部使用&#8211;all</p>
+
+<p><code>git stash</code></p>
+
+<p>  非常有用的命令，把当前work目录做临时保存，并revert到HEAD。
+  使用git stash apply进行恢复。</p>
+
+<p><a href="http://www.worldhello.net/">git权威指南作者blog</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  
 
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
 
-  
-  <h1>2012</h1>
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/31/org-mode-note/">org mode note</a></h2>
-<time datetime="2012-08-31T00:00:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>31</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/emacs/'>emacs</a>, <a class='category' href='/blog/categories/orgmode/'>orgmode</a></span>
-</footer>
-
-</div>
-
-</article>
+      
 
 
 
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/15/emacs-markdown-mode/">emacs markdown-mode</a></h2>
-<time datetime="2012-08-15T12:38:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>15</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/emacs/'>emacs</a>, <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
-
-</div>
-
-</article>
 
 
 
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/">git常用命令总结</a></h2>
-<time datetime="2012-08-15T11:58:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>15</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/git/'>git</a></span>
-</footer>
-
-</div>
-
-</article>
-
-
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/">添加微博sidebar</a></h2>
-<time datetime="2012-08-15T00:50:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>15</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>octopress</a></span>
-</footer>
-
-</div>
-
-</article>
-
-
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">octopress添加分类栏</a></h2>
-<time datetime="2012-08-14T23:09:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>14</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/octopress/'>octopress</a></span>
-</footer>
-
-</div>
-
-</article>
-
-
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/14/zhong-xin-an-zhuang-octopress/">重新安装octopress</a></h2>
-<time datetime="2012-08-14T16:31:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>14</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
-
-</div>
-
-</article>
-
-
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/13/markdown/">markdown</a></h2>
-<time datetime="2012-08-13T23:10:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>13</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
-
-</div>
-
-</article>
-
-
-
-<article>
-  <div class="well">
-
-<h2><a href="/blog/2012/08/12/first-post/">first post</a></h2>
-<time datetime="2012-08-12T23:34:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>12</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/test/'>test</a></span>
-</footer>
-
-</div>
-
-</article>
 
 
   
+
+
+<time datetime="2012-08-15T11:58:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/git/'>git</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/" title="Previous Post:
+        添加微博sidebar">&laquo; 添加微博sidebar</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2012/08/15/emacs-markdown-mode/"
+        title="Next Post: emacs markdown-mode">emacs markdown-mode
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
 </article>
 
 <aside class="sidebar-nav span3">
@@ -319,7 +327,10 @@ dpc=1"></iframe>
       var disqus_shortname = 'emmoblin';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
