@@ -9,7 +9,15 @@
   <meta name="author" content="emmoblin">
 
   
-  <meta name="description" content="<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> emacs org mode 学习笔记 <!--*/ html { font &hellip;">
+  <meta name="description" content="Table of Contents org mode note 头信息注释
+安装最新的org
+文档结构相关的操作 Motion
+headline结构移动
+Structure editing
+Sparse Tree
+List
+Footnotes 加粗
+链接 内部链接 Internal Link &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -130,118 +138,7 @@
   </header>
 
 
-<div class="entry-content"><?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<title>emacs org mode 学习笔记</title>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-<meta name="title" content="emacs org mode 学习笔记"/>
-<meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-08-16 Thu"/>
-<meta name="author" content="emmoblin"/>
-<meta name="description" content=""/>
-<meta name="keywords" content=""/>
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  html { font-family: Times, serif; font-size: 12pt; }
-  .title  { text-align: center; }
-  .todo   { color: red; }
-  .done   { color: green; }
-  .tag    { background-color: #add8e6; font-weight:normal }
-  .target { }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
-  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
-  .center {margin-left:auto; margin-right:auto; text-align:center;}
-  p.verse { margin-left: 3% }
-  pre {
-	border: 1pt solid #AEBDCC;
-	background-color: #F3F5F7;
-	padding: 5pt;
-	font-family: courier, monospace;
-        font-size: 90%;
-        overflow:auto;
-  }
-  table { border-collapse: collapse; }
-  td, th { vertical-align: top;  }
-  th.right  { text-align:center;  }
-  th.left   { text-align:center;   }
-  th.center { text-align:center; }
-  td.right  { text-align:right;  }
-  td.left   { text-align:left;   }
-  td.center { text-align:center; }
-  dt { font-weight: bold; }
-  div.figure { padding: 0.5em; }
-  div.figure p { text-align: center; }
-  div.inlinetask {
-    padding:10px;
-    border:2px solid gray;
-    margin:10px;
-    background: #ffffcc;
-  }
-  textarea { overflow-x: auto; }
-  .linenr { font-size:smaller }
-  .code-highlighted {background-color:#ffff00;}
-  .org-info-js_info-navigation { border-style:none; }
-  #org-info-js_console-label { font-size:10px; font-weight:bold;
-                               white-space:nowrap; }
-  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
-                                 font-weight:bold; }
-  /*]]>*/&#8211;>
-</style>
-<script type="text/javascript" src="org-info.js"></script>
-<script type="text/javascript" >
-<!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "4");
-org_html_manager.set("LINK_HOME", "");
-org_html_manager.set("LINK_UP", "");
-org_html_manager.set("LOCAL_TOC", "1");
-org_html_manager.set("VIEW_BUTTONS", "0");
-org_html_manager.set("MOUSE_HINT", "underline");
-org_html_manager.set("FIXED_TOC", "0");
-org_html_manager.set("TOC", "0");
-org_html_manager.set("VIEW", "content");
-org_html_manager.setup();  // activate after the parameters are set
-/*]]>*///-->
-</script>
-<script type="text/javascript">
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
-
-</head>
-<body>
-
-<div id="preamble">
-
-</div>
-
-<div id="content">
-<h1 class="title">emacs org mode 学习笔记</h1>
-
-
-<div id="table-of-contents">
+<div class="entry-content"><div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
@@ -342,6 +239,8 @@ org_html_manager.setup();  // activate after the parameters are set
 </li>
 <li>设定列视图<br/>
 </li>
+<li>更新了参数后在参数区域按C-c C-c进行更新<br/>
+</li>
 </ol>
 
 
@@ -349,6 +248,8 @@ org_html_manager.setup();  // activate after the parameters are set
 <b>这里的内容可以随时更改，但是要记得在改后用 C-c C-c 刷新设置</b><br/>
 </p>
 <p><br/>
+<!-- more -->
+
 </p></div>
 
 </div>
@@ -406,7 +307,7 @@ org_html_manager.setup();  // activate after the parameters are set
    <code>C-c C-j</code>  org-goto 这个功能强大，随意跳转<br/>
    <code>S-TAB</code> 收起所有目录树，相当与C-u TAB<br/>
 </p>
-<p><br/>
+<p>   <br/>
 </p></div>
 
 </div>
@@ -849,6 +750,10 @@ org_html_manager.setup();  // activate after the parameters are set
     S-up，down 调高低<br/>
 </p>
 <p>    <br/>
+    对于显示效果还要设置：<br/>
+    org-priority-faces<br/>
+</p>
+<p>    <br/>
 </p>
 <p><br/>
 </p></div>
@@ -1099,6 +1004,12 @@ org_html_manager.setup();  // activate after the parameters are set
    3.如果添加不让org解析的字段？<br/>
 </p>
 <p><br/>
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; local<br/>
+  这是orgmode的专业社区，完全用orgmode组织<br/>
+  <a href="http://orgmode.org/worg/">http://orgmode.org/worg/</a><br/>
+  可以试试自己搭建worg<br/>
+  <a href="http://orgmode.org/worg/worg-setup.html">http://orgmode.org/worg/worg-setup.html</a><br/>
+=======<br/>
 </p>
 <p><br/>
 </p></div>
@@ -1120,6 +1031,7 @@ org_html_manager.setup();  // activate after the parameters are set
 <p><br/>
    这是orgmode的专业社区，完全用orgmode组织<br/>
    <a href="http://orgmode.org/worg/">http://orgmode.org/worg/</a><br/>
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; other<br/>
 </p>
 <p><br/>
 </p>
@@ -1130,13 +1042,6 @@ org_html_manager.setup();  // activate after the parameters are set
 
 </div>
 </div>
-</div>
-
-<div id="postamble">
-
-</div>
-</body>
-</html>
 </div>
 
 

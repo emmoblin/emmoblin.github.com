@@ -4,7 +4,7 @@
   <title><![CDATA[Category: emacs | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2012-09-04T20:50:24+08:00</updated>
+  <updated>2012-09-05T23:27:08+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -18,83 +18,7 @@
     <link href="http://emmoblin.github.com/blog/2012/08/31/org-mode-note/"/>
     <updated>2012-08-31T00:00:00+08:00</updated>
     <id>http://emmoblin.github.com/blog/2012/08/31/org-mode-note</id>
-    <content type="html"><![CDATA[<p>&lt;?xml version="1.0" encoding="utf-8"?>
-&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"</p>
-
-<pre><code>           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
-</code></pre>
-
-<p><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<title>emacs org mode 学习笔记</title>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-<meta name="title" content="emacs org mode 学习笔记"/>
-<meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-08-16 Thu"/>
-<meta name="author" content="emmoblin"/>
-<meta name="description" content=""/>
-<meta name="keywords" content=""/></p>
-
-
-
-<script type="text/javascript" src="org-info.js"></script>
-
-
-<script type="text/javascript" >
-<!--/*-->&lt;![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "4");
-org_html_manager.set("LINK_HOME", "");
-org_html_manager.set("LINK_UP", "");
-org_html_manager.set("LOCAL_TOC", "1");
-org_html_manager.set("VIEW_BUTTONS", "0");
-org_html_manager.set("MOUSE_HINT", "underline");
-org_html_manager.set("FIXED_TOC", "0");
-org_html_manager.set("TOC", "0");
-org_html_manager.set("VIEW", "content");
-org_html_manager.setup();  // activate after the parameters are set
-/*]]&gt;*///-->
-</script>
-
-
-<script type="text/javascript">
-<!--/*-->&lt;![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]&gt;*///-->
-</script>
-
-
-<p></head>
-<body></p>
-
-<div id="preamble">
-
-</div>
-
-
-
-
-<div id="content">
-<h1 class="title">emacs org mode 学习笔记</h1>
-
-
-<div id="table-of-contents">
+    <content type="html"><![CDATA[<div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
@@ -162,6 +86,9 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 </div>
 
+
+
+
 <div id="outline-container-1" class="outline-2">
 <h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/emacs/atom.xml">org mode note</a></h2>
 <div class="outline-text-2" id="text-1">
@@ -195,6 +122,8 @@ org_html_manager.setup();  // activate after the parameters are set
 </li>
 <li>设定列视图<br/>
 </li>
+<li>更新了参数后在参数区域按C-c C-c进行更新<br/>
+</li>
 </ol>
 
 
@@ -202,6 +131,8 @@ org_html_manager.setup();  // activate after the parameters are set
 <b>这里的内容可以随时更改，但是要记得在改后用 C-c C-c 刷新设置</b><br/>
 </p>
 <p><br/>
+<!-- more -->
+
 </p></div>
 
 </div>
@@ -259,7 +190,7 @@ org_html_manager.setup();  // activate after the parameters are set
    <code>C-c C-j</code>  org-goto 这个功能强大，随意跳转<br/>
    <code>S-TAB</code> 收起所有目录树，相当与C-u TAB<br/>
 </p>
-<p><br/>
+<p>   <br/>
 </p></div>
 
 </div>
@@ -702,6 +633,10 @@ org_html_manager.setup();  // activate after the parameters are set
     S-up，down 调高低<br/>
 </p>
 <p>    <br/>
+    对于显示效果还要设置：<br/>
+    org-priority-faces<br/>
+</p>
+<p>    <br/>
 </p>
 <p><br/>
 </p></div>
@@ -952,6 +887,12 @@ org_html_manager.setup();  // activate after the parameters are set
    3.如果添加不让org解析的字段？<br/>
 </p>
 <p><br/>
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; local<br/>
+  这是orgmode的专业社区，完全用orgmode组织<br/>
+  <a href="http://orgmode.org/worg/">http://orgmode.org/worg/</a><br/>
+  可以试试自己搭建worg<br/>
+  <a href="http://orgmode.org/worg/worg-setup.html">http://orgmode.org/worg/worg-setup.html</a><br/>
+=======<br/>
 </p>
 <p><br/>
 </p></div>
@@ -973,6 +914,7 @@ org_html_manager.setup();  // activate after the parameters are set
 <p><br/>
    这是orgmode的专业社区，完全用orgmode组织<br/>
    <a href="http://orgmode.org/worg/">http://orgmode.org/worg/</a><br/>
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; other<br/>
 </p>
 <p><br/>
 </p>
@@ -983,18 +925,7 @@ org_html_manager.setup();  // activate after the parameters are set
 
 </div>
 </div>
-</div>
 
-
-
-
-<div id="postamble">
-
-</div>
-
-
-<p></body>
-</html></p>
 ]]></content>
   </entry>
   
