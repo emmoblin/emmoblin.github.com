@@ -30,14 +30,26 @@
     </url>
     <url>
         <loc>http://emmoblin.github.com/blog/2012/08/31/org-mode-note/</loc>
-        <lastmod>2012-09-05T23:27:07+08:00</lastmod>
+        <lastmod>2012-09-11T00:41:40+08:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://emmoblin.github.com/blog/2012/09/11/can-your-programming-language-do-this/
+        </loc>
+        <lastmod>2012-09-11T00:41:41+08:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/
+        </loc>
+        <lastmod>2012-09-11T00:41:41+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/blog/archives/</loc>
-        <lastmod>2012-09-05T23:27:07+08:00</lastmod>
+        <lastmod>2012-09-11T00:41:41+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/</loc>
-        <lastmod>2012-09-05T23:27:07+08:00</lastmod>
+        <lastmod>2012-09-11T00:41:41+08:00</lastmod>
     </url>
 </urlset>
