@@ -5,26 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>git常用命令总结 - Emmoblin Blog</title>
+  <title>初步体验lua写测试用例的简单 - Emmoblin Blog</title>
   <meta name="author" content="emmoblin">
 
   
-  <meta name="description" content="我只记录一些我的常用命令，一些不常用的即使写了过一段时间也会忘掉的。实在要用直接help一下就行。 gitconfig 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-[color] status = true branch = auto diff = auto ui = &hellip;">
+  <meta name="description" content="直接上代码，看看到底用脚本写测试用例到底有多简单。 lsystem = function (arg) print("cmd:\e\[31m"..arg.."\e\[0m") local date = io.popen(arg, r) local str = date:read"*a" date: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -33,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://emmoblin.github.com/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie">
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2010/08/02/first-luaunit-testcase">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -122,7 +107,7 @@
   
   <header class="page-header">
     
-      <h1 class="entry-title">Git常用命令总结</h1>
+      <h1 class="entry-title">初步体验lua写测试用例的简单</h1>
     
     
       <p class="meta">
@@ -138,61 +123,47 @@
   
 
 
-<time datetime="2012-08-15T11:58:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
+<time datetime="2010-08-02T00:00:00+08:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2010</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>我只记录一些我的常用命令，一些不常用的即使写了过一段时间也会忘掉的。实在要用直接help一下就行。</p>
-
-<h3>gitconfig</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[color]
-</span><span class='line'>  status = true
-</span><span class='line'>  branch = auto
-</span><span class='line'>  diff = auto
-</span><span class='line'>  ui = auto
-</span><span class='line'>
-</span><span class='line'>[alias]
-</span><span class='line'>  st = status
-</span><span class='line'>  co = checkout
-</span><span class='line'>  ci = commit -a
-</span><span class='line'>  l = log --graph
-</span><span class='line'>
-</span><span class='line'>[user]
-</span><span class='line'>  name = username
-</span><span class='line'>  email = youremail</span></code></pre></td></tr></table></div></figure>
+<div class="entry-content"><div><div><p><br/>
+直接上代码，看看到底用脚本写测试用例到底有多简单。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-lua"><span style="color: #a020f0;">lsystem</span> = <span style="color: #0000ff;">function</span> (arg)
+    print(<span style="color: #00bfff;">"cmd:\e\[31m"</span>..arg..<span style="color: #00bfff;">"\e\[0m"</span>)
+    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">date</span> = io.popen(arg, r)
+    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">str</span> = date:read<span style="color: #00bfff;">"*a"</span>
+    date:close()
+    <span style="color: #0000ff;">return</span> str
+<span style="color: #0000ff;">end</span>
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#27979;&#35797;mac&#22320;&#22336;&#30340;&#26174;&#31034;&#26159;&#21542;&#27491;&#30830;</span>
+<span style="color: #0000ff;">function</span> <span style="color: #a020f0;">test_ipshow</span>()
+    date = lsystem(<span style="color: #00bfff;">"ip addr show eth1"</span>)
+    assert_match(<span style="color: #00bfff;">"00:0a:e4:36:06:24"</span>,date)
+<span style="color: #0000ff;">end</span>
+</pre>
 
 
-<h3>备忘</h3>
-
-<p><code>git log --all</code></p>
-
-<p>  git log只会显示HEAD及其祖先的log，要产看全部使用&#8211;all</p>
-
-<p><code>git stash</code></p>
-
-<p>  非常有用的命令，把当前work目录做临时保存，并revert到HEAD。
-  使用git stash apply进行恢复。</p>
-
-<p><a href="http://www.worldhello.net/">git权威指南作者blog</a></p>
+简单到无法再简单的程序，只需要两句话，<br/>
+第一句是执行命令。<br/>
+第二句是判断返回内容是否正确。<br/>
+</p>
+<p><br/>
+优势一：<br/>
+如果要使用Cunit进行同样的测试，当然也基本上也都是这几行语句，但是最麻烦的就是需要对内存进行管理。<br/>
+优势二：<br/>
+同时使用c语言的字符串匹配没有脚本语言强大，至少支持正则匹配。<br/>
+优势三：<br/>
+不需要编译，直接修改，解释执行。<br/>
+</p></div>
+</div>
 </div>
 
 
@@ -215,12 +186,12 @@
   
 
 
-<time datetime="2012-08-15T11:58:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
+<time datetime="2010-08-02T00:00:00+08:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2010</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/git/'>git</a>
+    <a class='category' href='/blog/categories/lua/'>lua</a>, <a class='category' href='/blog/categories/testunit/'>testunit</a>
   
 </span>
 
@@ -235,22 +206,16 @@
 
     
     
-    <section>
-      <h1>Comments</h1>
-      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-    </section>
-    
     <ul class="pager">
       
       <li class="previous"><a class="basic-alignment left"
-        href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/" title="Previous Post:
-        添加微博sidebar">&laquo; 添加微博sidebar</a></li>
+        href="/blog/2010/08/01/luasocket-and-lua-capi/" title="Previous Post:
+        Luasocket和lua CAPI">&laquo; Luasocket和lua CAPI</a></li>
       
       <li><a href="/blog/archives">Blog Archives</a></li>
       
-      <li class="next"><a class="basic-alignment right" href="/blog/2012/08/15/emacs-markdown-mode/"
-        title="Next Post: emacs markdown-mode">emacs markdown-mode
+      <li class="next"><a class="basic-alignment right" href="/blog/2010/08/06/lua-call-c-function-to-unit-test/"
+        title="Next Post: lua调用c函数进行单元测试">lua调用c函数进行单元测试
         &raquo;</a></li>
       
     </ul>
@@ -261,30 +226,30 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/test'>test (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (1)</a></li></ul>
 </section>
 <section class="well">
   <ul id="recent_posts" class="nav nav-list">
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
+        <a href="/blog/2012/10/09/ssh-skill/">ssh的一些技巧</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">functional-programming-is-hard-thats-why-its-good</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/09/11/can-your-programming-language-do-this/">can your programming language do this</a>
+        <a href="/blog/2012/09/11/can+your+programming+language+do+this/">can your programming language do this</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/08/31/org-mode-note/">org mode note</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/15/emacs-markdown-mode/">emacs markdown-mode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/">git常用命令总结</a>
+        <a href="/blog/2012/08/31/org-mode-note/">org-mode学习笔记</a>
       </li>
     
   </ul>
@@ -343,10 +308,7 @@ dpc=1"></iframe>
       var disqus_shortname = 'emmoblin';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://emmoblin.github.com/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/';
-        var disqus_url = 'http://emmoblin.github.com/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

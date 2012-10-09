@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>octopress添加分类栏 - Emmoblin Blog</title>
+  <title>lua调用c函数进行单元测试 - Emmoblin Blog</title>
   <meta name="author" content="emmoblin">
 
   
-  <meta name="description" content="参考：octopress-tagcloud 下载并copy到对应目录 ├─ plugins/ │ └── tag_cloud.rb └─ source/ └─ _includes/ └─ custom/ └─ asides/ ├─ category_list.html └─ tag_cloud. &hellip;">
+  <meta name="description" content="之所以使用lua进行单元测试，而不用cunit，我觉得主要是考虑一下几点：
+1）lua测试命令行，优势明显
+2）cunit对函数进行单元测试的功能，用lua也可以做到。而且参数可以通过lua传递，更加灵活，修改测试用例不需要重新编译。
+以前用cunit写的时候，修改一下就要重新编译， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://emmoblin.github.com/blog/2012/08/14/octopresstian-jia-fen-lei-lan">
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2010/08/06/lua-call-c-function-to-unit-test">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -107,7 +110,7 @@
   
   <header class="page-header">
     
-      <h1 class="entry-title">Octopress添加分类栏</h1>
+      <h1 class="entry-title">Lua调用c函数进行单元测试</h1>
     
     
       <p class="meta">
@@ -123,34 +126,89 @@
   
 
 
-<time datetime="2012-08-14T23:09:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+<time datetime="2010-08-06T00:00:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2010</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>参考：<a href="https://github.com/tokkonopapa/octopress-tagcloud" title="octopress-tagcloud">octopress-tagcloud</a></p>
+<div class="entry-content"><div><div><p><br/>
+之所以使用lua进行单元测试，而不用cunit，我觉得主要是考虑一下几点：<br/>
+1）lua测试命令行，优势明显<br/>
+2）cunit对函数进行单元测试的功能，用lua也可以做到。而且参数可以通过lua传递，更加灵活，修改测试用例不需要重新编译。<br/>
+以前用cunit写的时候，修改一下就要重新编译，而且还要继续内存的管理。测试用例写多了有点厌烦。<br/>
+</p>
+<p><br/>
+下面主要看看Lua调用c函数进行单元测试：<br/>
+</p>
+<p><br/>
+这是lua代码，<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-lua"><span style="color: #0000ff;">local</span> <span style="color: #ff1493;">iptable</span> = {}
 
-<ul>
-<li><p>下载并copy到对应目录</p>
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#32452;&#32455;&#36755;&#20837;&#21442;&#25968;</span>
+<span style="color: #0000ff;">for</span> num = 1,5 <span style="color: #0000ff;">do</span>
+ <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">newip</span> = {[<span style="color: #00bfff;">"ip"</span>]=<span style="color: #00bfff;">"192.168.1."</span>..num, [<span style="color: #00bfff;">"up"</span>]=0, [<span style="color: #00bfff;">"down"</span>]=0}
+ iptable[num] = newip
+ print(iptable[num].ip, iptable[num].up, iptable[num].down)
+<span style="color: #0000ff;">end</span>
 
-<pre><code> ├─ plugins/
- │  └── tag_cloud.rb
- └─ source/
-    └─ _includes/
-       └─ custom/
-          └─ asides/
-             ├─ category_list.html
-             └─ tag_cloud.html
-</code></pre></li>
-<li><p>在_config.yml中的default_asides中添加</p>
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#35843;&#29992;&#34987;&#27979;&#35797;&#30340;c&#20989;&#25968;</span>
+qostest.qos_add_e(iptable)
 
-<pre><code>  custom/asides/category_list.html
-  custom/asides/tag_cloud.html
-</code></pre></li>
-</ul>
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#26816;&#27979;&#36820;&#22238;&#32467;&#26524;&#26159;&#21542;&#26159;&#39044;&#26399;&#32467;&#26524;&#65292;&#36825;&#37324;&#21482;&#26159;&#31616;&#21333;&#30340;&#25171;&#21360;&#20102;&#19968;&#19979;&#65292;&#27809;&#26377;&#29992;assert</span>
+<span style="color: #0000ff;">for</span> num = 1,5 <span style="color: #0000ff;">do</span>
+ print(iptable[num].ip, iptable[num].up, iptable[num].down)
+<span style="color: #0000ff;">end</span>
+</pre>
 
+
+下面是对应的c函数的实现：<br/>
+其中最容易出错的地方就是对于当前栈的层次，要时刻记住每一个lua<sub>*</sub> 相关的操作后，栈会变成什么样子。<br/>
+建议全部使用正数代表index，混合使用正数和负数比较容易出错。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-c"><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> <span style="color: #a020f0;">qos_add_e</span> (<span style="color: #0000ff;">lua_State</span> *<span style="color: #ff1493;">L</span>) {
+    <span style="color: #0000ff;">__u32</span> *<span style="color: #ff1493;">handle</span>,<span style="color: #ff1493;">ip</span>;
+    <span style="color: #0000ff;">int</span> <span style="color: #ff1493;">i</span> = 0, <span style="color: #ff1493;">ipnum</span> = 0;
+
+    ipnum = lua_objlen(L, 1);
+    printf(<span style="color: #00bfff;">"in libqostst qID = %u pID = %u ipnum = %d\n"</span>
+        , qID, pID, ipnum);
+
+    <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *<span style="color: #ff1493;">ipstr</span> = <span style="color: #ff0000;">NULL</span>;
+    <span style="color: #0000ff;">for</span> ( i = 1; i &lt;= ipnum; i++ ) {
+        lua_pushnumber(L, i);<span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">push key</span>
+
+        lua_gettable(L, 1);<span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">get value ,get level 1 table</span>
+
+        lua_getfield(L, 2, <span style="color: #00bfff;">"ip"</span>);
+        ipstr = luaL_checkstring(L, 3);
+
+        printf(<span style="color: #00bfff;">"%d=%s\n"</span>, i, ipstr);
+        ip = ntohl(inet_addr(ipstr));
+
+        <span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">&#20256;&#20837;ip&#65292;&#36820;&#22238;&#19978;&#19979;&#34892;&#30340;handle</span>
+        testfunc(ip, handle)
+        <span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">return handle to lua</span>
+        lua_pushnumber(L, handle[0]);
+        lua_setfield(L, 2, <span style="color: #00bfff;">"up"</span>);
+        lua_pop(L, 2);
+    }
+
+    <span style="color: #0000ff;">return</span> 1;
+}
+</pre>
+
+
+</p></div>
+</div>
 </div>
 
 
@@ -173,12 +231,12 @@
   
 
 
-<time datetime="2012-08-14T23:09:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+<time datetime="2010-08-06T00:00:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2010</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/octopress/'>octopress</a>
+    <a class='category' href='/blog/categories/lua/'>lua</a>, <a class='category' href='/blog/categories/testunit/'>testunit</a>
   
 </span>
 
@@ -193,22 +251,16 @@
 
     
     
-    <section>
-      <h1>Comments</h1>
-      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-    </section>
-    
     <ul class="pager">
       
       <li class="previous"><a class="basic-alignment left"
-        href="/blog/2012/08/14/zhong-xin-an-zhuang-octopress/" title="Previous Post:
-        重新安装octopress">&laquo; 重新安装octopress</a></li>
+        href="/blog/2010/08/02/first-luaunit-testcase/" title="Previous Post:
+        初步体验lua写测试用例的简单">&laquo; 初步体验lua写测试用例的简单</a></li>
       
       <li><a href="/blog/archives">Blog Archives</a></li>
       
-      <li class="next"><a class="basic-alignment right" href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/"
-        title="Next Post: 添加微博sidebar">添加微博sidebar
+      <li class="next"><a class="basic-alignment right" href="/blog/2010/08/08/mock-test/"
+        title="Next Post: mock测试">mock测试
         &raquo;</a></li>
       
     </ul>
@@ -301,10 +353,7 @@ dpc=1"></iframe>
       var disqus_shortname = 'emmoblin';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://emmoblin.github.com/blog/2012/08/14/octopresstian-jia-fen-lei-lan/';
-        var disqus_url = 'http://emmoblin.github.com/blog/2012/08/14/octopresstian-jia-fen-lei-lan/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

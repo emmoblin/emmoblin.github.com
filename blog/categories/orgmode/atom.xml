@@ -4,7 +4,7 @@
   <title><![CDATA[Category: orgmode | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/orgmode/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2012-09-13T00:26:59+08:00</updated>
+  <updated>2012-10-09T21:11:50+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[org mode note]]></title>
+    <title type="html"><![CDATA[org-mode学习笔记]]></title>
     <link href="http://emmoblin.github.com/blog/2012/08/31/org-mode-note/"/>
     <updated>2012-08-31T00:00:00+08:00</updated>
     <id>http://emmoblin.github.com/blog/2012/08/31/org-mode-note</id>
@@ -22,7 +22,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">org mode note</a>
+<li><a href="#sec-1">org-mode学习笔记</a>
 <ul>
 <li><a href="#sec-1-1">头信息注释</a></li>
 <li><a href="#sec-1-2">安装最新的org</a></li>
@@ -90,7 +90,7 @@
 
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/orgmode/atom.xml">org mode note</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/orgmode/atom.xml">org-mode学习笔记</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -249,6 +249,7 @@
 </pre>
 
    在list中同样支持类似header中的motion快捷键<br/>
+<b>注意一定后边要有个空格</b><br/>
 </p>
 <p><br/>
 </p></div>
@@ -800,7 +801,7 @@
 <div class="outline-text-3" id="text-1-12">
 
 <p>   M-x org-time-<br/>
-   C-c . 创建时间<br/>
+   C-c . 创建时间, 还可以添加C-u前缀，可以插入当前时间，默认只是日期<br/>
    C-c C-d 插入deadline<br/>
    C-c C-s 插入Schedule<br/>
 </p>
