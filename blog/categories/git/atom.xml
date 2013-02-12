@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2013-02-12T13:39:04+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[git常用命令总结]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/"/>
+    <updated>2012-08-15T11:58:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie</id>
+    <content type="html"><![CDATA[<p>我只记录一些我的常用命令，一些不常用的即使写了过一段时间也会忘掉的。实在要用直接help一下就行。</p>
+
+<h3>gitconfig</h3>
+
+<p>```
+[color]</p>
+
+<pre><code>status = true
+branch = auto
+diff = auto
+ui = auto
+</code></pre>
+
+<p>[alias]</p>
+
+<pre><code>st = status
+co = checkout
+ci = commit -a
+l = log --graph
+</code></pre>
+
+<p>[user]</p>
+
+<pre><code>name = username
+email = youremail
+</code></pre>
+
+<p>```</p>
+
+<h3>备忘</h3>
+
+<p><code>git log --all</code></p>
+
+<p>  git log只会显示HEAD及其祖先的log，要产看全部使用--all</p>
+
+<p><code>git stash</code></p>
+
+<p>  非常有用的命令，把当前work目录做临时保存，并revert到HEAD。
+  使用git stash apply进行恢复。</p>
+
+<p><a href="http://www.worldhello.net/">git权威指南作者blog</a></p>
+]]></content>
+  </entry>
+  
+</feed>

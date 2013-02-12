@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: test | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/test/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2013-02-12T13:39:04+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[first post]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/12/first-post/"/>
+    <updated>2012-08-12T23:34:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/12/first-post</id>
+    <content type="html"><![CDATA[<p>随便先写一点东西，markdown语法还不熟悉</p>
+
+<h3>发现的问题</h3>
+
+<ol>
+<li>即使本地加载也特别慢 <br/>
+原来是要去加载google的font，可能又要翻墙，所以特别慢。<br/>
+注释掉：source/_include/custom/head.html中注释掉fonts.googleapis.com的link</li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>
