@@ -1,0 +1,72 @@
+---
+title: ubuntu使用dropbox
+layout: post
+filename: dropbox under ubuntu
+on: 2012-10-10 23:42:20
+toc: off
+comments: true
+categories: [ubuntu]
+CATEGORY: dropbox
+---
+
+<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">对ubuntu one有点失望</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>我本来是用ubuntu one，但是我先在使用ubuntu one来同步我的org笔记，同时我的org笔记又使用hg同步。<br/>
+也就是一个文件夹同时使用hg和ubuntu one同步，结果发现ubuntu one同步总是出错，尤其是我使用hg fetch一个版本的时候。<br/>
+经常把我一个文件夹的内容同步没了，幸亏我有hg，否则这些文件就丢失啦。<br/>
+所以决定还是用dropbox吧，本来我手机使用dropbox来同步照片的，所以又申请了一个帐号，专门用于同步笔记。<br/>
+而且最终要的是：<br/>
+ubuntu one没有历史版本功能<br/>
+而dropbox可以可以回退到以前的历史版本，这个非常好。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">dropbox同步任意文件夹问题</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>本来还是我是打算用dropbox的，但是发现dropbox只能指定一个主目录，不想ubuntu one可以随便指定文件夹。<br/>
+但后来发现，其实只要做一个软链接到Dropbox目录就ok了。<br/>
+而且发现dropbox同步的速度非常快。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">dropbox安装</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>需要使用https链接去登录dropbox主页，下边有如何安装的方式，很简单，就是wget一个压缩包，然后解压就ok了。<br/>
+默认是.dropbox_dist目录。<br/>
+然后启动dropboxd就ok了<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">ubuntu one的一些命令</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>查看当前传输字节数<br/>
+<code>u1sdtool --current-transfers</code><br/>
+显示共享的文件夹<br/>
+<code>u1sdtool --list-folders</code><br/>
+删除文件夹<br/>
+<code>u1sdtool --delete-folder=FOLDER_ID</code><br/>
+其他命令使用&ndash;help查看<br/>
+</p></div>
+</div>
+</div>

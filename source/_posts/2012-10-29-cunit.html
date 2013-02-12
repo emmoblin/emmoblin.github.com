@@ -1,0 +1,89 @@
+---
+title: CUnit
+layout: post
+filename: CUnit使用
+on: 2012-10-29 17:02:30
+toc: on
+comments: true
+categories: [unittest]
+CATEGORY: CUnit
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">CUnit</a>
+<ul>
+<li><a href="#sec-1-1">CUnit交叉编译</a></li>
+<li><a href="#sec-1-2">使用bootstrap而不是configure</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com{{ page.url }}">CUnit</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">CUnit交叉编译</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>我更换到ubuntu12.04上编译CUnit已经编译不过去了，错误原因是：<br/>
+libtool : X&ndash;tag=CC: command not found 编译报错<br/>
+原因据说是因为在项目目录下生成的libtool脚本中定义了$ECHO变量，但是在脚本文件ltmain.sh中，使用的却是$echo(生成的libtool版本太旧)<br/>
+可通过以下方法解决：<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>直接复制系统自带的libtool到项目目录，应该在/usr/bin目录下，覆盖代码文件目录下的libtool，再执行make<br/>
+</li>
+</ol>
+
+<p>（没装就apt-get install libtool 或者 yum install libtool 安装一下吧）<br/>
+但是这有个问题，不能用于交叉编译，系统的libtool会使用系统的ld等，而应该使用交叉工具连的ld。<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>修改aclocal.m4文件，将上面的LIBTOOL='$(SHELL) $(top_builddir)/libtool'改成<br/>
+</li>
+</ol>
+
+<p>LIBTOOL='$(SHELL)  /usr/bin/libtool'后重新执行./configure<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>将源码目录下libtool脚本中所有的$ECHO替换成$echo. 或者将脚本文件ltmain.sh里的$echo替换成$ECHO，<br/>
+</li>
+</ol>
+
+<p>都一样，重新执行./configure<br/>
+</p>
+<p><br/>
+另一种解决方案<br/>
+export echo=echo  回车后 make 正常<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">使用bootstrap而不是configure</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>没有了上边的libtool的问题，直接修改bootstrap，添加CC就ok了。<br/>
+CC=/workspace26/i386-env/cross-tools/bin/i686-unknown-linux-gnu-gcc<br/>
+或者采用&ndash;host的形式：<br/>
+PATH=/workspace26/i386-env/cross-tools/bin/:$PATH LD_LIBRARY_PATH=/workspace26/env-x86-lib <br/>
+./configure &ndash;host=i686-unknown-linux-gnu &ndash;enable-shared=no &ndash;disable-dependency-tracking<br/>
+</p></div>
+</div>
+</div>

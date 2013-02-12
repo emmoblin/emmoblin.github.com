@@ -1,0 +1,89 @@
+---
+title: svn使用
+layout: post
+filename: svn
+on: 2012-10-16 10:41:16
+toc: on
+comments: true
+categories: [tools]
+CATEGORY: svn
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">svn使用</a>
+<ul>
+<li><a href="#sec-1-1">svn libneon的问题</a></li>
+<li><a href="#sec-1-2">自己编译，真的不容易啊</a></li>
+<li><a href="#sec-1-3">tftpd-hpa</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com{{ page.url }}">svn使用</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">svn libneon的问题</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>ubuntu安装的svn要使用https时，默认使用的libneon-gnutls有点兼容性问题。所以导致的错误是：<br/>
+SSL handshake failed: SSL 错误：在证书中检测到违规的密钥用法。<br/>
+解决办法：<br/>
+<a href="http://www.yeap.de/blog2.0/archives/260-Subversion-Certificate-Problems-with-Ubuntu-Precise-Pangolin.html">http://www.yeap.de/blog2.0/archives/260-Subversion-Certificate-Problems-with-Ubuntu-Precise-Pangolin.html</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">自己编译，真的不容易啊</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>cd openssl<br/>
+由于是64bit系统，所以需要添加fPIC<br/>
+./config -fPIC<br/>
+但是cropt目录不好添加fPIC，难道生成的.a难道也需要fPIC吗？，所以无奈，只能先安装系统的openssl<br/>
+apt-get install openssl-dev openssl<br/>
+</p>
+<p><br/>
+cd subversion<br/>
+./configure &ndash;with-ssl=openssl &ndash;with-neon=./neon &ndash;with-openssl=/usr<br/>
+出现warnning无用理会直接make<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">tftpd-hpa</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>atftpd 设置半天不能启动，连直接输入命令行都不能启动。<br/>
+所以换成tftpd-hpa，非常简单。<br/>
+不过要想能够上传文件需要修改配置：<br/>
+vi /etc/default/tftpd-hpa<br/>
+添加&ndash;create<br/>
+注意-s参数不能去掉。<br/>
+</p>
+<p><br/>
+客户端使用atftp。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>

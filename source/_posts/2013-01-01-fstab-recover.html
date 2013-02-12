@@ -1,0 +1,28 @@
+---
+title: fstab恢复
+layout: post
+filename: fstab recover
+on: 2013-01-01 11:10:32
+toc: off
+comments: true
+categories: [linux]
+CATEGORY: fstab_recover
+---
+
+<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">fstab恢复</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>不小心配置fstab结果参数写错了，导致重启后无法挂载，系统进不去。<br/>
+从grub进入recover模式，选择进入root。<br/>
+但此时根文件系统挂载的是只读的，所以无法修改fstab。<br/>
+重新挂载为rw就ok了，非常关键。<br/>
+mount -n -o remount,rw /<br/>
+之后就可以修改了fstab了。<br/>
+</p></div>
+</div>
+</div>

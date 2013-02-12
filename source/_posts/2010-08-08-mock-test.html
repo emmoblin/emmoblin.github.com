@@ -1,0 +1,36 @@
+---
+title: mock测试
+layout: post
+filename: mock test
+on: 2010-08-08 18:06
+toc: off
+comments: true
+categories: [lua, testunit]
+CATEGORY: mock测试
+---
+
+<div><div><p><br/>
+今天研究了一下cmockery,这是一个google开源的c mock测试框架。<br/>
+最主要的功能就是其mock的功能，就是可以模拟函数的返回结果，还可以模拟参数的输入和输出。<br/>
+</p>
+<p> <br/>
+mock的根本思想就是针对测试代码进行单独测试，尽量抛弃对其他模块或者函数的依赖。<br/>
+用得最多的就是数据库测试，比如一个函数调用数据库，从中取出一些数据，如果没有mock机制，那就必须组织数据库，提供真的环境。这多少有些太麻烦了。<br/>
+所以只需要模拟返回数据库返回的值就行了。这就是叫mock。<br/>
+</p>
+<p> <br/>
+<a href="http://see-see.appspot.com/?p=12001#TestExecution">cmockery中文翻译手册</a><br/>
+</p>
+<p> <br/>
+<a href="http://www.zbitedu.com/?uid-609-action-viewspace-itemid-15317">这是一个例子</a><br/>
+</p>
+<p> <br/>
+还有在lua测试框架中，还有一个简单的库，叫lmock，提供简单的lua中的mock的功能。<br/>
+<a href="http://luaforge.net/projects/lmock/">http://luaforge.net/projects/lmock/</a><br/>
+</p>
+<p> <br/>
+</p>
+<p> <br/>
+但是我觉得这种mock的方法，实际上是要通过修改链接来完成的，对于代码的组织要求比较高。基本上这些模拟的外接口都要独立在不同的文件中，这样才好mock。<br/>
+</p></div>
+</div>

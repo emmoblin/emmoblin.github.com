@@ -1,0 +1,72 @@
+---
+title: 串口工具ckermit
+layout: post
+filename: ckermit
+on: 2012-10-16 10:10:57
+toc: 
+comments: true
+categories: [tools]
+CATEGORY: ckermit
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">串口工具ckermit</a>
+<ul>
+<li><a href="#sec-1-1">默认配置文件</a></li>
+<li><a href="#sec-1-2">操作</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com{{ page.url }}">串口工具ckermit</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">默认配置文件</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>/etc/kermit/kermrc<br/>
+一般配置一个home下的自己的配置文件就ok了。<br/>
+~/.mykermrc<br/>
+</p>
+<p><br/>
+<pre class="example">set line /dev/ttyS0
+set speed 9600
+set carrier-watch off
+set handshake none
+set flow-control none
+robust
+set file type bin
+set file name lit
+set rec pack 1000
+set send pack 1000
+set window 5
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">操作</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>C-\ 切换到命令行<br/>
+c 打开链接<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
