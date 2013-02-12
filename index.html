@@ -1,0 +1,2230 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="Table of Contents ssh的一些技巧 多条连接共享
+长连接
+别再输入密码
+省去用户名
+在服务器间跳转
+穿越Web代理
+shfs
+使用本地App连接远程服务器
+减少延迟 ssh的一些技巧 多条连接共享 如果你需要在多个窗口中打开到同一个服务器的连接，而不想每次都输入用户名，密码， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      <div class="span9">
+  
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/09/ssh-skill/">Ssh的一些技巧</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true">Oct 9<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">ssh的一些技巧</a>
+<ul>
+<li><a href="#sec-1-1">多条连接共享</a></li>
+<li><a href="#sec-1-2">长连接</a></li>
+<li><a href="#sec-1-3">别再输入密码</a></li>
+<li><a href="#sec-1-4">省去用户名</a></li>
+<li><a href="#sec-1-5">在服务器间跳转</a></li>
+<li><a href="#sec-1-6">穿越Web代理</a></li>
+<li><a href="#sec-1-7">shfs</a></li>
+<li><a href="#sec-1-8">使用本地App连接远程服务器</a></li>
+<li><a href="#sec-1-9">减少延迟</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/09/ssh-skill/">ssh的一些技巧</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">多条连接共享</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>如果你需要在多个窗口中打开到同一个服务器的连接，而不想每次都输入用户名，密码，或是等待连接建立，<br/>
+那么你可以配置SSH的连接共享选项，在本地打开你的SSH配置文件，通常它们位于~/.ssh/config，然后添加下面2行：<br/>
+ControlMaster auto<br/>
+ControlPath /tmp/ssh<sub>mux</sub>_%h_%p_%r<br/>
+现在试试断开你与服务器的连接，并建立一条新连接，然后打开一个新窗口，再创建一条连接，你会发现，第二条连接几乎是在瞬间就建立好了。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">长连接</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>如果你发现自己每条需要连接同一个服务器无数次，那么长连接选项就是为你准备的：<br/>
+ControlPersist 4h<br/>
+现在你每次通过SSH与服务器建立连接之后，这条连接将被保持4个小时，即使在你退出服务器之后，这条连接依然可以重用，<br/>
+因此，在你下一次（4小时之内）登录服务器时，你会发现连接以闪电般的速度建立完成，<br/>
+这个选项对于通过scp拷贝多个文件提速尤其明显，因为你不在需要为每个文件做单独的认证了。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">别再输入密码</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>如果你还在通过密码方式登录SSH，那么你或许应该试试SSH Keys，首先使用OpenSSH为自己声称一对密钥：<br/>
+$ ssh-keygen<br/>
+跟随指示，完成之后，你应该可以在你的.ssh目录下看到两个文件，id<sub>rsa就是你的私钥，而id</sub><sub>ras</sub>.pub则是你的公钥，<br/>
+现在你需要将你的公钥拷贝到服务器上，如果你的系统有ssh-copy-id命令，拷贝会很简单：<br/>
+$ ssh-copy-id smylers@compo.example.org<br/>
+否则，你需要手动将你的私钥拷贝的服务器上的~/.ssh/authorized<sub>keys文件中：</sub><br/>
+$ &lt; ~/.ssh/id<sub>rsa</sub>.pub ssh clegg.example.org ‘mkdir -p .ssh; cat &gt;&gt; .ssh/authorized<sub>keys</sub>; chmod go-w .ssh .ssh/authorized<sub>keys’</sub><br/>
+现在试试重新连接到SSH服务器，或是拷贝文件，是不是已经不需要再输入密码了？<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">省去用户名</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>如果你在远程服务器上的用户名和你本地的用户名不同，你同样可以在SSH配置中进行设置：<br/>
+Host www* mail<br/>
+HostName %h.example.com<br/>
+User simon<br/>
+现在就算我的本地用户名是 smylers，我仍然可以这样连接我的服务器：<br/>
+$ ssh www2<br/>
+SSH会使用simon账户连接你的服务器，同样，Putty可以保存这个信息在你的session中。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">在服务器间跳转</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>有些时候，你可能没法直接连接到某台服务器，而需要使用一台中间服务器进行中转，这个过程也可以自动化。首先确保你已经为服务器配置了公钥访问，并开启了agent forwarding，现在你就可以通过2条命令来连接目标服务器，不会有任何提示输入：<br/>
+$ ssh gateway<br/>
+gateway $ ssh db<br/>
+然后在你的本地SSH配置中，添加下面这条配置：<br/>
+Host db<br/>
+HostName db.internal.example.com<br/>
+ProxyCommand ssh gateway netcat -q 600 %h %p<br/>
+现在你就可以通过一条命令来直接连接目标服务器了:<br/>
+$ ssh db<br/>
+这里你可能会需要等待长一点的时间，因为SSH需要进行两次认证，，注意netcat也有可能被写成nc或者ncat或者前面还需要加上g，你需要检查你的中间服务器来确定实际的参数。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">穿越Web代理</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>有些时候，你所在的网络不止封锁SSH端口，它们有可能更进一步，只让你通过Web代理来访问网络，幸运的是我们有一个叫做Corkscrew的程序可以通过Web代理在发送SSH数据。Corkscrew的使用非常简单，一般我都是在需要时搜索，然后直接下载，跟随网站上的指示，然后就搞定了，一般你需要这样一条配置：<br/>
+ProxyCommand corkscrew proxy.example.org 8080 %h %p<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">shfs</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>另一种让远程GUI程序显示在本地的替代方案就是让本地的GUI程序可以直接操作远程文件，你可以通过SSHFS来实现，只需要创建一个空目录，然后使用SSHFS将一个远程目录mount到这个目录就可以了：<br/>
+$ mkdir gallery<sub>src</sub><br/>
+$ sshfs dev:projects/gallery/src gallery<sub>src</sub><br/>
+$ cd gallery<sub>src</sub><br/>
+$ ls<br/>
+现在你就可以使用任何你喜欢的本地程序来便捷这个目录中的文件了，它们看起来是在你的本地，但其实时远程服务器上的文件，你可以使用fusermount命令来unmount这些文件，不要担心记不住，它们就在sshfs手册的顶上：<br/>
+$ cd ..<br/>
+$ fusermount -u gallery<sub>src</sub><br/>
+SSHFS可以在Linux和OSX上工作，Windows用户我目前还没找到什么好办法。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">使用本地App连接远程服务器</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>有时可能有些服务，比如数据库或是Web服务器，它们运行在远程服务器上，但是如果有用方式可以直接从本地程序连接它们，那会非常有用，要做到这一点，你需要用到端口转发(port forwarding)，<br/>
+举个例子，如果你的服务器运行Postgres（并且只允许本地访问），那么你就可以在你的SSH配置中加入：<br/>
+Host db<br/>
+LocalForward 5433 localhost:5432<br/>
+现在当你连接你的SSH服务器时，它会在你本地电脑打开一个5433端口（我随便挑的），并将所有发送到这个端口的数据转发到服务器的5432端口（Postgres的默认端口），然后，只要你和服务器建立了连接，你就可以通过5433端口来访问服务器的Postgres了。<br/>
+$ ssh db<br/>
+现在打开另外一个窗口，你就可以通过下面这条命令在本地连接你的Postgres数据库了：<br/>
+$ psql -h localhost -p 5443 orders<br/>
+如果你想要使用服务器不支持的图形化Postgres客户端时，这条命令会显得尤其有用：<br/>
+$ pgadmin3 &amp;<br/>
+或者你有一个后台的Web服务器，你不希望直接通过Internet访问它，你也可以通过端口转发来访问它：<br/>
+Host api<br/>
+LocalForward 8080 localhost:80<br/>
+现在连接到服务器：<br/>
+$ ssh api<br/>
+然后将浏览器指向你选择的端口号：<br/>
+$ firefox <a href="http://localhost:8080/">http://localhost:8080/</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">减少延迟</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>如果每次连接服务器都意味着你需要等待几十秒而无所事事，那么你或许应该试试在你的SSH配置中加入下面这条：<br/>
+GSSAPIAuthentication no<br/>
+如果这条命令有效的话，你应该通知你的系统管理员让他在服务器上禁用这个选项，这样其他人就不用再分别添加这条配置到它们的本地配置了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true">Oct 9<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">A Unix Utility You Should Know About:lsof</a>
+<ul>
+<li><a href="#sec-1-1">前言</a></li>
+<li><a href="#sec-1-2">如何使用lsof？</a></li>
+<li><a href="#sec-1-3">找出谁在使用某个文件</a></li>
+<li><a href="#sec-1-4">列出某个用户打开的所有文件</a></li>
+<li><a href="#sec-1-5">查找某个程序打开的所有文件</a></li>
+<li><a href="#sec-1-6">列出所有由某个用户或某个进程打开的文件</a></li>
+<li><a href="#sec-1-7">列出除root用户外的所有用户打开的文件</a></li>
+<li><a href="#sec-1-8">列出所有由某个PID对应的进程打开的文件</a></li>
+<li><a href="#sec-1-9">列出所有网络连接</a></li>
+<li><a href="#sec-1-10">列出所有NFS（网络文件系统）文件</a></li>
+<li><a href="#sec-1-11">列出所有UNIX域Socket文件</a></li>
+<li><a href="#sec-1-12">列出所有对应某个组id的进程</a></li>
+<li><a href="#sec-1-13">列出所有与某个描述符关联的文件</a></li>
+<li><a href="#sec-1-14">输出使用某些资源的进程pid</a></li>
+<li><a href="#sec-1-15">循环列出文件</a></li>
+<li><a href="#sec-1-16">如何安装lsof？</a></li>
+<li><a href="#sec-1-17">原文</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">前言</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>这是“你应该知道的Unix和Linux命令”系列的第三篇，在这篇文章中，我会介绍lsof这个工具，如果说netcat是进行网络诊断的瑞士军刀，那么lsof就是Unix调试的瑞士军刀。<br/>
+</p>
+<p><br/>
+Lsof是遵从Unix哲学的典范，它只做一件事情，并且做的相当完美——它可以列出某个进程打开的所有文件信息。<br/>
+打开的文件可能是普通的文件，目录，NFS文件，块文件，字符文件，共享库，常规管道，明明管道，符号链接，Socket流，网络Socket，UNIX域Socket，以及其它更多。因为Unix系统中几乎所有东西都是文件，你可以想象lsof该有多有用。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">如何使用lsof？</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p><br/>
+这篇文章中我会尽力列举我能想到的所有lsof的用法，让我们先从最简单的开始（或许你已经知道了），然后逐渐增加复杂度：<br/>
+</p>
+<p><br/>
+列出所有打开的文件<br/>
+</p>
+<p><br/>
+<code>lsof</code><br/>
+</p>
+<p><br/>
+不带任何参数运行lsof会列出所有进程打开的所有文件。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">找出谁在使用某个文件</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<p><br/>
+<code>lsof /path/to/file</code><br/>
+</p>
+<p><br/>
+只需要执行文件的路径，lsof就会列出所有使用这个文件的进程，你也可以列出多个文件，lsof会列出所有使用这些文件的进程。<br/>
+</p>
+<p><br/>
+你也可以一次制定多个文件：<br/>
+</p>
+<p><br/>
+<code>lsof /path/to/file1 /path/to/file2</code><br/>
+</p>
+<p><br/>
+递归查找某个目录中所有打开的文件<br/>
+</p>
+<p><br/>
+<code>lsof +D /usr/lib</code><br/>
+</p>
+<p><br/>
+加上+D参数，lsof会对指定目录进行递归查找，注意这个参数要比grep版本慢：<br/>
+</p>
+<p><br/>
+=lsof | grep &#8216;/usr/lib&#8217;=<br/>
+</p>
+<p><br/>
+之所以慢是因为+D首先查找所有的文件，然后一次性输出。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">列出某个用户打开的所有文件</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+<code>lsof -u pkrumins</code><br/>
+</p>
+<p><br/>
+-u选项限定只列出所有被用户pkrumins打开的文件，你可以通过逗号指定多个用户：<br/>
+</p>
+<p><br/>
+<code>lsof -u rms,root</code><br/>
+</p>
+<p><br/>
+这条命令会列出所有rms和root用户打开的文件。<br/>
+</p>
+<p><br/>
+你也可以像下面这样使用多个-u做同样的事情：<br/>
+</p>
+<p><br/>
+<code>lsof -u rms -u root</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">查找某个程序打开的所有文件</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+<p><br/>
+<code>lsof -c apache</code><br/>
+</p>
+<p><br/>
+-c选项限定只列出以apache开头的进程打开的文件：<br/>
+</p>
+<p><br/>
+所以你可以不用像下面这样写：<br/>
+</p>
+<p><br/>
+<code>lsof | grep foo</code><br/>
+</p>
+<p><br/>
+而使用下面这个更简短的版本：<br/>
+</p>
+<p><br/>
+<code>lsof -c foo</code><br/>
+</p>
+<p><br/>
+事实上，你可以只制定进程名称的开头：<br/>
+</p>
+<p><br/>
+<code>lsof -c apa</code><br/>
+</p>
+<p><br/>
+这会列出所有以apa开头的进程打开的文件<br/>
+</p>
+<p><br/>
+你同样可以制定多个-c参数：<br/>
+</p>
+<p><br/>
+<code>lsof -c apache -c python</code><br/>
+</p>
+<p><br/>
+这会列出所有由apache和python打开的文件<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">列出所有由某个用户或某个进程打开的文件</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+<p><br/>
+<code>lsof -u pkrumins -c apache</code><br/>
+</p>
+<p><br/>
+你也可以组合使用多个选项，这些选项默认进行或关联，也就是说上面的命令会输入由pkrumins用户或是apache进程打开的文件。<br/>
+</p>
+<p><br/>
+列出所有由一个用户与某个进程打开的文件<br/>
+</p>
+<p><br/>
+<code>lsof -a -u pkrumins -c bash</code><br/>
+</p>
+<p><br/>
+-a参数可以将多个选项的组合条件由或变为与，上面的命令会显示所有由pkrumins用户以及bash进程打开的文件。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">列出除root用户外的所有用户打开的文件</h3>
+<div class="outline-text-3" id="text-1-7">
+
+
+<p><br/>
+<code>lsof -u ^root</code><br/>
+</p>
+<p><br/>
+注意root前面的<sup>符号，它执行取反操作，因此lsof会列出所有root用户之外的用户打开的文件。</sup><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">列出所有由某个PID对应的进程打开的文件</h3>
+<div class="outline-text-3" id="text-1-8">
+
+
+<p><br/>
+<code>lsof -p 1</code><br/>
+</p>
+<p><br/>
+-p选项让你可以使用进程id来过滤输出。<br/>
+</p>
+<p><br/>
+记住你也可以用都好来分离多个pid。<br/>
+</p>
+<p><br/>
+<code>lsof -p 450,980,333</code><br/>
+</p>
+<p><br/>
+列出所有进程打开的文件除了某个pid的<br/>
+</p>
+<p><br/>
+<code>lsof -p ^1</code><br/>
+</p>
+<p><br/>
+同前面的用户一样，你也可以对-p选项使用<sup>来进行取反。</sup><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">列出所有网络连接</h3>
+<div class="outline-text-3" id="text-1-9">
+
+
+<p><br/>
+<code>lsof -i</code><br/>
+</p>
+<p><br/>
+lsof的-i选项可以列出所有打开了网络套接字（TCP和UDP）的进程。<br/>
+</p>
+<p><br/>
+列出所有TCP网络连接<br/>
+</p>
+<p><br/>
+<code>lsof -i tcp</code><br/>
+</p>
+<p><br/>
+也可以为-i选项加上参数，比如tcp，tcp选项会强制lsof只列出打开TCP sockets的进程。<br/>
+</p>
+<p><br/>
+列出所有UDP网络连接<br/>
+</p>
+<p><br/>
+<code>lsof -i udp</code><br/>
+</p>
+<p><br/>
+同样udp让lsof只列出使用UDP socket的进程。<br/>
+</p>
+<p><br/>
+找到使用某个端口的进程<br/>
+</p>
+<p><br/>
+<code>lsof -i :25</code><br/>
+</p>
+<p><br/>
+:25和-i选项组合可以让lsof列出占用TCP或UDP的25端口的进程。<br/>
+</p>
+<p><br/>
+你也可以使用/etc/services中制定的端口名称来代替端口号，比如：<br/>
+</p>
+<p><br/>
+<code>lsof -i :smtp</code><br/>
+</p>
+<p><br/>
+找到使用某个udp端口号的进程<br/>
+</p>
+<p><br/>
+<code>lsof -i udp:53</code><br/>
+</p>
+<p><br/>
+同样的，也可以找到使用某个tcp端口的进程：<br/>
+</p>
+<p><br/>
+<code>lsof -i tcp:80</code><br/>
+</p>
+<p><br/>
+找到某个用户的所有网络连接<br/>
+</p>
+<p><br/>
+<code>lsof -a -u hacker -i</code><br/>
+</p>
+<p><br/>
+使用-a将-u和-i选项组合可以让lsof列出某个用户的所有网络行为。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-10" class="outline-3">
+<h3 id="sec-1-10">列出所有NFS（网络文件系统）文件</h3>
+<div class="outline-text-3" id="text-1-10">
+
+
+<p><br/>
+<code>lsof -N</code><br/>
+</p>
+<p><br/>
+这个参数很好记，-N就对应NFS。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11" class="outline-3">
+<h3 id="sec-1-11">列出所有UNIX域Socket文件</h3>
+<div class="outline-text-3" id="text-1-11">
+
+
+<p><br/>
+<code>lsof -U</code><br/>
+</p>
+<p><br/>
+这个选项也很好记，-U就对应UNIX。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-12" class="outline-3">
+<h3 id="sec-1-12">列出所有对应某个组id的进程</h3>
+<div class="outline-text-3" id="text-1-12">
+
+
+<p><br/>
+<code>lsof -g 1234</code><br/>
+</p>
+<p><br/>
+进程组用来来逻辑上对进程进行分组，这个例子查找所有PGID为1234的进程打开的文件。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-13" class="outline-3">
+<h3 id="sec-1-13">列出所有与某个描述符关联的文件</h3>
+<div class="outline-text-3" id="text-1-13">
+
+
+<p><br/>
+<code>lsof -d 2</code><br/>
+</p>
+<p><br/>
+这个命令会列出所有以描述符2打开的文件。<br/>
+</p>
+<p><br/>
+你也可以为描述符指定一个范围：<br/>
+</p>
+<p><br/>
+<code>lsof -d 0-2</code><br/>
+</p>
+<p><br/>
+这会列出所有描述符为0，1，2的文件。<br/>
+</p>
+<p><br/>
+-d选项还支持其它很多特殊值，下面的命令列出所有内存映射文件：<br/>
+</p>
+<p><br/>
+<code>lsof -d mem</code><br/>
+</p>
+<p><br/>
+txt则列出所有加载在内存中并正在执行的进程：<br/>
+</p>
+<p><br/>
+<code>lsof -d txt</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-14" class="outline-3">
+<h3 id="sec-1-14">输出使用某些资源的进程pid</h3>
+<div class="outline-text-3" id="text-1-14">
+
+
+<p><br/>
+<code>lsof -t -i</code><br/>
+</p>
+<p><br/>
+-t选项输出进程的PID，你可以将它和-i选项组合输出使用某个端口的进程的PID，下面的命令将会杀掉所有使用网络的进程：<br/>
+</p>
+<p><br/>
+<code>kill -9 `lsof -t -i`</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-15" class="outline-3">
+<h3 id="sec-1-15">循环列出文件</h3>
+<div class="outline-text-3" id="text-1-15">
+
+
+<p><br/>
+<code>lsof -r 1</code><br/>
+</p>
+<p><br/>
+-r选项让lsof可以循环列出文件直到被中断，参数1的意思是每秒钟重复打印一次，这个选项最好同某个范围比较小的查询组合使用，比如用来监测网络活动：<br/>
+</p>
+<p><br/>
+<code>lsof -r 1 -u john -i -a</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-16" class="outline-3">
+<h3 id="sec-1-16">如何安装lsof？</h3>
+<div class="outline-text-3" id="text-1-16">
+
+
+<p><br/>
+许多Unix系统都内置了lsof，如果你的系统没有安装，你可以从这里直接下载源代码。<br/>
+</p>
+<p><br/>
+BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
+</p>
+<p><br/>
+你可以通过man lsof来了解关于lsof的完整文档，或者通过lsof -h查看。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-17" class="outline-3">
+<h3 id="sec-1-17">原文</h3>
+<div class="outline-text-3" id="text-1-17">
+
+<p><a href="http://www.catonmat.net/blog/unix-utilities-lsof/">http://www.catonmat.net/blog/unix-utilities-lsof/</a><br/>
+还有pipe view和netcat，以后再总结<br/>
+翻译：<br/>
+<a href="http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/">http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/</a><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">Functional-programming-is-hard-thats-why-its-good</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-11T00:00:00+08:00" pubdate data-updated="true">Sep 11<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">functional-programming-is-hard-thats-why-its-good</a>
+<ul>
+<li><a href="#sec-1-1">函数式编程很难，这正是你要学习它的原因</a>
+<ul>
+<li><a href="#sec-1-1-1">它给你的初次印象不友善</a></li>
+<li><a href="#sec-1-1-2">新奇事物</a></li>
+<li><a href="#sec-1-1-3">眼见为实</a></li>
+<li><a href="#sec-1-1-4">各有所求</a></li>
+<li><a href="#sec-1-1-5">补充</a></li>
+<li><a href="#sec-1-1-6">转载自: http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">functional-programming-is-hard-thats-why-its-good</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">函数式编程很难，这正是你要学习它的原因</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>很奇怪不是，很少有人每天都使用函数式编程语言。如果你用Scala，Haskell，Erlang，F#或某个Lisp方言来编程，很可能没有公司会花钱聘你。这个行业里的绝大部分人都是使用像Python，Ruby，Java或C#等面向对象的编程语言——它们用起来很顺手。不错，你也许会偶然用到一两个“函数式语言特征”，例如“block”，但人们不会去做函数式编程。<br/>
+</p>
+<p><br/>
+然而，很多年来，我们一直被教导说函数式编程语言很好很棒。我仍然记得当我第一次阅读ESR的著名的关于学习Lisp语言的论文时的困惑。也许大多数的人对Paul Graham 的《Beating The Averages》这篇文章更加熟悉：<br/>
+</p>
+<p><br/>
+使用Lisp开发使我们的开发周期迭代的如此之快，以至于有时当竞争对手在新闻发布会上推出他们的新功能一两天后，我们就能复制出同样的功能。当报道产品发布的新闻记者打电话给我们时，我们的产品已经拥有了同样的功能特征。<br/>
+</p>
+<p><br/>
+那些皈依函数式编程的人中，一直常见的考虑是：学习这种新的、函数式的语言“对你有好处”；就像是某些人建议说每天30分钟的健身房活动会“让你的身体健康”一样。但这也同时暗示了这样做的难度和需要的付出。Lisp语言跟Haskell、Ocaml和Scala语言不同，被认为是出了名的难学，可以说是臭名昭著。文雅的人说这是Lisp语言的“深度&amp;广度”的体现。不文雅的人说这是“意淫”或“玩弄学术”或简单的“没必要”。我认为，它的难度跟你对它熟不熟悉有关，而且，这种难度是一种重要指标显示：学习这样的一种语言会让你编程更有效率、能力更强。<br/>
+</p>
+<p><br/>
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/11/can+your+programming+language+do+this/">Can Your Programming Language Do This</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-11T00:00:00+08:00" pubdate data-updated="true">Sep 11<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">can your programming language do this</a>
+<ul>
+<li><a href="#sec-1-1">你的编程语言能这样做吗？</a></li>
+<li><a href="#sec-1-2">转载自</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/09/11/can+your+programming+language+do+this/">can your programming language do this</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">你的编程语言能这样做吗？</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>一日，你查看你的程序代码，你有两大块代码看起来几乎完全的一样。事实上它们就是完全一样，除了一个代码里说的是“Spaghetti(意大利面条)”，另一个代码里说的是“Chocolate Moose(巧克力慕丝)”。<br/>
+</p>
+<p><br/>
+<pre class="example">// 一个小例子：
+
+alert("I'd like some Spaghetti!");
+alert("I'd like some Chocolate Moose!");
+</pre>
+
+这个例子恰好是用Javascript写的，但即使是你不懂Javascript，你也应该能看懂我说的。<br/>
+</p>
+<p><br/>
+当然，重复的代码看起来不太好。所以你决定写一个函数：<br/>
+</p>
+<p><br/>
+<pre class="example">function SwedishChef( food )
+{
+    alert("I'd like some " + food + "!");
+}
+
+SwedishChef("Spaghetti");
+SwedishChef("Chocolate Moose");
+</pre>
+
+
+没错，这个例子很简单，但你可以想出一些更有实际价值的例子。这样做是更好一些，有很多理由，这些理由估计你都听说过一万遍了。可维护性，可读性，抽象 = 好！<br/>
+</p>
+<p><br/>
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/09/11/can+your+programming+language+do+this/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/31/org-mode-note/">Org-mode学习笔记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-31T00:00:00+08:00" pubdate data-updated="true">Aug 31<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">org-mode学习笔记</a>
+<ul>
+<li><a href="#sec-1-1">头信息注释</a></li>
+<li><a href="#sec-1-2">安装最新的org</a></li>
+<li><a href="#sec-1-3">文档结构相关的操作</a>
+<ul>
+<li><a href="#sec-1-3-1">Motion</a></li>
+<li><a href="#sec-1-3-2">headline结构移动</a></li>
+<li><a href="#sec-1-3-3">Structure editing</a></li>
+<li><a href="#sec-1-3-4">Sparse Tree</a></li>
+<li><a href="#sec-1-3-5">List</a></li>
+<li><a href="#sec-1-3-6">Footnotes</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">加粗</a></li>
+<li><a href="#sec-1-5">链接</a>
+<ul>
+<li><a href="#sec-1-5-1">内部链接 Internal Link</a></li>
+<li><a href="#sec-1-5-2">添加附件</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-6">TABLES</a>
+<ul>
+<li><a href="#sec-1-6-1">表格宽度</a></li>
+<li><a href="#sec-1-6-2">行列操作</a></li>
+<li><a href="#sec-1-6-3">表格计算</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-7">tag</a></li>
+<li><a href="#sec-1-8">code</a></li>
+<li><a href="#sec-1-9">TODO使用</a>
+<ul>
+<li><a href="#sec-1-9-1">TODO依赖关系</a></li>
+<li><a href="#sec-1-9-2">tracking todo state change</a></li>
+<li><a href="#sec-1-9-3">priotify</a></li>
+<li><a href="#sec-1-9-4">checkbox</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-10">org capture</a></li>
+<li><a href="#sec-1-11">exports</a>
+<ul>
+<li><a href="#sec-1-11-1">export option</a>
+<ul>
+<li><a href="#sec-1-11-1-1">export html</a></li>
+<li><a href="#sec-1-11-1-2">export pdf</a></li>
+<li><a href="#sec-1-11-1-3">使用org-jekyll导出</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-1-12">dates and times</a></li>
+<li><a href="#sec-1-13">属性</a></li>
+<li><a href="#sec-1-14">未分类</a>
+<ul>
+<li><a href="#sec-1-14-1">byte-recompile-directory</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-15">问题</a></li>
+<li><a href="#sec-1-16">参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/08/31/org-mode-note/">org-mode学习笔记</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">头信息注释</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p><br/>
+<pre class="example">#+TAGS: { 桌面(d) 服务器(s) }  编辑器(e) 浏览器(f) 多媒体(m) 压缩(z)
+#+TAGS:  { @Windows(w)  @Linux(l) }  
+#+TAGS:  { 糟糕(1) 凑合(2) 不错(3) 很好(4) 极品(5) } 
+#+SEQ_TODO: TODO(T) WAIT(W) | DONE(D!) CANCELED(C@) 
+#+COLUMNS: %10ITEM  %10PRIORITY %15TODO %65TAGS
+</pre>
+
+</p><ol>
+<li>启动时概览<br/>
+</li>
+<li>设定标签，括弧中的为标签快捷键（如果没有指定，默认为首字母）。可以设置在多行中<br/>
+</li>
+<li>花括号为标签组，组中的标签只能选一个<br/>
+</li>
+<li>设定待办状态。将项设置为 | 后面的状态时（DONE CANCELED），会打上 CLOSED 标志<br/>
+</li>
+<li>设定列视图<br/>
+</li>
+<li>更新了参数后在参数区域按C-c C-c进行更新<br/>
+</li>
+</ol>
+
+
+<p><br/>
+<b>这里的内容可以随时更改，但是要记得在改后用 C-c C-c 刷新设置</b><br/>
+</p>
+<p><br/>
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/31/org-mode-note/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/15/emacs-markdown-mode/">Emacs Markdown-mode</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-15T12:38:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h4>锚标签 C-c C-a</h4>
+
+<p><code>C-c C-a l</code> 超链接<br/>
+<code>C-c C-a r</code> 参考链接 text 参考链接放到文件最后 [label]: markdown.html<br/>
+<code>C-c C-a w</code> wiki链接 [[wikilink]]</p>
+
+<h4>常用命令 C-c C-c</h4>
+
+<p><code>C-c C-c m</code> 在另一个Buffer显示输出<br/>
+<code>C-c C-c p</code> 在浏览器中预览输出<br/>
+<code>C-c C-c e</code> 输出html文件到相同前缀的.html文件 eg:basename.html<br/>
+<code>C-c C-c v</code> 输出并且在浏览器中查看<br/>
+<code>C-c C-c c</code> 检查是否有未定义的链接</p>
+
+<h4>插入图片 C-c C-i</h4>
+
+<p><code>C-c C-i i</code> 插入一张图片</p>
+
+<h4>物理样式 C-c C-p</h4>
+
+<p><code>C-c C-p b</code> 将选中的文字加粗 bold <strong>bold</strong> 如果为选中则插入 <em><em>**<br/>
+<code>C-c C-p f</code> 将选中的文字设置成等宽字体 <code>fixed width text</code><br/>
+<code>C-c C-p i</code> 将选中的文字设置成斜体 italic</em>italic</em></p>
+
+<h4>逻辑样式 C-c C-s</h4>
+
+<p><code>C-c C-s b</code> 设置引用 > backquoted<br/>
+<code>C-c C-s p</code> 预格式，在之前插入4个空格默认 <code>&lt;pre&gt;pre text&lt;/pre&gt;</code><br/>
+<code>C-c C-s c</code> 插入代码块 <code>code here</code><br/>
+<code>C-c C-s e</code> 强调 emphasis <em>emphasis</em><br/>
+<code>C-c C-s s</code> 加强 strong <strong>strong</strong></p>
+
+<h4>标题章节 C-c C-t</h4>
+
+<p><code>C-c C-t n</code> 插入标题 1-6<br/>
+<code>C-c C-t t</code> 插入一个title<br/>
+<code>C-c C-t s</code> 插入一个section<br/>
+<code>C-c -</code> 插入一条分割线</p>
+
+<hr />
+
+<h4>导航</h4>
+
+<p><code>TAB</code> 折叠或者展开标题<br/>
+<code>C-M-n &amp; C-M-p</code> 在上下可见的标题中前后移动<br/>
+<code>C-M-f &amp; C-M-b</code> 在同一级的标题中前后移动<br/>
+<code>C-M-u</code> 回到上一级标题</p>
+
+<h2>参考</h2>
+
+<p><a href="http://jblevins.org/projects/markdown-mode/">Emacs Markdown Mode</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/">添加微博sidebar</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-15T00:50:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>使用<a href="http://weibo.com/tool/weiboshow">微博秀</a>直接生成对应的代码，然后写到custom/asides/weibo.html中。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;section&gt;</span>
+</span><span class='line'><span class="nt">&lt;h1&gt;</span>新浪微博<span class="nt">&lt;/h1&gt;</span>
+</span><span class='line'><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;weibo&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>
+</span><span class='line'><span class="nt">&lt;iframe</span> <span class="na">width=</span><span class="s">&quot;100%&quot;</span> <span class="na">height=</span><span class="s">&quot;550&quot;</span> <span class="na">class=</span><span class="s">&quot;share_self&quot;</span>  <span class="na">frameborder=</span><span class="s">&quot;0&quot;</span> <span class="na">scrolling=</span><span class="s">&quot;no&quot;</span>
+</span><span class='line'><span class="na">src=</span><span class="s">&quot;http://widget.weibo.com/weiboshow/index.php?</span>
+</span><span class='line'><span class="s">language=&amp;</span>
+</span><span class='line'><span class="s">width=0&amp;</span>
+</span><span class='line'><span class="s">height=550&amp;</span>
+</span><span class='line'><span class="s">fansRow=2&amp;</span>
+</span><span class='line'><span class="s">ptype=1&amp;</span>
+</span><span class='line'><span class="s">speed=0&amp;</span>
+</span><span class='line'><span class="s">skin=5&amp;</span>
+</span><span class='line'><span class="s">isTitle=1&amp;</span>
+</span><span class='line'><span class="s">noborder=1&amp;</span>
+</span><span class='line'><span class="s">isWeibo=1&amp;</span>
+</span><span class='line'><span class="s">isFans=0&amp;</span>
+</span><span class='line'><span class="s">uid=1905507693&amp;</span>
+</span><span class='line'><span class="s">verifier=e659651a&amp;</span>
+</span><span class='line'><span class="s">dpc=1&quot;</span><span class="nt">&gt;&lt;/iframe&gt;</span>
+</span><span class='line'><span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/section&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后在_config.yml中添加default_asides中：</p>
+
+<pre><code>    custom/asides/weibo.html
+</code></pre>
+
+<p>参考：<a href="http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/">http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">Octopress添加分类栏</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T23:09:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考：<a href="https://github.com/tokkonopapa/octopress-tagcloud" title="octopress-tagcloud">octopress-tagcloud</a></p>
+
+<ul>
+<li><p>下载并copy到对应目录</p>
+
+<pre><code> ├─ plugins/
+ │  └── tag_cloud.rb
+ └─ source/
+    └─ _includes/
+       └─ custom/
+          └─ asides/
+             ├─ category_list.html
+             └─ tag_cloud.html
+</code></pre></li>
+<li><p>在_config.yml中的default_asides中添加</p>
+
+<pre><code>  custom/asides/category_list.html
+  custom/asides/tag_cloud.html
+</code></pre></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/14/zhong-xin-an-zhuang-octopress/">重新安装octopress</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T16:31:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>如果更换机子或者重新安装系统后，要重新获得octopress非常简单。</p>
+
+<p>1.安装ruby就不说了，我喜欢用rben安装。</p>
+
+<p>2.clone已存在的库，需要上传ssh key</p>
+
+<pre><code>git clone git@github.com:username/username.github.com.git octopress
+</code></pre>
+
+<p>3.切换到souce分支<br/>
+  查看远程的所有分支。</p>
+
+<pre><code>  git branch -r
+</code></pre>
+
+<p>  切换分支</p>
+
+<pre><code>  git checkout origin source
+</code></pre>
+
+<p>4.提交代码</p>
+
+<pre><code>git push origin source
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/13/markdown/">Markdown</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-13T23:10:00+08:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[转自]<a href="http://wowubuntu.com/markdown/">http://wowubuntu.com/markdown/</a></p>
+
+<h2 id="block">区块元素</h2>
+
+
+
+
+<h3 id="p">段落和换行</h3>
+
+
+<p>一个 Markdown 段落是由一个或多个连续的文本行组成，它的前后要有一个以上的空行（空行的定义是显示上看起来像是空的，便会被视为空行。比方说，若某一行只包含空格和制表符，则该行也会被视为空行）。普通段落不该用空格或制表符来缩进。</p>
+
+<p>「由一个或多个连续的文本行组成」这句话其实暗示了 Markdown 允许段落内的强迫换行（插入换行符），这个特性和其他大部分的 text-to-HTML 格式不一样（包括 Movable Type 的「Convert Line Breaks」选项），其它的格式会把每个换行符都转成 <code>&lt;br /&gt;</code> 标签。</p>
+
+<p>如果你<em>确实</em>想要依赖 Markdown 来插入 <code>&lt;br /&gt;</code> 标签的话，<strong>在插入处先按入两个以上的空格然后回车。</strong></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/13/markdown/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2011/01/22/ksplice-success/">Ksplice实验成功</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-22T00:00:00+08:00" pubdate data-updated="true">Jan 22<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+昨天下午在公司，使用LFS qemu，重新编译了一遍内核，然后验证ksplice功能。<br/>
+非常顺利的完成了热补丁。<br/>
+简直太神奇了。<br/>
+</p>
+<p><br/>
+前天之所以没有成功，主要是lfs当时跑的内核和运新ksplice编译的内核可能不一样。<br/>
+所以导致ksplice内核模块总是报错。<br/>
+</p>
+<p><br/>
+当时最困扰的地是脚本中<br/>
+modporbe ksplice<br/>
+但是并没有编译出ksplice的内核模块啊。<br/>
+我还以为是他脚本写错了。<br/>
+</p>
+<p><br/>
+后来发现其实编译成standalone模式是不需要加载ksplice模块的。<br/>
+根本原因还是运行的内核和当前的内核不匹配。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/08/mock-test/">Mock测试</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-08T00:00:00+08:00" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+今天研究了一下cmockery,这是一个google开源的c mock测试框架。<br/>
+最主要的功能就是其mock的功能，就是可以模拟函数的返回结果，还可以模拟参数的输入和输出。<br/>
+</p>
+<p> <br/>
+mock的根本思想就是针对测试代码进行单独测试，尽量抛弃对其他模块或者函数的依赖。<br/>
+用得最多的就是数据库测试，比如一个函数调用数据库，从中取出一些数据，如果没有mock机制，那就必须组织数据库，提供真的环境。这多少有些太麻烦了。<br/>
+所以只需要模拟返回数据库返回的值就行了。这就是叫mock。<br/>
+</p>
+<p> <br/>
+<a href="http://see-see.appspot.com/?p=12001#TestExecution">cmockery中文翻译手册</a><br/>
+</p>
+<p> <br/>
+<a href="http://www.zbitedu.com/?uid-609-action-viewspace-itemid-15317">这是一个例子</a><br/>
+</p>
+<p> <br/>
+还有在lua测试框架中，还有一个简单的库，叫lmock，提供简单的lua中的mock的功能。<br/>
+<a href="http://luaforge.net/projects/lmock/">http://luaforge.net/projects/lmock/</a><br/>
+</p>
+<p> <br/>
+</p>
+<p> <br/>
+但是我觉得这种mock的方法，实际上是要通过修改链接来完成的，对于代码的组织要求比较高。基本上这些模拟的外接口都要独立在不同的文件中，这样才好mock。<br/>
+</p></div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/06/lua-call-c-function-to-unit-test/">Lua调用c函数进行单元测试</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-06T00:00:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+之所以使用lua进行单元测试，而不用cunit，我觉得主要是考虑一下几点：<br/>
+1）lua测试命令行，优势明显<br/>
+2）cunit对函数进行单元测试的功能，用lua也可以做到。而且参数可以通过lua传递，更加灵活，修改测试用例不需要重新编译。<br/>
+以前用cunit写的时候，修改一下就要重新编译，而且还要继续内存的管理。测试用例写多了有点厌烦。<br/>
+</p>
+<p><br/>
+下面主要看看Lua调用c函数进行单元测试：<br/>
+</p>
+<p><br/>
+这是lua代码，<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-lua"><span style="color: #0000ff;">local</span> <span style="color: #ff1493;">iptable</span> = {}
+
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#32452;&#32455;&#36755;&#20837;&#21442;&#25968;</span>
+<span style="color: #0000ff;">for</span> num = 1,5 <span style="color: #0000ff;">do</span>
+ <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">newip</span> = {[<span style="color: #00bfff;">"ip"</span>]=<span style="color: #00bfff;">"192.168.1."</span>..num, [<span style="color: #00bfff;">"up"</span>]=0, [<span style="color: #00bfff;">"down"</span>]=0}
+ iptable[num] = newip
+ print(iptable[num].ip, iptable[num].up, iptable[num].down)
+<span style="color: #0000ff;">end</span>
+
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#35843;&#29992;&#34987;&#27979;&#35797;&#30340;c&#20989;&#25968;</span>
+qostest.qos_add_e(iptable)
+
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#26816;&#27979;&#36820;&#22238;&#32467;&#26524;&#26159;&#21542;&#26159;&#39044;&#26399;&#32467;&#26524;&#65292;&#36825;&#37324;&#21482;&#26159;&#31616;&#21333;&#30340;&#25171;&#21360;&#20102;&#19968;&#19979;&#65292;&#27809;&#26377;&#29992;assert</span>
+<span style="color: #0000ff;">for</span> num = 1,5 <span style="color: #0000ff;">do</span>
+ print(iptable[num].ip, iptable[num].up, iptable[num].down)
+<span style="color: #0000ff;">end</span>
+</pre>
+
+
+下面是对应的c函数的实现：<br/>
+其中最容易出错的地方就是对于当前栈的层次，要时刻记住每一个lua<sub>*</sub> 相关的操作后，栈会变成什么样子。<br/>
+建议全部使用正数代表index，混合使用正数和负数比较容易出错。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-c"><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> <span style="color: #a020f0;">qos_add_e</span> (<span style="color: #0000ff;">lua_State</span> *<span style="color: #ff1493;">L</span>) {
+    <span style="color: #0000ff;">__u32</span> *<span style="color: #ff1493;">handle</span>,<span style="color: #ff1493;">ip</span>;
+    <span style="color: #0000ff;">int</span> <span style="color: #ff1493;">i</span> = 0, <span style="color: #ff1493;">ipnum</span> = 0;
+
+    ipnum = lua_objlen(L, 1);
+    printf(<span style="color: #00bfff;">"in libqostst qID = %u pID = %u ipnum = %d\n"</span>
+        , qID, pID, ipnum);
+
+    <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *<span style="color: #ff1493;">ipstr</span> = <span style="color: #ff0000;">NULL</span>;
+    <span style="color: #0000ff;">for</span> ( i = 1; i &lt;= ipnum; i++ ) {
+        lua_pushnumber(L, i);<span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">push key</span>
+
+        lua_gettable(L, 1);<span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">get value ,get level 1 table</span>
+
+        lua_getfield(L, 2, <span style="color: #00bfff;">"ip"</span>);
+        ipstr = luaL_checkstring(L, 3);
+
+        printf(<span style="color: #00bfff;">"%d=%s\n"</span>, i, ipstr);
+        ip = ntohl(inet_addr(ipstr));
+
+        <span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">&#20256;&#20837;ip&#65292;&#36820;&#22238;&#19978;&#19979;&#34892;&#30340;handle</span>
+        testfunc(ip, handle)
+        <span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">return handle to lua</span>
+        lua_pushnumber(L, handle[0]);
+        lua_setfield(L, 2, <span style="color: #00bfff;">"up"</span>);
+        lua_pop(L, 2);
+    }
+
+    <span style="color: #0000ff;">return</span> 1;
+}
+</pre>
+
+
+</p></div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/02/first-luaunit-testcase/">初步体验lua写测试用例的简单</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-02T00:00:00+08:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+直接上代码，看看到底用脚本写测试用例到底有多简单。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-lua"><span style="color: #a020f0;">lsystem</span> = <span style="color: #0000ff;">function</span> (arg)
+    print(<span style="color: #00bfff;">"cmd:\e\[31m"</span>..arg..<span style="color: #00bfff;">"\e\[0m"</span>)
+    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">date</span> = io.popen(arg, r)
+    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">str</span> = date:read<span style="color: #00bfff;">"*a"</span>
+    date:close()
+    <span style="color: #0000ff;">return</span> str
+<span style="color: #0000ff;">end</span>
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#27979;&#35797;mac&#22320;&#22336;&#30340;&#26174;&#31034;&#26159;&#21542;&#27491;&#30830;</span>
+<span style="color: #0000ff;">function</span> <span style="color: #a020f0;">test_ipshow</span>()
+    date = lsystem(<span style="color: #00bfff;">"ip addr show eth1"</span>)
+    assert_match(<span style="color: #00bfff;">"00:0a:e4:36:06:24"</span>,date)
+<span style="color: #0000ff;">end</span>
+</pre>
+
+
+简单到无法再简单的程序，只需要两句话，<br/>
+第一句是执行命令。<br/>
+第二句是判断返回内容是否正确。<br/>
+</p>
+<p><br/>
+优势一：<br/>
+如果要使用Cunit进行同样的测试，当然也基本上也都是这几行语句，但是最麻烦的就是需要对内存进行管理。<br/>
+优势二：<br/>
+同时使用c语言的字符串匹配没有脚本语言强大，至少支持正则匹配。<br/>
+优势三：<br/>
+不需要编译，直接修改，解释执行。<br/>
+</p></div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/01/luasocket-and-lua-capi/">Luasocket和lua CAPI</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-01T00:00:00+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">Luasocket和lua CAPI</a>
+<ul>
+<li><a href="#sec-1-1">lua安装</a></li>
+<li><a href="#sec-1-2">luasocket</a></li>
+<li><a href="#sec-1-3">debug</a>
+<ul>
+<li><a href="#sec-1-3-1">debug.getinfo</a></li>
+<li><a href="#sec-1-3-2">hook</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">CAPI</a>
+<ul>
+<li><a href="#sec-1-4-1">调用c函数</a></li>
+<li><a href="#sec-1-4-2">Lua<sub>stack</sub></a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi/">Luasocket和lua CAPI</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">lua安装</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>Lua在ubuntu上安装非常简单，但是需要一个readline的头文件。<br/>
+</p>
+<p><br/>
+<code>apt-get install libreadline6-dev libncurses-dev</code><br/>
+</p>
+<p><br/>
+然后进入lua目录<br/>
+make linux<br/>
+make linux install<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">luasocket</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>在看lunatest的时候，其中使用luasocket库，这个库实现了基本的socket功能。<br/>
+基本看了一下luasocket的实现，觉得主要是使用luaL<sub>tostring函数，从栈中获得lua的string，然后调用socket</sub>.send函数进行发送。<br/>
+</p>
+<p><br/>
+receive的时候，调用socket.receive获得data后，通过pushlstring，压入栈，传递给lua。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">debug</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>debug 库由两种函数组成:自省(introspective)函数和 hooks。<br/>
+自省函数使得我们可以检查运行程序的某些方面,比如活动函数栈、当前执行代码的行号、本地变量的名和值。<br/>
+Hooks 可以跟踪程序的执行情况。<br/>
+</p>
+<p><br/>
+Debug 库中的一个重要的思想是栈级别(stack level)。<br/>
+一个栈级别就是一个指向在当前时刻正在活动的特殊函数的数字,也就是说,这个函数正在被调用但还没有返回。<br/>
+调用 debug 库的函数级别为 1,调用他(他指调用 debug 库的函数)的函数级别为 2,以此类推。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">debug.getinfo</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>debug.getinfo(foo),将返回关于这个函数信息的一个表。<br/>
+这个表有下列一些域:<br/>
+    source,标明函数被定义的地方。<br/>
+    short<sub>src</sub>,source 的简短版本(最多 60 个字符),记录一些有用的错误信息。<br/>
+    linedefined,source 中函数被定义之处的行号。<br/>
+    what,标明函数类型。如果 foo 是一个普通得 Lua 函数,结果为 &#8220;Lua&#8221;;<br/>
+    如果是一个 C 函数,结果为 &#8220;C&#8221;;<br/>
+    如果是一个 Lua 的主 chunk,结果为 &#8220;main&#8221;。<br/>
+    name,函数的合理名称。<br/>
+    namewhat,上一个字段代表的含义。<br/>
+    nups,函数的 upvalues 的个数。<br/>
+    func,函数本身;详细情况看后面。<br/>
+以数字 n 调用 debug.getinfo(n)时,返回在 n 级栈的活动函数的信息数据。<br/>
+currentline,即在那个时刻函数所在的行号。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">hook</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p>debug 库的 hook 是这样一种机制:<br/>
+注册一个函数,用来在程序运行中某一事件到达时被调用。<br/>
+</p>
+<p><br/>
+有四种可以触发一个 hook 的事件: <br/>
+Lua 调用一个函数的时候 call 事件发生;<br/>
+当每次函数返回的时候,return 事件发生;<br/>
+Lua 开始执行代码的新行时候,line 事件发生;<br/>
+运行指定数目的指令之后,count 事件发生。<br/>
+Lua 使用单个参数调用 hooks,参数为一个描述产生调用的事件:&#8221;call&#8221;、&#8221;return&#8221;、&#8221;line&#8221; 或 &#8220;count&#8221;。<br/>
+另外,对于 line 事件,还可以传递第二个参数:新行号。<br/>
+我们在一个 hook 内总是可以使用 debug.getinfo 获取更多的信息。<br/>
+为了监控 call、return 和 line 事件,可以将他们的第一个字母(&#8216;c&#8217;、&#8217;r&#8217; 或 &#8216;l&#8217;)组合成一个 mask 字符串即可。<br/>
+要想关掉 hooks,只需要不带参数地调用 sethook 即可。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">CAPI</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>Lua API 没有定义任何类似 lua<sub>Value</sub> 的类型。<br/>
+替代的方案,它用一个抽象的栈在 Lua 与 C 之间交换值。<br/>
+Lua 以一个严格的 LIFO 规则(后进先出;也就是说,始终存取栈顶)来操作栈。<br/>
+当你调用 Lua 时,它只会改变栈顶部分。<br/>
+你的C代码却有更多的自由;更明确的来讲,你可以查询栈上的任何元素,甚至是在任何一个位置插入和删除元素。<br/>
+</p>
+<p><br/>
+Lua 要么做一份内部的拷贝要么重新利用已经存在的字符串。因此,一旦这些函数返回之后你可以自由的修改或是释放你的缓冲区。<br/>
+Lua<sub>tostring</sub> 函数返回一个指向字符串的内部拷贝的指针。你不能修改它(使你想起那里有一个 const)。<br/>
+只要这个指针对应的值还在栈内,Lua 会保证这个指针一直有效。<br/>
+当一个 C 函数返回后,Lua 会清理他的栈,<br/>
+所以,有一个原则:永远不要将指向 Lua 字符串的指针保存到访问他们的外部函数中。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">调用c函数</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<p>从 Lua调用 C 函数我们必须注册函数,也就是说,我们必须把 C 函数的地址以一个适当的方式<br/>
+传递给 Lua 解释器。<br/>
+    任何在 Lua 中注册的函数必须有同样的原型,这个原型声明定义就是 lua.h 中的<br/>
+</p>
+<p><br/>
+<pre class="src src-lua">lua_CFunction:
+    typedef int (*lua_CFunction) (lua_State *L);
+</pre>
+
+Lua 的 C 库就是这样实现的。除了定义 C 函数之外,还必须定义一个特殊的用来和 Lua 库的主 chunk 通信的特殊函数。<br/>
+一旦调用,这个函数就会注册库中所有的 C 函数,并将他们保存到适当的位置。<br/>
+</p>
+<p><br/>
+luaL<sub>openlib</sub> 函数接受一个 C 函数的列表和他们对应的函数名,并且作为一个库在一个 table 中注册所有这些函数。<br/>
+第二步,我们声明一个数组,保存所有的函数和他们对应的名字。<br/>
+这个数组的元素类型为 luaL<sub>reg</sub>:是一个带有两个域的结构体,一个字符串和一个函数指针。<br/>
+第三步,我们使用 luaL<sub>openlib</sub> 声明主函数。<br/>
+最后在lua中调用loadlib<br/>
+</p>
+<p><br/>
+一个 userdatum 提供了一个在 Lua 中没有预定义操作的 raw 内存区域。<br/>
+一个 light userdatum 是一个表示 C 指针的值，使用 light userdata 你必须自己管理内存,因为他们和垃圾收集器无关。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2">Lua<sub>stack</sub></h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+<p>正数代表栈中的绝对位置（从栈底开始），负数代表从栈顶的相对位置。<br/>
+对于栈的大小是要c程序来进行维护的，使用lua<sub>checkstack</sub> to grow the stack size，每次调用此函数，<br/>
+保证有LUA<sub>MINSTACK空间有效。</sub><br/>
+</p>
+<p><br/>
+module（name，&hellip;)<br/>
+其他参数是作为函数一次应用于module。<br/>
+require（）<br/>
+packet.preload<br/>
+package.path<br/>
+package.cpath 加载c库时，搜索路径<br/>
+加载库后Then it tries to find a C function inside the library to be used as the loader. <br/>
+The name of this C function is the string &#8220;luaopen_&#8221; concatenated with a copy of the module name <br/>
+where each dot is replaced by an underscore。（.变为<sub>）。</sub><br/>
+package.seeall<br/>
+把module的metatable的_<sub>index设置为全局变量，这样模块就继承了全局变量。</sub><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+All functions from the auxiliary library are defined in header file lauxlib.h and have a prefix luaL_.<br/>
+</p>
+<p><br/>
+All functions in the auxiliary library are built on top of the basic API, <br/>
+and so they provide nothing that cannot be done with this API.<br/>
+</p>
+<p><br/>
+Several functions in the auxiliary library are used to check C function arguments. <br/>
+Their names are always luaL<sub>check</sub>* or luaL<sub>opt</sub>*. <br/>
+All of these functions throw an error if the check is not satisfied. <br/>
+Because the error message is formatted for arguments (e.g., &#8220;bad argument #1&#8221;), <br/>
+you should not use these functions for other stack values. <br/>
+</p>
+<p><br/>
+lua<sub>settable（l，index）</sub><br/>
+从栈中弹出key 和val进行设置给index。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">参考资料</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p><a href="http://lua-users.org/wiki/">http://lua-users.org/wiki/</a> 有一个lua的在线教程，值得一看<br/>
+<a href="http://www.lua.org/">http://www.lua.org/</a><br/>
+<a href="http://www.lua.org/pil/">http://www.lua.org/pil/</a> Programming in Lua (first edition) 在线版<br/>
+<a href="http://www.lua.org/manual/5.1/">http://www.lua.org/manual/5.1/</a> LUA5.1手册<br/>
+<a href="http://lua-users.org/wiki/UnitTesting">http://lua-users.org/wiki/UnitTesting</a> 介绍几种lua测试框架<br/>
+<a href="http://www.nessie.de/mroth/lunit/">http://www.nessie.de/mroth/lunit/</a> lunit用于lua的测试框架，类似Cunit <br/>
+</p>
+<p><br/>
+lua中文教程.pdf 必看<br/>
+</p>
+<p><br/>
+lua5..1语法速查手册<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  <ul class="pager">
+    
+    <li><a href="/blog/archives">Blog Archives</a></li>
+    
+  </ul>
+</div>
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (1)</a></li></ul>
+</section>
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/09/ssh-skill/">ssh的一些技巧</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">functional-programming-is-hard-thats-why-its-good</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/can+your+programming+language+do+this/">can your programming language do this</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/31/org-mode-note/">org-mode学习笔记</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2012 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

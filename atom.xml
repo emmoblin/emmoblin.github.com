@@ -1,0 +1,3391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2012-10-14T00:05:30+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ssh的一些技巧]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/10/09/ssh-skill/"/>
+    <updated>2012-10-09T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/10/09/ssh-skill</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">ssh的一些技巧</a>
+<ul>
+<li><a href="#sec-1-1">多条连接共享</a></li>
+<li><a href="#sec-1-2">长连接</a></li>
+<li><a href="#sec-1-3">别再输入密码</a></li>
+<li><a href="#sec-1-4">省去用户名</a></li>
+<li><a href="#sec-1-5">在服务器间跳转</a></li>
+<li><a href="#sec-1-6">穿越Web代理</a></li>
+<li><a href="#sec-1-7">shfs</a></li>
+<li><a href="#sec-1-8">使用本地App连接远程服务器</a></li>
+<li><a href="#sec-1-9">减少延迟</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/09/ssh-skill/">ssh的一些技巧</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">多条连接共享</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>如果你需要在多个窗口中打开到同一个服务器的连接，而不想每次都输入用户名，密码，或是等待连接建立，<br/>
+那么你可以配置SSH的连接共享选项，在本地打开你的SSH配置文件，通常它们位于~/.ssh/config，然后添加下面2行：<br/>
+ControlMaster auto<br/>
+ControlPath /tmp/ssh<sub>mux</sub>_%h_%p_%r<br/>
+现在试试断开你与服务器的连接，并建立一条新连接，然后打开一个新窗口，再创建一条连接，你会发现，第二条连接几乎是在瞬间就建立好了。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">长连接</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>如果你发现自己每条需要连接同一个服务器无数次，那么长连接选项就是为你准备的：<br/>
+ControlPersist 4h<br/>
+现在你每次通过SSH与服务器建立连接之后，这条连接将被保持4个小时，即使在你退出服务器之后，这条连接依然可以重用，<br/>
+因此，在你下一次（4小时之内）登录服务器时，你会发现连接以闪电般的速度建立完成，<br/>
+这个选项对于通过scp拷贝多个文件提速尤其明显，因为你不在需要为每个文件做单独的认证了。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">别再输入密码</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>如果你还在通过密码方式登录SSH，那么你或许应该试试SSH Keys，首先使用OpenSSH为自己声称一对密钥：<br/>
+$ ssh-keygen<br/>
+跟随指示，完成之后，你应该可以在你的.ssh目录下看到两个文件，id<sub>rsa就是你的私钥，而id</sub><sub>ras</sub>.pub则是你的公钥，<br/>
+现在你需要将你的公钥拷贝到服务器上，如果你的系统有ssh-copy-id命令，拷贝会很简单：<br/>
+$ ssh-copy-id smylers@compo.example.org<br/>
+否则，你需要手动将你的私钥拷贝的服务器上的~/.ssh/authorized<sub>keys文件中：</sub><br/>
+$ &lt; ~/.ssh/id<sub>rsa</sub>.pub ssh clegg.example.org ‘mkdir -p .ssh; cat &gt;&gt; .ssh/authorized<sub>keys</sub>; chmod go-w .ssh .ssh/authorized<sub>keys’</sub><br/>
+现在试试重新连接到SSH服务器，或是拷贝文件，是不是已经不需要再输入密码了？<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">省去用户名</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>如果你在远程服务器上的用户名和你本地的用户名不同，你同样可以在SSH配置中进行设置：<br/>
+Host www* mail<br/>
+HostName %h.example.com<br/>
+User simon<br/>
+现在就算我的本地用户名是 smylers，我仍然可以这样连接我的服务器：<br/>
+$ ssh www2<br/>
+SSH会使用simon账户连接你的服务器，同样，Putty可以保存这个信息在你的session中。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">在服务器间跳转</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>有些时候，你可能没法直接连接到某台服务器，而需要使用一台中间服务器进行中转，这个过程也可以自动化。首先确保你已经为服务器配置了公钥访问，并开启了agent forwarding，现在你就可以通过2条命令来连接目标服务器，不会有任何提示输入：<br/>
+$ ssh gateway<br/>
+gateway $ ssh db<br/>
+然后在你的本地SSH配置中，添加下面这条配置：<br/>
+Host db<br/>
+HostName db.internal.example.com<br/>
+ProxyCommand ssh gateway netcat -q 600 %h %p<br/>
+现在你就可以通过一条命令来直接连接目标服务器了:<br/>
+$ ssh db<br/>
+这里你可能会需要等待长一点的时间，因为SSH需要进行两次认证，，注意netcat也有可能被写成nc或者ncat或者前面还需要加上g，你需要检查你的中间服务器来确定实际的参数。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">穿越Web代理</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>有些时候，你所在的网络不止封锁SSH端口，它们有可能更进一步，只让你通过Web代理来访问网络，幸运的是我们有一个叫做Corkscrew的程序可以通过Web代理在发送SSH数据。Corkscrew的使用非常简单，一般我都是在需要时搜索，然后直接下载，跟随网站上的指示，然后就搞定了，一般你需要这样一条配置：<br/>
+ProxyCommand corkscrew proxy.example.org 8080 %h %p<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">shfs</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>另一种让远程GUI程序显示在本地的替代方案就是让本地的GUI程序可以直接操作远程文件，你可以通过SSHFS来实现，只需要创建一个空目录，然后使用SSHFS将一个远程目录mount到这个目录就可以了：<br/>
+$ mkdir gallery<sub>src</sub><br/>
+$ sshfs dev:projects/gallery/src gallery<sub>src</sub><br/>
+$ cd gallery<sub>src</sub><br/>
+$ ls<br/>
+现在你就可以使用任何你喜欢的本地程序来便捷这个目录中的文件了，它们看起来是在你的本地，但其实时远程服务器上的文件，你可以使用fusermount命令来unmount这些文件，不要担心记不住，它们就在sshfs手册的顶上：<br/>
+$ cd ..<br/>
+$ fusermount -u gallery<sub>src</sub><br/>
+SSHFS可以在Linux和OSX上工作，Windows用户我目前还没找到什么好办法。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">使用本地App连接远程服务器</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>有时可能有些服务，比如数据库或是Web服务器，它们运行在远程服务器上，但是如果有用方式可以直接从本地程序连接它们，那会非常有用，要做到这一点，你需要用到端口转发(port forwarding)，<br/>
+举个例子，如果你的服务器运行Postgres（并且只允许本地访问），那么你就可以在你的SSH配置中加入：<br/>
+Host db<br/>
+LocalForward 5433 localhost:5432<br/>
+现在当你连接你的SSH服务器时，它会在你本地电脑打开一个5433端口（我随便挑的），并将所有发送到这个端口的数据转发到服务器的5432端口（Postgres的默认端口），然后，只要你和服务器建立了连接，你就可以通过5433端口来访问服务器的Postgres了。<br/>
+$ ssh db<br/>
+现在打开另外一个窗口，你就可以通过下面这条命令在本地连接你的Postgres数据库了：<br/>
+$ psql -h localhost -p 5443 orders<br/>
+如果你想要使用服务器不支持的图形化Postgres客户端时，这条命令会显得尤其有用：<br/>
+$ pgadmin3 &amp;<br/>
+或者你有一个后台的Web服务器，你不希望直接通过Internet访问它，你也可以通过端口转发来访问它：<br/>
+Host api<br/>
+LocalForward 8080 localhost:80<br/>
+现在连接到服务器：<br/>
+$ ssh api<br/>
+然后将浏览器指向你选择的端口号：<br/>
+$ firefox <a href="http://localhost:8080/">http://localhost:8080/</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">减少延迟</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>如果每次连接服务器都意味着你需要等待几十秒而无所事事，那么你或许应该试试在你的SSH配置中加入下面这条：<br/>
+GSSAPIAuthentication no<br/>
+如果这条命令有效的话，你应该通知你的系统管理员让他在服务器上禁用这个选项，这样其他人就不用再分别添加这条配置到它们的本地配置了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[A Unix Utility You Should Know About:lsof]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/10/09/lsof/"/>
+    <updated>2012-10-09T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/10/09/lsof</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">A Unix Utility You Should Know About:lsof</a>
+<ul>
+<li><a href="#sec-1-1">前言</a></li>
+<li><a href="#sec-1-2">如何使用lsof？</a></li>
+<li><a href="#sec-1-3">找出谁在使用某个文件</a></li>
+<li><a href="#sec-1-4">列出某个用户打开的所有文件</a></li>
+<li><a href="#sec-1-5">查找某个程序打开的所有文件</a></li>
+<li><a href="#sec-1-6">列出所有由某个用户或某个进程打开的文件</a></li>
+<li><a href="#sec-1-7">列出除root用户外的所有用户打开的文件</a></li>
+<li><a href="#sec-1-8">列出所有由某个PID对应的进程打开的文件</a></li>
+<li><a href="#sec-1-9">列出所有网络连接</a></li>
+<li><a href="#sec-1-10">列出所有NFS（网络文件系统）文件</a></li>
+<li><a href="#sec-1-11">列出所有UNIX域Socket文件</a></li>
+<li><a href="#sec-1-12">列出所有对应某个组id的进程</a></li>
+<li><a href="#sec-1-13">列出所有与某个描述符关联的文件</a></li>
+<li><a href="#sec-1-14">输出使用某些资源的进程pid</a></li>
+<li><a href="#sec-1-15">循环列出文件</a></li>
+<li><a href="#sec-1-16">如何安装lsof？</a></li>
+<li><a href="#sec-1-17">原文</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">前言</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>这是“你应该知道的Unix和Linux命令”系列的第三篇，在这篇文章中，我会介绍lsof这个工具，如果说netcat是进行网络诊断的瑞士军刀，那么lsof就是Unix调试的瑞士军刀。<br/>
+</p>
+<p><br/>
+Lsof是遵从Unix哲学的典范，它只做一件事情，并且做的相当完美——它可以列出某个进程打开的所有文件信息。<br/>
+打开的文件可能是普通的文件，目录，NFS文件，块文件，字符文件，共享库，常规管道，明明管道，符号链接，Socket流，网络Socket，UNIX域Socket，以及其它更多。因为Unix系统中几乎所有东西都是文件，你可以想象lsof该有多有用。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">如何使用lsof？</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p><br/>
+这篇文章中我会尽力列举我能想到的所有lsof的用法，让我们先从最简单的开始（或许你已经知道了），然后逐渐增加复杂度：<br/>
+</p>
+<p><br/>
+列出所有打开的文件<br/>
+</p>
+<p><br/>
+<code>lsof</code><br/>
+</p>
+<p><br/>
+不带任何参数运行lsof会列出所有进程打开的所有文件。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">找出谁在使用某个文件</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<p><br/>
+<code>lsof /path/to/file</code><br/>
+</p>
+<p><br/>
+只需要执行文件的路径，lsof就会列出所有使用这个文件的进程，你也可以列出多个文件，lsof会列出所有使用这些文件的进程。<br/>
+</p>
+<p><br/>
+你也可以一次制定多个文件：<br/>
+</p>
+<p><br/>
+<code>lsof /path/to/file1 /path/to/file2</code><br/>
+</p>
+<p><br/>
+递归查找某个目录中所有打开的文件<br/>
+</p>
+<p><br/>
+<code>lsof +D /usr/lib</code><br/>
+</p>
+<p><br/>
+加上+D参数，lsof会对指定目录进行递归查找，注意这个参数要比grep版本慢：<br/>
+</p>
+<p><br/>
+=lsof | grep &#8216;/usr/lib&#8217;=<br/>
+</p>
+<p><br/>
+之所以慢是因为+D首先查找所有的文件，然后一次性输出。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">列出某个用户打开的所有文件</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+<code>lsof -u pkrumins</code><br/>
+</p>
+<p><br/>
+-u选项限定只列出所有被用户pkrumins打开的文件，你可以通过逗号指定多个用户：<br/>
+</p>
+<p><br/>
+<code>lsof -u rms,root</code><br/>
+</p>
+<p><br/>
+这条命令会列出所有rms和root用户打开的文件。<br/>
+</p>
+<p><br/>
+你也可以像下面这样使用多个-u做同样的事情：<br/>
+</p>
+<p><br/>
+<code>lsof -u rms -u root</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">查找某个程序打开的所有文件</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+<p><br/>
+<code>lsof -c apache</code><br/>
+</p>
+<p><br/>
+-c选项限定只列出以apache开头的进程打开的文件：<br/>
+</p>
+<p><br/>
+所以你可以不用像下面这样写：<br/>
+</p>
+<p><br/>
+<code>lsof | grep foo</code><br/>
+</p>
+<p><br/>
+而使用下面这个更简短的版本：<br/>
+</p>
+<p><br/>
+<code>lsof -c foo</code><br/>
+</p>
+<p><br/>
+事实上，你可以只制定进程名称的开头：<br/>
+</p>
+<p><br/>
+<code>lsof -c apa</code><br/>
+</p>
+<p><br/>
+这会列出所有以apa开头的进程打开的文件<br/>
+</p>
+<p><br/>
+你同样可以制定多个-c参数：<br/>
+</p>
+<p><br/>
+<code>lsof -c apache -c python</code><br/>
+</p>
+<p><br/>
+这会列出所有由apache和python打开的文件<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">列出所有由某个用户或某个进程打开的文件</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+<p><br/>
+<code>lsof -u pkrumins -c apache</code><br/>
+</p>
+<p><br/>
+你也可以组合使用多个选项，这些选项默认进行或关联，也就是说上面的命令会输入由pkrumins用户或是apache进程打开的文件。<br/>
+</p>
+<p><br/>
+列出所有由一个用户与某个进程打开的文件<br/>
+</p>
+<p><br/>
+<code>lsof -a -u pkrumins -c bash</code><br/>
+</p>
+<p><br/>
+-a参数可以将多个选项的组合条件由或变为与，上面的命令会显示所有由pkrumins用户以及bash进程打开的文件。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">列出除root用户外的所有用户打开的文件</h3>
+<div class="outline-text-3" id="text-1-7">
+
+
+<p><br/>
+<code>lsof -u ^root</code><br/>
+</p>
+<p><br/>
+注意root前面的<sup>符号，它执行取反操作，因此lsof会列出所有root用户之外的用户打开的文件。</sup><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">列出所有由某个PID对应的进程打开的文件</h3>
+<div class="outline-text-3" id="text-1-8">
+
+
+<p><br/>
+<code>lsof -p 1</code><br/>
+</p>
+<p><br/>
+-p选项让你可以使用进程id来过滤输出。<br/>
+</p>
+<p><br/>
+记住你也可以用都好来分离多个pid。<br/>
+</p>
+<p><br/>
+<code>lsof -p 450,980,333</code><br/>
+</p>
+<p><br/>
+列出所有进程打开的文件除了某个pid的<br/>
+</p>
+<p><br/>
+<code>lsof -p ^1</code><br/>
+</p>
+<p><br/>
+同前面的用户一样，你也可以对-p选项使用<sup>来进行取反。</sup><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">列出所有网络连接</h3>
+<div class="outline-text-3" id="text-1-9">
+
+
+<p><br/>
+<code>lsof -i</code><br/>
+</p>
+<p><br/>
+lsof的-i选项可以列出所有打开了网络套接字（TCP和UDP）的进程。<br/>
+</p>
+<p><br/>
+列出所有TCP网络连接<br/>
+</p>
+<p><br/>
+<code>lsof -i tcp</code><br/>
+</p>
+<p><br/>
+也可以为-i选项加上参数，比如tcp，tcp选项会强制lsof只列出打开TCP sockets的进程。<br/>
+</p>
+<p><br/>
+列出所有UDP网络连接<br/>
+</p>
+<p><br/>
+<code>lsof -i udp</code><br/>
+</p>
+<p><br/>
+同样udp让lsof只列出使用UDP socket的进程。<br/>
+</p>
+<p><br/>
+找到使用某个端口的进程<br/>
+</p>
+<p><br/>
+<code>lsof -i :25</code><br/>
+</p>
+<p><br/>
+:25和-i选项组合可以让lsof列出占用TCP或UDP的25端口的进程。<br/>
+</p>
+<p><br/>
+你也可以使用/etc/services中制定的端口名称来代替端口号，比如：<br/>
+</p>
+<p><br/>
+<code>lsof -i :smtp</code><br/>
+</p>
+<p><br/>
+找到使用某个udp端口号的进程<br/>
+</p>
+<p><br/>
+<code>lsof -i udp:53</code><br/>
+</p>
+<p><br/>
+同样的，也可以找到使用某个tcp端口的进程：<br/>
+</p>
+<p><br/>
+<code>lsof -i tcp:80</code><br/>
+</p>
+<p><br/>
+找到某个用户的所有网络连接<br/>
+</p>
+<p><br/>
+<code>lsof -a -u hacker -i</code><br/>
+</p>
+<p><br/>
+使用-a将-u和-i选项组合可以让lsof列出某个用户的所有网络行为。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-10" class="outline-3">
+<h3 id="sec-1-10">列出所有NFS（网络文件系统）文件</h3>
+<div class="outline-text-3" id="text-1-10">
+
+
+<p><br/>
+<code>lsof -N</code><br/>
+</p>
+<p><br/>
+这个参数很好记，-N就对应NFS。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11" class="outline-3">
+<h3 id="sec-1-11">列出所有UNIX域Socket文件</h3>
+<div class="outline-text-3" id="text-1-11">
+
+
+<p><br/>
+<code>lsof -U</code><br/>
+</p>
+<p><br/>
+这个选项也很好记，-U就对应UNIX。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-12" class="outline-3">
+<h3 id="sec-1-12">列出所有对应某个组id的进程</h3>
+<div class="outline-text-3" id="text-1-12">
+
+
+<p><br/>
+<code>lsof -g 1234</code><br/>
+</p>
+<p><br/>
+进程组用来来逻辑上对进程进行分组，这个例子查找所有PGID为1234的进程打开的文件。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-13" class="outline-3">
+<h3 id="sec-1-13">列出所有与某个描述符关联的文件</h3>
+<div class="outline-text-3" id="text-1-13">
+
+
+<p><br/>
+<code>lsof -d 2</code><br/>
+</p>
+<p><br/>
+这个命令会列出所有以描述符2打开的文件。<br/>
+</p>
+<p><br/>
+你也可以为描述符指定一个范围：<br/>
+</p>
+<p><br/>
+<code>lsof -d 0-2</code><br/>
+</p>
+<p><br/>
+这会列出所有描述符为0，1，2的文件。<br/>
+</p>
+<p><br/>
+-d选项还支持其它很多特殊值，下面的命令列出所有内存映射文件：<br/>
+</p>
+<p><br/>
+<code>lsof -d mem</code><br/>
+</p>
+<p><br/>
+txt则列出所有加载在内存中并正在执行的进程：<br/>
+</p>
+<p><br/>
+<code>lsof -d txt</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-14" class="outline-3">
+<h3 id="sec-1-14">输出使用某些资源的进程pid</h3>
+<div class="outline-text-3" id="text-1-14">
+
+
+<p><br/>
+<code>lsof -t -i</code><br/>
+</p>
+<p><br/>
+-t选项输出进程的PID，你可以将它和-i选项组合输出使用某个端口的进程的PID，下面的命令将会杀掉所有使用网络的进程：<br/>
+</p>
+<p><br/>
+<code>kill -9 `lsof -t -i`</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-15" class="outline-3">
+<h3 id="sec-1-15">循环列出文件</h3>
+<div class="outline-text-3" id="text-1-15">
+
+
+<p><br/>
+<code>lsof -r 1</code><br/>
+</p>
+<p><br/>
+-r选项让lsof可以循环列出文件直到被中断，参数1的意思是每秒钟重复打印一次，这个选项最好同某个范围比较小的查询组合使用，比如用来监测网络活动：<br/>
+</p>
+<p><br/>
+<code>lsof -r 1 -u john -i -a</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-16" class="outline-3">
+<h3 id="sec-1-16">如何安装lsof？</h3>
+<div class="outline-text-3" id="text-1-16">
+
+
+<p><br/>
+许多Unix系统都内置了lsof，如果你的系统没有安装，你可以从这里直接下载源代码。<br/>
+</p>
+<p><br/>
+BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
+</p>
+<p><br/>
+你可以通过man lsof来了解关于lsof的完整文档，或者通过lsof -h查看。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-17" class="outline-3">
+<h3 id="sec-1-17">原文</h3>
+<div class="outline-text-3" id="text-1-17">
+
+<p><a href="http://www.catonmat.net/blog/unix-utilities-lsof/">http://www.catonmat.net/blog/unix-utilities-lsof/</a><br/>
+还有pipe view和netcat，以后再总结<br/>
+翻译：<br/>
+<a href="http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/">http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/</a><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[functional-programming-is-hard-thats-why-its-good]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/"/>
+    <updated>2012-09-11T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">functional-programming-is-hard-thats-why-its-good</a>
+<ul>
+<li><a href="#sec-1-1">函数式编程很难，这正是你要学习它的原因</a>
+<ul>
+<li><a href="#sec-1-1-1">它给你的初次印象不友善</a></li>
+<li><a href="#sec-1-1-2">新奇事物</a></li>
+<li><a href="#sec-1-1-3">眼见为实</a></li>
+<li><a href="#sec-1-1-4">各有所求</a></li>
+<li><a href="#sec-1-1-5">补充</a></li>
+<li><a href="#sec-1-1-6">转载自: http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">functional-programming-is-hard-thats-why-its-good</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">函数式编程很难，这正是你要学习它的原因</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>很奇怪不是，很少有人每天都使用函数式编程语言。如果你用Scala，Haskell，Erlang，F#或某个Lisp方言来编程，很可能没有公司会花钱聘你。这个行业里的绝大部分人都是使用像Python，Ruby，Java或C#等面向对象的编程语言——它们用起来很顺手。不错，你也许会偶然用到一两个“函数式语言特征”，例如“block”，但人们不会去做函数式编程。<br/>
+</p>
+<p><br/>
+然而，很多年来，我们一直被教导说函数式编程语言很好很棒。我仍然记得当我第一次阅读ESR的著名的关于学习Lisp语言的论文时的困惑。也许大多数的人对Paul Graham 的《Beating The Averages》这篇文章更加熟悉：<br/>
+</p>
+<p><br/>
+使用Lisp开发使我们的开发周期迭代的如此之快，以至于有时当竞争对手在新闻发布会上推出他们的新功能一两天后，我们就能复制出同样的功能。当报道产品发布的新闻记者打电话给我们时，我们的产品已经拥有了同样的功能特征。<br/>
+</p>
+<p><br/>
+那些皈依函数式编程的人中，一直常见的考虑是：学习这种新的、函数式的语言“对你有好处”；就像是某些人建议说每天30分钟的健身房活动会“让你的身体健康”一样。但这也同时暗示了这样做的难度和需要的付出。Lisp语言跟Haskell、Ocaml和Scala语言不同，被认为是出了名的难学，可以说是臭名昭著。文雅的人说这是Lisp语言的“深度&amp;广度”的体现。不文雅的人说这是“意淫”或“玩弄学术”或简单的“没必要”。我认为，它的难度跟你对它熟不熟悉有关，而且，这种难度是一种重要指标显示：学习这样的一种语言会让你编程更有效率、能力更强。<br/>
+</p>
+<p><br/>
+<!-- more -->
+
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">它给你的初次印象不友善</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+<p><br/>
+我7岁时就开始编程，在漫长无聊的郊区夏季里，在我祖父的计算机上瞎搞一气。我学了BASIC，用它在屏幕上画一个蹦跳的球。我学了Pascal，用它写了一个能通过PC喇叭放音乐的程序。大概10岁时我学了C语言，但遇到了一堵越不过去的墙，直到我上了高中。那就是：指针。即使不算这些该死的指针，我写、读、学习、练习中，同样遭遇无数的失败。我把祖父的硬盘给毁掉了两次(一次属意外)，最后弄得不少次要自己重装操作系统。我失败，一遍遍的失败。<br/>
+</p>
+<p><br/>
+也许你也有跟我相似的故事，也许是完全不同的一个。但我想，差不多所有学过编程的人都有过遇到困难的经历。我们在学了一些基本知识后，必然会遇到一些公认的概念上的关口，比如“指针”。很多计算机科学教授会把指针描述为他们课程上的过滤网。如果你想成为一名优秀的程序员，你必须要能理解指针。很少人能轻松的掌握它们。大多数人，包括我，则需要不断的练习和参考例子来理解什么是指针、为什么它们很重要。<br/>
+</p>
+<p><br/>
+这种艰难的努力过程不是偶然的，是一种几乎普遍的现象。指针是一种非常强大和基础功能的概念。学会它能让你成为一名更好的程序员，能让你的思考更加形象化。即使你使用的语言并不提供指针这样的特征，但跟指针类似的数据结构和概念却随处可见。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">新奇事物</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+
+<p><br/>
+一旦你学会了几种语言后，所有的语言都开始看起来都很相似。知道Python的人学习Ruby可能不会遇到太多的问题，知道Java的人学习C#会感到很熟悉。不错，也有意外的地方。Ruby爱好者在学习Python时会对它的comprehension感到吃惊，Java用户会对C#里的委派摸不着头脑。还是那句话，如果你只瞟一眼，它们都很相似。我可以打保票的说，如果你还不曾有过这样的认识，一旦你学了一种Lisp语言，你会发现所有的Lisp变种都很相似。<br/>
+</p>
+<p><br/>
+有人说，大部分人第一次使用Haskell或Ocaml时都完全的不知所措。见鬼了，在Haskell里，连分号都跟别人不一样。这并不是语法的问题；Haskell和ML语言完全基于一种不同的概念、一种新的语言范式。你需要用不同的方式开发应用，不同的方式组织应用，不同的方式扩展应用。<br/>
+</p>
+<p><br/>
+很多这样的新概念都具有不可思议的强大力量。Haskell里的Monads 是跟指针一样基础且强大的概念(你很可能在不知道它叫什么的情况下就已经使用过它们了)。所以，跟学了Java后再学C#不一样，有志向学习函数式语言的人需要往回走的更远，去学习更加基础的概念后才能接下去学习。就像是完全再学习一次指针。并且，就像是当年我们刚开始学习编程一样，一些很大的概念看起来会让人迷惑茫然，让人沮丧，直到你去攻克(以及失败)它们。<br/>
+</p>
+<p><br/>
+吃下你的药丸，找到你的药剂师<br/>
+</p>
+<p><br/>
+尽管不好学，但我坚信，学习这些函数式编程语言会在职业上对你有好处。我相信有些人读到这点时会眼睛翻起来向天看，很难想象出这些monoids 或 monad 会对他们在使用Java或C#时有用处。对我而言，我已经不惊奇于由于这样的思维而阻止他们学习函数式语言的现象；他们需要学习一种跟指针和递归一样基础的新概念。他们需要有一种只有专业人员在完成清晰的商业目标时才具有的耐心和斗志。很少人能在过了可塑的年龄后还受得了挫折——一次又一次的挫折——否则我们现在都早成专家了，不是吗？<br/>
+</p>
+<p><br/>
+还有更复杂的东西，有大量的语言和算法研究都是用函数式语言实施的(尤其是Haskell)。你很容易会被这些不熟悉的概念——例如范畴论， half-finished abstractions，一些失败的研究——弄的迷失方向。没有一个清晰的指导(比如由一个实用主义的作者写的一本好书)，本来已经很困难的学习任务变的更加可怕。<br/>
+</p>
+<p><br/>
+这些叠加起来的复杂因素导致了不出意外的结果：很多人不情愿在函数式编程学习中投入时间。很容易理解这种不情愿，“我干嘛不把花在学习这些东西的时间用在实现什么东西上呢？”但这种思路也表明了你永远不愿意在任何新技术上浪费时间(只用自己熟悉的)。在一个像软件技术这样日新月异的产业里，我不认为这是正确的判断。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">眼见为实</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+
+<p><br/>
+学习一种函数式编程语言最显而易见的好处是，你能学会这种类型语言中的函数式概念。它能帮助你的大脑，让它具有能非常清晰的思考和处理一些惊人的重大概念的能力。这并不是函数式编程具有魔法；各种语言和范式的出现都是为了应对某一特定类别的问题。函数式编程的杀手锏正是应对了当今世界上日益增长的并行性编程和元数据编程趋势。<br/>
+</p>
+<p><br/>
+例如，我们研究一个简化的、本地版本化的Google著名的MapReduce范例。用函数式方式描述这种范例是不可思议的清晰简洁：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">mapReducer data partitioner mapper reducer =
+              let partitions = partitioner data
+              in reduce reducer (map mapper partitions)
+</pre>
+
+让这样的代码支持并行计算或分布式并行计算是轻而易举的(对于本地并行计算，很多的功能包都支持“pmap”和“preduce“——只需要利用函数式语言的一些简单特性)。像maps, partitions, generators, streams, reductions, folds, 已以及 function chaining等概念在各种的函数式编程语言中都大同小异，所以，任何对Lisp，Haskell，OCaml，甚至带点函数式语言特征的语言——Python和Ruby熟悉的人，都会很容易的理解这里面的思想精华。<br/>
+</p>
+<p><br/>
+让我们花点时间考虑一下，如何用一种面向对象的语言，以一种常见的面向对象的模式来清楚的描述这种架构。至少你需要做的事情是定义用来描述mapper和reducer的声明。如果你有好奇心，请试着用你喜欢的面向对象语言描述一个最小化的“面向对象”的MapReduce。我发现那是非常罗嗦的。如果使用Java风格的语言，它会像这样：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">interface Mapper {
+   B map(A input);
+ }
+
+ interface Reducer {
+   Y reduce(X a, X b);
+ }
+
+ abstract class MapReduce {
+   private Mapper mapper;
+   private Reducer reducer;
+
+   public MapReduce(Mapper map, Reducer reduce) {
+     // ...
+   }
+
+   public run(SeqenceType data) {
+     // ...
+   }
+ }
+</pre>
+
+即使是没有加入循环逻辑，这种缺乏函数式模式中常见的名词和动词的使用，使得MapReduce这种技术很难被定义。这种定义方式几乎是滑稽可笑的，但它能让你想到函数式概念。另外一个好例子是Scala语言如何利用完备的Java Fork/Join 类库，把它轻松的集成的自己的自有语法中。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4">各有所求</h4>
+<div class="outline-text-4" id="text-1-1-4">
+
+
+<p><br/>
+所以，我鼓励任何想进步的程序员：请考虑学习一种函数式语言。Haskell和OCaml都是极好的选择，F#和Erlang也相当的不错。它们都不好学，但也许这是个好事。努力弄清楚你遇到的复杂的概念，看看是否有其他人正在利用这些概念；经常的，你会在寻找这些不熟悉的概念的真正用意的时候实现思想上的突破。<br/>
+</p>
+<p><br/>
+当你开始学的时候，请注意，不要过于在意。就像其他任何需要你花时间和精力的事情一样，过度的在函数式编程上进行精力上的投资是很危险的。掉进了认知能力的陷阱后你的投资会血本无归。你很容易会忘掉世界上还有无数种计算模型，你更容易忘掉有多少种优秀的软件根本没有使用任何的函数式概念。<br/>
+</p>
+<p><br/>
+学习的道路会越来越难走，但从另一方面说，在你日常的编程中，你会发现有越来越多的可以使用的重要概念和模型。对于这样紧凑的编程风格你会越来越适应，必然，你也会对如何成为一名更好的软件工程师有了新的认识。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-5" class="outline-4">
+<h4 id="sec-1-1-5">补充</h4>
+<div class="outline-text-4" id="text-1-1-5">
+
+
+<p><br/>
+有不少校对这篇文章的人在看完文章后都问了我一个同样的问题：“听起来不错，大卫，可是我应该学习那种语言呢？”当然，这是他们给我出的难题。<br/>
+</p>
+<p><br/>
+我想，如果你是一个很有经验的程序员，这最能“应付”这个问题的答案是：“选一种符合你的需求的”。如果你需要在JVM上工作，选择Scala或Clojure。如果你想能快速的开发大型分布式软件系统，选择Erlang。如果你想要一种具有超强编译器的超能干活的语言，请选择Haskell或RCaml。如果你想要一种比Ruby或Python更有能力的原型工具，选择Scheme。<br/>
+</p>
+<p><br/>
+请记住，我们在这里要做的这些目的是为了实际的技能和自我进步。如果你能腾出时间学这些，就走出你的安逸环境，挑战自己。<br/>
+</p>
+<p><br/>
+因为我已经学习了Lisp和Erlang，而且使用OCaml做专业工作，我决定研究一下Haskell，这完全是另外一个世界。我发现唯一能帮助我参透这种语言的途径是依赖Learn You A Haskell 和 Real World Haskell 这两本有用的指导材料。这些书写的非常好，很有价值，而且可以免费在网上找到。如果你想试一下Haskell，这些书可以当作你的寻宝图。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-6" class="outline-4">
+<h4 id="sec-1-1-6">转载自: <a href="http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/">http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/</a></h4>
+<div class="outline-text-4" id="text-1-1-6">
+
+</div>
+</div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[can your programming language do this]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/09/11/can+your+programming+language+do+this/"/>
+    <updated>2012-09-11T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/09/11/can your programming language do this</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">can your programming language do this</a>
+<ul>
+<li><a href="#sec-1-1">你的编程语言能这样做吗？</a></li>
+<li><a href="#sec-1-2">转载自</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/09/11/can+your+programming+language+do+this/">can your programming language do this</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">你的编程语言能这样做吗？</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>一日，你查看你的程序代码，你有两大块代码看起来几乎完全的一样。事实上它们就是完全一样，除了一个代码里说的是“Spaghetti(意大利面条)”，另一个代码里说的是“Chocolate Moose(巧克力慕丝)”。<br/>
+</p>
+<p><br/>
+<pre class="example">// 一个小例子：
+
+alert("I'd like some Spaghetti!");
+alert("I'd like some Chocolate Moose!");
+</pre>
+
+这个例子恰好是用Javascript写的，但即使是你不懂Javascript，你也应该能看懂我说的。<br/>
+</p>
+<p><br/>
+当然，重复的代码看起来不太好。所以你决定写一个函数：<br/>
+</p>
+<p><br/>
+<pre class="example">function SwedishChef( food )
+{
+    alert("I'd like some " + food + "!");
+}
+
+SwedishChef("Spaghetti");
+SwedishChef("Chocolate Moose");
+</pre>
+
+
+没错，这个例子很简单，但你可以想出一些更有实际价值的例子。这样做是更好一些，有很多理由，这些理由估计你都听说过一万遍了。可维护性，可读性，抽象 = 好！<br/>
+</p>
+<p><br/>
+<!-- more -->
+
+现在，你又发现两块代码几乎完全一样，除了一块是不停的调用一个叫BoomBoom的函数，而一块是不停的调用一个叫PutInPot的函数。除此之外，这两块代码完全一样。<br/>
+</p>
+<p><br/>
+<pre class="example">alert("get the lobster");
+PutInPot("lobster");
+PutInPot("water");
+
+alert("get the chicken");
+BoomBoom("chicken");
+BoomBoom("coconut");
+</pre>
+
+现在，你需要一个途径，把一个参数传递到一个函数里，而这个参数本身是个函数。这是一个很重要的功能，它是一个好的方法，能让你发现函数中存在的重复的代码，减少这样的重复。<br/>
+</p>
+<p><br/>
+<pre class="example">function Cook( i1, i2, f )
+{
+    alert("get the " + i1);
+    f(i1);
+    f(i2);
+}
+
+Cook( "lobster", "water", PutInPot );
+Cook( "chicken", "coconut", BoomBoom );
+</pre>
+
+看见了没！我们把一个函数当做了参数。<br/>
+</p>
+<p><br/>
+你的语言能这样做吗？<br/>
+</p>
+<p><br/>
+且慢… 如果你还没有写出PutInPot 或 BoomBoom 函数呢。如果你能把他们写成内联函数，而不是要在其它地方先声明，这样是不是更好？<br/>
+</p>
+<p><br/>
+<pre class="example">Cook( "lobster", 
+      "water", 
+      function(x) { alert("pot " + x); }  );
+Cook( "chicken", 
+      "coconut", 
+      function(x) { alert("boom " + x); } );
+</pre>
+
+老天，这太方便了。注意到了没有，我即时创建了一个方法，甚至都不用麻烦给它起名，只需掂着它的耳朵把它丢进函数里。<br/>
+</p>
+<p><br/>
+当你开始思考把匿名函数当作参数时，你也许会注意到有一种代码到处都是，就是，遍历数组里的所有元素进行操作。<br/>
+</p>
+<p><br/>
+<pre class="example">var a = [1,2,3];
+
+for (i=0; i&lt;a.length; i++)
+{
+    a[i] = a[i] * 2;
+}
+
+for (i=0; i&lt;a.length; i++)
+{
+    alert(a[i]);
+}
+</pre>
+
+对数组里的每个元素进行操作是一种很常见的动作，你可以写出一个函数，让它为你做这些：<br/>
+</p>
+<p><br/>
+<pre class="example">function map(fn, a)
+{
+    for (i = 0; i &lt; a.length; i++)
+    {
+        a[i] = fn(a[i]);
+    }
+}
+</pre>
+
+现在，你可以把上面的代码重写成这样：<br/>
+</p>
+<p><br/>
+<pre class="example">map( function(x){return x*2;}, a );
+map( alert, a );
+</pre>
+
+另一个常见的跟数组相关的操作是，通过某种方式把数组里的所有值组合到一起。<br/>
+</p>
+<p><br/>
+<pre class="example">function sum(a)
+{
+    var s = 0;
+    for (i = 0; i &lt; a.length; i++)
+        s += a[i];
+    return s;
+}
+
+function join(a)
+{
+    var s = "";
+    for (i = 0; i &lt; a.length; i++)
+        s += a[i];
+    return s;
+}
+
+alert(sum([1,2,3]));
+alert(join(["a","b","c"]));
+</pre>
+
+sum 和 join 看起来非常的相似，你也许会想把它们的通用之处提取出来做成一个能把数组里的元素合并成一个值的通用函数：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">function reduce(fn, a, init)
+{
+    var s = init;
+    for (i = 0; i &lt; a.length; i++)
+        s = fn( s, a[i] );
+    return s;
+}
+
+function sum(a)
+{
+    return reduce( function(a, b){ return a + b; }, 
+                   a, 0 );
+}
+
+function join(a)
+{
+    return reduce( function(a, b){ return a + b; }, 
+                   a, "" );
+}
+</pre>
+
+很多老式的语言根本没有方法做出这种事情。另外一些语言允许你做这些，但不容易(例如，C语言里有函数指针，但你必须进行声明，并要在什么地方定义它)。面向对象的语言并没有被证实可以允许你对函数做所有的操作。<br/>
+</p>
+<p><br/>
+如果你想在Java里把函数作为一个一等(First Class)对象，你需要建一个只包含一个用来调用功能点的方法的整个对象。把这种现象跟实际情况联系起来，很多的面向对象语言都会要求你为每个class创建一个完整的文件，非常的没效率。如果你的编程语言里要求你去这样的调用功能点，那你根本没有享受到现代语言环境给你带来的所有好处。看看能否退货吧，挽回一点损失。<br/>
+</p>
+<p><br/>
+写这样的小函数，只是做一些遍历数组，处理其中的每个元素的操作，这样做究竟能得到多少好处？<br/>
+</p>
+<p><br/>
+那好，我们来回头看一看map这个函数。当你需要对数组里的每个元素依次做一些操作时，实际情况是，你并不在乎处理这些元素的顺序。你可以向前或向后遍历整个数组，得到的结果是一样的，不是吗？ 事实上，如果你的机器是2cpu的，你可以写出一些程序让每个cpu个处理一半的元素，你的map一下子就变快了2倍。<br/>
+</p>
+<p><br/>
+或者，只是个假设，在你遍布全球的数个数据中心里，你有成千上万的服务器，你有一个非常非常大的数组，我说过，只是假设，它们装载着整个互联网的内容信息。那现在，你就可以在你的成千上万的计算机上运行map函数，每个机器都能分摊掉计算中的一小部分任务。<br/>
+</p>
+<p><br/>
+所以，如今，举个例子，要想写出一个十分高效的能搜索整个互联网内容信息的代码，你只需要简单的用基本搜索字符串当作参数来调用map函数就行了。<br/>
+</p>
+<p><br/>
+这里，我想请你们要真正注意的有趣的事情是，你会发现像map 和 reduce这样的函数每个人都可以使用，当人们使用它时，你只需要找到一个编程能手写出最困难的调用map 和 reduce 函数的代码，让它们能够运行在全球大量的并行执行的计算机上，而以前旧的运行的很好的代码只需要调用这个循环操作，唯一不同的是，它们获得了比以前千万倍快的速度，这意味着你能做瞬间处理完巨大的计算工作。<br/>
+</p>
+<p><br/>
+让我再复述一遍。通过把通用的循环操作提取出来，你可以实现你想要的任何循环操作，包括实现出一种能随硬件设备的增加而性能升级的效果。<br/>
+</p>
+<p><br/>
+我想现在你就该明白为什么我在前段时间写的一篇文章里抱怨学校只教授计算机科学专业的学生Java知识而忽略其它：<br/>
+</p>
+<p><br/>
+缺乏对函数式编程的理解，你不可能发明出MapReduce——这个能够让Google实现大规模按需扩展和升级的算法。Map和Reduce这两个词来自于Lisp语言和函数式编程。回首看来，MapReduce对于任何还存有记忆的人来说都意味着一种纯函数式的编程，没有副作用，易于并行计算。事实恰巧是Google发明了MapReduce，而微软没有，这就说明了为什么微软仍然努力做那些基本的搜索功能研究的原因了，而Google已经开始了它的下一个目标：开发它的Skynet<sup>H</sup><sup>H</sup><sup>H</sup><sup>H</sup><sup>H</sup><sup>H——这世界上最大规模的并行超级计算机。我并不觉得微软已经认识到在如今的潮流中它已经落后的多远。</sup><br/>
+</p>
+<p><br/>
+那么，我希望现在你已经能理解了以函数为一等(First class)特征编程语言能使你更容易的对代码进行提炼抽象，这意味着你的代码更短小，紧凑，可复用性强，更容易扩展升级。大量的Google应用程序都使用了MapReduce，在他们优化程序或修改Bug时，都能从中得到益处。<br/>
+</p>
+<p><br/>
+现在我要说一点怨言牢骚，最高效的语言开发环境应该是一种能让你在不同层次上进行抽象归纳的语言环境。笨拙陈旧的FORTRAN语言甚至不允许你写函数。C语言里有函数指针，但实现的很丑陋，不能匿名，使用之前必须先进行声明实现。Java允许你使用功能点调用(functor)，但更加丑陋。就像Steve Yegge指出的，Java就是一个名词的王国。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">转载自</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>   <a href="http://www.aqee.net/can-your-programming-language-do-this/">http://www.aqee.net/can-your-programming-language-do-this/</a><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[org-mode学习笔记]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/31/org-mode-note/"/>
+    <updated>2012-08-31T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/31/org-mode-note</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">org-mode学习笔记</a>
+<ul>
+<li><a href="#sec-1-1">头信息注释</a></li>
+<li><a href="#sec-1-2">安装最新的org</a></li>
+<li><a href="#sec-1-3">文档结构相关的操作</a>
+<ul>
+<li><a href="#sec-1-3-1">Motion</a></li>
+<li><a href="#sec-1-3-2">headline结构移动</a></li>
+<li><a href="#sec-1-3-3">Structure editing</a></li>
+<li><a href="#sec-1-3-4">Sparse Tree</a></li>
+<li><a href="#sec-1-3-5">List</a></li>
+<li><a href="#sec-1-3-6">Footnotes</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">加粗</a></li>
+<li><a href="#sec-1-5">链接</a>
+<ul>
+<li><a href="#sec-1-5-1">内部链接 Internal Link</a></li>
+<li><a href="#sec-1-5-2">添加附件</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-6">TABLES</a>
+<ul>
+<li><a href="#sec-1-6-1">表格宽度</a></li>
+<li><a href="#sec-1-6-2">行列操作</a></li>
+<li><a href="#sec-1-6-3">表格计算</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-7">tag</a></li>
+<li><a href="#sec-1-8">code</a></li>
+<li><a href="#sec-1-9">TODO使用</a>
+<ul>
+<li><a href="#sec-1-9-1">TODO依赖关系</a></li>
+<li><a href="#sec-1-9-2">tracking todo state change</a></li>
+<li><a href="#sec-1-9-3">priotify</a></li>
+<li><a href="#sec-1-9-4">checkbox</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-10">org capture</a></li>
+<li><a href="#sec-1-11">exports</a>
+<ul>
+<li><a href="#sec-1-11-1">export option</a>
+<ul>
+<li><a href="#sec-1-11-1-1">export html</a></li>
+<li><a href="#sec-1-11-1-2">export pdf</a></li>
+<li><a href="#sec-1-11-1-3">使用org-jekyll导出</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-1-12">dates and times</a></li>
+<li><a href="#sec-1-13">属性</a></li>
+<li><a href="#sec-1-14">未分类</a>
+<ul>
+<li><a href="#sec-1-14-1">byte-recompile-directory</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-15">问题</a></li>
+<li><a href="#sec-1-16">参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/08/31/org-mode-note/">org-mode学习笔记</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">头信息注释</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p><br/>
+<pre class="example">#+TAGS: { 桌面(d) 服务器(s) }  编辑器(e) 浏览器(f) 多媒体(m) 压缩(z)
+#+TAGS:  { @Windows(w)  @Linux(l) }  
+#+TAGS:  { 糟糕(1) 凑合(2) 不错(3) 很好(4) 极品(5) } 
+#+SEQ_TODO: TODO(T) WAIT(W) | DONE(D!) CANCELED(C@) 
+#+COLUMNS: %10ITEM  %10PRIORITY %15TODO %65TAGS
+</pre>
+
+</p><ol>
+<li>启动时概览<br/>
+</li>
+<li>设定标签，括弧中的为标签快捷键（如果没有指定，默认为首字母）。可以设置在多行中<br/>
+</li>
+<li>花括号为标签组，组中的标签只能选一个<br/>
+</li>
+<li>设定待办状态。将项设置为 | 后面的状态时（DONE CANCELED），会打上 CLOSED 标志<br/>
+</li>
+<li>设定列视图<br/>
+</li>
+<li>更新了参数后在参数区域按C-c C-c进行更新<br/>
+</li>
+</ol>
+
+
+<p><br/>
+<b>这里的内容可以随时更改，但是要记得在改后用 C-c C-c 刷新设置</b><br/>
+</p>
+<p><br/>
+<!-- more -->
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">安装最新的org</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>   <a href="http://orgmode.org/org-mode-download.html">http://orgmode.org/org-mode-download.html</a><br/>
+   下载最新的org版本，然后解压到home的emacs目录，在.emacs中添加load-path。<br/>
+   (require &#8216;org)<br/>
+   然后可以使用org-version查看版本号。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">文档结构相关的操作</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">Motion</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+
+<p><br/>
+</p><table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left"></th><th scope="col" class="left">向前</th><th scope="col" class="left">向后</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">同级</td><td class="left">C-c C-f</td><td class="left">C-c C-b</td></tr>
+</tbody>
+<tbody>
+<tr><td class="left">跨级</td><td class="left">C-c C-n</td><td class="left">C-c C-p</td></tr>
+</tbody>
+<tbody>
+<tr><td class="left">上一级</td><td class="left">C-c C-u</td><td class="left"></td></tr>
+</tbody>
+<tbody>
+<tr><td class="left">跳转</td><td class="left">C-c C-j</td><td class="left"></td></tr>
+</tbody>
+</table>
+
+
+<p><br/>
+   <code>C-c C-j</code>  org-goto 这个功能强大，随意跳转<br/>
+   <code>S-TAB</code> 收起所有目录树，相当与C-u TAB<br/>
+</p>
+<p>   <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">headline结构移动</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p>    <code>M-left,right</code> 移动一级<br/>
+    <code>M-S-left，righ</code> subtree移动一级<br/>
+    <code>M-S-up，down</code> subtree上下移动一级<br/>
+    <code>C-c C-x C-w</code> kill subtree<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3">Structure editing</h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+<p>    M-RET       添加同级head<br/>
+    M-S-RET     插入TODO<br/>
+    M-LEFT，RIGHT，UP,DOWN 上下左右调级<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4">Sparse Tree</h4>
+<div class="outline-text-4" id="text-1-3-4">
+
+<p>    C-/         搜索关键字，折叠其他所有，只显示关心内容<br/>
+    C-/ r<br/>
+    M-g M-n     在结果中跳转<br/>
+    M-g M-p<br/>
+</p>
+<p>    <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-5" class="outline-4">
+<h4 id="sec-1-3-5">List</h4>
+<div class="outline-text-4" id="text-1-3-5">
+
+
+<p><br/>
+<pre class="example">-，+,*
+1.
+1)
+:: 添加描述
+</pre>
+
+   在list中同样支持类似header中的motion快捷键<br/>
+<b>注意一定后边要有个空格</b><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-6" class="outline-4">
+<h4 id="sec-1-3-6">Footnotes</h4>
+<div class="outline-text-4" id="text-1-3-6">
+
+<p>   C-c C-x f 自动在此处添加脚注，再按一次就可以回到刚才的地方<br/>
+</p>
+<p><br/>
+</p><div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 这是一个脚注,fn是必须的<br/>
+   还有一些快捷键，进行脚注的跳转。<br/>
+</p><ul>
+<li>TODO 以后进行扩充<br/>
+</li>
+</ul>
+
+
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">加粗</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>   <b>name</b><br/>
+   <i>斜体</i><br/>
+   <span style="text-decoration:underline;">下划线</span><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">链接</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>  C-c C-l 添加一个链接<br/>
+</p>
+<p><br/>
+<pre class="example">[[链接地址][链接名称]]
+[[链接地址]]
+</pre>
+
+  如果想修改这个链接，在链接后按下 backspace。<br/>
+</p>
+<p><br/>
+  在一个链接上按C-c C-o即可访问，至于调用什么程序访问，取决于链接的内容<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1">内部链接 Internal Link</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+<p>   如下命令定义了一个名为target的跳转目标：<br/>
+</p>
+<p><br/>
+   #<a name="target" class="target">target</a> <br/>
+   如下方式可以设置到target的链接：<br/>
+</p>
+<p><br/>
+<pre class="example">[[target]] 或 [[target][description]]
+</pre>
+
+   其他常用链接命令 <br/>
+   C-c l 可以在光标所在处创建一个跳转目标点，在需要跳转至该目标的位置输入命令C-c C-l可以建立到目标的链接<br/>
+</p>
+<p><br/>
+   当输入C-c C-l命令，光标若处在已经存在的一个链接上的时候，可以编辑改链接。   <br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5-2" class="outline-4">
+<h4 id="sec-1-5-2">添加附件</h4>
+<div class="outline-text-4" id="text-1-5-2">
+
+<p>    给文档添加附件非常简单，C-c C-a 然后就着菜单选好了，其中C-c C-a a是添加文件系统中的文件作为附件。<br/>
+</p>
+<p>    <br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">TABLES</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>   在table中按TAB，跳到下一个table<br/>
+   在tab中按RET，跳到下一行<br/>
+   C-c C-c 整理格式<br/>
+</p>
+<p><br/>
+   以 |- 开始的行TAB后扩充为分隔栏<br/>
+</p>
+<p><br/>
+   <b>C-c | 自动把一个空格排列的字段转化为表格</b><br/>
+</p>
+<p>   <br/>
+   C-c RET 创建下一行表格<br/>
+   C-c - 在下一行插入一行分隔符<br/>
+   C-c ^ 按当前列排序<br/>
+</p>
+<p>   <br/>
+</p>
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1">表格宽度</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<p>    在一列中添加&lt;n&gt;<br/>
+    如果一行显示不完全会显示为==&gt;<br/>
+    此时通过C-c `进入编辑默认，C-c C-c编辑完毕。<br/>
+    还可以添加左中右对齐。<br/>
+    l,c,r<br/>
+    比如：<br/>
+    &lt;r10&gt;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2">行列操作</h4>
+<div class="outline-text-4" id="text-1-6-2">
+
+<p>   M-上下左右<br/>
+   M-S-上下左右 <br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6-3" class="outline-4">
+<h4 id="sec-1-6-3">表格计算</h4>
+<div class="outline-text-4" id="text-1-6-3">
+
+<p>    比较复杂，而且不常用，用得时候再说，还可以使用Org-Plot进行画图<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">tag</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>   使用冒号扩起来,在headline后边。 :tag1:<br/>
+   快捷键：C-c C-q<br/>
+   如果光标在headline行，则可以直接使用C-c C-c<br/>
+</p>
+<p>   <br/>
+   search<br/>
+   C-c \或者C-c / m<br/>
+   C-c a m 全局搜索<br/>
+</p>
+<p><br/>
+   C-c \        搜索标签<br/>
+   C-c / T<br/>
+   C-u C-c \    搜索带 TODO 的标签<br/>
+   可以使用逻辑表达式限制条件，更准确灵活的搜索<br/>
+</p>
+<p><br/>
+</p><ul>
+<li>和      a+b     同时有这两个标签<br/>
+</li>
+<li>排除    a-b     有 a 但没有 b<br/>
+</li>
+</ul>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<tbody>
+<tr><td class="left">或      a</td><td class="left">b     有 a 或者有 b</td></tr>
+</tbody>
+</table>
+
+   &amp;    和      a&amp;b     同时有 a 和 b，可以用“+”替代<br/>
+   在查询视图中 C-c C-c 退出<br/>
+
+<p>     <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">code</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>语法：<br/>
+</p>
+<p><br/>
+<pre class="example">#+NAME: &lt;name&gt;
+#+BEGIN_SRC &lt;language&gt; &lt;switches&gt; &lt;header arguments&gt;
+&lt;body&gt;
+#+END_SRC
+</pre>
+
+
+<b>引用文字 #+BEGIN<sub>EXAMPLE</sub> /#+END<sub>EXAMPLE</sub></b><br/>
+为了保留引文的格式，还可以使用#+BEGIN<sub>VERSE</sub> / #+END<sub>VERSE</sub> 和#+BEGIN<sub>QUOTE</sub>/ #+END<sub>QUOTE</sub>. <br/>
+将引文居中排版可以使用#+BEGIN<sub>CENTER</sub> / #+END<sub>CENTER</sub>.<br/>
+</p>
+<p><br/>
+例子：<br/>
+</p>
+<p><br/>
+<pre class="src src-emacs-lisp">(<span style="color: #0000ff;">defun</span> <span style="color: #a020f0;">org-xor</span> (a b)
+<span style="color: #00bfff;">"Exclusive or."</span>
+(<span style="color: #0000ff;">if</span> a (not b) b))
+</pre>
+
+
+输入&lt;e和TAB,得到<br/>
+</p>
+<p><br/>
+<pre class="example">#+end_example
+输入&lt;s和TAB,得到
+#+begin_example
+        #+begin_src
+        #+end_src
+</pre>
+
+
+咳，相应的还有：<br/>
+</p>
+<p><br/>
+<pre class="example">
+("s" "#+begin_src ?\n\n#+end_src" "&lt;src lang=\"?\"&gt;\n\n&lt;/src&gt;")
+("e" "#+begin_example\n?\n#+end_example" "&lt;example&gt;\n?\n&lt;/example&gt;")
+("q" "#+begin_quote\n?\n#+end_quote" "&lt;quote&gt;\n?\n&lt;/quote&gt;")
+("v" "#+begin_verse\n?\n#+end_verse" "&lt;verse&gt;\n?\n/verse&gt;")
+("c" "#+begin_center\n?\n#+end_center" "&lt;center&gt;\n?\n/center&gt;")
+("l" "#+begin_latex\n?\n#+end_latex" "&lt;literal style=\"latex\"&gt;\n?\n&lt;/literal&gt;")
+("L" "#+latex: " "&lt;literal style=\"latex\"&gt;?&lt;/literal&gt;")
+("h" "#+begin_html\n?\n#+end_html" "&lt;literal style=\"html\"&gt;\n?\n&lt;/literal&gt;")
+("H" "#+html: " "&lt;literal style=\"html\"&gt;?&lt;/literal&gt;")
+("a" "#+begin_ascii\n?\n#+end_ascii")
+("A" "#+ascii: ")
+("i" "#+include %file ?" "&lt;include file=%file markup=\"?\"&gt;"))
+</pre>
+
+这些都是定义在org-structure-template-alist中的变量。<br/>
+</p>
+<p><br/>
+;; 定义快捷插入操作<br/>
+</p>
+<p><br/>
+<pre class="src src-lisp">(<span style="color: #0000ff;">define-skeleton</span> <span style="color: #a020f0;">iexp</span> 
+  <span style="color: #00bfff;">"Input #+BEGIN_EXAMPLE #+END_EXAMPLE in org-mode"</span>
+  <span style="color: #00bfff;">""</span>
+  <span style="color: #00bfff;">"#+BEGIN_EXAMPLE\n"</span>
+  _ <span style="color: #00bfff;">"\n"</span> 
+  <span style="color: #00bfff;">"#+END_EXAMPLE"</span>
+  )
+(define-abbrev org-mode-abbrev-table <span style="color: #00bfff;">"iexp"</span> <span style="color: #00bfff;">""</span> 'iexp)
+</pre>
+
+如果你想插入代码片段，直接M-x iexp RET即可，<br/>
+会自动出现 #+BEGIN<sub>EXAMPLE</sub> #+END<sub>EXAMPLE，并且光标自动停留在中间等待你的输入，</sub><br/>
+如果文章中已经有了一段内容，直接选中这段内容，M-x iexp RET，同样可以将这段内容引用起来，非常方便.<br/>
+</p>
+<p><br/>
+貌似使用等号也是有这个作用，用在行内，比如 <code>这样</code> <br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">TODO使用</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>   任何headline前加上TODO都可以变为TODO item<br/>
+   C-c C-t 循环变化TODO的状态<br/>
+   C-c / t 在sparse tree中查看TODO<br/>
+   C-c a t 显示aganda全局TODO<br/>
+</p>
+<p>   <br/>
+   设置多个状态，并添加简写，可以使用C-c C-t + brief 直接设置状态<br/>
+</p>
+<p><br/>
+<pre class="src src-lisp">(setq org-todo-keywords
+'((sequence <span style="color: #00bfff;">"TODO(t)"</span> <span style="color: #00bfff;">"|"</span> <span style="color: #00bfff;">"DONE(d)"</span>)
+(sequence <span style="color: #00bfff;">"REPORT(r)"</span> <span style="color: #00bfff;">"BUG(b)"</span> <span style="color: #00bfff;">"KNOWNCAUSE(k)"</span> <span style="color: #00bfff;">"|"</span> <span style="color: #00bfff;">"FIXED(f)"</span>)
+(sequence <span style="color: #00bfff;">"|"</span> <span style="color: #00bfff;">"CANCELED(c)"</span>)))
+</pre>
+
+
+   C-u C-c C-t  手动输入 TODO 状态，如果设定快捷则使用快捷键输入<br/>
+   S-right      循环切换 TODO 状态，两个以上 TODO 状态时使用<br/>
+   S-left<br/>
+   C-S-right    组间切换<br/>
+   C-S-left<br/>
+   C-c C-v      查询视图<br/>
+   C-c / t<br/>
+   C-c a t      全局 TODO 列表<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-9-1" class="outline-4">
+<h4 id="sec-1-9-1">TODO依赖关系</h4>
+<div class="outline-text-4" id="text-1-9-1">
+
+<p>   父级TODO只有等子TODO都done后才能done<br/>
+   例子： 添加ORDERED属性，subclass也是按照先后顺序执行<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">* Parent
+:PROPERTIES:
+:END:
+**TODO a
+**TODO b, needs to wait for (a)
+**TODO c, needs to wait for (a) and (b)
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9-2" class="outline-4">
+<h4 id="sec-1-9-2">tracking todo state change</h4>
+<div class="outline-text-4" id="text-1-9-2">
+
+<p>    This is achieved by adding special markers ‘!’(for a timestamp) <br/>
+    or ‘@’ (for a note with timestamp) in parentheses after each keyword.<br/>
+</p>
+<p>    <br/>
+    exp:<br/>
+    (setq org-todo-keywords<br/>
+    &#8216;((sequence &#8220;TODO(t)&#8221; &#8220;WAIT(w@/!)&#8221; &#8220;|&#8221; &#8220;DONE(d!)&#8221; &#8220;CANCELED(c@)&#8221;)))<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9-3" class="outline-4">
+<h4 id="sec-1-9-3">priotify</h4>
+<div class="outline-text-4" id="text-1-9-3">
+
+<p>    在headline添加priority cookie<br/>
+    *** TODO [#A] Write letter to Sam Fortune<br/>
+    A，B，C<br/>
+    不写priority cookie的headline默认为B<br/>
+    C-c , 设置优先级<br/>
+    S-up，down 调高低<br/>
+</p>
+<p>    <br/>
+    对于显示效果还要设置：<br/>
+    org-priority-faces<br/>
+</p>
+<p>    <br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9-4" class="outline-4">
+<h4 id="sec-1-9-4">checkbox</h4>
+<div class="outline-text-4" id="text-1-9-4">
+
+<p>    每行以- [ ] 开头，就是checkbox,注意[ ]之间必须有空格<br/>
+    实际上是列表，所有要加- + 或者*在[ ]之前<br/>
+</p>
+<p><br/>
+    但checkbox不加入global todo list。<br/>
+    试用于把一个任务分成若干个小项。<br/>
+    C-c C-c  toggle checkbox<br/>
+    C-u C-c C-c 在list符后添加一个空的checkbox或者删除<br/>
+    C-u C-u C-c C-c 把checkbox设置为中间状态[-]<br/>
+    还headline后添加[/]或者[%] 可以显示当前项完成的个数或者百分比。<br/>
+</p>
+<p>   <br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-10" class="outline-3">
+<h3 id="sec-1-10">org capture</h3>
+<div class="outline-text-3" id="text-1-10">
+
+<p>  用于快速记录一些想法，可以设置一些模板。<br/>
+</p>
+<p><br/>
+<pre class="src src-lisp">(setq org-directory <span style="color: #00bfff;">"~/lwemacs/org"</span>)
+(setq org-default-notes-file (concat org-directory <span style="color: #00bfff;">"/notes.org"</span>))
+(global-set-key <span style="color: #00bfff;">"\C-cc"</span> 'org-capture)
+</pre>
+
+</p>
+<p>  <br/>
+  C-c C-c 完成编辑<br/>
+  C-c C-k 放弃编辑<br/>
+  C-u C-c c 查看模板，或者定制模板<br/>
+  C-u C-u C-c c 查看last note<br/>
+</p>
+<p>  <br/>
+  添加模板，设置org-capture-templates变量：<br/>
+</p>
+<p><br/>
+<pre class="src src-lisp">(setq org-capture-templates
+ '((<span style="color: #00bfff;">"t"</span> <span style="color: #00bfff;">"Todo"</span> entry (file+headline (concat org-directory <span style="color: #00bfff;">"/gtd.org"</span>) <span style="color: #00bfff;">"Tasks"</span>)
+        <span style="color: #00bfff;">"* TODO %?\n %i\n %a"</span>)
+   (<span style="color: #00bfff;">"j"</span> <span style="color: #00bfff;">"Journal"</span> entry (file+datetree (concat org-directory <span style="color: #00bfff;">"/journal.org"</span>))
+        <span style="color: #00bfff;">"* %?\nEntered on %U\n %i\n %a"</span>)))  
+</pre>
+
+  要学习模板的格式，查看org-capture-templates变量描述。<br/>
+</p>
+<p>  <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11" class="outline-3">
+<h3 id="sec-1-11">exports</h3>
+<div class="outline-text-3" id="text-1-11">
+
+<p>   设置如下tag可以控制导出和不导出的headline<br/>
+   (:export:) and &#8216;(:noexport:) <br/>
+</p>
+<p>   <br/>
+</p>
+</div>
+
+<div id="outline-container-1-11-1" class="outline-4">
+<h4 id="sec-1-11-1">export option</h4>
+<div class="outline-text-4" id="text-1-11-1">
+
+<p>   放在文章的任何位置都可以<br/>
+   C-c C-e t 插入option模板<br/>
+</p>
+<p><br/>
+   最好把统一的配置放在一个独立的文件中，然后进行引用<br/>
+   <code>#+SETUPFILE</code><br/>
+</p>
+<p><br/>
+   其中OPTIONS字段是最重要的，有很多选项：<br/>
+   C-c C-e 开始export命令，org-export,然后会提示导出什么格式。<br/>
+   <b>注意，一定要加上\n:t, 导出的时候加入回行，否则都会显示为一行</b><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-11-1-1" class="outline-5">
+<h5 id="sec-1-11-1-1">export html</h5>
+<div class="outline-text-5" id="text-1-11-1-1">
+
+<p>    org-export-html-postamble 默认此变量时true，会往结尾添加一些作者信息。<br/>
+    css相关：<br/>
+    org-export-html-style 或者 <br/>
+    #+STYLE: &lt;link rel=&#8221;stylesheet&#8221; type=&#8221;text/css&#8221; href=&#8221;stylesheet.css&#8221; /&gt;<br/>
+    #+INFOJS<sub>OPT</sub>: 是设置和js相关的一些属性<br/>
+    view:   <br/>
+    info        Info-like interface with one section per page.<br/>
+    overview    Folding interface, initially showing only top-level.<br/>
+    content     Folding interface, starting with all headlines visible.<br/>
+    showall     Folding interface, all headlines and text visible.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11-1-2" class="outline-5">
+<h5 id="sec-1-11-1-2">export pdf</h5>
+<div class="outline-text-5" id="text-1-11-1-2">
+
+<p>     apt install letex-recommend 结果还是导出失败。以后再搞吧。<br/>
+     有可能是版本的问题， 网上说要用最新的。我用的org才6.3版本。<br/>
+     解决了问题：需要安装一些包。<br/>
+     texlive-fonts-recommended, texlive-fonts-recommended, texlive-latex-extra<br/>
+</p>
+<p>     <br/>
+     LaTeX Error: File `marvosym.sty&#8217; not found. solution: apt-get install texlive-fonts-recommended<br/>
+     LaTeX Error: File `fullpage.sty&#8217; not found. solution: apt-get install texlive-latex-extra<br/>
+     LaTeX Error: File `multibib.sty&#8217; not found. solution: apt-get install texlive-bibtex-extra<br/>
+     LaTeX Error: File `algorithm.sty&#8217; not found. solution: apt-get install texlive-science<br/>
+</p>
+<p>     <br/>
+     中文问题：<br/>
+     安装texlive-xetex，这样就会有xelatex了。<br/>
+     暂时放弃，太费劲了，有空参考一下：<br/>
+     <a href="http://orgmode.org/worg/org-contrib/babel/examples/article-class.html">http://orgmode.org/worg/org-contrib/babel/examples/article-class.html</a><br/>
+     <a href="http://mathslinux.org/?p=58">用 org-mode 写 LaTeX</a><br/>
+     我这里生成不了org-article.cls?<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11-1-3" class="outline-5">
+<h5 id="sec-1-11-1-3">使用org-jekyll导出</h5>
+<div class="outline-text-5" id="text-1-11-1-3">
+
+<p>     在一个headline上添加：blog:的tag和on的属性<br/>
+     然后执行：<br/>
+     org-jekyll-export-blog<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-12" class="outline-3">
+<h3 id="sec-1-12">dates and times</h3>
+<div class="outline-text-3" id="text-1-12">
+
+<p>   M-x org-time-<br/>
+   C-c . 创建时间, 还可以添加C-u前缀，可以插入当前时间，默认只是日期<br/>
+   C-c C-d 插入deadline<br/>
+   C-c C-s 插入Schedule<br/>
+</p>
+<p><br/>
+   M-x org-clock-<br/>
+   C-c C-x C-i clock in，一个工作的开始计时<br/>
+   C-c C-x C-o clock out<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-13" class="outline-3">
+<h3 id="sec-1-13">属性</h3>
+<div class="outline-text-3" id="text-1-13">
+
+<p>   在headline的下一行输入：<br/>
+   <code>C-c C-x p</code> 添加属性<br/>
+   在属性栏上<br/>
+   <code>C-c C-c</code> 弹出属性的action，可以添加删除<br/>
+</p>
+<p><br/>
+   属性的搜索<br/>
+   <code>c-c \</code> 搜索属性<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-14" class="outline-3">
+<h3 id="sec-1-14">未分类</h3>
+<div class="outline-text-3" id="text-1-14">
+
+<p>   C-c C-x b    在一个新缓冲区中显示当前分支<br/>
+   5个或以上的“-”是一个水平分割符。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-14-1" class="outline-4">
+<h4 id="sec-1-14-1">byte-recompile-directory</h4>
+<div class="outline-text-4" id="text-1-14-1">
+
+<p>    编译整个目录el<br/>
+    C-u 0 M-x byte-recompile-directory<br/>
+</p>
+<p><br/>
+    will compile all the .el files in the directory and in all subdirectories below.<br/>
+</p>
+<p><br/>
+    The C-u 0 part is to make it not ask about every .el file that does not have a .elc counterpart.<br/>
+</p>
+<p><br/>
+    emacs -batch -f batch-byte-compile &lt;filename&gt;<br/>
+    e.g.:   emacs -batch -f batch-byte-compile *.el<br/>
+    简单解释一下，-batch=&ndash;batch 不打开交互界面（emacs窗口），-f=&ndash;funcall 执行一个函数，后面跟的就是函数： batch-byte-compile 编译成字节码。<br/>
+</p>
+<p><br/>
+    给大家补充一点编译知识：<br/>
+    lisp是函数式语言，它的程序不能编译成可执行程序独立执行，只能通过解释器解释执行。<br/>
+    所以emacs只能将.el文件字节编译，编译后的目标代码其实还是源程序，只是用字节码的方式存储，而且在字节编译的过程中进行了语法检查，所以可以提高执行效率。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-15" class="outline-3">
+<h3 id="sec-1-15">问题</h3>
+<div class="outline-text-3" id="text-1-15">
+
+<p>   1.如果自动添加下一级head，如在lev1中回车后添加lev2，而M-RET添加的是同级的？<br/>
+</p>
+<p><br/>
+   2.C-c | 转换的表格对不齐，不知如何对其？<br/>
+</p>
+<p><br/>
+   3.如果添加不让org解析的字段？<br/>
+</p>
+<p><br/>
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; local<br/>
+  这是orgmode的专业社区，完全用orgmode组织<br/>
+  <a href="http://orgmode.org/worg/">http://orgmode.org/worg/</a><br/>
+  可以试试自己搭建worg<br/>
+  <a href="http://orgmode.org/worg/worg-setup.html">http://orgmode.org/worg/worg-setup.html</a><br/>
+=======<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-16" class="outline-3">
+<h3 id="sec-1-16">参考资料</h3>
+<div class="outline-text-3" id="text-1-16">
+
+<p>   <a href="http://emacser.com/org-mode.htm">http://emacser.com/org-mode.htm</a><br/>
+   <a href="http://ifq.github.com/blog/2012/08/10/org-octopress/">org结合octopress</a><br/>
+</p>
+<p>   <br/>
+   这个非常好：orgcard<br/>
+   <a href="http://orgmode.org/worg/orgcard.html">http://orgmode.org/worg/orgcard.html</a><br/>
+   <a href="http://orgmode.org/orgcard.pdf">http://orgmode.org/orgcard.pdf</a><br/>
+</p>
+<p><br/>
+   这是orgmode的专业社区，完全用orgmode组织<br/>
+   <a href="http://orgmode.org/worg/">http://orgmode.org/worg/</a><br/>
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; other<br/>
+</p>
+<p><br/>
+</p>
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 测试一个脚注测试<br/>
+</p></div>
+</div>
+</div>
+
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[emacs markdown-mode]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/15/emacs-markdown-mode/"/>
+    <updated>2012-08-15T12:38:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/15/emacs-markdown-mode</id>
+    <content type="html"><![CDATA[<h4>锚标签 C-c C-a</h4>
+
+<p><code>C-c C-a l</code> 超链接<br/>
+<code>C-c C-a r</code> 参考链接 text 参考链接放到文件最后 [label]: markdown.html<br/>
+<code>C-c C-a w</code> wiki链接 [[wikilink]]</p>
+
+<h4>常用命令 C-c C-c</h4>
+
+<p><code>C-c C-c m</code> 在另一个Buffer显示输出<br/>
+<code>C-c C-c p</code> 在浏览器中预览输出<br/>
+<code>C-c C-c e</code> 输出html文件到相同前缀的.html文件 eg:basename.html<br/>
+<code>C-c C-c v</code> 输出并且在浏览器中查看<br/>
+<code>C-c C-c c</code> 检查是否有未定义的链接</p>
+
+<h4>插入图片 C-c C-i</h4>
+
+<p><code>C-c C-i i</code> 插入一张图片</p>
+
+<h4>物理样式 C-c C-p</h4>
+
+<p><code>C-c C-p b</code> 将选中的文字加粗 bold <strong>bold</strong> 如果为选中则插入 <em><em>**<br/>
+<code>C-c C-p f</code> 将选中的文字设置成等宽字体 <code>fixed width text</code><br/>
+<code>C-c C-p i</code> 将选中的文字设置成斜体 italic</em>italic</em></p>
+
+<h4>逻辑样式 C-c C-s</h4>
+
+<p><code>C-c C-s b</code> 设置引用 > backquoted<br/>
+<code>C-c C-s p</code> 预格式，在之前插入4个空格默认 <code>&lt;pre&gt;pre text&lt;/pre&gt;</code><br/>
+<code>C-c C-s c</code> 插入代码块 <code>code here</code><br/>
+<code>C-c C-s e</code> 强调 emphasis <em>emphasis</em><br/>
+<code>C-c C-s s</code> 加强 strong <strong>strong</strong></p>
+
+<h4>标题章节 C-c C-t</h4>
+
+<p><code>C-c C-t n</code> 插入标题 1-6<br/>
+<code>C-c C-t t</code> 插入一个title<br/>
+<code>C-c C-t s</code> 插入一个section<br/>
+<code>C-c -</code> 插入一条分割线</p>
+
+<hr />
+
+<h4>导航</h4>
+
+<p><code>TAB</code> 折叠或者展开标题<br/>
+<code>C-M-n &amp; C-M-p</code> 在上下可见的标题中前后移动<br/>
+<code>C-M-f &amp; C-M-b</code> 在同一级的标题中前后移动<br/>
+<code>C-M-u</code> 回到上一级标题</p>
+
+<h2>参考</h2>
+
+<p><a href="http://jblevins.org/projects/markdown-mode/">Emacs Markdown Mode</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[添加微博sidebar]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/15/tian-jia-wei-bo-sidebar/"/>
+    <updated>2012-08-15T00:50:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/15/tian-jia-wei-bo-sidebar</id>
+    <content type="html"><![CDATA[<p>使用<a href="http://weibo.com/tool/weiboshow">微博秀</a>直接生成对应的代码，然后写到custom/asides/weibo.html中。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;section&gt;</span>
+</span><span class='line'><span class="nt">&lt;h1&gt;</span>新浪微博<span class="nt">&lt;/h1&gt;</span>
+</span><span class='line'><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;weibo&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;li&gt;</span>
+</span><span class='line'><span class="nt">&lt;iframe</span> <span class="na">width=</span><span class="s">&quot;100%&quot;</span> <span class="na">height=</span><span class="s">&quot;550&quot;</span> <span class="na">class=</span><span class="s">&quot;share_self&quot;</span>  <span class="na">frameborder=</span><span class="s">&quot;0&quot;</span> <span class="na">scrolling=</span><span class="s">&quot;no&quot;</span>
+</span><span class='line'><span class="na">src=</span><span class="s">&quot;http://widget.weibo.com/weiboshow/index.php?</span>
+</span><span class='line'><span class="s">language=&amp;</span>
+</span><span class='line'><span class="s">width=0&amp;</span>
+</span><span class='line'><span class="s">height=550&amp;</span>
+</span><span class='line'><span class="s">fansRow=2&amp;</span>
+</span><span class='line'><span class="s">ptype=1&amp;</span>
+</span><span class='line'><span class="s">speed=0&amp;</span>
+</span><span class='line'><span class="s">skin=5&amp;</span>
+</span><span class='line'><span class="s">isTitle=1&amp;</span>
+</span><span class='line'><span class="s">noborder=1&amp;</span>
+</span><span class='line'><span class="s">isWeibo=1&amp;</span>
+</span><span class='line'><span class="s">isFans=0&amp;</span>
+</span><span class='line'><span class="s">uid=1905507693&amp;</span>
+</span><span class='line'><span class="s">verifier=e659651a&amp;</span>
+</span><span class='line'><span class="s">dpc=1&quot;</span><span class="nt">&gt;&lt;/iframe&gt;</span>
+</span><span class='line'><span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/section&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后在_config.yml中添加default_asides中：</p>
+
+<pre><code>    custom/asides/weibo.html
+</code></pre>
+
+<p>参考：<a href="http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/">http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[octopress添加分类栏]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/14/octopresstian-jia-fen-lei-lan/"/>
+    <updated>2012-08-14T23:09:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/14/octopresstian-jia-fen-lei-lan</id>
+    <content type="html"><![CDATA[<p>参考：<a href="https://github.com/tokkonopapa/octopress-tagcloud" title="octopress-tagcloud">octopress-tagcloud</a></p>
+
+<ul>
+<li><p>下载并copy到对应目录</p>
+
+<pre><code> ├─ plugins/
+ │  └── tag_cloud.rb
+ └─ source/
+    └─ _includes/
+       └─ custom/
+          └─ asides/
+             ├─ category_list.html
+             └─ tag_cloud.html
+</code></pre></li>
+<li><p>在_config.yml中的default_asides中添加</p>
+
+<pre><code>  custom/asides/category_list.html
+  custom/asides/tag_cloud.html
+</code></pre></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[重新安装octopress]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/14/zhong-xin-an-zhuang-octopress/"/>
+    <updated>2012-08-14T16:31:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/14/zhong-xin-an-zhuang-octopress</id>
+    <content type="html"><![CDATA[<p>如果更换机子或者重新安装系统后，要重新获得octopress非常简单。</p>
+
+<p>1.安装ruby就不说了，我喜欢用rben安装。</p>
+
+<p>2.clone已存在的库，需要上传ssh key</p>
+
+<pre><code>git clone git@github.com:username/username.github.com.git octopress
+</code></pre>
+
+<p>3.切换到souce分支<br/>
+  查看远程的所有分支。</p>
+
+<pre><code>  git branch -r
+</code></pre>
+
+<p>  切换分支</p>
+
+<pre><code>  git checkout origin source
+</code></pre>
+
+<p>4.提交代码</p>
+
+<pre><code>git push origin source
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[markdown]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/13/markdown/"/>
+    <updated>2012-08-13T23:10:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/13/markdown</id>
+    <content type="html"><![CDATA[<p>[转自]<a href="http://wowubuntu.com/markdown/">http://wowubuntu.com/markdown/</a></p>
+
+<h2 id="block">区块元素</h2>
+
+
+
+
+<h3 id="p">段落和换行</h3>
+
+
+<p>一个 Markdown 段落是由一个或多个连续的文本行组成，它的前后要有一个以上的空行（空行的定义是显示上看起来像是空的，便会被视为空行。比方说，若某一行只包含空格和制表符，则该行也会被视为空行）。普通段落不该用空格或制表符来缩进。</p>
+
+<p>「由一个或多个连续的文本行组成」这句话其实暗示了 Markdown 允许段落内的强迫换行（插入换行符），这个特性和其他大部分的 text-to-HTML 格式不一样（包括 Movable Type 的「Convert Line Breaks」选项），其它的格式会把每个换行符都转成 <code>&lt;br /&gt;</code> 标签。</p>
+
+<p>如果你<em>确实</em>想要依赖 Markdown 来插入 <code>&lt;br /&gt;</code> 标签的话，<strong>在插入处先按入两个以上的空格然后回车。</strong></p>
+
+<!-- more -->
+
+
+<h3 id="header">标题</h3>
+
+
+<p>Markdown 支持两种标题的语法，类 [Setext] [1] 和类 [atx] [2] 形式。</p>
+
+<p>类 Setext 形式是用底线的形式，利用 <code>=</code> （最高阶标题）和 <code>-</code> （第二阶标题），例如：</p>
+
+<pre><code>This is an H1
+=============
+
+This is an H2
+-------------
+</code></pre>
+
+<p>任何数量的 <code>=</code> 和 <code>-</code> 都可以有效果。</p>
+
+<p>类 Atx 形式则是在行首插入 1 到 6 个 <code>#</code> ，对应到标题 1 到 6 阶，例如：</p>
+
+<pre><code># 这是 H1
+
+## 这是 H2
+
+###### 这是 H6
+</code></pre>
+
+<p>你可以选择性地「闭合」类 atx 样式的标题，这纯粹只是美观用的，若是觉得这样看起来比较舒适，你就可以在行尾加上 <code>#</code>，而行尾的 <code>#</code> 数量也不用和开头一样（行首的井字符数量决定标题的阶数）：</p>
+
+<pre><code># 这是 H1 #
+
+## 这是 H2 ##
+
+### 这是 H3 ######
+</code></pre>
+
+<h3 id="blockquote">区块引用 Blockquotes</h3>
+
+
+<p>Markdown 标记区块引用是使用类似 email 中用 <code>&gt;</code> 的引用方式。如果你还熟悉在 email 信件中的引言部分，你就知道怎么在 Markdown 文件中建立一个区块引用，那会看起来像是你自己先断好行，然后在每行的最前面加上 <code>&gt;</code> ：</p>
+
+<pre><code>&gt; This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
+&gt; consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
+&gt; Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.
+&gt; 
+&gt; Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse
+&gt; id sem consectetuer libero luctus adipiscing.
+</code></pre>
+
+<p>Markdown 也允许你偷懒只在整个段落的第一行最前面加上 <code>&gt;</code> ：</p>
+
+<pre><code>&gt; This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
+consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
+Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.
+
+&gt; Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse
+id sem consectetuer libero luctus adipiscing.
+</code></pre>
+
+<p>区块引用可以嵌套（例如：引用内的引用），只要根据层次加上不同数量的 <code>&gt;</code> ：</p>
+
+<pre><code>&gt; This is the first level of quoting.
+&gt;
+&gt; &gt; This is nested blockquote.
+&gt;
+&gt; Back to the first level.
+</code></pre>
+
+<p>引用的区块内也可以使用其他的 Markdown 语法，包括标题、列表、代码区块等：</p>
+
+<pre><code>&gt; ## 这是一个标题。
+&gt; 
+&gt; 1.   这是第一行列表项。
+&gt; 2.   这是第二行列表项。
+&gt; 
+&gt; 给出一些例子代码：
+&gt; 
+&gt;     return shell_exec("echo $input | $markdown_script");
+</code></pre>
+
+<h3 id="list">列表</h3>
+
+
+<p>Markdown 支持有序列表和无序列表。</p>
+
+<p>无序列表使用星号、加号或是减号作为列表标记：</p>
+
+<pre><code>*   Red
+*   Green
+*   Blue
+</code></pre>
+
+<p>等同于：</p>
+
+<pre><code>+   Red
++   Green
++   Blue
+</code></pre>
+
+<p>也等同于：</p>
+
+<pre><code>-   Red
+-   Green
+-   Blue
+</code></pre>
+
+<p>有序列表则使用数字接着一个英文句点：</p>
+
+<pre><code>1.  Bird
+2.  McHale
+3.  Parish
+</code></pre>
+
+<p>很重要的一点是，你在列表标记上使用的数字并不会影响输出的 HTML 结果，上面的列表所产生的 HTML 标记为：</p>
+
+<pre><code>&lt;ol&gt;
+&lt;li&gt;Bird&lt;/li&gt;
+&lt;li&gt;McHale&lt;/li&gt;
+&lt;li&gt;Parish&lt;/li&gt;
+&lt;/ol&gt;
+</code></pre>
+
+<p>如果你的列表标记写成：</p>
+
+<pre><code>1.  Bird
+1.  McHale
+1.  Parish
+</code></pre>
+
+<p>或甚至是：</p>
+
+<pre><code>3. Bird
+1. McHale
+8. Parish
+</code></pre>
+
+<p>你都会得到完全相同的 HTML 输出。重点在于，你可以让 Markdown 文件的列表数字和输出的结果相同，或是你懒一点，你可以完全不用在意数字的正确性。</p>
+
+<p>如果你使用懒惰的写法，建议第一个项目最好还是从 1. 开始，因为 Markdown 未来可能会支持有序列表的 start 属性。</p>
+
+<p>列表项目标记通常是放在最左边，但是其实也可以缩进，最多 3 个空格，项目标记后面则一定要接着至少一个空格或制表符。</p>
+
+<p>要让列表看起来更漂亮，你可以把内容用固定的缩进整理好：</p>
+
+<pre><code>*   Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+    Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi,
+    viverra nec, fringilla in, laoreet vitae, risus.
+*   Donec sit amet nisl. Aliquam semper ipsum sit amet velit.
+    Suspendisse id sem consectetuer libero luctus adipiscing.
+</code></pre>
+
+<p>但是如果你懒，那也行：</p>
+
+<pre><code>*   Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi,
+viverra nec, fringilla in, laoreet vitae, risus.
+*   Donec sit amet nisl. Aliquam semper ipsum sit amet velit.
+Suspendisse id sem consectetuer libero luctus adipiscing.
+</code></pre>
+
+<p>如果列表项目间用空行分开，在输出 HTML 时 Markdown 就会将项目内容用 <code>&lt;p&gt;</code>
+标签包起来，举例来说：</p>
+
+<pre><code>*   Bird
+*   Magic
+</code></pre>
+
+<p>会被转换为：</p>
+
+<pre><code>&lt;ul&gt;
+&lt;li&gt;Bird&lt;/li&gt;
+&lt;li&gt;Magic&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p>但是这个：</p>
+
+<pre><code>*   Bird
+
+*   Magic
+</code></pre>
+
+<p>会被转换为：</p>
+
+<pre><code>&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Bird&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Magic&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p>列表项目可以包含多个段落，每个项目下的段落都必须缩进 4 个空格或是 1 个制表符：</p>
+
+<pre><code>1.  This is a list item with two paragraphs. Lorem ipsum dolor
+    sit amet, consectetuer adipiscing elit. Aliquam hendrerit
+    mi posuere lectus.
+
+    Vestibulum enim wisi, viverra nec, fringilla in, laoreet
+    vitae, risus. Donec sit amet nisl. Aliquam semper ipsum
+    sit amet velit.
+
+2.  Suspendisse id sem consectetuer libero luctus adipiscing.
+</code></pre>
+
+<p>如果你每行都有缩进，看起来会看好很多，当然，再次地，如果你很懒惰，Markdown 也允许：</p>
+
+<pre><code>*   This is a list item with two paragraphs.
+
+    This is the second paragraph in the list item. You're
+only required to indent the first line. Lorem ipsum dolor
+sit amet, consectetuer adipiscing elit.
+
+*   Another item in the same list.
+</code></pre>
+
+<p>如果要在列表项目内放进引用，那 <code>&gt;</code> 就需要缩进：</p>
+
+<pre><code>*   A list item with a blockquote:
+
+    &gt; This is a blockquote
+    &gt; inside a list item.
+</code></pre>
+
+<p>如果要放代码区块的话，该区块就需要缩进<em>两次</em>，也就是 8 个空格或是 2 个制表符：</p>
+
+<pre><code>*   一列表项包含一个列表区块：
+
+        &lt;代码写在这&gt;
+</code></pre>
+
+<p>当然，项目列表很可能会不小心产生，像是下面这样的写法：</p>
+
+<pre><code>1986. What a great season.
+</code></pre>
+
+<p>换句话说，也就是在行首出现<em>数字-句点-空白</em>，要避免这样的状况，你可以在句点前面加上反斜杠。</p>
+
+<pre><code>1986\. What a great season.
+</code></pre>
+
+<h3 id="precode">代码区块</h3>
+
+
+<p>和程序相关的写作或是标签语言原始码通常会有已经排版好的代码区块，通常这些区块我们并不希望它以一般段落文件的方式去排版，而是照原来的样子显示，Markdown 会用 <code>&lt;pre&gt;</code> 和 <code>&lt;code&gt;</code> 标签来把代码区块包起来。</p>
+
+<p>要在 Markdown 中建立代码区块很简单，只要简单地缩进 4 个空格或是 1 个制表符就可以，例如，下面的输入：</p>
+
+<pre><code>这是一个普通段落：
+
+    这是一个代码区块。
+</code></pre>
+
+<p>Markdown 会转换成：</p>
+
+<pre><code>&lt;p&gt;这是一个普通段落：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;这是一个代码区块。
+&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+
+<p>这个每行一阶的缩进（4 个空格或是 1 个制表符），都会被移除，例如：</p>
+
+<pre><code>Here is an example of AppleScript:
+
+    tell application "Foo"
+        beep
+    end tell
+</code></pre>
+
+<p>会被转换为：</p>
+
+<pre><code>&lt;p&gt;Here is an example of AppleScript:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;tell application "Foo"
+    beep
+end tell
+&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+
+<p>一个代码区块会一直持续到没有缩进的那一行（或是文件结尾）。</p>
+
+<p>在代码区块里面， <code>&amp;</code> 、 <code>&lt;</code> 和 <code>&gt;</code> 会自动转成 HTML 实体，这样的方式让你非常容易使用 Markdown 插入范例用的 HTML 原始码，只需要复制贴上，再加上缩进就可以了，剩下的 Markdown 都会帮你处理，例如：</p>
+
+<pre><code>    &lt;div class="footer"&gt;
+        &amp;copy; 2004 Foo Corporation
+    &lt;/div&gt;
+</code></pre>
+
+<p>会被转换为：</p>
+
+<pre><code>&lt;pre&gt;&lt;code&gt;&amp;lt;div class="footer"&amp;gt;
+    &amp;amp;copy; 2004 Foo Corporation
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+
+<p>代码区块中，一般的 Markdown 语法不会被转换，像是星号便只是星号，这表示你可以很容易地以 Markdown 语法撰写 Markdown 语法相关的文件。</p>
+
+<h3 id="hr">分隔线</h3>
+
+
+<p>你可以在一行中用三个以上的星号、减号、底线来建立一个分隔线，行内不能有其他东西。你也可以在星号或是减号中间插入空格。下面每种写法都可以建立分隔线：</p>
+
+<pre><code>* * *
+
+***
+
+*****
+
+- - -
+
+---------------------------------------
+</code></pre>
+
+<hr />
+
+<h2 id="span">区段元素</h2>
+
+
+
+
+<h3 id="link">链接</h3>
+
+
+<p>Markdown 支持两种形式的链接语法： <em>行内式</em>和<em>参考式</em>两种形式。</p>
+
+<p>不管是哪一种，链接文字都是用 [方括号] 来标记。</p>
+
+<p>要建立一个<em>行内式</em>的链接，只要在方块括号后面紧接着圆括号并插入网址链接即可，如果你还想要加上链接的 title 文字，只要在网址后面，用双引号把 title 文字包起来即可，例如：</p>
+
+<pre><code>This is [an example](http://example.com/ "Title") inline link.
+
+[This link](http://example.net/) has no title attribute.
+</code></pre>
+
+<p>会产生：</p>
+
+<pre><code>&lt;p&gt;This is &lt;a href="http://example.com/" title="Title"&gt;
+an example&lt;/a&gt; inline link.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://example.net/"&gt;This link&lt;/a&gt; has no
+title attribute.&lt;/p&gt;
+</code></pre>
+
+<p>如果你是要链接到同样主机的资源，你可以使用相对路径：</p>
+
+<pre><code>See my [About](/about/) page for details.   
+</code></pre>
+
+<p><em>参考式</em>的链接是在链接文字的括号后面再接上另一个方括号，而在第二个方括号里面要填入用以辨识链接的标记：</p>
+
+<pre><code>This is [an example][id] reference-style link.
+</code></pre>
+
+<p>你也可以选择性地在两个方括号中间加上一个空格：</p>
+
+<pre><code>This is [an example] [id] reference-style link.
+</code></pre>
+
+<p>接着，在文件的任意处，你可以把这个标记的链接内容定义出来：</p>
+
+<pre><code>[id]: http://example.com/  "Optional Title Here"
+</code></pre>
+
+<p>链接内容定义的形式为：</p>
+
+<ul>
+<li>方括号（前面可以选择性地加上至多三个空格来缩进），里面输入链接文字</li>
+<li>接着一个冒号</li>
+<li>接着一个以上的空格或制表符</li>
+<li>接着链接的网址</li>
+<li>选择性地接着 title 内容，可以用单引号、双引号或是括弧包着</li>
+</ul>
+
+
+<p>下面这三种链接的定义都是相同：</p>
+
+<pre><code>[foo]: http://example.com/  "Optional Title Here"
+[foo]: http://example.com/  'Optional Title Here'
+[foo]: http://example.com/  (Optional Title Here)
+</code></pre>
+
+<p><strong>请注意：</strong>有一个已知的问题是 Markdown.pl 1.0.1 会忽略单引号包起来的链接 title。</p>
+
+<p>链接网址也可以用方括号包起来：</p>
+
+<pre><code>[id]: &lt;http://example.com/&gt;  "Optional Title Here"
+</code></pre>
+
+<p>你也可以把 title 属性放到下一行，也可以加一些缩进，若网址太长的话，这样会比较好看：</p>
+
+<pre><code>[id]: http://example.com/longish/path/to/resource/here
+    "Optional Title Here"
+</code></pre>
+
+<p>网址定义只有在产生链接的时候用到，并不会直接出现在文件之中。</p>
+
+<p>链接辨别标签可以有字母、数字、空白和标点符号，但是并<em>不</em>区分大小写，因此下面两个链接是一样的：</p>
+
+<pre><code>[link text][a]
+[link text][A]
+</code></pre>
+
+<p><em>隐式链接标记</em>功能让你可以省略指定链接标记，这种情形下，链接标记会视为等同于链接文字，要用隐式链接标记只要在链接文字后面加上一个空的方括号，如果你要让 &#8220;Google&#8221; 链接到 google.com，你可以简化成：</p>
+
+<pre><code>[Google][]
+</code></pre>
+
+<p>然后定义链接内容：</p>
+
+<pre><code>[Google]: http://google.com/
+</code></pre>
+
+<p>由于链接文字可能包含空白，所以这种简化型的标记内也许包含多个单词：</p>
+
+<pre><code>Visit [Daring Fireball][] for more information.
+</code></pre>
+
+<p>然后接着定义链接：</p>
+
+<pre><code>[Daring Fireball]: http://daringfireball.net/
+</code></pre>
+
+<p>链接的定义可以放在文件中的任何一个地方，我比较偏好直接放在链接出现段落的后面，你也可以把它放在文件最后面，就像是注解一样。</p>
+
+<p>下面是一个参考式链接的范例：</p>
+
+<pre><code>I get 10 times more traffic from [Google] [1] than from
+[Yahoo] [2] or [MSN] [3].
+
+  [1]: http://google.com/        "Google"
+  [2]: http://search.yahoo.com/  "Yahoo Search"
+  [3]: http://search.msn.com/    "MSN Search"
+</code></pre>
+
+<p>如果改成用链接名称的方式写：</p>
+
+<pre><code>I get 10 times more traffic from [Google][] than from
+[Yahoo][] or [MSN][].
+
+  [google]: http://google.com/        "Google"
+  [yahoo]:  http://search.yahoo.com/  "Yahoo Search"
+  [msn]:    http://search.msn.com/    "MSN Search"
+</code></pre>
+
+<p>上面两种写法都会产生下面的 HTML。</p>
+
+<pre><code>&lt;p&gt;I get 10 times more traffic from &lt;a href="http://google.com/"
+title="Google"&gt;Google&lt;/a&gt; than from
+&lt;a href="http://search.yahoo.com/" title="Yahoo Search"&gt;Yahoo&lt;/a&gt;
+or &lt;a href="http://search.msn.com/" title="MSN Search"&gt;MSN&lt;/a&gt;.&lt;/p&gt;
+</code></pre>
+
+<p>下面是用行内式写的同样一段内容的 Markdown 文件，提供作为比较之用：</p>
+
+<pre><code>I get 10 times more traffic from [Google](http://google.com/ "Google")
+than from [Yahoo](http://search.yahoo.com/ "Yahoo Search") or
+[MSN](http://search.msn.com/ "MSN Search").
+</code></pre>
+
+<p>参考式的链接其实重点不在于它比较好写，而是它比较好读，比较一下上面的范例，使用参考式的文章本身只有 81 个字符，但是用行内形式的却会增加到 176 个字元，如果是用纯 HTML 格式来写，会有 234 个字元，在 HTML 格式中，标签比文本还要多。</p>
+
+<p>使用 Markdown 的参考式链接，可以让文件更像是浏览器最后产生的结果，让你可以把一些标记相关的元数据移到段落文字之外，你就可以增加链接而不让文章的阅读感觉被打断。</p>
+
+<h3 id="em">强调</h3>
+
+
+<p>Markdown 使用星号（<code>*</code>）和底线（<code>_</code>）作为标记强调字词的符号，被 <code>*</code> 或 <code>_</code> 包围的字词会被转成用 <code>&lt;em&gt;</code> 标签包围，用两个 <code>*</code> 或 <code>_</code> 包起来的话，则会被转成 <code>&lt;strong&gt;</code>，例如：</p>
+
+<pre><code>*single asterisks*
+
+_single underscores_
+
+**double asterisks**
+
+__double underscores__
+</code></pre>
+
+<p>会转成：</p>
+
+<pre><code>&lt;em&gt;single asterisks&lt;/em&gt;
+
+&lt;em&gt;single underscores&lt;/em&gt;
+
+&lt;strong&gt;double asterisks&lt;/strong&gt;
+
+&lt;strong&gt;double underscores&lt;/strong&gt;
+</code></pre>
+
+<p>你可以随便用你喜欢的样式，唯一的限制是，你用什么符号开启标签，就要用什么符号结束。</p>
+
+<p>强调也可以直接插在文字中间：</p>
+
+<pre><code>un*frigging*believable
+</code></pre>
+
+<p>但是<strong>如果你的 <code>*</code> 和 <code>_</code> 两边都有空白的话，它们就只会被当成普通的符号</strong>。</p>
+
+<p>如果要在文字前后直接插入普通的星号或底线，你可以用反斜线：</p>
+
+<pre><code>\*this text is surrounded by literal asterisks\*
+</code></pre>
+
+<h3 id="code">代码</h3>
+
+
+<p>如果要标记一小段行内代码，你可以用反引号把它包起来（<code>`</code>），例如：</p>
+
+<pre><code>Use the `printf()` function.
+</code></pre>
+
+<p>会产生：</p>
+
+<pre><code>&lt;p&gt;Use the &lt;code&gt;printf()&lt;/code&gt; function.&lt;/p&gt;
+</code></pre>
+
+<p>如果要在代码区段内插入反引号，你可以用多个反引号来开启和结束代码区段：</p>
+
+<pre><code>``There is a literal backtick (`) here.``
+</code></pre>
+
+<p>这段语法会产生：</p>
+
+<pre><code>&lt;p&gt;&lt;code&gt;There is a literal backtick (`) here.&lt;/code&gt;&lt;/p&gt;
+</code></pre>
+
+<p>代码区段的起始和结束端都可以放入一个空白，起始端后面一个，结束端前面一个，这样你就可以在区段的一开始就插入反引号：</p>
+
+<pre><code>A single backtick in a code span: `` ` ``
+
+A backtick-delimited string in a code span: `` `foo` ``
+</code></pre>
+
+<p>会产生：</p>
+
+<pre><code>&lt;p&gt;A single backtick in a code span: &lt;code&gt;`&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;A backtick-delimited string in a code span: &lt;code&gt;`foo`&lt;/code&gt;&lt;/p&gt;
+</code></pre>
+
+<p>在代码区段内，<code>&amp;</code> 和方括号<strong>都</strong>会被自动地转成 HTML 实体，这使得插入 HTML 原始码变得很容易，Markdown 会把下面这段：</p>
+
+<pre><code>Please don't use any `&lt;blink&gt;` tags.
+</code></pre>
+
+<p>转为：</p>
+
+<pre><code>&lt;p&gt;Please don't use any &lt;code&gt;&amp;lt;blink&amp;gt;&lt;/code&gt; tags.&lt;/p&gt;
+</code></pre>
+
+<p>你也可以这样写：</p>
+
+<pre><code>`&amp;#8212;` is the decimal-encoded equivalent of `&amp;mdash;`.
+</code></pre>
+
+<p>以产生：</p>
+
+<pre><code>&lt;p&gt;&lt;code&gt;&amp;amp;#8212;&lt;/code&gt; is the decimal-encoded
+equivalent of &lt;code&gt;&amp;amp;mdash;&lt;/code&gt;.&lt;/p&gt;
+</code></pre>
+
+<h3 id="img">图片</h3>
+
+
+<p>很明显地，要在纯文字应用中设计一个「自然」的语法来插入图片是有一定难度的。</p>
+
+<p>Markdown 使用一种和链接很相似的语法来标记图片，同样也允许两种样式： <em>行内式</em>和<em>参考式</em>。</p>
+
+<p>行内式的图片语法看起来像是：</p>
+
+<pre><code>![Alt text](/path/to/img.jpg)
+
+![Alt text](/path/to/img.jpg "Optional title")
+</code></pre>
+
+<p>详细叙述如下：</p>
+
+<ul>
+<li>一个惊叹号 <code>!</code></li>
+<li>接着一个方括号，里面放上图片的替代文字</li>
+<li>接着一个普通括号，里面放上图片的网址，最后还可以用引号包住并加上
+选择性的 &#8216;title&#8217; 文字。</li>
+</ul>
+
+
+<p>参考式的图片语法则长得像这样：</p>
+
+<pre><code>![Alt text][id]
+</code></pre>
+
+<p>「id」是图片参考的名称，图片参考的定义方式则和连结参考一样：</p>
+
+<pre><code>[id]: url/to/image  "Optional title attribute"
+</code></pre>
+
+<p>到目前为止， Markdown 还没有办法指定图片的宽高，如果你需要的话，你可以使用普通的 <code>&lt;img&gt;</code> 标签。</p>
+
+<hr />
+
+<h2 id="misc">其它</h2>
+
+
+
+
+<h3 id="autolink">自动链接</h3>
+
+
+<p>Markdown 支持以比较简短的自动链接形式来处理网址和电子邮件信箱，只要是用方括号包起来， Markdown 就会自动把它转成链接。一般网址的链接文字就和链接地址一样，例如：</p>
+
+<pre><code>&lt;http://example.com/&gt;
+</code></pre>
+
+<p>Markdown 会转为：</p>
+
+<pre><code>&lt;a href="http://example.com/"&gt;http://example.com/&lt;/a&gt;
+</code></pre>
+
+<p>邮址的自动链接也很类似，只是 Markdown 会先做一个编码转换的过程，把文字字符转成 16 进位码的 HTML 实体，这样的格式可以糊弄一些不好的邮址收集机器人，例如：</p>
+
+<pre><code>&lt;address@example.com&gt;
+</code></pre>
+
+<p>Markdown 会转成：</p>
+
+<pre><code>&lt;a href="&amp;#x6D;&amp;#x61;i&amp;#x6C;&amp;#x74;&amp;#x6F;:&amp;#x61;&amp;#x64;&amp;#x64;&amp;#x72;&amp;#x65;
+&amp;#115;&amp;#115;&amp;#64;&amp;#101;&amp;#120;&amp;#x61;&amp;#109;&amp;#x70;&amp;#x6C;e&amp;#x2E;&amp;#99;&amp;#111;
+&amp;#109;"&gt;&amp;#x61;&amp;#x64;&amp;#x64;&amp;#x72;&amp;#x65;&amp;#115;&amp;#115;&amp;#64;&amp;#101;&amp;#120;&amp;#x61;
+&amp;#109;&amp;#x70;&amp;#x6C;e&amp;#x2E;&amp;#99;&amp;#111;&amp;#109;&lt;/a&gt;
+</code></pre>
+
+<p>在浏览器里面，这段字串（其实是 <code>&lt;a href="mailto:address@example.com"&gt;address@example.com&lt;/a&gt;</code>）会变成一个可以点击的「address@example.com」链接。</p>
+
+<p>（这种作法虽然可以糊弄不少的机器人，但并不能全部挡下来，不过总比什么都不做好些。不管怎样，公开你的信箱终究会引来广告信件的。）</p>
+
+<h3 id="backslash">反斜杠</h3>
+
+
+<p>Markdown 可以利用反斜杠来插入一些在语法中有其它意义的符号，例如：如果你想要用星号加在文字旁边的方式来做出强调效果（但不用 <code>&lt;em&gt;</code> 标签），你可以在星号的前面加上反斜杠：</p>
+
+<pre><code>\*literal asterisks\*
+</code></pre>
+
+<p>Markdown 支持以下这些符号前面加上反斜杠来帮助插入普通的符号：</p>
+
+<pre><code>\   反斜线
+`   反引号
+*   星号
+_   底线
+{}  花括号
+[]  方括号
+()  括弧
+#   井字号
++   加号
+-   减号
+.   英文句点
+!   惊叹号
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ksplice实验成功]]></title>
+    <link href="http://emmoblin.github.com/blog/2011/01/22/ksplice-success/"/>
+    <updated>2011-01-22T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2011/01/22/ksplice-success</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+昨天下午在公司，使用LFS qemu，重新编译了一遍内核，然后验证ksplice功能。<br/>
+非常顺利的完成了热补丁。<br/>
+简直太神奇了。<br/>
+</p>
+<p><br/>
+前天之所以没有成功，主要是lfs当时跑的内核和运新ksplice编译的内核可能不一样。<br/>
+所以导致ksplice内核模块总是报错。<br/>
+</p>
+<p><br/>
+当时最困扰的地是脚本中<br/>
+modporbe ksplice<br/>
+但是并没有编译出ksplice的内核模块啊。<br/>
+我还以为是他脚本写错了。<br/>
+</p>
+<p><br/>
+后来发现其实编译成standalone模式是不需要加载ksplice模块的。<br/>
+根本原因还是运行的内核和当前的内核不匹配。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[mock测试]]></title>
+    <link href="http://emmoblin.github.com/blog/2010/08/08/mock-test/"/>
+    <updated>2010-08-08T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2010/08/08/mock-test</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+今天研究了一下cmockery,这是一个google开源的c mock测试框架。<br/>
+最主要的功能就是其mock的功能，就是可以模拟函数的返回结果，还可以模拟参数的输入和输出。<br/>
+</p>
+<p> <br/>
+mock的根本思想就是针对测试代码进行单独测试，尽量抛弃对其他模块或者函数的依赖。<br/>
+用得最多的就是数据库测试，比如一个函数调用数据库，从中取出一些数据，如果没有mock机制，那就必须组织数据库，提供真的环境。这多少有些太麻烦了。<br/>
+所以只需要模拟返回数据库返回的值就行了。这就是叫mock。<br/>
+</p>
+<p> <br/>
+<a href="http://see-see.appspot.com/?p=12001#TestExecution">cmockery中文翻译手册</a><br/>
+</p>
+<p> <br/>
+<a href="http://www.zbitedu.com/?uid-609-action-viewspace-itemid-15317">这是一个例子</a><br/>
+</p>
+<p> <br/>
+还有在lua测试框架中，还有一个简单的库，叫lmock，提供简单的lua中的mock的功能。<br/>
+<a href="http://luaforge.net/projects/lmock/">http://luaforge.net/projects/lmock/</a><br/>
+</p>
+<p> <br/>
+</p>
+<p> <br/>
+但是我觉得这种mock的方法，实际上是要通过修改链接来完成的，对于代码的组织要求比较高。基本上这些模拟的外接口都要独立在不同的文件中，这样才好mock。<br/>
+</p></div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[lua调用c函数进行单元测试]]></title>
+    <link href="http://emmoblin.github.com/blog/2010/08/06/lua-call-c-function-to-unit-test/"/>
+    <updated>2010-08-06T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2010/08/06/lua-call-c-function-to-unit-test</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+之所以使用lua进行单元测试，而不用cunit，我觉得主要是考虑一下几点：<br/>
+1）lua测试命令行，优势明显<br/>
+2）cunit对函数进行单元测试的功能，用lua也可以做到。而且参数可以通过lua传递，更加灵活，修改测试用例不需要重新编译。<br/>
+以前用cunit写的时候，修改一下就要重新编译，而且还要继续内存的管理。测试用例写多了有点厌烦。<br/>
+</p>
+<p><br/>
+下面主要看看Lua调用c函数进行单元测试：<br/>
+</p>
+<p><br/>
+这是lua代码，<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-lua"><span style="color: #0000ff;">local</span> <span style="color: #ff1493;">iptable</span> = {}
+
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#32452;&#32455;&#36755;&#20837;&#21442;&#25968;</span>
+<span style="color: #0000ff;">for</span> num = 1,5 <span style="color: #0000ff;">do</span>
+ <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">newip</span> = {[<span style="color: #00bfff;">"ip"</span>]=<span style="color: #00bfff;">"192.168.1."</span>..num, [<span style="color: #00bfff;">"up"</span>]=0, [<span style="color: #00bfff;">"down"</span>]=0}
+ iptable[num] = newip
+ print(iptable[num].ip, iptable[num].up, iptable[num].down)
+<span style="color: #0000ff;">end</span>
+
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#35843;&#29992;&#34987;&#27979;&#35797;&#30340;c&#20989;&#25968;</span>
+qostest.qos_add_e(iptable)
+
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#26816;&#27979;&#36820;&#22238;&#32467;&#26524;&#26159;&#21542;&#26159;&#39044;&#26399;&#32467;&#26524;&#65292;&#36825;&#37324;&#21482;&#26159;&#31616;&#21333;&#30340;&#25171;&#21360;&#20102;&#19968;&#19979;&#65292;&#27809;&#26377;&#29992;assert</span>
+<span style="color: #0000ff;">for</span> num = 1,5 <span style="color: #0000ff;">do</span>
+ print(iptable[num].ip, iptable[num].up, iptable[num].down)
+<span style="color: #0000ff;">end</span>
+</pre>
+
+
+下面是对应的c函数的实现：<br/>
+其中最容易出错的地方就是对于当前栈的层次，要时刻记住每一个lua<sub>*</sub> 相关的操作后，栈会变成什么样子。<br/>
+建议全部使用正数代表index，混合使用正数和负数比较容易出错。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-c"><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> <span style="color: #a020f0;">qos_add_e</span> (<span style="color: #0000ff;">lua_State</span> *<span style="color: #ff1493;">L</span>) {
+    <span style="color: #0000ff;">__u32</span> *<span style="color: #ff1493;">handle</span>,<span style="color: #ff1493;">ip</span>;
+    <span style="color: #0000ff;">int</span> <span style="color: #ff1493;">i</span> = 0, <span style="color: #ff1493;">ipnum</span> = 0;
+
+    ipnum = lua_objlen(L, 1);
+    printf(<span style="color: #00bfff;">"in libqostst qID = %u pID = %u ipnum = %d\n"</span>
+        , qID, pID, ipnum);
+
+    <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *<span style="color: #ff1493;">ipstr</span> = <span style="color: #ff0000;">NULL</span>;
+    <span style="color: #0000ff;">for</span> ( i = 1; i &lt;= ipnum; i++ ) {
+        lua_pushnumber(L, i);<span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">push key</span>
+
+        lua_gettable(L, 1);<span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">get value ,get level 1 table</span>
+
+        lua_getfield(L, 2, <span style="color: #00bfff;">"ip"</span>);
+        ipstr = luaL_checkstring(L, 3);
+
+        printf(<span style="color: #00bfff;">"%d=%s\n"</span>, i, ipstr);
+        ip = ntohl(inet_addr(ipstr));
+
+        <span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">&#20256;&#20837;ip&#65292;&#36820;&#22238;&#19978;&#19979;&#34892;&#30340;handle</span>
+        testfunc(ip, handle)
+        <span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">return handle to lua</span>
+        lua_pushnumber(L, handle[0]);
+        lua_setfield(L, 2, <span style="color: #00bfff;">"up"</span>);
+        lua_pop(L, 2);
+    }
+
+    <span style="color: #0000ff;">return</span> 1;
+}
+</pre>
+
+
+</p></div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[初步体验lua写测试用例的简单]]></title>
+    <link href="http://emmoblin.github.com/blog/2010/08/02/first-luaunit-testcase/"/>
+    <updated>2010-08-02T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2010/08/02/first-luaunit-testcase</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+直接上代码，看看到底用脚本写测试用例到底有多简单。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-lua"><span style="color: #a020f0;">lsystem</span> = <span style="color: #0000ff;">function</span> (arg)
+    print(<span style="color: #00bfff;">"cmd:\e\[31m"</span>..arg..<span style="color: #00bfff;">"\e\[0m"</span>)
+    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">date</span> = io.popen(arg, r)
+    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">str</span> = date:read<span style="color: #00bfff;">"*a"</span>
+    date:close()
+    <span style="color: #0000ff;">return</span> str
+<span style="color: #0000ff;">end</span>
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#27979;&#35797;mac&#22320;&#22336;&#30340;&#26174;&#31034;&#26159;&#21542;&#27491;&#30830;</span>
+<span style="color: #0000ff;">function</span> <span style="color: #a020f0;">test_ipshow</span>()
+    date = lsystem(<span style="color: #00bfff;">"ip addr show eth1"</span>)
+    assert_match(<span style="color: #00bfff;">"00:0a:e4:36:06:24"</span>,date)
+<span style="color: #0000ff;">end</span>
+</pre>
+
+
+简单到无法再简单的程序，只需要两句话，<br/>
+第一句是执行命令。<br/>
+第二句是判断返回内容是否正确。<br/>
+</p>
+<p><br/>
+优势一：<br/>
+如果要使用Cunit进行同样的测试，当然也基本上也都是这几行语句，但是最麻烦的就是需要对内存进行管理。<br/>
+优势二：<br/>
+同时使用c语言的字符串匹配没有脚本语言强大，至少支持正则匹配。<br/>
+优势三：<br/>
+不需要编译，直接修改，解释执行。<br/>
+</p></div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Luasocket和lua CAPI]]></title>
+    <link href="http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi/"/>
+    <updated>2010-08-01T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">Luasocket和lua CAPI</a>
+<ul>
+<li><a href="#sec-1-1">lua安装</a></li>
+<li><a href="#sec-1-2">luasocket</a></li>
+<li><a href="#sec-1-3">debug</a>
+<ul>
+<li><a href="#sec-1-3-1">debug.getinfo</a></li>
+<li><a href="#sec-1-3-2">hook</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">CAPI</a>
+<ul>
+<li><a href="#sec-1-4-1">调用c函数</a></li>
+<li><a href="#sec-1-4-2">Lua<sub>stack</sub></a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi/">Luasocket和lua CAPI</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">lua安装</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>Lua在ubuntu上安装非常简单，但是需要一个readline的头文件。<br/>
+</p>
+<p><br/>
+<code>apt-get install libreadline6-dev libncurses-dev</code><br/>
+</p>
+<p><br/>
+然后进入lua目录<br/>
+make linux<br/>
+make linux install<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">luasocket</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>在看lunatest的时候，其中使用luasocket库，这个库实现了基本的socket功能。<br/>
+基本看了一下luasocket的实现，觉得主要是使用luaL<sub>tostring函数，从栈中获得lua的string，然后调用socket</sub>.send函数进行发送。<br/>
+</p>
+<p><br/>
+receive的时候，调用socket.receive获得data后，通过pushlstring，压入栈，传递给lua。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">debug</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>debug 库由两种函数组成:自省(introspective)函数和 hooks。<br/>
+自省函数使得我们可以检查运行程序的某些方面,比如活动函数栈、当前执行代码的行号、本地变量的名和值。<br/>
+Hooks 可以跟踪程序的执行情况。<br/>
+</p>
+<p><br/>
+Debug 库中的一个重要的思想是栈级别(stack level)。<br/>
+一个栈级别就是一个指向在当前时刻正在活动的特殊函数的数字,也就是说,这个函数正在被调用但还没有返回。<br/>
+调用 debug 库的函数级别为 1,调用他(他指调用 debug 库的函数)的函数级别为 2,以此类推。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">debug.getinfo</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>debug.getinfo(foo),将返回关于这个函数信息的一个表。<br/>
+这个表有下列一些域:<br/>
+    source,标明函数被定义的地方。<br/>
+    short<sub>src</sub>,source 的简短版本(最多 60 个字符),记录一些有用的错误信息。<br/>
+    linedefined,source 中函数被定义之处的行号。<br/>
+    what,标明函数类型。如果 foo 是一个普通得 Lua 函数,结果为 &#8220;Lua&#8221;;<br/>
+    如果是一个 C 函数,结果为 &#8220;C&#8221;;<br/>
+    如果是一个 Lua 的主 chunk,结果为 &#8220;main&#8221;。<br/>
+    name,函数的合理名称。<br/>
+    namewhat,上一个字段代表的含义。<br/>
+    nups,函数的 upvalues 的个数。<br/>
+    func,函数本身;详细情况看后面。<br/>
+以数字 n 调用 debug.getinfo(n)时,返回在 n 级栈的活动函数的信息数据。<br/>
+currentline,即在那个时刻函数所在的行号。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">hook</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p>debug 库的 hook 是这样一种机制:<br/>
+注册一个函数,用来在程序运行中某一事件到达时被调用。<br/>
+</p>
+<p><br/>
+有四种可以触发一个 hook 的事件: <br/>
+Lua 调用一个函数的时候 call 事件发生;<br/>
+当每次函数返回的时候,return 事件发生;<br/>
+Lua 开始执行代码的新行时候,line 事件发生;<br/>
+运行指定数目的指令之后,count 事件发生。<br/>
+Lua 使用单个参数调用 hooks,参数为一个描述产生调用的事件:&#8221;call&#8221;、&#8221;return&#8221;、&#8221;line&#8221; 或 &#8220;count&#8221;。<br/>
+另外,对于 line 事件,还可以传递第二个参数:新行号。<br/>
+我们在一个 hook 内总是可以使用 debug.getinfo 获取更多的信息。<br/>
+为了监控 call、return 和 line 事件,可以将他们的第一个字母(&#8216;c&#8217;、&#8217;r&#8217; 或 &#8216;l&#8217;)组合成一个 mask 字符串即可。<br/>
+要想关掉 hooks,只需要不带参数地调用 sethook 即可。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">CAPI</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>Lua API 没有定义任何类似 lua<sub>Value</sub> 的类型。<br/>
+替代的方案,它用一个抽象的栈在 Lua 与 C 之间交换值。<br/>
+Lua 以一个严格的 LIFO 规则(后进先出;也就是说,始终存取栈顶)来操作栈。<br/>
+当你调用 Lua 时,它只会改变栈顶部分。<br/>
+你的C代码却有更多的自由;更明确的来讲,你可以查询栈上的任何元素,甚至是在任何一个位置插入和删除元素。<br/>
+</p>
+<p><br/>
+Lua 要么做一份内部的拷贝要么重新利用已经存在的字符串。因此,一旦这些函数返回之后你可以自由的修改或是释放你的缓冲区。<br/>
+Lua<sub>tostring</sub> 函数返回一个指向字符串的内部拷贝的指针。你不能修改它(使你想起那里有一个 const)。<br/>
+只要这个指针对应的值还在栈内,Lua 会保证这个指针一直有效。<br/>
+当一个 C 函数返回后,Lua 会清理他的栈,<br/>
+所以,有一个原则:永远不要将指向 Lua 字符串的指针保存到访问他们的外部函数中。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">调用c函数</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<p>从 Lua调用 C 函数我们必须注册函数,也就是说,我们必须把 C 函数的地址以一个适当的方式<br/>
+传递给 Lua 解释器。<br/>
+    任何在 Lua 中注册的函数必须有同样的原型,这个原型声明定义就是 lua.h 中的<br/>
+</p>
+<p><br/>
+<pre class="src src-lua">lua_CFunction:
+    typedef int (*lua_CFunction) (lua_State *L);
+</pre>
+
+Lua 的 C 库就是这样实现的。除了定义 C 函数之外,还必须定义一个特殊的用来和 Lua 库的主 chunk 通信的特殊函数。<br/>
+一旦调用,这个函数就会注册库中所有的 C 函数,并将他们保存到适当的位置。<br/>
+</p>
+<p><br/>
+luaL<sub>openlib</sub> 函数接受一个 C 函数的列表和他们对应的函数名,并且作为一个库在一个 table 中注册所有这些函数。<br/>
+第二步,我们声明一个数组,保存所有的函数和他们对应的名字。<br/>
+这个数组的元素类型为 luaL<sub>reg</sub>:是一个带有两个域的结构体,一个字符串和一个函数指针。<br/>
+第三步,我们使用 luaL<sub>openlib</sub> 声明主函数。<br/>
+最后在lua中调用loadlib<br/>
+</p>
+<p><br/>
+一个 userdatum 提供了一个在 Lua 中没有预定义操作的 raw 内存区域。<br/>
+一个 light userdatum 是一个表示 C 指针的值，使用 light userdata 你必须自己管理内存,因为他们和垃圾收集器无关。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2">Lua<sub>stack</sub></h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+<p>正数代表栈中的绝对位置（从栈底开始），负数代表从栈顶的相对位置。<br/>
+对于栈的大小是要c程序来进行维护的，使用lua<sub>checkstack</sub> to grow the stack size，每次调用此函数，<br/>
+保证有LUA<sub>MINSTACK空间有效。</sub><br/>
+</p>
+<p><br/>
+module（name，&hellip;)<br/>
+其他参数是作为函数一次应用于module。<br/>
+require（）<br/>
+packet.preload<br/>
+package.path<br/>
+package.cpath 加载c库时，搜索路径<br/>
+加载库后Then it tries to find a C function inside the library to be used as the loader. <br/>
+The name of this C function is the string &#8220;luaopen_&#8221; concatenated with a copy of the module name <br/>
+where each dot is replaced by an underscore。（.变为<sub>）。</sub><br/>
+package.seeall<br/>
+把module的metatable的_<sub>index设置为全局变量，这样模块就继承了全局变量。</sub><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+All functions from the auxiliary library are defined in header file lauxlib.h and have a prefix luaL_.<br/>
+</p>
+<p><br/>
+All functions in the auxiliary library are built on top of the basic API, <br/>
+and so they provide nothing that cannot be done with this API.<br/>
+</p>
+<p><br/>
+Several functions in the auxiliary library are used to check C function arguments. <br/>
+Their names are always luaL<sub>check</sub>* or luaL<sub>opt</sub>*. <br/>
+All of these functions throw an error if the check is not satisfied. <br/>
+Because the error message is formatted for arguments (e.g., &#8220;bad argument #1&#8221;), <br/>
+you should not use these functions for other stack values. <br/>
+</p>
+<p><br/>
+lua<sub>settable（l，index）</sub><br/>
+从栈中弹出key 和val进行设置给index。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">参考资料</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p><a href="http://lua-users.org/wiki/">http://lua-users.org/wiki/</a> 有一个lua的在线教程，值得一看<br/>
+<a href="http://www.lua.org/">http://www.lua.org/</a><br/>
+<a href="http://www.lua.org/pil/">http://www.lua.org/pil/</a> Programming in Lua (first edition) 在线版<br/>
+<a href="http://www.lua.org/manual/5.1/">http://www.lua.org/manual/5.1/</a> LUA5.1手册<br/>
+<a href="http://lua-users.org/wiki/UnitTesting">http://lua-users.org/wiki/UnitTesting</a> 介绍几种lua测试框架<br/>
+<a href="http://www.nessie.de/mroth/lunit/">http://www.nessie.de/mroth/lunit/</a> lunit用于lua的测试框架，类似Cunit <br/>
+</p>
+<p><br/>
+lua中文教程.pdf 必看<br/>
+</p>
+<p><br/>
+lua5..1语法速查手册<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+</feed>
