@@ -109,7 +109,7 @@
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/08/31/org-mode-note/">Org-mode学习笔记</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/11/02/gcov/">Gcov</a></h1>
     
     
       <p class="meta">
@@ -125,7 +125,7 @@
   
 
 
-<time datetime="2012-08-31T00:00:00+08:00" pubdate data-updated="true">2012年08月31日</time>
+<time datetime="2012-11-02T00:00:00+08:00" pubdate data-updated="true">2012年11月02日</time>
         
       </p>
     
@@ -136,65 +136,10 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">org-mode学习笔记</a>
+<li><a href="#sec-1">gcov</a>
 <ul>
-<li><a href="#sec-1-1">头信息注释</a></li>
-<li><a href="#sec-1-2">安装最新的org</a></li>
-<li><a href="#sec-1-3">文档结构相关的操作</a>
-<ul>
-<li><a href="#sec-1-3-1">Motion</a></li>
-<li><a href="#sec-1-3-2">headline结构移动</a></li>
-<li><a href="#sec-1-3-3">Structure editing</a></li>
-<li><a href="#sec-1-3-4">Sparse Tree</a></li>
-<li><a href="#sec-1-3-5">List</a></li>
-<li><a href="#sec-1-3-6">Footnotes</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-4">加粗</a></li>
-<li><a href="#sec-1-5">链接</a>
-<ul>
-<li><a href="#sec-1-5-1">内部链接 Internal Link</a></li>
-<li><a href="#sec-1-5-2">添加附件</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-6">TABLES</a>
-<ul>
-<li><a href="#sec-1-6-1">表格宽度</a></li>
-<li><a href="#sec-1-6-2">行列操作</a></li>
-<li><a href="#sec-1-6-3">表格计算</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-7">tag</a></li>
-<li><a href="#sec-1-8">code</a></li>
-<li><a href="#sec-1-9">TODO使用</a>
-<ul>
-<li><a href="#sec-1-9-1">TODO依赖关系</a></li>
-<li><a href="#sec-1-9-2">tracking todo state change</a></li>
-<li><a href="#sec-1-9-3">priotify</a></li>
-<li><a href="#sec-1-9-4">checkbox</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-10">org capture</a></li>
-<li><a href="#sec-1-11">exports</a>
-<ul>
-<li><a href="#sec-1-11-1">export option</a>
-<ul>
-<li><a href="#sec-1-11-1-1">防止下横杠被转义</a></li>
-<li><a href="#sec-1-11-1-2">export html</a></li>
-<li><a href="#sec-1-11-1-3">export pdf</a></li>
-<li><a href="#sec-1-11-1-4">使用org-jekyll导出</a></li>
-</ul></li>
-</ul>
-</li>
-<li><a href="#sec-1-12">dates and times</a></li>
-<li><a href="#sec-1-13">属性</a></li>
-<li><a href="#sec-1-14">未分类</a>
-<ul>
-<li><a href="#sec-1-14-1">byte-recompile-directory</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-15">问题</a></li>
-<li><a href="#sec-1-16">参考资料</a></li>
+<li><a href="#sec-1-1">分支覆盖的作用</a></li>
+<li><a href="#sec-1-2">参考</a></li>
 </ul>
 </li>
 </ul>
@@ -202,7 +147,7 @@
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/08/31/org-mode-note/">org-mode学习笔记</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/11/02/gcov/">gcov</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -211,577 +156,148 @@
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">头信息注释</h3>
+<h3 id="sec-1-1">分支覆盖的作用</h3>
 <div class="outline-text-3" id="text-1-1">
 
-
+<p>所有单元测试跑完后，统计分支覆盖率，统计测试的是否全面。一个程序如果每个分支都执行过了，也不能保证程序就是正确的。<br/>
+毕竟还有很多逻辑错误，但至少能从某种程度上显示出，这些代码测试的是否完善，不完善就还需要补充测试用例。<br/>
+可以显示出每行被执行了多少次，哪行没有被执行。<br/>
+</p>
 <p><br/>
-<pre class="example">#+TAGS: { 桌面(d) 服务器(s) }  编辑器(e) 浏览器(f) 多媒体(m) 压缩(z)
-#+TAGS:  { @Windows(w)  @Linux(l) }  
-#+TAGS:  { 糟糕(1) 凑合(2) 不错(3) 很好(4) 极品(5) } 
-#+SEQ_TODO: TODO(T) WAIT(W) | DONE(D!) CANCELED(C@) 
-#+COLUMNS: %10ITEM  %10PRIORITY %15TODO %65TAGS
-</pre>
+</p>
+<p><br/>
+</p></div>
 
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">参考</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p><a href="http://www.taobaotest.com/blogs/qa?bid=8451">GCOV 实现原理</a><br/>
+&lt;深入浅出Linux平台代码覆盖率测试.pdf&gt;<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/02/cutter/">C单元测试框架:cutter</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-02T00:00:00+08:00" pubdate data-updated="true">2012年11月02日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">特性</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>c的单元测试见的多了，cutter有什么看家本领吗？<br/>
 </p><ol>
-<li>启动时概览<br/>
-</li>
-<li>设定标签，括弧中的为标签快捷键（如果没有指定，默认为首字母）。可以设置在多行中<br/>
-</li>
-<li>花括号为标签组，组中的标签只能选一个<br/>
-</li>
-<li>设定待办状态。将项设置为 | 后面的状态时（DONE CANCELED），会打上 CLOSED 标志<br/>
-</li>
-<li>设定列视图<br/>
-</li>
-<li>更新了参数后在参数区域按C-c C-c进行更新<br/>
+<li>框平台性好<br/>
+   这个貌似意义不大，单元测试框架一般本身都很小巧，移植难度很小。<br/>
+
+<p><br/>
+</p></li>
+<li>自动探测用例<br/>
+   这个功能不错，只要开头是test_ 开头的函数，自动认为是testcase。<br/>
+   其实他是把testcase编译成了库，然后进行符号查找。<br/>
+
+<p><br/>
+</p></li>
+<li>显示友好<br/>
+   尽量精确的提出错误在哪里，有个expect和real，貌似还可以diff。<br/>
+
+<p><br/>
+</p></li>
+<li>支持数据驱动测试<br/>
+   这个功能还有点不明白，貌似应该是测试前准备数据集的功能，不知道是否是mock功能。<br/>
+
+<p><br/>
+</p></li>
+<li>支持代码的分支覆盖率攻击。<br/>
+
+<p><br/>
+</p></li>
+<li>针对ubuntu特别优化。<br/>
 </li>
 </ol>
 
 
 <p><br/>
-<b>这里的内容可以随时更改，但是要记得在改后用 C-c C-c 刷新设置</b><br/>
 </p>
 <p><br/>
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/08/31/org-mode-note/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/15/emacs-markdown-mode/">Emacs Markdown-mode</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-15T12:38:00+08:00" pubdate data-updated="true">2012年08月15日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h4>锚标签 C-c C-a</h4>
-
-<p><code>C-c C-a l</code> 超链接<br/>
-<code>C-c C-a r</code> 参考链接 text 参考链接放到文件最后 [label]: markdown.html<br/>
-<code>C-c C-a w</code> wiki链接 [[wikilink]]</p>
-
-<h4>常用命令 C-c C-c</h4>
-
-<p><code>C-c C-c m</code> 在另一个Buffer显示输出<br/>
-<code>C-c C-c p</code> 在浏览器中预览输出<br/>
-<code>C-c C-c e</code> 输出html文件到相同前缀的.html文件 eg:basename.html<br/>
-<code>C-c C-c v</code> 输出并且在浏览器中查看<br/>
-<code>C-c C-c c</code> 检查是否有未定义的链接</p>
-
-<h4>插入图片 C-c C-i</h4>
-
-<p><code>C-c C-i i</code> 插入一张图片</p>
-
-<h4>物理样式 C-c C-p</h4>
-
-<p><code>C-c C-p b</code> 将选中的文字加粗 bold <strong>bold</strong> 如果为选中则插入 <em><em>**<br/>
-<code>C-c C-p f</code> 将选中的文字设置成等宽字体 <code>fixed width text</code><br/>
-<code>C-c C-p i</code> 将选中的文字设置成斜体 italic</em>italic</em></p>
-
-<h4>逻辑样式 C-c C-s</h4>
-
-<p><code>C-c C-s b</code> 设置引用 > backquoted<br/>
-<code>C-c C-s p</code> 预格式，在之前插入4个空格默认 <code>&lt;pre&gt;pre text&lt;/pre&gt;</code><br/>
-<code>C-c C-s c</code> 插入代码块 <code>code here</code><br/>
-<code>C-c C-s e</code> 强调 emphasis <em>emphasis</em><br/>
-<code>C-c C-s s</code> 加强 strong <strong>strong</strong></p>
-
-<h4>标题章节 C-c C-t</h4>
-
-<p><code>C-c C-t n</code> 插入标题 1-6<br/>
-<code>C-c C-t t</code> 插入一个title<br/>
-<code>C-c C-t s</code> 插入一个section<br/>
-<code>C-c -</code> 插入一条分割线</p>
-
-<hr />
-
-<h4>导航</h4>
-
-<p><code>TAB</code> 折叠或者展开标题<br/>
-<code>C-M-n &amp; C-M-p</code> 在上下可见的标题中前后移动<br/>
-<code>C-M-f &amp; C-M-b</code> 在同一级的标题中前后移动<br/>
-<code>C-M-u</code> 回到上一级标题</p>
-
-<h2>参考</h2>
-
-<p><a href="http://jblevins.org/projects/markdown-mode/">Emacs Markdown Mode</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/">添加微博sidebar</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-15T00:50:00+08:00" pubdate data-updated="true">2012年08月15日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>使用<a href="http://weibo.com/tool/weiboshow">微博秀</a>直接生成对应的代码，然后写到custom/asides/weibo.html中。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;section&gt;</span>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>新浪微博<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;weibo&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;li&gt;</span>
-</span><span class='line'><span class="nt">&lt;iframe</span> <span class="na">width=</span><span class="s">&quot;100%&quot;</span> <span class="na">height=</span><span class="s">&quot;550&quot;</span> <span class="na">class=</span><span class="s">&quot;share_self&quot;</span>  <span class="na">frameborder=</span><span class="s">&quot;0&quot;</span> <span class="na">scrolling=</span><span class="s">&quot;no&quot;</span>
-</span><span class='line'><span class="na">src=</span><span class="s">&quot;http://widget.weibo.com/weiboshow/index.php?</span>
-</span><span class='line'><span class="s">language=&amp;</span>
-</span><span class='line'><span class="s">width=0&amp;</span>
-</span><span class='line'><span class="s">height=550&amp;</span>
-</span><span class='line'><span class="s">fansRow=2&amp;</span>
-</span><span class='line'><span class="s">ptype=1&amp;</span>
-</span><span class='line'><span class="s">speed=0&amp;</span>
-</span><span class='line'><span class="s">skin=5&amp;</span>
-</span><span class='line'><span class="s">isTitle=1&amp;</span>
-</span><span class='line'><span class="s">noborder=1&amp;</span>
-</span><span class='line'><span class="s">isWeibo=1&amp;</span>
-</span><span class='line'><span class="s">isFans=0&amp;</span>
-</span><span class='line'><span class="s">uid=1905507693&amp;</span>
-</span><span class='line'><span class="s">verifier=e659651a&amp;</span>
-</span><span class='line'><span class="s">dpc=1&quot;</span><span class="nt">&gt;&lt;/iframe&gt;</span>
-</span><span class='line'><span class="nt">&lt;/li&gt;</span>
-</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
-</span><span class='line'><span class="nt">&lt;/section&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后在_config.yml中添加default_asides中：</p>
-
-<pre><code>    custom/asides/weibo.html
-</code></pre>
-
-<p>参考：<a href="http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/">http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/15/git-used-cmd/">Git常用命令总结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-15T00:00:00+08:00" pubdate data-updated="true">2012年08月15日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div><div><p><br/>
-我只记录一些我的常用命令，一些不常用的即使写了过一段时间也会忘掉的。实在要用直接help一下就行。<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">gitconfig</h3>
-<div class="outline-text-3" id="text-1-1">
-
-
-<p><br/>
-<pre class="example">[color]
-        status = true
-        branch = auto
-        diff = auto
-        ui = auto
-
-[alias]
-        st = status
-        co = checkout
-        ci = commit -a
-        l = log --graph
-
-[user]
-        name = username
-        email = youremail
-</pre>
-
-
 </p></div>
 
 </div>
 
 <div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">常用命令</h3>
+<h3 id="sec-1-2">后续待添加功能</h3>
 <div class="outline-text-3" id="text-1-2">
 
-<p><code>git log --all</code><br/>
-git log只会显示HEAD及其祖先的log，要产看全部使用&ndash;all<br/>
-</p>
-<p><br/>
-<code>git stash</code><br/>
-非常有用的命令，把当前work目录做临时保存，并revert到HEAD。<br/>
-使用git stash apply进行恢复。<br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">Octopress添加分类栏</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-14T23:09:00+08:00" pubdate data-updated="true">2012年08月14日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考：<a href="https://github.com/tokkonopapa/octopress-tagcloud" title="octopress-tagcloud">octopress-tagcloud</a></p>
-
-<ul>
-<li><p>下载并copy到对应目录</p>
-
-<pre><code> ├─ plugins/
- │  └── tag_cloud.rb
- └─ source/
-    └─ _includes/
-       └─ custom/
-          └─ asides/
-             ├─ category_list.html
-             └─ tag_cloud.html
-</code></pre></li>
-<li><p>在_config.yml中的default_asides中添加</p>
-
-<pre><code>  custom/asides/category_list.html
-  custom/asides/tag_cloud.html
-</code></pre></li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/14/zhong-xin-an-zhuang-octopress/">重新安装octopress</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-14T16:31:00+08:00" pubdate data-updated="true">2012年08月14日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>如果更换机子或者重新安装系统后，要重新获得octopress非常简单。</p>
-
-<p>1.安装ruby就不说了，我喜欢用rben安装。</p>
-
-<p>2.clone已存在的库，需要上传ssh key</p>
-
-<pre><code>git clone git@github.com:username/username.github.com.git octopress
-</code></pre>
-
-<p>3.切换到souce分支<br/>
-  查看远程的所有分支。</p>
-
-<pre><code>  git branch -r
-</code></pre>
-
-<p>  切换分支</p>
-
-<pre><code>  git checkout origin source
-</code></pre>
-
-<p>4.提交代码</p>
-
-<pre><code>git push origin source
-</code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/13/markdown/">Markdown</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-13T23:10:00+08:00" pubdate data-updated="true">2012年08月13日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>[转自]<a href="http://wowubuntu.com/markdown/">http://wowubuntu.com/markdown/</a></p>
-
-<h2 id="block">区块元素</h2>
-
-
-
-
-<h3 id="p">段落和换行</h3>
-
-
-<p>一个 Markdown 段落是由一个或多个连续的文本行组成，它的前后要有一个以上的空行（空行的定义是显示上看起来像是空的，便会被视为空行。比方说，若某一行只包含空格和制表符，则该行也会被视为空行）。普通段落不该用空格或制表符来缩进。</p>
-
-<p>「由一个或多个连续的文本行组成」这句话其实暗示了 Markdown 允许段落内的强迫换行（插入换行符），这个特性和其他大部分的 text-to-HTML 格式不一样（包括 Movable Type 的「Convert Line Breaks」选项），其它的格式会把每个换行符都转成 <code>&lt;br /&gt;</code> 标签。</p>
-
-<p>如果你<em>确实</em>想要依赖 Markdown 来插入 <code>&lt;br /&gt;</code> 标签的话，<strong>在插入处先按入两个以上的空格然后回车。</strong></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/08/13/markdown/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/12/first-post/">First Post</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-12T23:34:00+08:00" pubdate data-updated="true">2012年08月12日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>随便先写一点东西，markdown语法还不熟悉</p>
-
-<h3>发现的问题</h3>
-
-<ol>
-<li>即使本地加载也特别慢 <br/>
-原来是要去加载google的font，可能又要翻墙，所以特别慢。<br/>
-注释掉：source/_include/custom/head.html中注释掉fonts.googleapis.com的link</li>
+<p>从他的TODO中可以看到一些，不过我最期望的是：<br/>
+</p><ol>
+<li>测试用例的search<br/>
+</li>
+<li>内存泄漏测试，最好集成memwatch的功能。mem_limit很好。<br/>
+</li>
+<li>是否有mock功能？<br/>
+</li>
 </ol>
 
+
+<p><br/>
+</p></div>
+
 </div>
-  
-  
 
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">主页</h3>
+<div class="outline-text-3" id="text-1-3">
 
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2011/01/22/ksplice-success/">Ksplice实验成功</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-01-22T00:00:00+08:00" pubdate data-updated="true">2011年01月22日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div><div><p><br/>
-昨天下午在公司，使用LFS qemu，重新编译了一遍内核，然后验证ksplice功能。<br/>
-非常顺利的完成了热补丁。<br/>
-简直太神奇了。<br/>
-</p>
-<p><br/>
-前天之所以没有成功，主要是lfs当时跑的内核和运新ksplice编译的内核可能不一样。<br/>
-所以导致ksplice内核模块总是报错。<br/>
-</p>
-<p><br/>
-当时最困扰的地是脚本中<br/>
-modporbe ksplice<br/>
-但是并没有编译出ksplice的内核模块啊。<br/>
-我还以为是他脚本写错了。<br/>
-</p>
-<p><br/>
-后来发现其实编译成standalone模式是不需要加载ksplice模块的。<br/>
-根本原因还是运行的内核和当前的内核不匹配。<br/>
+<p><a href="http://sourceforge.net/projects/cutter/">http://sourceforge.net/projects/cutter/</a><br/>
 </p>
 <p><br/>
 </p></div>
 </div>
 </div>
+</div>
   
   
 
@@ -793,7 +309,7 @@ modporbe ksplice<br/>
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2010/08/08/mock-test/">Mock测试</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/10/30/memwatch-/">Memwatch</a></h1>
     
     
       <p class="meta">
@@ -809,247 +325,7 @@ modporbe ksplice<br/>
   
 
 
-<time datetime="2010-08-08T00:00:00+08:00" pubdate data-updated="true">2010年08月08日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div><div><p><br/>
-今天研究了一下cmockery,这是一个google开源的c mock测试框架。<br/>
-最主要的功能就是其mock的功能，就是可以模拟函数的返回结果，还可以模拟参数的输入和输出。<br/>
-</p>
-<p> <br/>
-mock的根本思想就是针对测试代码进行单独测试，尽量抛弃对其他模块或者函数的依赖。<br/>
-用得最多的就是数据库测试，比如一个函数调用数据库，从中取出一些数据，如果没有mock机制，那就必须组织数据库，提供真的环境。这多少有些太麻烦了。<br/>
-所以只需要模拟返回数据库返回的值就行了。这就是叫mock。<br/>
-</p>
-<p> <br/>
-<a href="http://see-see.appspot.com/?p=12001#TestExecution">cmockery中文翻译手册</a><br/>
-</p>
-<p> <br/>
-<a href="http://www.zbitedu.com/?uid-609-action-viewspace-itemid-15317">这是一个例子</a><br/>
-</p>
-<p> <br/>
-还有在lua测试框架中，还有一个简单的库，叫lmock，提供简单的lua中的mock的功能。<br/>
-<a href="http://luaforge.net/projects/lmock/">http://luaforge.net/projects/lmock/</a><br/>
-</p>
-<p> <br/>
-</p>
-<p> <br/>
-但是我觉得这种mock的方法，实际上是要通过修改链接来完成的，对于代码的组织要求比较高。基本上这些模拟的外接口都要独立在不同的文件中，这样才好mock。<br/>
-</p></div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2010/08/06/lua-call-c-function-to-unit-test/">Lua调用c函数进行单元测试</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-06T00:00:00+08:00" pubdate data-updated="true">2010年08月06日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div><div><p><br/>
-之所以使用lua进行单元测试，而不用cunit，我觉得主要是考虑一下几点：<br/>
-1）lua测试命令行，优势明显<br/>
-2）cunit对函数进行单元测试的功能，用lua也可以做到。而且参数可以通过lua传递，更加灵活，修改测试用例不需要重新编译。<br/>
-以前用cunit写的时候，修改一下就要重新编译，而且还要继续内存的管理。测试用例写多了有点厌烦。<br/>
-</p>
-<p><br/>
-下面主要看看Lua调用c函数进行单元测试：<br/>
-</p>
-<p><br/>
-这是lua代码，<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-<pre class="src src-lua"><span style="color: #0000ff;">local</span> <span style="color: #ff1493;">iptable</span> = {}
-
-<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#32452;&#32455;&#36755;&#20837;&#21442;&#25968;</span>
-<span style="color: #0000ff;">for</span> num = 1,5 <span style="color: #0000ff;">do</span>
- <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">newip</span> = {[<span style="color: #00bfff;">"ip"</span>]=<span style="color: #00bfff;">"192.168.1."</span>..num, [<span style="color: #00bfff;">"up"</span>]=0, [<span style="color: #00bfff;">"down"</span>]=0}
- iptable[num] = newip
- print(iptable[num].ip, iptable[num].up, iptable[num].down)
-<span style="color: #0000ff;">end</span>
-
-<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#35843;&#29992;&#34987;&#27979;&#35797;&#30340;c&#20989;&#25968;</span>
-qostest.qos_add_e(iptable)
-
-<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#26816;&#27979;&#36820;&#22238;&#32467;&#26524;&#26159;&#21542;&#26159;&#39044;&#26399;&#32467;&#26524;&#65292;&#36825;&#37324;&#21482;&#26159;&#31616;&#21333;&#30340;&#25171;&#21360;&#20102;&#19968;&#19979;&#65292;&#27809;&#26377;&#29992;assert</span>
-<span style="color: #0000ff;">for</span> num = 1,5 <span style="color: #0000ff;">do</span>
- print(iptable[num].ip, iptable[num].up, iptable[num].down)
-<span style="color: #0000ff;">end</span>
-</pre>
-
-
-下面是对应的c函数的实现：<br/>
-其中最容易出错的地方就是对于当前栈的层次，要时刻记住每一个lua_* 相关的操作后，栈会变成什么样子。<br/>
-建议全部使用正数代表index，混合使用正数和负数比较容易出错。<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-<pre class="src src-c"><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> <span style="color: #a020f0;">qos_add_e</span> (<span style="color: #0000ff;">lua_State</span> *<span style="color: #ff1493;">L</span>) {
-    <span style="color: #0000ff;">__u32</span> *<span style="color: #ff1493;">handle</span>,<span style="color: #ff1493;">ip</span>;
-    <span style="color: #0000ff;">int</span> <span style="color: #ff1493;">i</span> = 0, <span style="color: #ff1493;">ipnum</span> = 0;
-
-    ipnum = lua_objlen(L, 1);
-    printf(<span style="color: #00bfff;">"in libqostst qID = %u pID = %u ipnum = %d\n"</span>
-        , qID, pID, ipnum);
-
-    <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *<span style="color: #ff1493;">ipstr</span> = <span style="color: #ff0000;">NULL</span>;
-    <span style="color: #0000ff;">for</span> ( i = 1; i &lt;= ipnum; i++ ) {
-        lua_pushnumber(L, i);<span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">push key</span>
-
-        lua_gettable(L, 1);<span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">get value ,get level 1 table</span>
-
-        lua_getfield(L, 2, <span style="color: #00bfff;">"ip"</span>);
-        ipstr = luaL_checkstring(L, 3);
-
-        printf(<span style="color: #00bfff;">"%d=%s\n"</span>, i, ipstr);
-        ip = ntohl(inet_addr(ipstr));
-
-        <span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">&#20256;&#20837;ip&#65292;&#36820;&#22238;&#19978;&#19979;&#34892;&#30340;handle</span>
-        testfunc(ip, handle)
-        <span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">return handle to lua</span>
-        lua_pushnumber(L, handle[0]);
-        lua_setfield(L, 2, <span style="color: #00bfff;">"up"</span>);
-        lua_pop(L, 2);
-    }
-
-    <span style="color: #0000ff;">return</span> 1;
-}
-</pre>
-
-
-</p></div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2010/08/02/first-luaunit-testcase/">初步体验lua写测试用例的简单</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-02T00:00:00+08:00" pubdate data-updated="true">2010年08月02日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div><div><p><br/>
-直接上代码，看看到底用脚本写测试用例到底有多简单。<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-<pre class="src src-lua"><span style="color: #a020f0;">lsystem</span> = <span style="color: #0000ff;">function</span> (arg)
-    print(<span style="color: #00bfff;">"cmd:\e\[31m"</span>..arg..<span style="color: #00bfff;">"\e\[0m"</span>)
-    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">date</span> = io.popen(arg, r)
-    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">str</span> = date:read<span style="color: #00bfff;">"*a"</span>
-    date:close()
-    <span style="color: #0000ff;">return</span> str
-<span style="color: #0000ff;">end</span>
-<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#27979;&#35797;mac&#22320;&#22336;&#30340;&#26174;&#31034;&#26159;&#21542;&#27491;&#30830;</span>
-<span style="color: #0000ff;">function</span> <span style="color: #a020f0;">test_ipshow</span>()
-    date = lsystem(<span style="color: #00bfff;">"ip addr show eth1"</span>)
-    assert_match(<span style="color: #00bfff;">"00:0a:e4:36:06:24"</span>,date)
-<span style="color: #0000ff;">end</span>
-</pre>
-
-
-简单到无法再简单的程序，只需要两句话，<br/>
-第一句是执行命令。<br/>
-第二句是判断返回内容是否正确。<br/>
-</p>
-<p><br/>
-优势一：<br/>
-如果要使用Cunit进行同样的测试，当然也基本上也都是这几行语句，但是最麻烦的就是需要对内存进行管理。<br/>
-优势二：<br/>
-同时使用c语言的字符串匹配没有脚本语言强大，至少支持正则匹配。<br/>
-优势三：<br/>
-不需要编译，直接修改，解释执行。<br/>
-</p></div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2010/08/01/luasocket-and-lua-capi/">Luasocket和lua CAPI</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-01T00:00:00+08:00" pubdate data-updated="true">2010年08月01日</time>
+<time datetime="2012-10-30T00:00:00+08:00" pubdate data-updated="true">2012年10月30日</time>
         
       </p>
     
@@ -1060,23 +336,18 @@ qostest.qos_add_e(iptable)
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">Luasocket和lua CAPI</a>
+<li><a href="#sec-1">memwatch</a>
 <ul>
-<li><a href="#sec-1-1">lua安装</a></li>
-<li><a href="#sec-1-2">luasocket</a></li>
-<li><a href="#sec-1-3">debug</a>
+<li><a href="#sec-1-1">Memwatch简介</a></li>
+<li><a href="#sec-1-2">MemWatch的内存处理</a></li>
+<li><a href="#sec-1-3">初始化和结束处理</a></li>
+<li><a href="#sec-1-4">MemWatch的I/O 操作</a></li>
+<li><a href="#sec-1-5">使用</a>
 <ul>
-<li><a href="#sec-1-3-1">debug.getinfo</a></li>
-<li><a href="#sec-1-3-2">hook</a></li>
+<li><a href="#sec-1-5-1">使用MemWatch提供的功能</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-4">CAPI</a>
-<ul>
-<li><a href="#sec-1-4-1">调用c函数</a></li>
-<li><a href="#sec-1-4-2">Lua_stack</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-5">参考资料</a></li>
+<li><a href="#sec-1-6">Memwatch使用注意</a></li>
 </ul>
 </li>
 </ul>
@@ -1084,7 +355,7 @@ qostest.qos_add_e(iptable)
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi/">Luasocket和lua CAPI</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/30/memwatch-/">memwatch</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -1093,18 +364,14 @@ qostest.qos_add_e(iptable)
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">lua安装</h3>
+<h3 id="sec-1-1">Memwatch简介</h3>
 <div class="outline-text-3" id="text-1-1">
 
-<p>Lua在ubuntu上安装非常简单，但是需要一个readline的头文件。<br/>
-</p>
-<p><br/>
-<code>apt-get install libreadline6-dev libncurses-dev</code><br/>
-</p>
-<p><br/>
-然后进入lua目录<br/>
-make linux<br/>
-make linux install<br/>
+<p>在三种检测工具当中，设置最简单的算是memwatch，和dmalloc一样，<br/>
+它能检测未释放的内存、同一段内存被释放多次、位址存取错误及不当使用未分配之内存区域。<br/>
+请往<br/>
+<a href="http://www.linkdata.se/sourcecode.html">http://www.linkdata.se/sourcecode.html</a><br/>
+下载最新版本的Memwatch。<br/>
 </p>
 <p><br/>
 </p></div>
@@ -1112,14 +379,18 @@ make linux install<br/>
 </div>
 
 <div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">luasocket</h3>
+<h3 id="sec-1-2">MemWatch的内存处理</h3>
 <div class="outline-text-3" id="text-1-2">
 
-<p>在看lunatest的时候，其中使用luasocket库，这个库实现了基本的socket功能。<br/>
-基本看了一下luasocket的实现，觉得主要是使用luaL_tostring函数，从栈中获得lua的string，然后调用socket.send函数进行发送。<br/>
+<p>MemWatch将所有分配的内存用0xFE填充，所以，如果你看到错误的数据是用0xFE填充的，那就是你没有初始化数据。<br/>
+例外是calloc()，它会直接把分配的内存用0填充。<br/>
 </p>
 <p><br/>
-receive的时候，调用socket.receive获得data后，通过pushlstring，压入栈，传递给lua。<br/>
+MemWatch将所有已释放的内存用0xFD填充(zapped with 0xFD).<br/>
+如果你发现你使用的数据是用0xFD填充的，那你就使用的是已释放的内存。<br/>
+在这种情况，注意MemWatch会立即把一个&#8221;释放了的块信息&#8221; 填在释放了的数据前。<br/>
+这个块包括关于内存在哪儿释放的信息，以可读的文本形式存放，格式 为&#8221;FBI&lt;counter&gt;filename(line)&#8221;。<br/>
+如:&#8221;FBI&lt;267&gt;test.c(12)&#8221;.使用FBI会降 低free()的速度，所以默认是关闭的。使用mwFreeBufferInfo(1)开启。<br/>
 </p>
 <p><br/>
 </p></div>
@@ -1127,189 +398,639 @@ receive的时候，调用socket.receive获得data后，通过pushlstring，压�
 </div>
 
 <div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">debug</h3>
+<h3 id="sec-1-3">初始化和结束处理</h3>
 <div class="outline-text-3" id="text-1-3">
 
-<p>debug 库由两种函数组成:自省(introspective)函数和 hooks。<br/>
-自省函数使得我们可以检查运行程序的某些方面,比如活动函数栈、当前执行代码的行号、本地变量的名和值。<br/>
-Hooks 可以跟踪程序的执行情况。<br/>
+<p>一般来说，在程序中使用MemWatch的功能，可以手动添加mwInit()进行初始化，并用对应的mwTerm ()进行结束处理。<br/>
+一般不需要手动添加，memwatch会在第一个malloc的时候自动初始化，并在atexit中添加mwTerm。<br/>
 </p>
 <p><br/>
-Debug 库中的一个重要的思想是栈级别(stack level)。<br/>
-一个栈级别就是一个指向在当前时刻正在活动的特殊函数的数字,也就是说,这个函数正在被调用但还没有返回。<br/>
-调用 debug 库的函数级别为 1,调用他(他指调用 debug 库的函数)的函数级别为 2,以此类推。<br/>
+如果自动初始化不合适或者程序比较特殊，请显式调用mwInit()和mwTerm().<br/>
+比如，有的时候明明程序没有问题，而memwatch显示内存泄漏，这时就需要手动调用初始化和结束。<br/>
 </p>
 <p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-3-1" class="outline-4">
-<h4 id="sec-1-3-1">debug.getinfo</h4>
-<div class="outline-text-4" id="text-1-3-1">
-
-<p>debug.getinfo(foo),将返回关于这个函数信息的一个表。<br/>
-这个表有下列一些域:<br/>
-    source,标明函数被定义的地方。<br/>
-    short_src,source 的简短版本(最多 60 个字符),记录一些有用的错误信息。<br/>
-    linedefined,source 中函数被定义之处的行号。<br/>
-    what,标明函数类型。如果 foo 是一个普通得 Lua 函数,结果为 &#8220;Lua&#8221;;<br/>
-    如果是一个 C 函数,结果为 &#8220;C&#8221;;<br/>
-    如果是一个 Lua 的主 chunk,结果为 &#8220;main&#8221;。<br/>
-    name,函数的合理名称。<br/>
-    namewhat,上一个字段代表的含义。<br/>
-    nups,函数的 upvalues 的个数。<br/>
-    func,函数本身;详细情况看后面。<br/>
-以数字 n 调用 debug.getinfo(n)时,返回在 n 级栈的活动函数的信息数据。<br/>
-currentline,即在那个时刻函数所在的行号。<br/>
+涉及的函数主要有：<br/>
+mwInit()    mwTerm()    mwAbort()<br/>
 </p>
 <p><br/>
 </p></div>
-
-</div>
-
-<div id="outline-container-1-3-2" class="outline-4">
-<h4 id="sec-1-3-2">hook</h4>
-<div class="outline-text-4" id="text-1-3-2">
-
-<p>debug 库的 hook 是这样一种机制:<br/>
-注册一个函数,用来在程序运行中某一事件到达时被调用。<br/>
-</p>
-<p><br/>
-有四种可以触发一个 hook 的事件: <br/>
-Lua 调用一个函数的时候 call 事件发生;<br/>
-当每次函数返回的时候,return 事件发生;<br/>
-Lua 开始执行代码的新行时候,line 事件发生;<br/>
-运行指定数目的指令之后,count 事件发生。<br/>
-Lua 使用单个参数调用 hooks,参数为一个描述产生调用的事件:&#8221;call&#8221;、&#8221;return&#8221;、&#8221;line&#8221; 或 &#8220;count&#8221;。<br/>
-另外,对于 line 事件,还可以传递第二个参数:新行号。<br/>
-我们在一个 hook 内总是可以使用 debug.getinfo 获取更多的信息。<br/>
-为了监控 call、return 和 line 事件,可以将他们的第一个字母(&#8216;c&#8217;、&#8217;r&#8217; 或 &#8216;l&#8217;)组合成一个 mask 字符串即可。<br/>
-要想关掉 hooks,只需要不带参数地调用 sethook 即可。<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
 
 </div>
 
 <div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">CAPI</h3>
+<h3 id="sec-1-4">MemWatch的I/O 操作</h3>
 <div class="outline-text-3" id="text-1-4">
 
-<p>Lua API 没有定义任何类似 lua_Value 的类型。<br/>
-替代的方案,它用一个抽象的栈在 Lua 与 C 之间交换值。<br/>
-Lua 以一个严格的 LIFO 规则(后进先出;也就是说,始终存取栈顶)来操作栈。<br/>
-当你调用 Lua 时,它只会改变栈顶部分。<br/>
-你的C代码却有更多的自由;更明确的来讲,你可以查询栈上的任何元素,甚至是在任何一个位置插入和删除元素。<br/>
+<p>对于一般的操作，MemWatch创建memwatch.log文件。有时，该文件不能被创建;<br/>
+MemWatch会试图创建memwatNN.log文件，NN在01~99之间。<br/>
 </p>
 <p><br/>
-Lua 要么做一份内部的拷贝要么重新利用已经存在的字符串。因此,一旦这些函数返回之后你可以自由的修改或是释放你的缓冲区。<br/>
-Lua_tostring 函数返回一个指向字符串的内部拷贝的指针。你不能修改它(使你想起那里有一个 const)。<br/>
-只要这个指针对应的值还在栈内,Lua 会保证这个指针一直有效。<br/>
-当一个 C 函数返回后,Lua 会清理他的栈,<br/>
-所以,有一个原则:永远不要将指向 Lua 字符串的指针保存到访问他们的外部函数中。<br/>
+如果你不能使用日志，或者不想使用，也没有问题。<br/>
+只要使用类型为&#8221;void func(int c)&#8221;的参数调用mwSetOutFunc()，然后所有的输出都会按字节定向到该函数.<br/>
 </p>
 <p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-4-1" class="outline-4">
-<h4 id="sec-1-4-1">调用c函数</h4>
-<div class="outline-text-4" id="text-1-4-1">
-
-<p>从 Lua调用 C 函数我们必须注册函数,也就是说,我们必须把 C 函数的地址以一个适当的方式<br/>
-传递给 Lua 解释器。<br/>
-    任何在 Lua 中注册的函数必须有同样的原型,这个原型声明定义就是 lua.h 中的<br/>
+当ASSERT或者VERIFY失败时，MemWatch也有Abort/Retry/Ignore处理机制。<br/>
+默认的处理机制没有I/O操作，但是会自动中断程序。<br/>
+你可以使用任何其他Abort/Retry/Ignore的处理机制,只要以参数&#8221;void func(int c)&#8221;调用mwSetAriFunc()。<br/>
 </p>
 <p><br/>
-<pre class="src src-lua">lua_CFunction:
-    typedef int (*lua_CFunction) (lua_State *L);
-</pre>
-
-Lua 的 C 库就是这样实现的。除了定义 C 函数之外,还必须定义一个特殊的用来和 Lua 库的主 chunk 通信的特殊函数。<br/>
-一旦调用,这个函数就会注册库中所有的 C 函数,并将他们保存到适当的位置。<br/>
-</p>
-<p><br/>
-luaL_openlib 函数接受一个 C 函数的列表和他们对应的函数名,并且作为一个库在一个 table 中注册所有这些函数。<br/>
-第二步,我们声明一个数组,保存所有的函数和他们对应的名字。<br/>
-这个数组的元素类型为 luaL_reg:是一个带有两个域的结构体,一个字符串和一个函数指针。<br/>
-第三步,我们使用 luaL_openlib 声明主函数。<br/>
-最后在lua中调用loadlib<br/>
-</p>
-<p><br/>
-一个 userdatum 提供了一个在 Lua 中没有预定义操作的 raw 内存区域。<br/>
-一个 light userdatum 是一个表示 C 指针的值，使用 light userdata 你必须自己管理内存,因为他们和垃圾收集器无关。<br/>
+涉及的函数主要有：<br/>
+mwTrace()           mwPuts()        mwSetOutFunc()  mwSetAriFunc()<br/>
+mwSetAriAction()    mwAriHandler()  mwBreakOut()<br/>
 </p>
 <p><br/>
 </p></div>
-
-</div>
-
-<div id="outline-container-1-4-2" class="outline-4">
-<h4 id="sec-1-4-2">Lua_stack</h4>
-<div class="outline-text-4" id="text-1-4-2">
-
-<p>正数代表栈中的绝对位置（从栈底开始），负数代表从栈顶的相对位置。<br/>
-对于栈的大小是要c程序来进行维护的，使用lua_checkstack to grow the stack size，每次调用此函数，<br/>
-保证有LUA_MINSTACK空间有效。<br/>
-</p>
-<p><br/>
-module（name，&hellip;)<br/>
-其他参数是作为函数一次应用于module。<br/>
-require（）<br/>
-packet.preload<br/>
-package.path<br/>
-package.cpath 加载c库时，搜索路径<br/>
-加载库后Then it tries to find a C function inside the library to be used as the loader. <br/>
-The name of this C function is the string &#8220;luaopen_&#8221; concatenated with a copy of the module name <br/>
-where each dot is replaced by an underscore。（.变为_）。<br/>
-package.seeall<br/>
-把module的metatable的__index设置为全局变量，这样模块就继承了全局变量。<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-All functions from the auxiliary library are defined in header file lauxlib.h and have a prefix luaL_.<br/>
-</p>
-<p><br/>
-All functions in the auxiliary library are built on top of the basic API, <br/>
-and so they provide nothing that cannot be done with this API.<br/>
-</p>
-<p><br/>
-Several functions in the auxiliary library are used to check C function arguments. <br/>
-Their names are always luaL_check* or luaL_opt*. <br/>
-All of these functions throw an error if the check is not satisfied. <br/>
-Because the error message is formatted for arguments (e.g., &#8220;bad argument #1&#8221;), <br/>
-you should not use these functions for other stack values. <br/>
-</p>
-<p><br/>
-lua_settable（l，index）<br/>
-从栈中弹出key 和val进行设置给index。<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
 
 </div>
 
 <div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">参考资料</h3>
+<h3 id="sec-1-5">使用</h3>
 <div class="outline-text-3" id="text-1-5">
 
-<p><a href="http://lua-users.org/wiki/">http://lua-users.org/wiki/</a> 有一个lua的在线教程，值得一看<br/>
-<a href="http://www.lua.org/">http://www.lua.org/</a><br/>
-<a href="http://www.lua.org/pil/">http://www.lua.org/pil/</a> Programming in Lua (first edition) 在线版<br/>
-<a href="http://www.lua.org/manual/5.1/">http://www.lua.org/manual/5.1/</a> LUA5.1手册<br/>
-<a href="http://lua-users.org/wiki/UnitTesting">http://lua-users.org/wiki/UnitTesting</a> 介绍几种lua测试框架<br/>
-<a href="http://www.nessie.de/mroth/lunit/">http://www.nessie.de/mroth/lunit/</a> lunit用于lua的测试框架，类似Cunit <br/>
+<p>在要使用MemWatch的.c文件中包含头文件&#8221;memwatch.h&#8221;<br/>
 </p>
 <p><br/>
-lua中文教程.pdf 必看<br/>
+使用GCC编译（注意：不是链接）自己的程序时，加入-DMEMWATCH -DMW_STDIO<br/>
+如：gcc -DMEMWATCH -DMW_STDIO –o test.o –c  test1.c memwatch.c<br/>
 </p>
 <p><br/>
-lua5..1语法速查手册<br/>
+</p>
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1">使用MemWatch提供的功能</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+<ol>
+<li>mwTRACE，mwASSERT，mwVERIFY和mwPuts<br/>
+</li>
+<li>ARI机制即程序设置的“Abort, Retry, Ignore选择陷阱<br/>
+</li>
+<li>mwSetOutFunc<br/>
+   将输出转向调用者给出的函数(参数即函数地址)。参数为NULL，表示把输出写入日志文件memwatch.log.<br/>
+</li>
+<li>mwIsReadAddr<br/>
+   检查内存是否有读取的权限<br/>
+</li>
+<li>mwIsSafeAddr<br/>
+   检查内存是否有读、写的权限<br/>
+</li>
+<li>mwStatistics<br/>
+   设置状态搜集器的行为。对应的参数采用宏定义。<br/>
+
+<p><br/>
+   #define MW_STAT_GLOBAL  0       <i>* 仅搜集全局状态信息 *</i><br/>
+   #define MW_STAT_MODULE  1       <i>* 搜集模块级的状态信息 *</i><br/>
+   #define MW_STAT_LINE    2       <i>* 搜集代码行级的状态信息 *</i><br/>
+   #define MW_STAT_DEFAULT 0       <i>* 默认状态设置 *</i><br/>
+</p></li>
+</ol>
+
+
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">Memwatch使用注意</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>Memwatch 的优点是无需特別配置，不需安装便能使用，但缺点是它会拖慢程序的运行速度，尤其是释放内存时它会作大量检查。<br/>
+但它比mtrace和dmalloc多了 一项功能，就是能模拟系统内存不足的情況，<br/>
+使用者只需用mwLimit(long num_of_byte)函数来限制程式的heap memory大小(以byte单位)。<br/>
 </p>
 <p><br/>
+最详细的使用说明(包括优点缺点，运行原理等)已在README中列出，本人强烈建议各位读者参考该文件。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/29/cunit/">CUnit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-29T00:00:00+08:00" pubdate data-updated="true">2012年10月29日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">CUnit</a>
+<ul>
+<li><a href="#sec-1-1">CUnit交叉编译</a></li>
+<li><a href="#sec-1-2">使用bootstrap而不是configure</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/29/cunit/">CUnit</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">CUnit交叉编译</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>我更换到ubuntu12.04上编译CUnit已经编译不过去了，错误原因是：<br/>
+libtool : X&ndash;tag=CC: command not found 编译报错<br/>
+原因据说是因为在项目目录下生成的libtool脚本中定义了$ECHO变量，但是在脚本文件ltmain.sh中，使用的却是$echo(生成的libtool版本太旧)<br/>
+可通过以下方法解决：<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>直接复制系统自带的libtool到项目目录，应该在/usr/bin目录下，覆盖代码文件目录下的libtool，再执行make<br/>
+</li>
+</ol>
+
+<p>（没装就apt-get install libtool 或者 yum install libtool 安装一下吧）<br/>
+但是这有个问题，不能用于交叉编译，系统的libtool会使用系统的ld等，而应该使用交叉工具连的ld。<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>修改aclocal.m4文件，将上面的LIBTOOL=&#8217;$(SHELL) $(top_builddir)/libtool&#8217;改成<br/>
+</li>
+</ol>
+
+<p>LIBTOOL=&#8217;$(SHELL)  /usr/bin/libtool&#8217;后重新执行./configure<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>将源码目录下libtool脚本中所有的$ECHO替换成$echo. 或者将脚本文件ltmain.sh里的$echo替换成$ECHO，<br/>
+</li>
+</ol>
+
+<p>都一样，重新执行./configure<br/>
+</p>
+<p><br/>
+另一种解决方案<br/>
+export echo=echo  回车后 make 正常<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">使用bootstrap而不是configure</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>没有了上边的libtool的问题，直接修改bootstrap，添加CC就ok了。<br/>
+CC=/workspace26/i386-env/cross-tools/bin/i686-unknown-linux-gnu-gcc<br/>
+或者采用&ndash;host的形式：<br/>
+PATH=/workspace26/i386-env/cross-tools/bin/:$PATH LD_LIBRARY_PATH=/workspace26/env-x86-lib <br/>
+./configure &ndash;host=i686-unknown-linux-gnu &ndash;enable-shared=no &ndash;disable-dependency-tracking<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/16/svn/">Svn使用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-16T00:00:00+08:00" pubdate data-updated="true">2012年10月16日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">svn使用</a>
+<ul>
+<li><a href="#sec-1-1">svn libneon的问题</a></li>
+<li><a href="#sec-1-2">自己编译，真的不容易啊</a></li>
+<li><a href="#sec-1-3">tftpd-hpa</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/16/svn/">svn使用</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">svn libneon的问题</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>ubuntu安装的svn要使用https时，默认使用的libneon-gnutls有点兼容性问题。所以导致的错误是：<br/>
+SSL handshake failed: SSL 错误：在证书中检测到违规的密钥用法。<br/>
+解决办法：<br/>
+<a href="http://www.yeap.de/blog2.0/archives/260-Subversion-Certificate-Problems-with-Ubuntu-Precise-Pangolin.html">http://www.yeap.de/blog2.0/archives/260-Subversion-Certificate-Problems-with-Ubuntu-Precise-Pangolin.html</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">自己编译，真的不容易啊</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>cd openssl<br/>
+由于是64bit系统，所以需要添加fPIC<br/>
+./config -fPIC<br/>
+但是cropt目录不好添加fPIC，难道生成的.a难道也需要fPIC吗？，所以无奈，只能先安装系统的openssl<br/>
+apt-get install openssl-dev openssl<br/>
+</p>
+<p><br/>
+cd subversion<br/>
+./configure &ndash;with-ssl=openssl &ndash;with-neon=./neon &ndash;with-openssl=/usr<br/>
+出现warnning无用理会直接make<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">tftpd-hpa</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>atftpd 设置半天不能启动，连直接输入命令行都不能启动。<br/>
+所以换成tftpd-hpa，非常简单。<br/>
+不过要想能够上传文件需要修改配置：<br/>
+vi /etc/default/tftpd-hpa<br/>
+添加&ndash;create<br/>
+注意-s参数不能去掉。<br/>
+</p>
+<p><br/>
+客户端使用atftp。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/16/ckermit/">串口工具ckermit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-16T00:00:00+08:00" pubdate data-updated="true">2012年10月16日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">串口工具ckermit</a>
+<ul>
+<li><a href="#sec-1-1">默认配置文件</a></li>
+<li><a href="#sec-1-2">操作</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/16/ckermit/">串口工具ckermit</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">默认配置文件</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>/etc/kermit/kermrc<br/>
+一般配置一个home下的自己的配置文件就ok了。<br/>
+~/.mykermrc<br/>
+</p>
+<p><br/>
+<pre class="example">set line /dev/ttyS0
+set speed 9600
+set carrier-watch off
+set handshake none
+set flow-control none
+robust
+set file type bin
+set file name lit
+set rec pack 1000
+set send pack 1000
+set window 5
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">操作</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>C-\ 切换到命令行<br/>
+c 打开链接<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/12/thunderbirdskill/">Thunderbird技巧</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-12T00:00:00+08:00" pubdate data-updated="true">2012年10月12日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">插件</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">mouseless mutt key</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>像mutt一样操作邮件，非常方便。<br/>
+m： write email<br/>
+n/p: next,preview<br/>
+r: re<br/>
+f: forward<br/>
+s: 加星<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">Contact Tabs</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>方便查看联系人<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">Thunderbird Conversations</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>把显示样式呈现的更友好<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">实现回复在前面</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>默认Thunderbird是将回复加在回复邮件的后面，可以通过修改配置项实现回复在前面，<br/>
+首选项&ndash;&gt;高级&ndash;&gt;高级配置&ndash;&gt;配置编辑器<br/>
+找到配置编辑器，将 mail.identity.default.reply_on_top 这一项由默认的0改为1即可。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">3列显示</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>在view显示为垂直视图<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/10/dropbox-under-ubuntu/">Ubuntu使用dropbox</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-10T00:00:00+08:00" pubdate data-updated="true">2012年10月10日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">对ubuntu one有点失望</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>我本来是用ubuntu one，但是我先在使用ubuntu one来同步我的org笔记，同时我的org笔记又使用hg同步。<br/>
+也就是一个文件夹同时使用hg和ubuntu one同步，结果发现ubuntu one同步总是出错，尤其是我使用hg fetch一个版本的时候。<br/>
+经常把我一个文件夹的内容同步没了，幸亏我有hg，否则这些文件就丢失啦。<br/>
+所以决定还是用dropbox吧，本来我手机使用dropbox来同步照片的，所以又申请了一个帐号，专门用于同步笔记。<br/>
+而且最终要的是：<br/>
+ubuntu one没有历史版本功能<br/>
+而dropbox可以可以回退到以前的历史版本，这个非常好。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">dropbox同步任意文件夹问题</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>本来还是我是打算用dropbox的，但是发现dropbox只能指定一个主目录，不想ubuntu one可以随便指定文件夹。<br/>
+但后来发现，其实只要做一个软链接到Dropbox目录就ok了。<br/>
+而且发现dropbox同步的速度非常快。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">dropbox安装</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>需要使用https链接去登录dropbox主页，下边有如何安装的方式，很简单，就是wget一个压缩包，然后解压就ok了。<br/>
+默认是.dropbox_dist目录。<br/>
+然后启动dropboxd就ok了<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">ubuntu one的一些命令</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>查看当前传输字节数<br/>
+<code>u1sdtool --current-transfers</code><br/>
+显示共享的文件夹<br/>
+<code>u1sdtool --list-folders</code><br/>
+删除文件夹<br/>
+<code>u1sdtool --delete-folder=FOLDER_ID</code><br/>
+其他命令使用&ndash;help查看<br/>
 </p></div>
 </div>
 </div>
@@ -1322,6 +1043,8 @@ lua5..1语法速查手册<br/>
   
   <ul class="pager">
     
+    <li class="previous"><a href="/blog/page/3/">&larr; Older</a></li>
+    
     <li><a href="/blog/archives">Blog Archives</a></li>
     
     <li class="next"><a href="/">Newer &rarr;</a></li>
@@ -1331,6 +1054,13 @@ lua5..1语法速查手册<br/>
 <aside class="sidebar-nav span3">
   
     <section>
+  <h1>About Me</h1>
+  <p><img src="/images/my_avatar.jpg"></p>
+  <p>网络工程师，喜欢折腾linux，emacs。</p>
+  <p>坚持理想，相信一定会实现。</p>
+  <p><a href="mailto:emmoblin@gmail.com"><img src="/images/my_email.png" alt="emmoblin@gmail.com"></a></p>
+</section>
+<section>
   <h1>Categories</h1>
     <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
@@ -1359,6 +1089,10 @@ dpc=1"></iframe>
 </ul>
 </section>
 
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
 <section class="well">
   <ul id="recent_posts" class="nav nav-list">
     <li class="nav-header">Recent Posts</li>

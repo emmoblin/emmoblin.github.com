@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>lua调用c函数进行单元测试 - Emmoblin Blog</title>
+  <title>Emmoblin Blog</title>
   <meta name="author" content="emmoblin">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://emmoblin.github.com/blog/2010/08/06/lua-call-c-function-to-unit-test">
+  <link rel="canonical" href="http://emmoblin.github.com/blog/page/4">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -101,13 +101,347 @@
 </nav>
   <div class="container">
     <div class="row-fluid">
-      
-<article class="hentry span9" role="article">
-
+      <div class="span9">
   
+  
+  
+    <article>
+      
   <header class="page-header">
     
-      <h1 class="entry-title">Lua调用c函数进行单元测试</h1>
+      <h1 class="entry-title"><a href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">Octopress添加分类栏</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T23:09:00+08:00" pubdate data-updated="true">2012年08月14日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考：<a href="https://github.com/tokkonopapa/octopress-tagcloud" title="octopress-tagcloud">octopress-tagcloud</a></p>
+
+<ul>
+<li><p>下载并copy到对应目录</p>
+
+<pre><code> ├─ plugins/
+ │  └── tag_cloud.rb
+ └─ source/
+    └─ _includes/
+       └─ custom/
+          └─ asides/
+             ├─ category_list.html
+             └─ tag_cloud.html
+</code></pre></li>
+<li><p>在_config.yml中的default_asides中添加</p>
+
+<pre><code>  custom/asides/category_list.html
+  custom/asides/tag_cloud.html
+</code></pre></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/14/zhong-xin-an-zhuang-octopress/">重新安装octopress</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T16:31:00+08:00" pubdate data-updated="true">2012年08月14日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>如果更换机子或者重新安装系统后，要重新获得octopress非常简单。</p>
+
+<p>1.安装ruby就不说了，我喜欢用rben安装。</p>
+
+<p>2.clone已存在的库，需要上传ssh key</p>
+
+<pre><code>git clone git@github.com:username/username.github.com.git octopress
+</code></pre>
+
+<p>3.切换到souce分支<br/>
+  查看远程的所有分支。</p>
+
+<pre><code>  git branch -r
+</code></pre>
+
+<p>  切换分支</p>
+
+<pre><code>  git checkout origin source
+</code></pre>
+
+<p>4.提交代码</p>
+
+<pre><code>git push origin source
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/13/markdown/">Markdown</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-13T23:10:00+08:00" pubdate data-updated="true">2012年08月13日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[转自]<a href="http://wowubuntu.com/markdown/">http://wowubuntu.com/markdown/</a></p>
+
+<h2 id="block">区块元素</h2>
+
+
+
+
+<h3 id="p">段落和换行</h3>
+
+
+<p>一个 Markdown 段落是由一个或多个连续的文本行组成，它的前后要有一个以上的空行（空行的定义是显示上看起来像是空的，便会被视为空行。比方说，若某一行只包含空格和制表符，则该行也会被视为空行）。普通段落不该用空格或制表符来缩进。</p>
+
+<p>「由一个或多个连续的文本行组成」这句话其实暗示了 Markdown 允许段落内的强迫换行（插入换行符），这个特性和其他大部分的 text-to-HTML 格式不一样（包括 Movable Type 的「Convert Line Breaks」选项），其它的格式会把每个换行符都转成 <code>&lt;br /&gt;</code> 标签。</p>
+
+<p>如果你<em>确实</em>想要依赖 Markdown 来插入 <code>&lt;br /&gt;</code> 标签的话，<strong>在插入处先按入两个以上的空格然后回车。</strong></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/13/markdown/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/12/first-post/">First Post</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-12T23:34:00+08:00" pubdate data-updated="true">2012年08月12日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>随便先写一点东西，markdown语法还不熟悉</p>
+
+<h3>发现的问题</h3>
+
+<ol>
+<li>即使本地加载也特别慢 <br/>
+原来是要去加载google的font，可能又要翻墙，所以特别慢。<br/>
+注释掉：source/_include/custom/head.html中注释掉fonts.googleapis.com的link</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2011/01/22/ksplice-success/">Ksplice实验成功</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-22T00:00:00+08:00" pubdate data-updated="true">2011年01月22日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+昨天下午在公司，使用LFS qemu，重新编译了一遍内核，然后验证ksplice功能。<br/>
+非常顺利的完成了热补丁。<br/>
+简直太神奇了。<br/>
+</p>
+<p><br/>
+前天之所以没有成功，主要是lfs当时跑的内核和运新ksplice编译的内核可能不一样。<br/>
+所以导致ksplice内核模块总是报错。<br/>
+</p>
+<p><br/>
+当时最困扰的地是脚本中<br/>
+modporbe ksplice<br/>
+但是并没有编译出ksplice的内核模块啊。<br/>
+我还以为是他脚本写错了。<br/>
+</p>
+<p><br/>
+后来发现其实编译成standalone模式是不需要加载ksplice模块的。<br/>
+根本原因还是运行的内核和当前的内核不匹配。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/08/mock-test/">Mock测试</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-08T00:00:00+08:00" pubdate data-updated="true">2010年08月08日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+今天研究了一下cmockery,这是一个google开源的c mock测试框架。<br/>
+最主要的功能就是其mock的功能，就是可以模拟函数的返回结果，还可以模拟参数的输入和输出。<br/>
+</p>
+<p> <br/>
+mock的根本思想就是针对测试代码进行单独测试，尽量抛弃对其他模块或者函数的依赖。<br/>
+用得最多的就是数据库测试，比如一个函数调用数据库，从中取出一些数据，如果没有mock机制，那就必须组织数据库，提供真的环境。这多少有些太麻烦了。<br/>
+所以只需要模拟返回数据库返回的值就行了。这就是叫mock。<br/>
+</p>
+<p> <br/>
+<a href="http://see-see.appspot.com/?p=12001#TestExecution">cmockery中文翻译手册</a><br/>
+</p>
+<p> <br/>
+<a href="http://www.zbitedu.com/?uid-609-action-viewspace-itemid-15317">这是一个例子</a><br/>
+</p>
+<p> <br/>
+还有在lua测试框架中，还有一个简单的库，叫lmock，提供简单的lua中的mock的功能。<br/>
+<a href="http://luaforge.net/projects/lmock/">http://luaforge.net/projects/lmock/</a><br/>
+</p>
+<p> <br/>
+</p>
+<p> <br/>
+但是我觉得这种mock的方法，实际上是要通过修改链接来完成的，对于代码的组织要求比较高。基本上这些模拟的外接口都要独立在不同的文件中，这样才好mock。<br/>
+</p></div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/06/lua-call-c-function-to-unit-test/">Lua调用c函数进行单元测试</a></h1>
     
     
       <p class="meta">
@@ -130,7 +464,7 @@
   </header>
 
 
-<div class="entry-content"><div><div><p><br/>
+  <div class="entry-content"><div><div><p><br/>
 之所以使用lua进行单元测试，而不用cunit，我觉得主要是考虑一下几点：<br/>
 1）lua测试命令行，优势明显<br/>
 2）cunit对函数进行单元测试的功能，用lua也可以做到。而且参数可以通过lua传递，更加灵活，修改测试用例不需要重新编译。<br/>
@@ -207,63 +541,91 @@ qostest.qos_add_e(iptable)
 </p></div>
 </div>
 </div>
+  
+  
 
 
-  <footer>
-    <p class="meta">
+    </article>
+  
+  
+    <article>
       
-  
-
-<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-06T00:00:00+08:00" pubdate data-updated="true">2010年08月06日</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/lua/'>lua</a>, <a class='category' href='/blog/categories/testunit/'>testunit</a>
-  
-</span>
-
-
-    </p>
+  <header class="page-header">
     
-      <div class="sharing">
+      <h1 class="entry-title"><a href="/blog/2010/08/02/first-luaunit-testcase/">初步体验lua写测试用例的简单</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
   
-  
-  
+
+
+<time datetime="2010-08-02T00:00:00+08:00" pubdate data-updated="true">2010年08月02日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+直接上代码，看看到底用脚本写测试用例到底有多简单。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-lua"><span style="color: #a020f0;">lsystem</span> = <span style="color: #0000ff;">function</span> (arg)
+    print(<span style="color: #00bfff;">"cmd:\e\[31m"</span>..arg..<span style="color: #00bfff;">"\e\[0m"</span>)
+    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">date</span> = io.popen(arg, r)
+    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">str</span> = date:read<span style="color: #00bfff;">"*a"</span>
+    date:close()
+    <span style="color: #0000ff;">return</span> str
+<span style="color: #0000ff;">end</span>
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#27979;&#35797;mac&#22320;&#22336;&#30340;&#26174;&#31034;&#26159;&#21542;&#27491;&#30830;</span>
+<span style="color: #0000ff;">function</span> <span style="color: #a020f0;">test_ipshow</span>()
+    date = lsystem(<span style="color: #00bfff;">"ip addr show eth1"</span>)
+    assert_match(<span style="color: #00bfff;">"00:0a:e4:36:06:24"</span>,date)
+<span style="color: #0000ff;">end</span>
+</pre>
+
+
+简单到无法再简单的程序，只需要两句话，<br/>
+第一句是执行命令。<br/>
+第二句是判断返回内容是否正确。<br/>
+</p>
+<p><br/>
+优势一：<br/>
+如果要使用Cunit进行同样的测试，当然也基本上也都是这几行语句，但是最麻烦的就是需要对内存进行管理。<br/>
+优势二：<br/>
+同时使用c语言的字符串匹配没有脚本语言强大，至少支持正则匹配。<br/>
+优势三：<br/>
+不需要编译，直接修改，解释执行。<br/>
+</p></div>
 </div>
+</div>
+  
+  
 
-    
-    
-    <ul class="pager">
-      
-      <li class="previous"><a class="basic-alignment left"
-        href="/blog/2010/08/02/first-luaunit-testcase/" title="Previous Post:
-        初步体验lua写测试用例的简单">&laquo; 初步体验lua写测试用例的简单</a></li>
-      
-      <li><a href="/blog/archives">Blog Archives</a></li>
-      
-      <li class="next"><a class="basic-alignment right" href="/blog/2010/08/08/mock-test/"
-        title="Next Post: mock测试">mock测试
-        &raquo;</a></li>
-      
-    </ul>
-  </footer>
-</article>
 
+    </article>
+  
+  <ul class="pager">
+    
+    <li class="previous"><a href="/blog/page/5/">&larr; Older</a></li>
+    
+    <li><a href="/blog/archives">Blog Archives</a></li>
+    
+    <li class="next"><a href="/blog/page/3/">Newer &rarr;</a></li>
+    
+  </ul>
+</div>
 <aside class="sidebar-nav span3">
   
     <section>
@@ -340,7 +702,6 @@ dpc=1"></iframe>
 
   
 </aside>
-
 
     </div>
   </div>
