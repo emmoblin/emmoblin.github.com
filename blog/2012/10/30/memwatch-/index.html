@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>memwatch - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2012/10/30/memwatch-">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">Memwatch</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-30T00:00:00+08:00" pubdate data-updated="true">2012年10月30日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">memwatch</a>
+<ul>
+<li><a href="#sec-1-1">Memwatch简介</a></li>
+<li><a href="#sec-1-2">MemWatch的内存处理</a></li>
+<li><a href="#sec-1-3">初始化和结束处理</a></li>
+<li><a href="#sec-1-4">MemWatch的I/O 操作</a></li>
+<li><a href="#sec-1-5">使用</a>
+<ul>
+<li><a href="#sec-1-5-1">使用MemWatch提供的功能</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-6">Memwatch使用注意</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/30/memwatch-/">memwatch</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Memwatch简介</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>在三种检测工具当中，设置最简单的算是memwatch，和dmalloc一样，<br/>
+它能检测未释放的内存、同一段内存被释放多次、位址存取错误及不当使用未分配之内存区域。<br/>
+请往<br/>
+<a href="http://www.linkdata.se/sourcecode.html">http://www.linkdata.se/sourcecode.html</a><br/>
+下载最新版本的Memwatch。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">MemWatch的内存处理</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>MemWatch将所有分配的内存用0xFE填充，所以，如果你看到错误的数据是用0xFE填充的，那就是你没有初始化数据。<br/>
+例外是calloc()，它会直接把分配的内存用0填充。<br/>
+</p>
+<p><br/>
+MemWatch将所有已释放的内存用0xFD填充(zapped with 0xFD).<br/>
+如果你发现你使用的数据是用0xFD填充的，那你就使用的是已释放的内存。<br/>
+在这种情况，注意MemWatch会立即把一个&#8221;释放了的块信息&#8221; 填在释放了的数据前。<br/>
+这个块包括关于内存在哪儿释放的信息，以可读的文本形式存放，格式 为&#8221;FBI&lt;counter&gt;filename(line)&#8221;。<br/>
+如:&#8221;FBI&lt;267&gt;test.c(12)&#8221;.使用FBI会降 低free()的速度，所以默认是关闭的。使用mwFreeBufferInfo(1)开启。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">初始化和结束处理</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>一般来说，在程序中使用MemWatch的功能，可以手动添加mwInit()进行初始化，并用对应的mwTerm ()进行结束处理。<br/>
+一般不需要手动添加，memwatch会在第一个malloc的时候自动初始化，并在atexit中添加mwTerm。<br/>
+</p>
+<p><br/>
+如果自动初始化不合适或者程序比较特殊，请显式调用mwInit()和mwTerm().<br/>
+比如，有的时候明明程序没有问题，而memwatch显示内存泄漏，这时就需要手动调用初始化和结束。<br/>
+</p>
+<p><br/>
+涉及的函数主要有：<br/>
+mwInit()    mwTerm()    mwAbort()<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">MemWatch的I/O 操作</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>对于一般的操作，MemWatch创建memwatch.log文件。有时，该文件不能被创建;<br/>
+MemWatch会试图创建memwatNN.log文件，NN在01~99之间。<br/>
+</p>
+<p><br/>
+如果你不能使用日志，或者不想使用，也没有问题。<br/>
+只要使用类型为&#8221;void func(int c)&#8221;的参数调用mwSetOutFunc()，然后所有的输出都会按字节定向到该函数.<br/>
+</p>
+<p><br/>
+当ASSERT或者VERIFY失败时，MemWatch也有Abort/Retry/Ignore处理机制。<br/>
+默认的处理机制没有I/O操作，但是会自动中断程序。<br/>
+你可以使用任何其他Abort/Retry/Ignore的处理机制,只要以参数&#8221;void func(int c)&#8221;调用mwSetAriFunc()。<br/>
+</p>
+<p><br/>
+涉及的函数主要有：<br/>
+mwTrace()           mwPuts()        mwSetOutFunc()  mwSetAriFunc()<br/>
+mwSetAriAction()    mwAriHandler()  mwBreakOut()<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">使用</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>在要使用MemWatch的.c文件中包含头文件&#8221;memwatch.h&#8221;<br/>
+</p>
+<p><br/>
+使用GCC编译（注意：不是链接）自己的程序时，加入-DMEMWATCH -DMW_STDIO<br/>
+如：gcc -DMEMWATCH -DMW_STDIO –o test.o –c  test1.c memwatch.c<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1">使用MemWatch提供的功能</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+<ol>
+<li>mwTRACE，mwASSERT，mwVERIFY和mwPuts<br/>
+</li>
+<li>ARI机制即程序设置的“Abort, Retry, Ignore选择陷阱<br/>
+</li>
+<li>mwSetOutFunc<br/>
+   将输出转向调用者给出的函数(参数即函数地址)。参数为NULL，表示把输出写入日志文件memwatch.log.<br/>
+</li>
+<li>mwIsReadAddr<br/>
+   检查内存是否有读取的权限<br/>
+</li>
+<li>mwIsSafeAddr<br/>
+   检查内存是否有读、写的权限<br/>
+</li>
+<li>mwStatistics<br/>
+   设置状态搜集器的行为。对应的参数采用宏定义。<br/>
+
+<p><br/>
+   #define MW_STAT_GLOBAL  0       <i>* 仅搜集全局状态信息 *</i><br/>
+   #define MW_STAT_MODULE  1       <i>* 搜集模块级的状态信息 *</i><br/>
+   #define MW_STAT_LINE    2       <i>* 搜集代码行级的状态信息 *</i><br/>
+   #define MW_STAT_DEFAULT 0       <i>* 默认状态设置 *</i><br/>
+</p></li>
+</ol>
+
+
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">Memwatch使用注意</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>Memwatch 的优点是无需特別配置，不需安装便能使用，但缺点是它会拖慢程序的运行速度，尤其是释放内存时它会作大量检查。<br/>
+但它比mtrace和dmalloc多了 一项功能，就是能模拟系统内存不足的情況，<br/>
+使用者只需用mwLimit(long num_of_byte)函数来限制程式的heap memory大小(以byte单位)。<br/>
+</p>
+<p><br/>
+最详细的使用说明(包括优点缺点，运行原理等)已在README中列出，本人强烈建议各位读者参考该文件。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-30T00:00:00+08:00" pubdate data-updated="true">2012年10月30日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/tools/'>tools</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2012/10/29/cunit/" title="Previous Post:
+        CUnit">&laquo; CUnit</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2012/11/02/cutter/"
+        title="Next Post: c单元测试框架:cutter">c单元测试框架:cutter
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/06/linux-g-dial/">linux_3g拨号</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/01/fstab-recover/">fstab恢复</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/18/git-server/">git服务器开源软件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/05/shell-snippet-collect/">shell代码片段收集</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2012/10/30/memwatch-/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2012/10/30/memwatch-/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

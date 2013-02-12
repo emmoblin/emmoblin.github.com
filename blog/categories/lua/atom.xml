@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: lua | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/lua/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2013-02-12T23:54:59+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[mock测试]]></title>
+    <link href="http://emmoblin.github.com/blog/2010/08/08/mock-test/"/>
+    <updated>2010-08-08T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2010/08/08/mock-test</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+今天研究了一下cmockery,这是一个google开源的c mock测试框架。<br/>
+最主要的功能就是其mock的功能，就是可以模拟函数的返回结果，还可以模拟参数的输入和输出。<br/>
+</p>
+<p> <br/>
+mock的根本思想就是针对测试代码进行单独测试，尽量抛弃对其他模块或者函数的依赖。<br/>
+用得最多的就是数据库测试，比如一个函数调用数据库，从中取出一些数据，如果没有mock机制，那就必须组织数据库，提供真的环境。这多少有些太麻烦了。<br/>
+所以只需要模拟返回数据库返回的值就行了。这就是叫mock。<br/>
+</p>
+<p> <br/>
+<a href="http://see-see.appspot.com/?p=12001#TestExecution">cmockery中文翻译手册</a><br/>
+</p>
+<p> <br/>
+<a href="http://www.zbitedu.com/?uid-609-action-viewspace-itemid-15317">这是一个例子</a><br/>
+</p>
+<p> <br/>
+还有在lua测试框架中，还有一个简单的库，叫lmock，提供简单的lua中的mock的功能。<br/>
+<a href="http://luaforge.net/projects/lmock/">http://luaforge.net/projects/lmock/</a><br/>
+</p>
+<p> <br/>
+</p>
+<p> <br/>
+但是我觉得这种mock的方法，实际上是要通过修改链接来完成的，对于代码的组织要求比较高。基本上这些模拟的外接口都要独立在不同的文件中，这样才好mock。<br/>
+</p></div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[lua调用c函数进行单元测试]]></title>
+    <link href="http://emmoblin.github.com/blog/2010/08/06/lua-call-c-function-to-unit-test/"/>
+    <updated>2010-08-06T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2010/08/06/lua-call-c-function-to-unit-test</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+之所以使用lua进行单元测试，而不用cunit，我觉得主要是考虑一下几点：<br/>
+1）lua测试命令行，优势明显<br/>
+2）cunit对函数进行单元测试的功能，用lua也可以做到。而且参数可以通过lua传递，更加灵活，修改测试用例不需要重新编译。<br/>
+以前用cunit写的时候，修改一下就要重新编译，而且还要继续内存的管理。测试用例写多了有点厌烦。<br/>
+</p>
+<p><br/>
+下面主要看看Lua调用c函数进行单元测试：<br/>
+</p>
+<p><br/>
+这是lua代码，<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-lua"><span style="color: #0000ff;">local</span> <span style="color: #ff1493;">iptable</span> = {}
+
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#32452;&#32455;&#36755;&#20837;&#21442;&#25968;</span>
+<span style="color: #0000ff;">for</span> num = 1,5 <span style="color: #0000ff;">do</span>
+ <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">newip</span> = {[<span style="color: #00bfff;">"ip"</span>]=<span style="color: #00bfff;">"192.168.1."</span>..num, [<span style="color: #00bfff;">"up"</span>]=0, [<span style="color: #00bfff;">"down"</span>]=0}
+ iptable[num] = newip
+ print(iptable[num].ip, iptable[num].up, iptable[num].down)
+<span style="color: #0000ff;">end</span>
+
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#35843;&#29992;&#34987;&#27979;&#35797;&#30340;c&#20989;&#25968;</span>
+qostest.qos_add_e(iptable)
+
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#26816;&#27979;&#36820;&#22238;&#32467;&#26524;&#26159;&#21542;&#26159;&#39044;&#26399;&#32467;&#26524;&#65292;&#36825;&#37324;&#21482;&#26159;&#31616;&#21333;&#30340;&#25171;&#21360;&#20102;&#19968;&#19979;&#65292;&#27809;&#26377;&#29992;assert</span>
+<span style="color: #0000ff;">for</span> num = 1,5 <span style="color: #0000ff;">do</span>
+ print(iptable[num].ip, iptable[num].up, iptable[num].down)
+<span style="color: #0000ff;">end</span>
+</pre>
+
+
+下面是对应的c函数的实现：<br/>
+其中最容易出错的地方就是对于当前栈的层次，要时刻记住每一个lua_* 相关的操作后，栈会变成什么样子。<br/>
+建议全部使用正数代表index，混合使用正数和负数比较容易出错。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-c"><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> <span style="color: #a020f0;">qos_add_e</span> (<span style="color: #0000ff;">lua_State</span> *<span style="color: #ff1493;">L</span>) {
+    <span style="color: #0000ff;">__u32</span> *<span style="color: #ff1493;">handle</span>,<span style="color: #ff1493;">ip</span>;
+    <span style="color: #0000ff;">int</span> <span style="color: #ff1493;">i</span> = 0, <span style="color: #ff1493;">ipnum</span> = 0;
+
+    ipnum = lua_objlen(L, 1);
+    printf(<span style="color: #00bfff;">"in libqostst qID = %u pID = %u ipnum = %d\n"</span>
+        , qID, pID, ipnum);
+
+    <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *<span style="color: #ff1493;">ipstr</span> = <span style="color: #ff0000;">NULL</span>;
+    <span style="color: #0000ff;">for</span> ( i = 1; i &lt;= ipnum; i++ ) {
+        lua_pushnumber(L, i);<span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">push key</span>
+
+        lua_gettable(L, 1);<span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">get value ,get level 1 table</span>
+
+        lua_getfield(L, 2, <span style="color: #00bfff;">"ip"</span>);
+        ipstr = luaL_checkstring(L, 3);
+
+        printf(<span style="color: #00bfff;">"%d=%s\n"</span>, i, ipstr);
+        ip = ntohl(inet_addr(ipstr));
+
+        <span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">&#20256;&#20837;ip&#65292;&#36820;&#22238;&#19978;&#19979;&#34892;&#30340;handle</span>
+        testfunc(ip, handle)
+        <span style="color: #8c8c8c; font-style: italic;">//</span><span style="color: #8c8c8c; font-style: italic;">return handle to lua</span>
+        lua_pushnumber(L, handle[0]);
+        lua_setfield(L, 2, <span style="color: #00bfff;">"up"</span>);
+        lua_pop(L, 2);
+    }
+
+    <span style="color: #0000ff;">return</span> 1;
+}
+</pre>
+
+
+</p></div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[初步体验lua写测试用例的简单]]></title>
+    <link href="http://emmoblin.github.com/blog/2010/08/02/first-luaunit-testcase/"/>
+    <updated>2010-08-02T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2010/08/02/first-luaunit-testcase</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+直接上代码，看看到底用脚本写测试用例到底有多简单。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-lua"><span style="color: #a020f0;">lsystem</span> = <span style="color: #0000ff;">function</span> (arg)
+    print(<span style="color: #00bfff;">"cmd:\e\[31m"</span>..arg..<span style="color: #00bfff;">"\e\[0m"</span>)
+    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">date</span> = io.popen(arg, r)
+    <span style="color: #0000ff;">local</span> <span style="color: #ff1493;">str</span> = date:read<span style="color: #00bfff;">"*a"</span>
+    date:close()
+    <span style="color: #0000ff;">return</span> str
+<span style="color: #0000ff;">end</span>
+<span style="color: #8c8c8c; font-style: italic;">--</span><span style="color: #8c8c8c; font-style: italic;">&#27979;&#35797;mac&#22320;&#22336;&#30340;&#26174;&#31034;&#26159;&#21542;&#27491;&#30830;</span>
+<span style="color: #0000ff;">function</span> <span style="color: #a020f0;">test_ipshow</span>()
+    date = lsystem(<span style="color: #00bfff;">"ip addr show eth1"</span>)
+    assert_match(<span style="color: #00bfff;">"00:0a:e4:36:06:24"</span>,date)
+<span style="color: #0000ff;">end</span>
+</pre>
+
+
+简单到无法再简单的程序，只需要两句话，<br/>
+第一句是执行命令。<br/>
+第二句是判断返回内容是否正确。<br/>
+</p>
+<p><br/>
+优势一：<br/>
+如果要使用Cunit进行同样的测试，当然也基本上也都是这几行语句，但是最麻烦的就是需要对内存进行管理。<br/>
+优势二：<br/>
+同时使用c语言的字符串匹配没有脚本语言强大，至少支持正则匹配。<br/>
+优势三：<br/>
+不需要编译，直接修改，解释执行。<br/>
+</p></div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Luasocket和lua CAPI]]></title>
+    <link href="http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi/"/>
+    <updated>2010-08-01T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">Luasocket和lua CAPI</a>
+<ul>
+<li><a href="#sec-1-1">lua安装</a></li>
+<li><a href="#sec-1-2">luasocket</a></li>
+<li><a href="#sec-1-3">debug</a>
+<ul>
+<li><a href="#sec-1-3-1">debug.getinfo</a></li>
+<li><a href="#sec-1-3-2">hook</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">CAPI</a>
+<ul>
+<li><a href="#sec-1-4-1">调用c函数</a></li>
+<li><a href="#sec-1-4-2">Lua_stack</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/lua/atom.xml">Luasocket和lua CAPI</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">lua安装</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>Lua在ubuntu上安装非常简单，但是需要一个readline的头文件。<br/>
+</p>
+<p><br/>
+<code>apt-get install libreadline6-dev libncurses-dev</code><br/>
+</p>
+<p><br/>
+然后进入lua目录<br/>
+make linux<br/>
+make linux install<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">luasocket</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>在看lunatest的时候，其中使用luasocket库，这个库实现了基本的socket功能。<br/>
+基本看了一下luasocket的实现，觉得主要是使用luaL_tostring函数，从栈中获得lua的string，然后调用socket.send函数进行发送。<br/>
+</p>
+<p><br/>
+receive的时候，调用socket.receive获得data后，通过pushlstring，压入栈，传递给lua。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">debug</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>debug 库由两种函数组成:自省(introspective)函数和 hooks。<br/>
+自省函数使得我们可以检查运行程序的某些方面,比如活动函数栈、当前执行代码的行号、本地变量的名和值。<br/>
+Hooks 可以跟踪程序的执行情况。<br/>
+</p>
+<p><br/>
+Debug 库中的一个重要的思想是栈级别(stack level)。<br/>
+一个栈级别就是一个指向在当前时刻正在活动的特殊函数的数字,也就是说,这个函数正在被调用但还没有返回。<br/>
+调用 debug 库的函数级别为 1,调用他(他指调用 debug 库的函数)的函数级别为 2,以此类推。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">debug.getinfo</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>debug.getinfo(foo),将返回关于这个函数信息的一个表。<br/>
+这个表有下列一些域:<br/>
+    source,标明函数被定义的地方。<br/>
+    short_src,source 的简短版本(最多 60 个字符),记录一些有用的错误信息。<br/>
+    linedefined,source 中函数被定义之处的行号。<br/>
+    what,标明函数类型。如果 foo 是一个普通得 Lua 函数,结果为 "Lua";<br/>
+    如果是一个 C 函数,结果为 "C";<br/>
+    如果是一个 Lua 的主 chunk,结果为 "main"。<br/>
+    name,函数的合理名称。<br/>
+    namewhat,上一个字段代表的含义。<br/>
+    nups,函数的 upvalues 的个数。<br/>
+    func,函数本身;详细情况看后面。<br/>
+以数字 n 调用 debug.getinfo(n)时,返回在 n 级栈的活动函数的信息数据。<br/>
+currentline,即在那个时刻函数所在的行号。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">hook</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p>debug 库的 hook 是这样一种机制:<br/>
+注册一个函数,用来在程序运行中某一事件到达时被调用。<br/>
+</p>
+<p><br/>
+有四种可以触发一个 hook 的事件: <br/>
+Lua 调用一个函数的时候 call 事件发生;<br/>
+当每次函数返回的时候,return 事件发生;<br/>
+Lua 开始执行代码的新行时候,line 事件发生;<br/>
+运行指定数目的指令之后,count 事件发生。<br/>
+Lua 使用单个参数调用 hooks,参数为一个描述产生调用的事件:"call"、"return"、"line" 或 "count"。<br/>
+另外,对于 line 事件,还可以传递第二个参数:新行号。<br/>
+我们在一个 hook 内总是可以使用 debug.getinfo 获取更多的信息。<br/>
+为了监控 call、return 和 line 事件,可以将他们的第一个字母('c'、'r' 或 'l')组合成一个 mask 字符串即可。<br/>
+要想关掉 hooks,只需要不带参数地调用 sethook 即可。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">CAPI</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>Lua API 没有定义任何类似 lua_Value 的类型。<br/>
+替代的方案,它用一个抽象的栈在 Lua 与 C 之间交换值。<br/>
+Lua 以一个严格的 LIFO 规则(后进先出;也就是说,始终存取栈顶)来操作栈。<br/>
+当你调用 Lua 时,它只会改变栈顶部分。<br/>
+你的C代码却有更多的自由;更明确的来讲,你可以查询栈上的任何元素,甚至是在任何一个位置插入和删除元素。<br/>
+</p>
+<p><br/>
+Lua 要么做一份内部的拷贝要么重新利用已经存在的字符串。因此,一旦这些函数返回之后你可以自由的修改或是释放你的缓冲区。<br/>
+Lua_tostring 函数返回一个指向字符串的内部拷贝的指针。你不能修改它(使你想起那里有一个 const)。<br/>
+只要这个指针对应的值还在栈内,Lua 会保证这个指针一直有效。<br/>
+当一个 C 函数返回后,Lua 会清理他的栈,<br/>
+所以,有一个原则:永远不要将指向 Lua 字符串的指针保存到访问他们的外部函数中。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">调用c函数</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<p>从 Lua调用 C 函数我们必须注册函数,也就是说,我们必须把 C 函数的地址以一个适当的方式<br/>
+传递给 Lua 解释器。<br/>
+    任何在 Lua 中注册的函数必须有同样的原型,这个原型声明定义就是 lua.h 中的<br/>
+</p>
+<p><br/>
+<pre class="src src-lua">lua_CFunction:
+    typedef int (*lua_CFunction) (lua_State *L);
+</pre>
+
+Lua 的 C 库就是这样实现的。除了定义 C 函数之外,还必须定义一个特殊的用来和 Lua 库的主 chunk 通信的特殊函数。<br/>
+一旦调用,这个函数就会注册库中所有的 C 函数,并将他们保存到适当的位置。<br/>
+</p>
+<p><br/>
+luaL_openlib 函数接受一个 C 函数的列表和他们对应的函数名,并且作为一个库在一个 table 中注册所有这些函数。<br/>
+第二步,我们声明一个数组,保存所有的函数和他们对应的名字。<br/>
+这个数组的元素类型为 luaL_reg:是一个带有两个域的结构体,一个字符串和一个函数指针。<br/>
+第三步,我们使用 luaL_openlib 声明主函数。<br/>
+最后在lua中调用loadlib<br/>
+</p>
+<p><br/>
+一个 userdatum 提供了一个在 Lua 中没有预定义操作的 raw 内存区域。<br/>
+一个 light userdatum 是一个表示 C 指针的值，使用 light userdata 你必须自己管理内存,因为他们和垃圾收集器无关。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2">Lua_stack</h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+<p>正数代表栈中的绝对位置（从栈底开始），负数代表从栈顶的相对位置。<br/>
+对于栈的大小是要c程序来进行维护的，使用lua_checkstack to grow the stack size，每次调用此函数，<br/>
+保证有LUA_MINSTACK空间有效。<br/>
+</p>
+<p><br/>
+module（name，&hellip;)<br/>
+其他参数是作为函数一次应用于module。<br/>
+require（）<br/>
+packet.preload<br/>
+package.path<br/>
+package.cpath 加载c库时，搜索路径<br/>
+加载库后Then it tries to find a C function inside the library to be used as the loader. <br/>
+The name of this C function is the string "luaopen_" concatenated with a copy of the module name <br/>
+where each dot is replaced by an underscore。（.变为_）。<br/>
+package.seeall<br/>
+把module的metatable的__index设置为全局变量，这样模块就继承了全局变量。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+All functions from the auxiliary library are defined in header file lauxlib.h and have a prefix luaL_.<br/>
+</p>
+<p><br/>
+All functions in the auxiliary library are built on top of the basic API, <br/>
+and so they provide nothing that cannot be done with this API.<br/>
+</p>
+<p><br/>
+Several functions in the auxiliary library are used to check C function arguments. <br/>
+Their names are always luaL_check* or luaL_opt*. <br/>
+All of these functions throw an error if the check is not satisfied. <br/>
+Because the error message is formatted for arguments (e.g., "bad argument #1"), <br/>
+you should not use these functions for other stack values. <br/>
+</p>
+<p><br/>
+lua_settable（l，index）<br/>
+从栈中弹出key 和val进行设置给index。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">参考资料</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p><a href="http://lua-users.org/wiki/">http://lua-users.org/wiki/</a> 有一个lua的在线教程，值得一看<br/>
+<a href="http://www.lua.org/">http://www.lua.org/</a><br/>
+<a href="http://www.lua.org/pil/">http://www.lua.org/pil/</a> Programming in Lua (first edition) 在线版<br/>
+<a href="http://www.lua.org/manual/5.1/">http://www.lua.org/manual/5.1/</a> LUA5.1手册<br/>
+<a href="http://lua-users.org/wiki/UnitTesting">http://lua-users.org/wiki/UnitTesting</a> 介绍几种lua测试框架<br/>
+<a href="http://www.nessie.de/mroth/lunit/">http://www.nessie.de/mroth/lunit/</a> lunit用于lua的测试框架，类似Cunit <br/>
+</p>
+<p><br/>
+lua中文教程.pdf 必看<br/>
+</p>
+<p><br/>
+lua5..1语法速查手册<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

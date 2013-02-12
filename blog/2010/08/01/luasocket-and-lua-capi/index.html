@@ -1,0 +1,555 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Luasocket和lua CAPI - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">Luasocket和lua CAPI</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-01T00:00:00+08:00" pubdate data-updated="true">2010年08月01日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">Luasocket和lua CAPI</a>
+<ul>
+<li><a href="#sec-1-1">lua安装</a></li>
+<li><a href="#sec-1-2">luasocket</a></li>
+<li><a href="#sec-1-3">debug</a>
+<ul>
+<li><a href="#sec-1-3-1">debug.getinfo</a></li>
+<li><a href="#sec-1-3-2">hook</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">CAPI</a>
+<ul>
+<li><a href="#sec-1-4-1">调用c函数</a></li>
+<li><a href="#sec-1-4-2">Lua_stack</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi/">Luasocket和lua CAPI</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">lua安装</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>Lua在ubuntu上安装非常简单，但是需要一个readline的头文件。<br/>
+</p>
+<p><br/>
+<code>apt-get install libreadline6-dev libncurses-dev</code><br/>
+</p>
+<p><br/>
+然后进入lua目录<br/>
+make linux<br/>
+make linux install<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">luasocket</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>在看lunatest的时候，其中使用luasocket库，这个库实现了基本的socket功能。<br/>
+基本看了一下luasocket的实现，觉得主要是使用luaL_tostring函数，从栈中获得lua的string，然后调用socket.send函数进行发送。<br/>
+</p>
+<p><br/>
+receive的时候，调用socket.receive获得data后，通过pushlstring，压入栈，传递给lua。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">debug</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>debug 库由两种函数组成:自省(introspective)函数和 hooks。<br/>
+自省函数使得我们可以检查运行程序的某些方面,比如活动函数栈、当前执行代码的行号、本地变量的名和值。<br/>
+Hooks 可以跟踪程序的执行情况。<br/>
+</p>
+<p><br/>
+Debug 库中的一个重要的思想是栈级别(stack level)。<br/>
+一个栈级别就是一个指向在当前时刻正在活动的特殊函数的数字,也就是说,这个函数正在被调用但还没有返回。<br/>
+调用 debug 库的函数级别为 1,调用他(他指调用 debug 库的函数)的函数级别为 2,以此类推。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">debug.getinfo</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>debug.getinfo(foo),将返回关于这个函数信息的一个表。<br/>
+这个表有下列一些域:<br/>
+    source,标明函数被定义的地方。<br/>
+    short_src,source 的简短版本(最多 60 个字符),记录一些有用的错误信息。<br/>
+    linedefined,source 中函数被定义之处的行号。<br/>
+    what,标明函数类型。如果 foo 是一个普通得 Lua 函数,结果为 &#8220;Lua&#8221;;<br/>
+    如果是一个 C 函数,结果为 &#8220;C&#8221;;<br/>
+    如果是一个 Lua 的主 chunk,结果为 &#8220;main&#8221;。<br/>
+    name,函数的合理名称。<br/>
+    namewhat,上一个字段代表的含义。<br/>
+    nups,函数的 upvalues 的个数。<br/>
+    func,函数本身;详细情况看后面。<br/>
+以数字 n 调用 debug.getinfo(n)时,返回在 n 级栈的活动函数的信息数据。<br/>
+currentline,即在那个时刻函数所在的行号。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">hook</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p>debug 库的 hook 是这样一种机制:<br/>
+注册一个函数,用来在程序运行中某一事件到达时被调用。<br/>
+</p>
+<p><br/>
+有四种可以触发一个 hook 的事件: <br/>
+Lua 调用一个函数的时候 call 事件发生;<br/>
+当每次函数返回的时候,return 事件发生;<br/>
+Lua 开始执行代码的新行时候,line 事件发生;<br/>
+运行指定数目的指令之后,count 事件发生。<br/>
+Lua 使用单个参数调用 hooks,参数为一个描述产生调用的事件:&#8221;call&#8221;、&#8221;return&#8221;、&#8221;line&#8221; 或 &#8220;count&#8221;。<br/>
+另外,对于 line 事件,还可以传递第二个参数:新行号。<br/>
+我们在一个 hook 内总是可以使用 debug.getinfo 获取更多的信息。<br/>
+为了监控 call、return 和 line 事件,可以将他们的第一个字母(&#8216;c&#8217;、&#8217;r&#8217; 或 &#8216;l&#8217;)组合成一个 mask 字符串即可。<br/>
+要想关掉 hooks,只需要不带参数地调用 sethook 即可。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">CAPI</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>Lua API 没有定义任何类似 lua_Value 的类型。<br/>
+替代的方案,它用一个抽象的栈在 Lua 与 C 之间交换值。<br/>
+Lua 以一个严格的 LIFO 规则(后进先出;也就是说,始终存取栈顶)来操作栈。<br/>
+当你调用 Lua 时,它只会改变栈顶部分。<br/>
+你的C代码却有更多的自由;更明确的来讲,你可以查询栈上的任何元素,甚至是在任何一个位置插入和删除元素。<br/>
+</p>
+<p><br/>
+Lua 要么做一份内部的拷贝要么重新利用已经存在的字符串。因此,一旦这些函数返回之后你可以自由的修改或是释放你的缓冲区。<br/>
+Lua_tostring 函数返回一个指向字符串的内部拷贝的指针。你不能修改它(使你想起那里有一个 const)。<br/>
+只要这个指针对应的值还在栈内,Lua 会保证这个指针一直有效。<br/>
+当一个 C 函数返回后,Lua 会清理他的栈,<br/>
+所以,有一个原则:永远不要将指向 Lua 字符串的指针保存到访问他们的外部函数中。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">调用c函数</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<p>从 Lua调用 C 函数我们必须注册函数,也就是说,我们必须把 C 函数的地址以一个适当的方式<br/>
+传递给 Lua 解释器。<br/>
+    任何在 Lua 中注册的函数必须有同样的原型,这个原型声明定义就是 lua.h 中的<br/>
+</p>
+<p><br/>
+<pre class="src src-lua">lua_CFunction:
+    typedef int (*lua_CFunction) (lua_State *L);
+</pre>
+
+Lua 的 C 库就是这样实现的。除了定义 C 函数之外,还必须定义一个特殊的用来和 Lua 库的主 chunk 通信的特殊函数。<br/>
+一旦调用,这个函数就会注册库中所有的 C 函数,并将他们保存到适当的位置。<br/>
+</p>
+<p><br/>
+luaL_openlib 函数接受一个 C 函数的列表和他们对应的函数名,并且作为一个库在一个 table 中注册所有这些函数。<br/>
+第二步,我们声明一个数组,保存所有的函数和他们对应的名字。<br/>
+这个数组的元素类型为 luaL_reg:是一个带有两个域的结构体,一个字符串和一个函数指针。<br/>
+第三步,我们使用 luaL_openlib 声明主函数。<br/>
+最后在lua中调用loadlib<br/>
+</p>
+<p><br/>
+一个 userdatum 提供了一个在 Lua 中没有预定义操作的 raw 内存区域。<br/>
+一个 light userdatum 是一个表示 C 指针的值，使用 light userdata 你必须自己管理内存,因为他们和垃圾收集器无关。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2">Lua_stack</h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+<p>正数代表栈中的绝对位置（从栈底开始），负数代表从栈顶的相对位置。<br/>
+对于栈的大小是要c程序来进行维护的，使用lua_checkstack to grow the stack size，每次调用此函数，<br/>
+保证有LUA_MINSTACK空间有效。<br/>
+</p>
+<p><br/>
+module（name，&hellip;)<br/>
+其他参数是作为函数一次应用于module。<br/>
+require（）<br/>
+packet.preload<br/>
+package.path<br/>
+package.cpath 加载c库时，搜索路径<br/>
+加载库后Then it tries to find a C function inside the library to be used as the loader. <br/>
+The name of this C function is the string &#8220;luaopen_&#8221; concatenated with a copy of the module name <br/>
+where each dot is replaced by an underscore。（.变为_）。<br/>
+package.seeall<br/>
+把module的metatable的__index设置为全局变量，这样模块就继承了全局变量。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+All functions from the auxiliary library are defined in header file lauxlib.h and have a prefix luaL_.<br/>
+</p>
+<p><br/>
+All functions in the auxiliary library are built on top of the basic API, <br/>
+and so they provide nothing that cannot be done with this API.<br/>
+</p>
+<p><br/>
+Several functions in the auxiliary library are used to check C function arguments. <br/>
+Their names are always luaL_check* or luaL_opt*. <br/>
+All of these functions throw an error if the check is not satisfied. <br/>
+Because the error message is formatted for arguments (e.g., &#8220;bad argument #1&#8221;), <br/>
+you should not use these functions for other stack values. <br/>
+</p>
+<p><br/>
+lua_settable（l，index）<br/>
+从栈中弹出key 和val进行设置给index。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">参考资料</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p><a href="http://lua-users.org/wiki/">http://lua-users.org/wiki/</a> 有一个lua的在线教程，值得一看<br/>
+<a href="http://www.lua.org/">http://www.lua.org/</a><br/>
+<a href="http://www.lua.org/pil/">http://www.lua.org/pil/</a> Programming in Lua (first edition) 在线版<br/>
+<a href="http://www.lua.org/manual/5.1/">http://www.lua.org/manual/5.1/</a> LUA5.1手册<br/>
+<a href="http://lua-users.org/wiki/UnitTesting">http://lua-users.org/wiki/UnitTesting</a> 介绍几种lua测试框架<br/>
+<a href="http://www.nessie.de/mroth/lunit/">http://www.nessie.de/mroth/lunit/</a> lunit用于lua的测试框架，类似Cunit <br/>
+</p>
+<p><br/>
+lua中文教程.pdf 必看<br/>
+</p>
+<p><br/>
+lua5..1语法速查手册<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-01T00:00:00+08:00" pubdate data-updated="true">2010年08月01日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/lua/'>lua</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2010/08/02/first-luaunit-testcase/"
+        title="Next Post: 初步体验lua写测试用例的简单">初步体验lua写测试用例的简单
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/06/linux-g-dial/">linux_3g拨号</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/01/fstab-recover/">fstab恢复</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/18/git-server/">git服务器开源软件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/05/shell-snippet-collect/">shell代码片段收集</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

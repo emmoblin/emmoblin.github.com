@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>git服务器开源软件 - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2012/12/18/git-server">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">Git服务器开源软件</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-18T00:00:00+08:00" pubdate data-updated="true">2012年12月18日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">git服务器开源软件</a>
+<ul>
+<li><a href="#sec-1-1">在服务器上部署git</a>
+<ul>
+<li><a href="#sec-1-1-1">通过git账户访问</a></li>
+<li><a href="#sec-1-1-2">gitweb</a></li>
+<li><a href="#sec-1-1-3">repo</a></li>
+<li><a href="#sec-1-1-4">代码抽取</a></li>
+<li><a href="#sec-1-1-5">分支合并</a></li>
+<li><a href="#sec-1-1-6">git submodule</a></li>
+<li><a href="#sec-1-1-7">gitk</a></li>
+<li><a href="#sec-1-1-8">git log &ndash;graph</a></li>
+<li><a href="#sec-1-1-9">git help workflows</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">GITolite</a></li>
+<li><a href="#sec-1-3">gerrit</a></li>
+<li><a href="#sec-1-4">Jenkins</a></li>
+<li><a href="#sec-1-5">git权限控制理解</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/12/18/git-server/">git服务器开源软件</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">在服务器上部署git</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>git clone &ndash;bare my_project my_project.git<br/>
+其实 clone 操作基本上相当于 git init 加 git fetch。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">通过git账户访问</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>第二个办法是在主机上建立一个 git 账户，让每个需要写权限的人发送一个 SSH 公钥，然后将其加入 git 账户的~/.ssh/authorized_keys 文件。这样一来，所有人都将通过 git 账户访问主机。这丝毫不会影响提交的数据 — 访问主机用的身份不会影响提交对象的提交者信息。<br/>
+</p>
+<p><br/>
+$ sudo adduser git<br/>
+$ su git<br/>
+$ cd<br/>
+$ mkdir .ssh<br/>
+</p>
+<p><br/>
+只要把它们逐个追加到 authorized_keys 文件尾部即可：<br/>
+</p>
+<p><br/>
+$ cat <i>tmp/id_rsa.john.pub &gt;&gt; ~</i>.ssh/authorized_keys<br/>
+$ cat <i>tmp/id_rsa.josie.pub &gt;&gt; ~</i>.ssh/authorized_keys<br/>
+$ cat <i>tmp/id_rsa.jessica.pub &gt;&gt; ~</i>.ssh/authorized_keys<br/>
+现在可以用 &ndash;bare 选项运行 git init 来建立一个裸仓库，这会初始化一个不包含工作目录的仓库。<br/>
+</p>
+<p><br/>
+$ cd /opt/git<br/>
+$ mkdir project.git<br/>
+$ cd project.git<br/>
+$ git &ndash;bare init<br/>
+这时，Join，Josie 或者 Jessica 就可以把它加为远程仓库，推送一个分支，从而把第一个版本的项目文件上传到仓库里了。值得注意的是，每次添加一个新项目都需要通过 shell 登入主机并创建一个裸仓库目录。<br/>
+$ cd myproject<br/>
+$ git init<br/>
+$ git add .<br/>
+$ git commit -m &#8216;initial commit&#8217;<br/>
+$ git remote add origin git@gitserver:/opt/git/project.git<br/>
+$ git push origin master<br/>
+作为一个额外的防范措施，你可以用 Git 自带的 git-shell 工具限制 git 用户的活动范围。只要把它设为git 用户登入的 shell，那么该用户就无法使用普通的 bash 或者 csh 什么的 shell 程序。编辑 /etc/passwd 文件：<br/>
+</p>
+<p><br/>
+在其他人机子上可以直接clone<br/>
+git clone git@gitserver:/opt/git/project.git<br/>
+</p>
+<p><br/>
+$ sudo vim /etc/passwd<br/>
+在文件末尾，你应该能找到类似这样的行：<br/>
+</p>
+<p><br/>
+git:x:1000:1000::/home/git:/bin/sh<br/>
+把 bin/sh 改为 /usr/bin/git-shell （或者用 which git-shell 查看它的实际安装路径）。该行修改后的样子如下：<br/>
+</p>
+<p><br/>
+git:x:1000:1000::/home/git:/usr/bin/git-shell<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">gitweb</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>git自带的cgi脚本<br/>
+git instaweb &ndash;httpd=lighttpd<br/>
+</p>
+<p> <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">repo</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>git仓库太大会导致git操作很慢，那么分成多个子项目，用repo来管理。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4">代码抽取</h4>
+<div class="outline-text-4" id="text-1-1-4">
+
+<p>git cherry-pick &lt;commit&gt;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-5" class="outline-4">
+<h4 id="sec-1-1-5">分支合并</h4>
+<div class="outline-text-4" id="text-1-1-5">
+
+<p>git merge<br/>
+git rebase &lt;upstream&gt; [&lt;branch&gt;]<br/>
+rebase 可以让你看起来是基于最新的代码实现的改动。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-6" class="outline-4">
+<h4 id="sec-1-1-6">git submodule</h4>
+<div class="outline-text-4" id="text-1-1-6">
+
+<p>子模块允许你将一个git仓库当作另一个git仓库的子目录。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-7" class="outline-4">
+<h4 id="sec-1-1-7">gitk</h4>
+<div class="outline-text-4" id="text-1-1-7">
+
+<p>安装apt-get install gitk<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-8" class="outline-4">
+<h4 id="sec-1-1-8">git log &ndash;graph</h4>
+<div class="outline-text-4" id="text-1-1-8">
+
+<p>可以添加到git的配置文件中<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-9" class="outline-4">
+<h4 id="sec-1-1-9">git help workflows</h4>
+<div class="outline-text-4" id="text-1-1-9">
+
+<p>查看推荐的工作流<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">GITolite</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>Gitolite 是一款 Perl 语言开发的 Git 服务管理工具，通过公钥对用户进行认证，并能够通过配置文件对写操作进行基于分支和路径的的精细授权。GITolite 采用的是SSH协议，并需要使用公钥 验证。也就是说 GITolite会根据管理员预先定义好的设置，根据客户的SSH，对于来自不同客户端的请求进行权限控制，只读，或者读写，甚至于精确到某个文件夹，某个文件的权限。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">gerrit</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>前面我们说到了对Gitolite是对于开发人员的一种授权，但一旦保证了授权，就能够保证版本库的稳定吗？如果获得授权的人乱搞代码，或者改错代码，那版本库照样会出现不稳定的情况的。就像前面在敏捷系列里面说到的一样，在代码改动之后，要引入code review (代码审阅，说code review 比较顺口，还是用code review吧)。在Clearcase条件下，code review是需要把别人的代码整进去版本库之后，再由code reviewer拿下来看的。于是在Google Android项目的开发过程当中，Google为GIT带来了又一个伟大的工具-Gerrit，也有人叫Gerrit2，因为现在用的Gerrit跟Google刚开始整的时候有很大的不同，我们暂且叫它Gerrit就可以。<br/>
+Gerrit有两个很牛的功能，第一是权限管理，它提供了一个跟GITolite一样的功能，管理用户的读写权限。但它比GITolite好用，对权限的控制都在它提供的网页系统里面完成，不用push啥的！第二是Gerrit为GIT带来强制性的code review，除非你某某是管理员。任何的代码改动都需要有人approve之后，这个代码改动才有可能进入公共代码库，如果没有经过approve或者被人reject了，即使你已经push了五百年，这代码依旧进不了公共版本库。而且 相比起裸奔时代的code review，Gerrit提供一个在线review 的系统，所有的操作都在它提供的系统上面点点点就能搞定的。<br/>
+首先我们来看看权限控制，Gerrit有10种不同的权限，其中有读写权限，code review的权限等等。每个权限的设置包括两部分：权限本身，以及权限授予的组。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">Jenkins</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>如果用了Gerrit，那么每一个代码改动都要经过code review approve 并且要验证。code review还好说，可验证就麻烦了。如果每个改动都要人手拿到本地，至少去确保能编译通过吧，那谁都会疯了的！！！话说IT人的精品特质之一就是懒，所以有繁琐的地方<br/>
+ 往往都会产生自动化 （这貌似也是工业能够向前发展，甚至于社会能够向前发展的一个因素哦，要发扬发扬）。Jenkins就应运而生了。<br/>
+Jenkins， 曾用名Hudson，是基于Java开发的持续集成的工具。它能够自动监控到公共代码库的版本变更，并且执行我们预先定义好的动作。在动作完成之后，把动作执行的结果回传给有关部门！比如我们可以让Jenkins监听Gerrit上面的代码变更情况，看有没有人提出code review的请求。如果监听到请求，那么Jenkins就偷偷向Gerrit要那个人改了的代码，试着做一些编译以及单元测试。如果这人很牛叉，测试通过。那么Jenkins会告诉Gerrit ：“喂，这条友很牛哦，我向毛主席保证，TA的代码改动没有问题”，这时Gerrit就跑过去将这个review item的 verify设置为+1，如果不通过，那就铁面无私地给一个 verify-1.<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">git权限控制理解</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>从技术上讲，git可能永远也做不到类似svn的路径授权(读权限)<br/>
+如果允许按照路径授权，则各个克隆的关系不再是平等的，有的内容多有的内容少，分布式的理念被破坏。<br/>
+git的授权模型只能实现非零即一的方式，要不拥有全部写权限，要不没有写权限。<br/>
+要么拥有全部库的读权限，o要么禁用。<br/>
+</p>
+<p><br/>
+看来git的保密性确实不好，要不一视同仁，大家都有全部代码，要不把代码分成多个库。<br/>
+这样看来在公司内部使用git确实不太方便了。公司最基本的要求就是代码的保护。<br/>
+</p>
+<p><br/>
+Git对于写操作可以精细到目录和分支级别（使用Gitolite作为服务器）， 但作为分布式版本库控制系统，在设计上只能实现版本库量子化的读授权。 即某用户对整个版本库要么都能读，要么对整个版本库都不能读。<br/>
+</p>
+<p><br/>
+那么如何控制Git版本库的读授权呢？实际上Git可以通过子模组来实现细粒度的读授权。 即在项目需要精细授权的场合，将版本库拆分为多个Git版本库进行单独授权， 再使用子模组将多个版本库整合为一个。这个操作并不复杂，而且有助于实现项目的模块化。<br/>
+</p></div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-18T00:00:00+08:00" pubdate data-updated="true">2012年12月18日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/git/'>git</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2012/12/05/shell-snippet-collect/" title="Previous Post:
+        shell代码片段收集">&laquo; shell代码片段收集</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2013/01/01/fstab-recover/"
+        title="Next Post: fstab恢复">fstab恢复
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/06/linux-g-dial/">linux_3g拨号</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/01/fstab-recover/">fstab恢复</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/18/git-server/">git服务器开源软件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/05/shell-snippet-collect/">shell代码片段收集</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2012/12/18/git-server/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2012/12/18/git-server/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

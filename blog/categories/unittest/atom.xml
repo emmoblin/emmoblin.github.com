@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: unittest | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/unittest/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2013-02-12T23:54:59+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[gcov]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/11/02/gcov/"/>
+    <updated>2012-11-02T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/11/02/gcov</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">gcov</a>
+<ul>
+<li><a href="#sec-1-1">分支覆盖的作用</a></li>
+<li><a href="#sec-1-2">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/unittest/atom.xml">gcov</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">分支覆盖的作用</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>所有单元测试跑完后，统计分支覆盖率，统计测试的是否全面。一个程序如果每个分支都执行过了，也不能保证程序就是正确的。<br/>
+毕竟还有很多逻辑错误，但至少能从某种程度上显示出，这些代码测试的是否完善，不完善就还需要补充测试用例。<br/>
+可以显示出每行被执行了多少次，哪行没有被执行。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">参考</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p><a href="http://www.taobaotest.com/blogs/qa?bid=8451">GCOV 实现原理</a><br/>
+&lt;深入浅出Linux平台代码覆盖率测试.pdf&gt;<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[c单元测试框架:cutter]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/11/02/cutter/"/>
+    <updated>2012-11-02T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/11/02/cutter</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">特性</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>c的单元测试见的多了，cutter有什么看家本领吗？<br/>
+</p><ol>
+<li>框平台性好<br/>
+   这个貌似意义不大，单元测试框架一般本身都很小巧，移植难度很小。<br/>
+
+<p><br/>
+</p></li>
+<li>自动探测用例<br/>
+   这个功能不错，只要开头是test_ 开头的函数，自动认为是testcase。<br/>
+   其实他是把testcase编译成了库，然后进行符号查找。<br/>
+
+<p><br/>
+</p></li>
+<li>显示友好<br/>
+   尽量精确的提出错误在哪里，有个expect和real，貌似还可以diff。<br/>
+
+<p><br/>
+</p></li>
+<li>支持数据驱动测试<br/>
+   这个功能还有点不明白，貌似应该是测试前准备数据集的功能，不知道是否是mock功能。<br/>
+
+<p><br/>
+</p></li>
+<li>支持代码的分支覆盖率攻击。<br/>
+
+<p><br/>
+</p></li>
+<li>针对ubuntu特别优化。<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">后续待添加功能</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>从他的TODO中可以看到一些，不过我最期望的是：<br/>
+</p><ol>
+<li>测试用例的search<br/>
+</li>
+<li>内存泄漏测试，最好集成memwatch的功能。mem_limit很好。<br/>
+</li>
+<li>是否有mock功能？<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">主页</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p><a href="http://sourceforge.net/projects/cutter/">http://sourceforge.net/projects/cutter/</a><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CUnit]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/10/29/cunit/"/>
+    <updated>2012-10-29T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/10/29/cunit</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">CUnit</a>
+<ul>
+<li><a href="#sec-1-1">CUnit交叉编译</a></li>
+<li><a href="#sec-1-2">使用bootstrap而不是configure</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/unittest/atom.xml">CUnit</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">CUnit交叉编译</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>我更换到ubuntu12.04上编译CUnit已经编译不过去了，错误原因是：<br/>
+libtool : X&ndash;tag=CC: command not found 编译报错<br/>
+原因据说是因为在项目目录下生成的libtool脚本中定义了$ECHO变量，但是在脚本文件ltmain.sh中，使用的却是$echo(生成的libtool版本太旧)<br/>
+可通过以下方法解决：<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>直接复制系统自带的libtool到项目目录，应该在/usr/bin目录下，覆盖代码文件目录下的libtool，再执行make<br/>
+</li>
+</ol>
+
+<p>（没装就apt-get install libtool 或者 yum install libtool 安装一下吧）<br/>
+但是这有个问题，不能用于交叉编译，系统的libtool会使用系统的ld等，而应该使用交叉工具连的ld。<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>修改aclocal.m4文件，将上面的LIBTOOL='$(SHELL) $(top_builddir)/libtool'改成<br/>
+</li>
+</ol>
+
+<p>LIBTOOL='$(SHELL)  /usr/bin/libtool'后重新执行./configure<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>将源码目录下libtool脚本中所有的$ECHO替换成$echo. 或者将脚本文件ltmain.sh里的$echo替换成$ECHO，<br/>
+</li>
+</ol>
+
+<p>都一样，重新执行./configure<br/>
+</p>
+<p><br/>
+另一种解决方案<br/>
+export echo=echo  回车后 make 正常<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">使用bootstrap而不是configure</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>没有了上边的libtool的问题，直接修改bootstrap，添加CC就ok了。<br/>
+CC=/workspace26/i386-env/cross-tools/bin/i686-unknown-linux-gnu-gcc<br/>
+或者采用&ndash;host的形式：<br/>
+PATH=/workspace26/i386-env/cross-tools/bin/:$PATH LD_LIBRARY_PATH=/workspace26/env-x86-lib <br/>
+./configure &ndash;host=i686-unknown-linux-gnu &ndash;enable-shared=no &ndash;disable-dependency-tracking<br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: open sources | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/open-sources/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2013-02-12T23:54:59+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[开源防火墙]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/11/17/opensources-firewall/"/>
+    <updated>2012-11-17T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/11/17/opensources-firewall</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+要说免费使用的防火墙那多了，但都不开源，而我更喜欢开源的，能学到东西。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">可下到源代码</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">IPCop</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p><a href="http://sourceforge.net/projects/ipcop/develop">http://sourceforge.net/projects/ipcop/develop</a><br/>
+可以下载源代码。<br/>
+<code>svn co https://ipcop.svn.sourceforge.net/svnroot/ipcop ipcop</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">EFW</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p><a href="http://www.endian.com/">http://www.endian.com/</a><br/>
+这个比较大，600M源码包，非常全。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Vyatta</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>基于debian<br/>
+<a href="http://www.vyatta.org/downloads">http://www.vyatta.org/downloads</a><br/>
+目前这个是我发现的有专门针对虚拟化平台优化的版本。<br/>
+<a href="http://www.vyatta.org/getting-started/how-to-install">http://www.vyatta.org/getting-started/how-to-install</a><br/>
+</p>
+<p><br/>
+Installing Vyatta Core in a Virtualized Environment<br/>
+If you’re deploying Vyatta Core on a hypervisor such as VMWare ESX/ESXi or Citrix XenServer, <br/>
+you’ll want to use the Vyatta virtualization ISO (virt-ISO).<br/>
+Similar to the LiveCD ISO, the virt-ISO provides a bootable ISO,<br/>
+except it also includes virtual machine tools and other optimizations<br/>
+to deliver the best possible experience for users running Vyatta on a virtual machine. <br/>
+</p>
+<p><br/>
+Using the vSphere Client, create a new VM<br/>
+</p><ul>
+<li>Configuration: Custom<br/>
+</li>
+<li>Name: "vyatta"<br/>
+</li>
+<li>Datastore: default<br/>
+</li>
+<li>Virtual Machine Version: 7<br/>
+</li>
+<li>Guest OS: Linux/Other 2.6x Linux<br/>
+</li>
+<li>CPU: "1"<br/>
+</li>
+<li>Memory: "512"<br/>
+</li>
+<li>Network: "2" / vmxnet3<br/>
+</li>
+<li>SCSI Controller: default<br/>
+</li>
+<li>Select a Disk: default<br/>
+</li>
+<li>Create a Disk: "4"GB (thin provisioning and independent / persistent mode)<br/>
+</li>
+<li>Advanced Options: Enable "Support VMI Paravirtualization"<br/>
+</li>
+</ul>
+
+
+<p>        <br/>
+使用了<br/>
+open-vm-tools<br/>
+ec2-api-tools 是不是可以通过api来管理此虚拟机，或者获得性能等。ec2-api是什么东东？<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">获取源代码</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p><a href="http://www.vyatta.org/downloads/source-code">http://www.vyatta.org/downloads/source-code</a><br/>
+</p>
+<p><br/>
+git clone <a href="http://git.vyatta.com/build-iso.git">http://git.vyatta.com/build-iso.git</a><br/>
+cd build-iso<br/>
+注意要先调整到一个分支或者tag<br/>
+build-iso$ git branch &ndash;track &lt;branch&gt; origin/&lt;branch&gt;<br/>
+build-iso$ git checkout &lt;branch&gt;<br/>
+或者<br/>
+git checkout tagv1<br/>
+</p>
+<p><br/>
+获取子模块的代码<br/>
+git submodule init<br/>
+git submodule update pkgs/SUBMODULE<br/>
+</p>
+<p><br/>
+克隆所有模块<br/>
+git submodule update<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">install</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>启动虚拟机,用缺省的用户名/密码 vyatta/vyatta登陆系统<br/>
+install image 基于image安装，推荐,可以切换image<br/>
+install system 基于disk安装，传统硬盘安装方式<br/>
+</p>
+<p><br/>
+There are two types of installations that can be performed on a persistent device: <br/>
+• Image-based install. The simplest, most flexible, and most powerful way to <br/>
+install a Vyatta system is using a binary system image. With this method, you can <br/>
+install multiple versions of the Vyatta system as images and switch between the <br/>
+images simply and easily. You install the image from a LiveCD then you reboot <br/>
+your system and it runs the image. <br/>
+• Disk-based install. A disk-based install also installs from a LiveCD onto a <br/>
+persistent device such as a hard disk partition. However, unlike an image-based <br/>
+install, a disk-based install uses a traditional layout of files on the disk. <br/>
+Additional system images may be added at a later time to a system created using <br/>
+a disk-based install. <br/>
+</p>
+<p><br/>
+nstall-image (is what I would suggest btw) is using squashfs and is capable of booting/running multiple images of versions<br/>
+</p>
+<p><br/>
+真让我好找，找了一天，终于找到安装脚本了，在pkgs/vyatta-cfg-system<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">debian install</h4>
+<div class="outline-text-4" id="text-1-2-3">
+
+<p>这个貌似比较重要，vyatta之所以看不太明白，应该是对d-i不了解。<br/>
+看看internal<br/>
+<a href="http://d-i.alioth.debian.org/doc/internals/">http://d-i.alioth.debian.org/doc/internals/</a><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4">配置ip</h4>
+<div class="outline-text-4" id="text-1-2-4">
+
+<p>vyatta@vyatta:~$ configure<br/>
+vyatta@vyatta# set interfaces ethernet eth0 address 192.168.1.81/24<br/>
+vyatta@vyatta# commit<br/>
+vyatta@vyatta# exit<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-5" class="outline-4">
+<h4 id="sec-1-2-5">启动webui</h4>
+<div class="outline-text-4" id="text-1-2-5">
+
+<p>vyatta@R1# set service https<br/>
+不过需要商业版才能使用webui<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-6" class="outline-4">
+<h4 id="sec-1-2-6">linux-image</h4>
+<div class="outline-text-4" id="text-1-2-6">
+
+<p>vyatta的内核配置<br/>
+/home/liwei/work/src_analysis/tag_vyatta_src/pkgs/linux-image/debian/arch/i386/config.586-vyatta-virt<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,43 +1,147 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://emmoblin.github.com/blog/2010/08/01/luasocket-and-lua-capi/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2010/08/02/first-luaunit-testcase/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2010/08/06/lua-call-c-function-to-unit-test/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2010/08/08/mock-test/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2011/01/22/ksplice-success/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://emmoblin.github.com/blog/2012/08/12/first-post/</loc>
-        <lastmod>2013-02-12T11:17:30+08:00</lastmod>
+        <lastmod>2013-02-12T21:36:26+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/blog/2012/08/13/markdown/</loc>
-        <lastmod>2013-02-12T11:17:30+08:00</lastmod>
+        <lastmod>2013-02-12T21:36:26+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/blog/2012/08/14/zhong-xin-an-zhuang-octopress/</loc>
-        <lastmod>2013-02-12T11:17:30+08:00</lastmod>
+        <lastmod>2013-02-12T21:36:26+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/blog/2012/08/14/octopresstian-jia-fen-lei-lan/</loc>
-        <lastmod>2013-02-12T11:17:30+08:00</lastmod>
+        <lastmod>2013-02-12T21:36:26+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/08/15/git-used-cmd/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/blog/2012/08/15/tian-jia-wei-bo-sidebar/</loc>
-        <lastmod>2013-02-12T11:17:30+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://emmoblin.github.com/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/</loc>
-        <lastmod>2013-02-12T11:17:30+08:00</lastmod>
+        <lastmod>2013-02-12T21:36:26+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/blog/2012/08/15/emacs-markdown-mode/</loc>
-        <lastmod>2013-02-12T11:17:30+08:00</lastmod>
+        <lastmod>2013-02-12T21:36:26+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/blog/2012/08/31/org-mode-note/</loc>
-        <lastmod>2013-02-12T11:17:30+08:00</lastmod>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://emmoblin.github.com/blog/2012/09/11/can-your-programming-language-do-this/
+        </loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/
+        </loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/10/09/lsof/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/10/09/ssh-skill/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/10/10/dropbox-under-ubuntu/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/10/12/thunderbirdskill/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/10/16/ckermit/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/10/16/svn/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/10/29/cunit/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/10/30/memwatch-/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/11/02/cutter/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/11/02/gcov/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/11/15/centos-kdump/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/11/16/shell-skill/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/11/17/opensources-firewall/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/12/05/shell-snippet-collect/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2012/12/18/git-server/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2013/01/01/fstab-recover/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2013/01/06/linux-g-dial/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://emmoblin.github.com/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/</loc>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/</loc>
-        <lastmod>2013-02-12T11:17:30+08:00</lastmod>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
     </url>
     <url>
         <loc>http://emmoblin.github.com/blog/archives/</loc>
-        <lastmod>2013-02-12T11:17:30+08:00</lastmod>
+        <lastmod>2013-02-12T23:50:03+08:00</lastmod>
     </url>
 </urlset>

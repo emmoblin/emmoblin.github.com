@@ -9,7 +9,7 @@
   <meta name="author" content="emmoblin">
 
   
-  <meta name="description" content="<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> emacs org mode 学习笔记 <!--*/ html { font &hellip;">
+  <meta name="description" content="">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,18 +18,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://emmoblin.github.com/">
+  <link rel="canonical" href="http://emmoblin.github.com">
   <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
-
+  
   
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -46,47 +62,54 @@
 
 </head>
 
-<body>
-  <header role="banner"><hgroup>
-  <h1><a href="/">Emmoblin Blog</a></h1>
-  
-    <h2>A blogging framework for hackers.</h2>
-  
-</hgroup>
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
 
-</header>
-  <div id="navigation">
-    <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:emmoblin.github.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
   <li><a href="/">Blog</a></li>
   <li><a href="/blog/archives">Archives</a></li>
 </ul>
 
-</nav>
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
   </div>
-  <div id="body"  >
-    <div id="main">
-      <div id="content">
-        <div class="blog-index">
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      <div class="span9">
   
   
   
     <article>
       
-  <header>
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/08/31/org-mode-note/">Org Mode Note</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a></h1>
     
     
       <p class="meta">
@@ -102,186 +125,27 @@
   
 
 
-<time datetime="2012-08-31T00:00:00+08:00" pubdate data-updated="true">Aug 31<span>st</span>, 2012</time>
+<time datetime="2013-02-12T00:00:00+08:00" pubdate data-updated="true">2013年02月12日</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<title>emacs org mode 学习笔记</title>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-<meta name="title" content="emacs org mode 学习笔记"/>
-<meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-08-16 Thu"/>
-<meta name="author" content="emmoblin"/>
-<meta name="description" content=""/>
-<meta name="keywords" content=""/>
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  html { font-family: Times, serif; font-size: 12pt; }
-  .title  { text-align: center; }
-  .todo   { color: red; }
-  .done   { color: green; }
-  .tag    { background-color: #add8e6; font-weight:normal }
-  .target { }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
-  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
-  .center {margin-left:auto; margin-right:auto; text-align:center;}
-  p.verse { margin-left: 3% }
-  pre {
-	border: 1pt solid #AEBDCC;
-	background-color: #F3F5F7;
-	padding: 5pt;
-	font-family: courier, monospace;
-        font-size: 90%;
-        overflow:auto;
-  }
-  table { border-collapse: collapse; }
-  td, th { vertical-align: top;  }
-  th.right  { text-align:center;  }
-  th.left   { text-align:center;   }
-  th.center { text-align:center; }
-  td.right  { text-align:right;  }
-  td.left   { text-align:left;   }
-  td.center { text-align:center; }
-  dt { font-weight: bold; }
-  div.figure { padding: 0.5em; }
-  div.figure p { text-align: center; }
-  div.inlinetask {
-    padding:10px;
-    border:2px solid gray;
-    margin:10px;
-    background: #ffffcc;
-  }
-  textarea { overflow-x: auto; }
-  .linenr { font-size:smaller }
-  .code-highlighted {background-color:#ffff00;}
-  .org-info-js_info-navigation { border-style:none; }
-  #org-info-js_console-label { font-size:10px; font-weight:bold;
-                               white-space:nowrap; }
-  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
-                                 font-weight:bold; }
-  /*]]>*/&#8211;>
-</style>
-<script type="text/javascript" src="org-info.js"></script>
-<script type="text/javascript" >
-<!--/*--><![CDATA[/*><!--*/
-org_html_manager.set("TOC_DEPTH", "4");
-org_html_manager.set("LINK_HOME", "");
-org_html_manager.set("LINK_UP", "");
-org_html_manager.set("LOCAL_TOC", "1");
-org_html_manager.set("VIEW_BUTTONS", "0");
-org_html_manager.set("MOUSE_HINT", "underline");
-org_html_manager.set("FIXED_TOC", "0");
-org_html_manager.set("TOC", "0");
-org_html_manager.set("VIEW", "content");
-org_html_manager.setup();  // activate after the parameters are set
-/*]]>*///-->
-</script>
-<script type="text/javascript">
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
-
-</head>
-<body>
-
-<div id="preamble">
-
-</div>
-
-<div id="content">
-<h1 class="title">emacs org mode 学习笔记</h1>
-
-
-<div id="table-of-contents">
+  <div class="entry-content"><div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">org mode note</a>
+<li><a href="#sec-1">先衰竭训练法</a>
 <ul>
-<li><a href="#sec-1-1">头信息注释</a></li>
-<li><a href="#sec-1-2">安装最新的org</a></li>
-<li><a href="#sec-1-3">文档结构相关的操作</a>
-<ul>
-<li><a href="#sec-1-3-1">Motion</a></li>
-<li><a href="#sec-1-3-2">headline结构移动</a></li>
-<li><a href="#sec-1-3-3">Structure editing</a></li>
-<li><a href="#sec-1-3-4">Sparse Tree</a></li>
-<li><a href="#sec-1-3-5">List</a></li>
-<li><a href="#sec-1-3-6">Footnotes</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-4">加粗</a></li>
-<li><a href="#sec-1-5">链接</a>
-<ul>
-<li><a href="#sec-1-5-1">内部链接 Internal Link</a></li>
-<li><a href="#sec-1-5-2">添加附件</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-6">TABLES</a>
-<ul>
-<li><a href="#sec-1-6-1">表格宽度</a></li>
-<li><a href="#sec-1-6-2">行列操作</a></li>
-<li><a href="#sec-1-6-3">表格计算</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-7">tag</a></li>
-<li><a href="#sec-1-8">code</a></li>
-<li><a href="#sec-1-9">TODO使用</a>
-<ul>
-<li><a href="#sec-1-9-1">TODO依赖关系</a></li>
-<li><a href="#sec-1-9-2">tracking todo state change</a></li>
-<li><a href="#sec-1-9-3">priotify</a></li>
-<li><a href="#sec-1-9-4">checkbox</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-10">org capture</a></li>
-<li><a href="#sec-1-11">exports</a>
-<ul>
-<li><a href="#sec-1-11-1">export option</a>
-<ul>
-<li><a href="#sec-1-11-1-1">export html</a></li>
-<li><a href="#sec-1-11-1-2">export pdf</a></li>
-<li><a href="#sec-1-11-1-3">使用org-jekyll导出</a></li>
-</ul></li>
-</ul>
-</li>
-<li><a href="#sec-1-12">dates and times</a></li>
-<li><a href="#sec-1-13">属性</a></li>
-<li><a href="#sec-1-14">未分类</a>
-<ul>
-<li><a href="#sec-1-14-1">byte-recompile-directory</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-15">问题</a></li>
-<li><a href="#sec-1-16">参考资料</a></li>
+<li><a href="#sec-1-1">先衰竭训练法</a></li>
+<li><a href="#sec-1-2">胸大肌的先衰竭训练法</a></li>
+<li><a href="#sec-1-3">三角肌的先衰竭训练法：</a></li>
+<li><a href="#sec-1-4">肱三头肌的先衰竭训练法</a></li>
+<li><a href="#sec-1-5">竖脊肌（后腰）的先衰竭训练法</a></li>
+<li><a href="#sec-1-6">大腿的先衰竭训练法</a></li>
+<li><a href="#sec-1-7">背阔肌的先衰竭训练法</a></li>
+<li><a href="#sec-1-8">总结</a></li>
 </ul>
 </li>
 </ul>
@@ -289,7 +153,7 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/08/31/org-mode-note/">org mode note</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -298,34 +162,11 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">头信息注释</h3>
+<h3 id="sec-1-1">先衰竭训练法</h3>
 <div class="outline-text-3" id="text-1-1">
 
-
-<p><br/>
-<pre class="example">#+TAGS: { 桌面(d) 服务器(s) }  编辑器(e) 浏览器(f) 多媒体(m) 压缩(z)
-#+TAGS:  { @Windows(w)  @Linux(l) }  
-#+TAGS:  { 糟糕(1) 凑合(2) 不错(3) 很好(4) 极品(5) } 
-#+SEQ_TODO: TODO(T) WAIT(W) | DONE(D!) CANCELED(C@) 
-#+COLUMNS: %10ITEM  %10PRIORITY %15TODO %65TAGS
-</pre>
-
-</p><ol>
-<li>启动时概览<br/>
-</li>
-<li>设定标签，括弧中的为标签快捷键（如果没有指定，默认为首字母）。可以设置在多行中<br/>
-</li>
-<li>花括号为标签组，组中的标签只能选一个<br/>
-</li>
-<li>设定待办状态。将项设置为 | 后面的状态时（DONE CANCELED），会打上 CLOSED 标志<br/>
-</li>
-<li>设定列视图<br/>
-</li>
-</ol>
-
-
-<p><br/>
-<b>这里的内容可以随时更改，但是要记得在改后用 C-c C-c 刷新设置</b><br/>
+<p>先衰竭法是目前增大肌肉围径的有效方法。<br/>
+其做法是要想发展那块肌肉，先选择只发展这块肌肉的局部肌肉练习来训练，做8-10次直到疲劳，使其衰竭，然后在3-5秒之内跑向另一器械，做一个以发展这块肌肉为主的综合肌肉群练习，用70％的重量做到极限，这样交替训练4组左右，肌肉会感受到极大的刺激。据研究，这样能有效地刺激肌肉生长，促进其发育。<br/>
 </p>
 <p><br/>
 </p></div>
@@ -333,13 +174,16 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 
 <div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">安装最新的org</h3>
+<h3 id="sec-1-2">胸大肌的先衰竭训练法</h3>
 <div class="outline-text-3" id="text-1-2">
 
-<p>   <a href="http://orgmode.org/org-mode-download.html">http://orgmode.org/org-mode-download.html</a><br/>
-   下载最新的org版本，然后解压到home的emacs目录，在.emacs中添加load-path。<br/>
-   (require &#8216;org)<br/>
-   然后可以使用org-version查看版本号。<br/>
+<p>发达胸大肌的局部有效练习：仰卧飞鸟；<br/>
+发达胸大肌综合肌群的练习：卧推（包括宽握、中握、窄握），它除了发展胸大肌外，还能发展肱三头肌、三角肌前部和前锯肌。<br/>
+</p>
+<p>  <br/>
+先用只能举8-10次的重量做仰卧飞鸟练习，直到起不来，<br/>
+紧接着跑到卧推架前用事先准备好的60-70％重量做卧推，尽力举次数，直到起不来算一组，<br/>
+共做4组左右，累计总运动量为8组约50次左右。<br/>
 </p>
 <p><br/>
 </p></div>
@@ -347,140 +191,554 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 
 <div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">文档结构相关的操作</h3>
+<h3 id="sec-1-3">三角肌的先衰竭训练法：</h3>
 <div class="outline-text-3" id="text-1-3">
 
-
-</div>
-
-<div id="outline-container-1-3-1" class="outline-4">
-<h4 id="sec-1-3-1">Motion</h4>
-<div class="outline-text-4" id="text-1-3-1">
-
-
-<p><br/>
-</p><table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption></caption>
-<colgroup><col class="left" /><col class="left" /><col class="left" />
-</colgroup>
-<thead>
-<tr><th scope="col" class="left"></th><th scope="col" class="left">向前</th><th scope="col" class="left">向后</th></tr>
-</thead>
-<tbody>
-<tr><td class="left">同级</td><td class="left">C-c C-f</td><td class="left">C-c C-b</td></tr>
-</tbody>
-<tbody>
-<tr><td class="left">跨级</td><td class="left">C-c C-n</td><td class="left">C-c C-p</td></tr>
-</tbody>
-<tbody>
-<tr><td class="left">上一级</td><td class="left">C-c C-u</td><td class="left"></td></tr>
-</tbody>
-<tbody>
-<tr><td class="left">跳转</td><td class="left">C-c C-j</td><td class="left"></td></tr>
-</tbody>
-</table>
-
-
-<p><br/>
-   <code>C-c C-j</code>  org-goto 这个功能强大，随意跳转<br/>
-   <code>S-TAB</code> 收起所有目录树，相当与C-u TAB<br/>
+<p>发达三角肌的局部肌肉练习：哑铃前平举 主要发展三角肌前束；哑铃侧平举主要发展三角肌中束；俯身后斜举主要发展三角肌后束。<br/>
+发达三角肌的综合练习：颈后宽推，这个练习既能发展三角肌，还能发展肱三头肌，对胸大肌、前锯肌也有影响。<br/>
+</p>
+<p>  <br/>
+为发达三角肌将这两个有效练习有机地结合在一起训练，其效果会更好。<br/>
+每组动作：是先用只能平举8-10次的重量做哑铃来练习。直到起不来，紧接着跑到放置在另一侧的杠铃前，用做（70％），直到一个起不来算一大组，共做4大组。<br/>
 </p>
 <p><br/>
 </p></div>
-
-</div>
-
-<div id="outline-container-1-3-2" class="outline-4">
-<h4 id="sec-1-3-2">headline结构移动</h4>
-<div class="outline-text-4" id="text-1-3-2">
-
-<p>    <code>M-left,right</code> 移动一级<br/>
-    <code>M-S-left，righ</code> subtree移动一级<br/>
-    <code>M-S-up，down</code> subtree上下移动一级<br/>
-    <code>C-c C-x C-w</code> kill subtree<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-3" class="outline-4">
-<h4 id="sec-1-3-3">Structure editing</h4>
-<div class="outline-text-4" id="text-1-3-3">
-
-<p>    M-RET       添加同级head<br/>
-    M-S-RET     插入TODO<br/>
-    M-LEFT，RIGHT，UP,DOWN 上下左右调级<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-4" class="outline-4">
-<h4 id="sec-1-3-4">Sparse Tree</h4>
-<div class="outline-text-4" id="text-1-3-4">
-
-<p>    C-/         搜索关键字，折叠其他所有，只显示关心内容<br/>
-    C-/ r<br/>
-    M-g M-n     在结果中跳转<br/>
-    M-g M-p<br/>
-</p>
-<p>    <br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-5" class="outline-4">
-<h4 id="sec-1-3-5">List</h4>
-<div class="outline-text-4" id="text-1-3-5">
-
-
-<p><br/>
-<pre class="example">-，+,*
-1.
-1)
-:: 添加描述
-</pre>
-
-   在list中同样支持类似header中的motion快捷键<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-6" class="outline-4">
-<h4 id="sec-1-3-6">Footnotes</h4>
-<div class="outline-text-4" id="text-1-3-6">
-
-<p>   C-c C-x f 自动在此处添加脚注，再按一次就可以回到刚才的地方<br/>
-</p>
-<p><br/>
-</p><div id="footnotes">
-<h2 class="footnotes">Footnotes: </h2>
-<div id="text-footnotes">
-<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 这是一个脚注,fn是必须的<br/>
-   还有一些快捷键，进行脚注的跳转。<br/>
-</p><ul>
-<li>TODO 以后进行扩充<br/>
-</li>
-</ul>
-
-
-<p><br/>
-</p></div>
-</div>
 
 </div>
 
 <div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">加粗</h3>
+<h3 id="sec-1-4">肱三头肌的先衰竭训练法</h3>
 <div class="outline-text-3" id="text-1-4">
 
-<p>   <b>name</b><br/>
-   <i>斜体</i><br/>
-   <span style="text-decoration:underline;">下划线</span><br/>
+<p>发达肱三头肌的局部肌肉练习：各种臂屈伸，如颈后臂屈伸、弓身臂屈伸等<br/>
+发达肱三头肌的综合练习：是窄卧推<br/>
+</p>
+<p> <br/>
+先做颈后臂屈伸6-10次直到疲劳，然后迅速跑向深蹲架前拿起架上事先放好的杠铃（杠铃重量为自己最高重量的60-70％），<br/>
+连续举直到起不来，这样两种练习算一大组，共做4大组，肱三头肌就会很胀，刺激很深。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">竖脊肌（后腰）的先衰竭训练法</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>发达后腰竖脊肌的局部肌肉练习：负重山羊挺身<br/>
+发达后腰竖脊肌的综合练习：弓身、屈腿硬拉等。<br/>
+</p>
+<p><br/>
+<img src="/img/shanyangtingshen.gif"  alt="/img/shanyangtingshen.gif" /><br/>
+先在山羊上做负重挺身6-10次直到挺不起为止，紧接着跑向深蹲架前肩负杠铃做弓身练习（或做硬拉），直到疲劳。将这两个练习组合在一起训练4组，背肌就能得到很好的刺激。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">大腿的先衰竭训练法</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>发达股四头肌的局部肌肉练习：负重腿屈伸<br/>
+发达腿部肌肉的综合肌群练习：深蹲，<br/>
+<img src="/img/qutui.gif"  alt="/img/qutui.gif" /><br/>
+</p>
+<p><br/>
+尽力做8次左右负重腿屈伸，紧接着做也尽力做6-8次深蹲，这样交叉轮换做8组（4大组）约50次，股四头肌就会因刺激较深而发胀。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">背阔肌的先衰竭训练法</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>发达背阔肌的局部肌肉练习：宽握颈后引体向上<br/>
+发达背阔肌的综合练习：坐姿划船<br/>
+</p>
+<p> <br/>
+先宽握颈后引体向上10-15次直到拉不起为止，紧接着跑向做坐姿划船练习，直到疲劳。将这两个练习组合在一起训练4组，背阔肌就能得到很好的刺激。 <br/>
+</p>
+<p> <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">总结</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>先衰竭原理之所以先进，从理论上讲它符合极限负荷后的超量恢复的原则。<br/>
+这是因为肌体精疲力竭地负荷之后，首先功能能力大大减退，紧接着在恢复防疲肌体由适应一提高，超过它原有的水平。<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/06/linux-g-dial/">Linux_3g拨号</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-06T00:00:00+08:00" pubdate data-updated="true">2013年01月06日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">linux下3g网卡拨号</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>需要安装的软件usb_modeswitch,wvdial<br/>
+usb_modeswitch用于将usb3g转换为usb modem模式，这样才能拨号。最好到官网下载最新代码，包含的3g网卡类型会更全。最主要的就是usb_modeswitch_data。<br/>
+<a href="http://www.draisberghof.de/usb_modeswitch/#download">http://www.draisberghof.de/usb\_modeswitch/#download</a><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">安装usb_modeswitch_data</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>进入目录，执行<br/>
+sudo make install<br/>
+会安装对应的udev文件到/lib/udev/rules.d目录。<br/>
+</p>
+<p><br/>
+不过我发现自动转换没有效果，暂时先不查了。<br/>
+直接使用命令行转：<br/>
+usb_modeswitch -c /etc/usb_modeswitch.conf<br/>
+如果转换成功会出现/dev/ttyUSB0-3，dmesg也会有输出信息。<br/>
+</p>
+<p><br/>
+usb_modeswitch.conf<br/>
+</p>
+<p><br/>
+<pre class="example">######################################################## 
+# ZTE A371B
+#
+# Contributor: Wang Lei
+
+DefaultVendor= 0x19d2
+DefaultProduct=0x0169
+
+TargetVendor=  0x19d2
+TargetProduct= 0x0170
+
+MessageContent="5553424312345678000000000000061b000000020000000000000000000000"
+NeedResponse=1
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">wvdial</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>这个难了，wvdial负责发送AT命令给usb modem，进行拨号。但不同的3g卡发送的指令也不一样。<br/>
+我是在xp上安装了usb抓包软件，把xp上官方的3g拨号过程进行了抓包分析，提取出如下序列：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">[Dialer Defaults]
+Init1 = AT
+Init2 = AT+CIMI
+Init3 = AT+CMEE=1
+Init4 = ATE0
+Init5 = AT+CFUN=1
+Init6 = AT+CLCK="SC",2
+Init7 = AT+cgdcont=1,"ip","CMNET"
+Modem Type = USB Modem
+Baud = 460800
+New PPPD = yes
+Modem = /dev/ttyUSB0
+ISDN = 0
+Phone = *98*1#
+Password = any
+Username = any
+Stupid Mode = 1
+</pre>
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">遇到的问题</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>我的x230上无线鼠标的usb接收器貌似总是捣乱，拔了接收器，换了个usb口插3g，就可以ok了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/01/fstab-recover/">Fstab恢复</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-01T00:00:00+08:00" pubdate data-updated="true">2013年01月01日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">fstab恢复</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>不小心配置fstab结果参数写错了，导致重启后无法挂载，系统进不去。<br/>
+从grub进入recover模式，选择进入root。<br/>
+但此时根文件系统挂载的是只读的，所以无法修改fstab。<br/>
+重新挂载为rw就ok了，非常关键。<br/>
+mount -n -o remount,rw /<br/>
+之后就可以修改了fstab了。<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/18/git-server/">Git服务器开源软件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-18T00:00:00+08:00" pubdate data-updated="true">2012年12月18日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">git服务器开源软件</a>
+<ul>
+<li><a href="#sec-1-1">在服务器上部署git</a>
+<ul>
+<li><a href="#sec-1-1-1">通过git账户访问</a></li>
+<li><a href="#sec-1-1-2">gitweb</a></li>
+<li><a href="#sec-1-1-3">repo</a></li>
+<li><a href="#sec-1-1-4">代码抽取</a></li>
+<li><a href="#sec-1-1-5">分支合并</a></li>
+<li><a href="#sec-1-1-6">git submodule</a></li>
+<li><a href="#sec-1-1-7">gitk</a></li>
+<li><a href="#sec-1-1-8">git log &ndash;graph</a></li>
+<li><a href="#sec-1-1-9">git help workflows</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">GITolite</a></li>
+<li><a href="#sec-1-3">gerrit</a></li>
+<li><a href="#sec-1-4">Jenkins</a></li>
+<li><a href="#sec-1-5">git权限控制理解</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/12/18/git-server/">git服务器开源软件</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">在服务器上部署git</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>git clone &ndash;bare my_project my_project.git<br/>
+其实 clone 操作基本上相当于 git init 加 git fetch。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">通过git账户访问</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>第二个办法是在主机上建立一个 git 账户，让每个需要写权限的人发送一个 SSH 公钥，然后将其加入 git 账户的~/.ssh/authorized_keys 文件。这样一来，所有人都将通过 git 账户访问主机。这丝毫不会影响提交的数据 — 访问主机用的身份不会影响提交对象的提交者信息。<br/>
+</p>
+<p><br/>
+$ sudo adduser git<br/>
+$ su git<br/>
+$ cd<br/>
+$ mkdir .ssh<br/>
+</p>
+<p><br/>
+只要把它们逐个追加到 authorized_keys 文件尾部即可：<br/>
+</p>
+<p><br/>
+$ cat <i>tmp/id_rsa.john.pub &gt;&gt; ~</i>.ssh/authorized_keys<br/>
+$ cat <i>tmp/id_rsa.josie.pub &gt;&gt; ~</i>.ssh/authorized_keys<br/>
+$ cat <i>tmp/id_rsa.jessica.pub &gt;&gt; ~</i>.ssh/authorized_keys<br/>
+现在可以用 &ndash;bare 选项运行 git init 来建立一个裸仓库，这会初始化一个不包含工作目录的仓库。<br/>
+</p>
+<p><br/>
+$ cd /opt/git<br/>
+$ mkdir project.git<br/>
+$ cd project.git<br/>
+$ git &ndash;bare init<br/>
+这时，Join，Josie 或者 Jessica 就可以把它加为远程仓库，推送一个分支，从而把第一个版本的项目文件上传到仓库里了。值得注意的是，每次添加一个新项目都需要通过 shell 登入主机并创建一个裸仓库目录。<br/>
+$ cd myproject<br/>
+$ git init<br/>
+$ git add .<br/>
+$ git commit -m &#8216;initial commit&#8217;<br/>
+$ git remote add origin git@gitserver:/opt/git/project.git<br/>
+$ git push origin master<br/>
+作为一个额外的防范措施，你可以用 Git 自带的 git-shell 工具限制 git 用户的活动范围。只要把它设为git 用户登入的 shell，那么该用户就无法使用普通的 bash 或者 csh 什么的 shell 程序。编辑 /etc/passwd 文件：<br/>
+</p>
+<p><br/>
+在其他人机子上可以直接clone<br/>
+git clone git@gitserver:/opt/git/project.git<br/>
+</p>
+<p><br/>
+$ sudo vim /etc/passwd<br/>
+在文件末尾，你应该能找到类似这样的行：<br/>
+</p>
+<p><br/>
+git:x:1000:1000::/home/git:/bin/sh<br/>
+把 bin/sh 改为 /usr/bin/git-shell （或者用 which git-shell 查看它的实际安装路径）。该行修改后的样子如下：<br/>
+</p>
+<p><br/>
+git:x:1000:1000::/home/git:/usr/bin/git-shell<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">gitweb</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>git自带的cgi脚本<br/>
+git instaweb &ndash;httpd=lighttpd<br/>
+</p>
+<p> <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">repo</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>git仓库太大会导致git操作很慢，那么分成多个子项目，用repo来管理。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4">代码抽取</h4>
+<div class="outline-text-4" id="text-1-1-4">
+
+<p>git cherry-pick &lt;commit&gt;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-5" class="outline-4">
+<h4 id="sec-1-1-5">分支合并</h4>
+<div class="outline-text-4" id="text-1-1-5">
+
+<p>git merge<br/>
+git rebase &lt;upstream&gt; [&lt;branch&gt;]<br/>
+rebase 可以让你看起来是基于最新的代码实现的改动。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-6" class="outline-4">
+<h4 id="sec-1-1-6">git submodule</h4>
+<div class="outline-text-4" id="text-1-1-6">
+
+<p>子模块允许你将一个git仓库当作另一个git仓库的子目录。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-7" class="outline-4">
+<h4 id="sec-1-1-7">gitk</h4>
+<div class="outline-text-4" id="text-1-1-7">
+
+<p>安装apt-get install gitk<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-8" class="outline-4">
+<h4 id="sec-1-1-8">git log &ndash;graph</h4>
+<div class="outline-text-4" id="text-1-1-8">
+
+<p>可以添加到git的配置文件中<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-9" class="outline-4">
+<h4 id="sec-1-1-9">git help workflows</h4>
+<div class="outline-text-4" id="text-1-1-9">
+
+<p>查看推荐的工作流<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">GITolite</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>Gitolite 是一款 Perl 语言开发的 Git 服务管理工具，通过公钥对用户进行认证，并能够通过配置文件对写操作进行基于分支和路径的的精细授权。GITolite 采用的是SSH协议，并需要使用公钥 验证。也就是说 GITolite会根据管理员预先定义好的设置，根据客户的SSH，对于来自不同客户端的请求进行权限控制，只读，或者读写，甚至于精确到某个文件夹，某个文件的权限。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">gerrit</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>前面我们说到了对Gitolite是对于开发人员的一种授权，但一旦保证了授权，就能够保证版本库的稳定吗？如果获得授权的人乱搞代码，或者改错代码，那版本库照样会出现不稳定的情况的。就像前面在敏捷系列里面说到的一样，在代码改动之后，要引入code review (代码审阅，说code review 比较顺口，还是用code review吧)。在Clearcase条件下，code review是需要把别人的代码整进去版本库之后，再由code reviewer拿下来看的。于是在Google Android项目的开发过程当中，Google为GIT带来了又一个伟大的工具-Gerrit，也有人叫Gerrit2，因为现在用的Gerrit跟Google刚开始整的时候有很大的不同，我们暂且叫它Gerrit就可以。<br/>
+Gerrit有两个很牛的功能，第一是权限管理，它提供了一个跟GITolite一样的功能，管理用户的读写权限。但它比GITolite好用，对权限的控制都在它提供的网页系统里面完成，不用push啥的！第二是Gerrit为GIT带来强制性的code review，除非你某某是管理员。任何的代码改动都需要有人approve之后，这个代码改动才有可能进入公共代码库，如果没有经过approve或者被人reject了，即使你已经push了五百年，这代码依旧进不了公共版本库。而且 相比起裸奔时代的code review，Gerrit提供一个在线review 的系统，所有的操作都在它提供的系统上面点点点就能搞定的。<br/>
+首先我们来看看权限控制，Gerrit有10种不同的权限，其中有读写权限，code review的权限等等。每个权限的设置包括两部分：权限本身，以及权限授予的组。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">Jenkins</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>如果用了Gerrit，那么每一个代码改动都要经过code review approve 并且要验证。code review还好说，可验证就麻烦了。如果每个改动都要人手拿到本地，至少去确保能编译通过吧，那谁都会疯了的！！！话说IT人的精品特质之一就是懒，所以有繁琐的地方<br/>
+ 往往都会产生自动化 （这貌似也是工业能够向前发展，甚至于社会能够向前发展的一个因素哦，要发扬发扬）。Jenkins就应运而生了。<br/>
+Jenkins， 曾用名Hudson，是基于Java开发的持续集成的工具。它能够自动监控到公共代码库的版本变更，并且执行我们预先定义好的动作。在动作完成之后，把动作执行的结果回传给有关部门！比如我们可以让Jenkins监听Gerrit上面的代码变更情况，看有没有人提出code review的请求。如果监听到请求，那么Jenkins就偷偷向Gerrit要那个人改了的代码，试着做一些编译以及单元测试。如果这人很牛叉，测试通过。那么Jenkins会告诉Gerrit ：“喂，这条友很牛哦，我向毛主席保证，TA的代码改动没有问题”，这时Gerrit就跑过去将这个review item的 verify设置为+1，如果不通过，那就铁面无私地给一个 verify-1.<br/>
 </p>
 <p><br/>
 </p>
@@ -490,253 +748,724 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 
 <div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">链接</h3>
+<h3 id="sec-1-5">git权限控制理解</h3>
 <div class="outline-text-3" id="text-1-5">
 
-<p>  C-c C-l 添加一个链接<br/>
+<p>从技术上讲，git可能永远也做不到类似svn的路径授权(读权限)<br/>
+如果允许按照路径授权，则各个克隆的关系不再是平等的，有的内容多有的内容少，分布式的理念被破坏。<br/>
+git的授权模型只能实现非零即一的方式，要不拥有全部写权限，要不没有写权限。<br/>
+要么拥有全部库的读权限，o要么禁用。<br/>
 </p>
 <p><br/>
-<pre class="example">[[链接地址][链接名称]]
-[[链接地址]]
-</pre>
+看来git的保密性确实不好，要不一视同仁，大家都有全部代码，要不把代码分成多个库。<br/>
+这样看来在公司内部使用git确实不太方便了。公司最基本的要求就是代码的保护。<br/>
+</p>
+<p><br/>
+Git对于写操作可以精细到目录和分支级别（使用Gitolite作为服务器）， 但作为分布式版本库控制系统，在设计上只能实现版本库量子化的读授权。 即某用户对整个版本库要么都能读，要么对整个版本库都不能读。<br/>
+</p>
+<p><br/>
+那么如何控制Git版本库的读授权呢？实际上Git可以通过子模组来实现细粒度的读授权。 即在项目需要精细授权的场合，将版本库拆分为多个Git版本库进行单独授权， 再使用子模组将多个版本库整合为一个。这个操作并不复杂，而且有助于实现项目的模块化。<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
 
-  如果想修改这个链接，在链接后按下 backspace。<br/>
-</p>
-<p><br/>
-  在一个链接上按C-c C-o即可访问，至于调用什么程序访问，取决于链接的内容<br/>
-</p>
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/05/shell-snippet-collect/">Shell代码片段收集</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-05T00:00:00+08:00" pubdate data-updated="true">2012年12月05日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">shell代码片段收集</a>
+<ul>
+<li><a href="#sec-1-1">获取磁盘大小</a></li>
+<li><a href="#sec-1-2">变为大写</a></li>
+<li><a href="#sec-1-3">判断返回值</a></li>
+<li><a href="#sec-1-4">提问</a></li>
+<li><a href="#sec-1-5">for循环</a></li>
+<li><a href="#sec-1-6">while and until</a></li>
+<li><a href="#sec-1-7">case</a></li>
+<li><a href="#sec-1-8">读取文件</a></li>
+<li><a href="#sec-1-9">awk按域搜索的例子</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/12/05/shell-snippet-collect/">shell代码片段收集</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
 <p><br/>
 </p>
 </div>
 
-<div id="outline-container-1-5-1" class="outline-4">
-<h4 id="sec-1-5-1">内部链接 Internal Link</h4>
-<div class="outline-text-4" id="text-1-5-1">
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">获取磁盘大小</h3>
+<div class="outline-text-3" id="text-1-1">
 
-<p>   如下命令定义了一个名为target的跳转目标：<br/>
-</p>
+
 <p><br/>
-   #<a name="target" class="target">target</a> <br/>
-   如下方式可以设置到target的链接：<br/>
-</p>
-<p><br/>
-<pre class="example">[[target]] 或 [[target][description]]
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Return the size of the drive in MB</span>
+get_drive_size () {
+  <span style="color: #ff1493;">ldrive</span>=$<span style="color: #ff1493;">1</span>
+
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Make sure you can print disk info using parted</span>
+  parted --script /dev/$<span style="color: #ff1493;">ldrive</span> print &gt;/dev/null 2&gt;&amp;1
+
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If unable to read disk, it's likely it needs a disklabel</span>
+  <span style="color: #0000ff;">if</span> [  <span style="color: #00bfff;">"$?"</span> != <span style="color: #00bfff;">"0"</span> ]; <span style="color: #0000ff;">then</span>
+    <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"Creating a new disklabel on $ldrive"</span> &gt;&gt; $<span style="color: #ff1493;">INSTALL_LOG</span>
+    <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"parted /dev/$ldrive mklabel msdos"</span> &gt;&gt; $<span style="color: #ff1493;">INSTALL_LOG</span>
+    <span style="color: #ff1493;">output</span>=$(<span style="color: #ff00ff;">parted</span> -s /dev/$<span style="color: #ff1493;">ldrive</span> mklabel msdos)
+
+    <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Get the drive size from parted</span>
+    <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">parted</span> -s /dev/$<span style="color: #ff1493;">ldrive</span> p | grep <span style="color: #00bfff;">"^Disk"</span> | awk <span style="color: #00bfff;">'{ print $3 }'</span>)
+
+    <span style="color: #0000ff;">if</span> [ $(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | grep error) ]; <span style="color: #0000ff;">then</span>
+      <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"Unable to read disk label.  Exiting."</span>
+      <span style="color: #0000ff;">exit</span> 1
+    <span style="color: #0000ff;">fi</span>
+  <span style="color: #0000ff;">fi</span>
+
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Get the drive size from parted</span>
+  <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">parted</span> -s /dev/$<span style="color: #ff1493;">ldrive</span> p | grep <span style="color: #00bfff;">"^Disk"</span> | awk <span style="color: #00bfff;">'{ print $3 }'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Get the reported units (mB, GB, kB)</span>
+  <span style="color: #ff1493;">lmodifier</span>=$(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | sed <span style="color: #00bfff;">'s/[0-9\.]//g'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">remove the modifier</span>
+  <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | sed <span style="color: #00bfff;">'s/[a-z,A-Z]//g'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Remove any fractions</span>
+  <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | cut -f1 -d<span style="color: #00bfff;">'.'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Translate our size into mB if not there already</span>
+  <span style="color: #0000ff;">if</span> [ $<span style="color: #ff1493;">lmodifier</span> = <span style="color: #00bfff;">"GB"</span> ]; <span style="color: #0000ff;">then</span> 
+    <span style="color: #ff1493;">lsize</span>=$(($<span style="color: #ff1493;">lsize</span> * 1000))
+  <span style="color: #0000ff;">elif</span> [ $<span style="color: #ff1493;">lmodifier</span> = <span style="color: #00bfff;">"kB"</span> ]; <span style="color: #0000ff;">then</span> 
+    <span style="color: #ff1493;">lsize</span>=$(($<span style="color: #ff1493;">lsize</span> / 1000))
+  <span style="color: #0000ff;">fi</span>
+
+  <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">lsize</span>
+}
+
 </pre>
 
-   其他常用链接命令 <br/>
-   C-c l 可以在光标所在处创建一个跳转目标点，在需要跳转至该目标的位置输入命令C-c C-l可以建立到目标的链接<br/>
-</p>
-<p><br/>
-   当输入C-c C-l命令，光标若处在已经存在的一个链接上的时候，可以编辑改链接。   <br/>
+
+disk_size=`fdisk -l $CF | grep MB | cut -d&#8221;:&#8221; -f2 | cut -d &#8220;,&#8221; -f1| sed s/MB//g `<br/>
 </p>
 <p><br/>
 </p></div>
 
 </div>
 
-<div id="outline-container-1-5-2" class="outline-4">
-<h4 id="sec-1-5-2">添加附件</h4>
-<div class="outline-text-4" id="text-1-5-2">
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">变为大写</h3>
+<div class="outline-text-3" id="text-1-2">
 
-<p>    给文档添加附件非常简单，C-c C-a 然后就着菜单选好了，其中C-c C-a a是添加文件系统中的文件作为附件。<br/>
-</p>
-<p>    <br/>
-</p>
+
 <p><br/>
+<pre class="src src-sh">upper_str()
+{
+        <span style="color: #ff1493;">upper</span>=<span style="color: #ff00ff;">`echo $1 | tr "[a-z]" "[A-Z]"`</span>
+        <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">upper</span>
+}
+</pre>
+
+
 </p></div>
+
 </div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">判断返回值</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">TOS_VERSION</span> | grep <span style="color: #00bfff;">"^3.3.016"</span> 
+<span style="color: #0000ff;">if</span> [  $? != 0  ]
+<span style="color: #0000ff;">then</span> 
+        <span style="color: #ff1493;">VERSION_016</span>=<span style="color: #00bfff;">"false"</span>
+<span style="color: #0000ff;">else</span>
+        <span style="color: #ff1493;">VERSION_016</span>=<span style="color: #00bfff;">"true"</span>
+<span style="color: #0000ff;">fi</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">提问</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+<pre class="src src-sh">auto_echo <span style="color: #00bfff;">"Are you sure to begin[y/n]:"</span>
+<span style="color: #0000ff;">while </span><span style="color: #a52a2a;">read</span> answer
+<span style="color: #0000ff;">do</span>
+<span style="color: #ff1493;">answer</span>=<span style="color: #ff00ff;">`upper_str $answer`</span>
+<span style="color: #0000ff;">if</span> [ <span style="color: #00bfff;">"$answer"</span> = <span style="color: #00bfff;">"Y"</span> ] 
+<span style="color: #0000ff;">then</span>
+<span style="color: #0000ff;">break</span>
+<span style="color: #0000ff;">elif</span> [ <span style="color: #00bfff;">"$answer"</span> = <span style="color: #00bfff;">"N"</span> ] 
+<span style="color: #0000ff;">then</span>
+write_free
+<span style="color: #0000ff;">exit</span>
+<span style="color: #0000ff;">fi</span>
+auto_echo <span style="color: #00bfff;">"Are you sure to begin[y/n]:"</span>
+<span style="color: #0000ff;">done</span>
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">for循环</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #0000ff;">for</span> x<span style="color: #0000ff;"> in</span> /var/log/*
+<span style="color: #0000ff;">do</span>
+    <span style="color: #a52a2a;">echo</span> <span style="color: #ff00ff;">`basename $x`</span> is a file living<span style="color: #0000ff;"> in</span> /var/log
+<span style="color: #0000ff;">done</span>
+</pre>
+
+</p>
+<p> <br/>
+</p></div>
 
 </div>
 
 <div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">TABLES</h3>
+<h3 id="sec-1-6">while and until</h3>
 <div class="outline-text-3" id="text-1-6">
 
-<p>   在table中按TAB，跳到下一个table<br/>
-   在tab中按RET，跳到下一行<br/>
-   C-c C-c 整理格式<br/>
-</p>
-<p><br/>
-   以 |- 开始的行TAB后扩充为分隔栏<br/>
-</p>
-<p><br/>
-   <b>C-c | 自动把一个空格排列的字段转化为表格</b><br/>
-</p>
-<p>   <br/>
-   C-c RET 创建下一行表格<br/>
-   C-c - 在下一行插入一行分隔符<br/>
-   C-c ^ 按当前列排序<br/>
-</p>
-<p>   <br/>
-</p>
-</div>
 
-<div id="outline-container-1-6-1" class="outline-4">
-<h4 id="sec-1-6-1">表格宽度</h4>
-<div class="outline-text-4" id="text-1-6-1">
-
-<p>    在一列中添加&lt;n&gt;<br/>
-    如果一行显示不完全会显示为==&gt;<br/>
-    此时通过C-c `进入编辑默认，C-c C-c编辑完毕。<br/>
-    还可以添加左中右对齐。<br/>
-    l,c,r<br/>
-    比如：<br/>
-    &lt;r10&gt;<br/>
-</p>
 <p><br/>
+<pre class="src src-sh"><span style="color: #ff1493;">myvar</span>=0
+<span style="color: #0000ff;">while</span> [ $<span style="color: #ff1493;">myvar</span> -ne 10 ]
+<span style="color: #0000ff;">do</span>
+    <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">myvar</span>
+    <span style="color: #ff1493;">myvar</span>=$(( $<span style="color: #ff1493;">myvar</span> + 1 ))
+<span style="color: #0000ff;">done</span>
+
+
+<span style="color: #ff1493;">myvar</span>=0
+<span style="color: #0000ff;">until</span> [ $<span style="color: #ff1493;">myvar</span> -eq 10 ]
+<span style="color: #0000ff;">do</span>
+    <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">myvar</span>
+    <span style="color: #ff1493;">myvar</span>=$(( $<span style="color: #ff1493;">myvar</span> + 1 ))
+<span style="color: #0000ff;">done</span>
+</pre>
+
+
 </p></div>
-
-</div>
-
-<div id="outline-container-1-6-2" class="outline-4">
-<h4 id="sec-1-6-2">行列操作</h4>
-<div class="outline-text-4" id="text-1-6-2">
-
-<p>   M-上下左右<br/>
-   M-S-上下左右 <br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-6-3" class="outline-4">
-<h4 id="sec-1-6-3">表格计算</h4>
-<div class="outline-text-4" id="text-1-6-3">
-
-<p>    比较复杂，而且不常用，用得时候再说，还可以使用Org-Plot进行画图<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
 
 </div>
 
 <div id="outline-container-1-7" class="outline-3">
-<h3 id="sec-1-7">tag</h3>
+<h3 id="sec-1-7">case</h3>
 <div class="outline-text-3" id="text-1-7">
 
-<p>   使用冒号扩起来,在headline后边。 :tag1:<br/>
-   快捷键：C-c C-q<br/>
-   如果光标在headline行，则可以直接使用C-c C-c<br/>
-</p>
-<p>   <br/>
-   search<br/>
-   C-c \或者C-c / m<br/>
-   C-c a m 全局搜索<br/>
+<p>*$x为文件名，只获取文件的后缀，至于是为什么现在不明白? *<br/>
 </p>
 <p><br/>
-   C-c \        搜索标签<br/>
-   C-c / T<br/>
-   C-u C-c \    搜索带 TODO 的标签<br/>
-   可以使用逻辑表达式限制条件，更准确灵活的搜索<br/>
-</p>
-<p><br/>
-</p><ul>
-<li>和      a+b     同时有这两个标签<br/>
-</li>
-<li>排除    a-b     有 a 但没有 b<br/>
-</li>
-</ul>
+<pre class="src src-sh"><span style="color: #0000ff;">case</span> <span style="color: #00bfff;">"${x##*.}"</span><span style="color: #0000ff;"> in</span>
+     gz)
+           gzunpack ${<span style="color: #ff1493;">SROOT</span>}/${<span style="color: #ff1493;">x</span>}
+           ;;
+     bz2)
+           bz2unpack ${<span style="color: #ff1493;">SROOT</span>}/${<span style="color: #ff1493;">x</span>}
+           ;;
+     *)
+           <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"Archive format not recognized."</span>
+           <span style="color: #0000ff;">exit</span>
+           ;;
+<span style="color: #0000ff;">esac</span>
+</pre>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption></caption>
-<colgroup><col class="left" /><col class="left" />
-</colgroup>
-<tbody>
-<tr><td class="left">或      a</td><td class="left">b     有 a 或者有 b</td></tr>
-</tbody>
-</table>
 
-   &amp;    和      a&amp;b     同时有 a 和 b，可以用“+”替代<br/>
-   在查询视图中 C-c C-c 退出<br/>
-
-<p>     <br/>
 </p></div>
 
 </div>
 
 <div id="outline-container-1-8" class="outline-3">
-<h3 id="sec-1-8">code</h3>
+<h3 id="sec-1-8">读取文件</h3>
 <div class="outline-text-3" id="text-1-8">
 
-<p>语法：<br/>
-</p>
+
 <p><br/>
-<pre class="example">#+NAME: &lt;name&gt;
-#+BEGIN_SRC &lt;language&gt; &lt;switches&gt; &lt;header arguments&gt;
-&lt;body&gt;
-#+END_SRC
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">! /bin/</span><span style="color: #0000ff;">bash</span><span style="color: #8c8c8c; font-style: italic;">  </span>
+<span style="color: #0000ff;">while </span><span style="color: #a52a2a;">read</span> LINE
+<span style="color: #0000ff;">do</span>
+        <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">LINE</span> 
+<span style="color: #0000ff;">done</span> &lt; /etc/passwd
 </pre>
 
 
-<b>引用文字 #+BEGIN<sub>EXAMPLE</sub> /#+END<sub>EXAMPLE</sub></b><br/>
-为了保留引文的格式，还可以使用#+BEGIN<sub>VERSE</sub> / #+END<sub>VERSE</sub> 和#+BEGIN<sub>QUOTE</sub>/ #+END<sub>QUOTE</sub>. <br/>
-将引文居中排版可以使用#+BEGIN<sub>CENTER</sub> / #+END<sub>CENTER</sub>.<br/>
-</p>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">awk按域搜索的例子</h3>
+<div class="outline-text-3" id="text-1-9">
+
+
 <p><br/>
-例子：<br/>
-</p>
-<p><br/>
-<pre class="src src-emacs-lisp">(<span style="color: #0000ff;">defun</span> <span style="color: #a020f0;">org-xor</span> (a b)
-<span style="color: #00bfff;">"Exclusive or."</span>
-(<span style="color: #0000ff;">if</span> a (not b) b))
+<pre class="src src-sh"><span style="color: #0000ff;">while </span><span style="color: #a52a2a;">read</span> line; 
+        <span style="color: #0000ff;">do</span> cp aaaa $<span style="color: #ff1493;">line</span>;
+<span style="color: #0000ff;">done</span> &lt;&lt; (awk <span style="color: #00bfff;">'{for(i=1; i &lt;= NF; ++i){if($i ~/^-l/){gsub("^-l","lib",$i); printf("%s.so\n", $i)}}}'</span> libso.txt  | sort -u)
 </pre>
 
-
-输入&lt;e和TAB,得到<br/>
-</p>
-<p><br/>
-<pre class="example">#+end_example
-输入&lt;s和TAB,得到
-#+begin_example
-        #+begin_src
-        #+end_src
-</pre>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
 
 
-咳，相应的还有：<br/>
-</p>
-<p><br/>
-<pre class="example">
-("s" "#+begin_src ?\n\n#+end_src" "&lt;src lang=\"?\"&gt;\n\n&lt;/src&gt;")
-("e" "#+begin_example\n?\n#+end_example" "&lt;example&gt;\n?\n&lt;/example&gt;")
-("q" "#+begin_quote\n?\n#+end_quote" "&lt;quote&gt;\n?\n&lt;/quote&gt;")
-("v" "#+begin_verse\n?\n#+end_verse" "&lt;verse&gt;\n?\n/verse&gt;")
-("c" "#+begin_center\n?\n#+end_center" "&lt;center&gt;\n?\n/center&gt;")
-("l" "#+begin_latex\n?\n#+end_latex" "&lt;literal style=\"latex\"&gt;\n?\n&lt;/literal&gt;")
-("L" "#+latex: " "&lt;literal style=\"latex\"&gt;?&lt;/literal&gt;")
-("h" "#+begin_html\n?\n#+end_html" "&lt;literal style=\"html\"&gt;\n?\n&lt;/literal&gt;")
-("H" "#+html: " "&lt;literal style=\"html\"&gt;?&lt;/literal&gt;")
-("a" "#+begin_ascii\n?\n#+end_ascii")
-("A" "#+ascii: ")
-("i" "#+include %file ?" "&lt;include file=%file markup=\"?\"&gt;"))
-</pre>
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/17/opensources-firewall/">开源防火墙</a></h1>
+    
+    
+      <p class="meta">
+        
 
-这些都是定义在org-structure-template-alist中的变量。<br/>
-</p>
-<p><br/>
-;; 定义快捷插入操作<br/>
-</p>
-<p><br/>
-<pre class="src src-lisp">(<span style="color: #0000ff;">define-skeleton</span> <span style="color: #a020f0;">iexp</span> 
-  <span style="color: #00bfff;">"Input #+BEGIN_EXAMPLE #+END_EXAMPLE in org-mode"</span>
-  <span style="color: #00bfff;">""</span>
-  <span style="color: #00bfff;">"#+BEGIN_EXAMPLE\n"</span>
-  _ <span style="color: #00bfff;">"\n"</span> 
-  <span style="color: #00bfff;">"#+END_EXAMPLE"</span>
-  )
-(define-abbrev org-mode-abbrev-table <span style="color: #00bfff;">"iexp"</span> <span style="color: #00bfff;">""</span> 'iexp)
-</pre>
 
-如果你想插入代码片段，直接M-x iexp RET即可，<br/>
-会自动出现 #+BEGIN<sub>EXAMPLE</sub> #+END<sub>EXAMPLE，并且光标自动停留在中间等待你的输入，</sub><br/>
-如果文章中已经有了一段内容，直接选中这段内容，M-x iexp RET，同样可以将这段内容引用起来，非常方便.<br/>
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-17T00:00:00+08:00" pubdate data-updated="true">2012年11月17日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+要说免费使用的防火墙那多了，但都不开源，而我更喜欢开源的，能学到东西。<br/>
 </p>
 <p><br/>
-貌似使用等号也是有这个作用，用在行内，比如 <code>这样</code> <br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">可下到源代码</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">IPCop</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p><a href="http://sourceforge.net/projects/ipcop/develop">http://sourceforge.net/projects/ipcop/develop</a><br/>
+可以下载源代码。<br/>
+<code>svn co https://ipcop.svn.sourceforge.net/svnroot/ipcop ipcop</code><br/>
 </p>
 <p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">EFW</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p><a href="http://www.endian.com/">http://www.endian.com/</a><br/>
+这个比较大，600M源码包，非常全。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Vyatta</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>基于debian<br/>
+<a href="http://www.vyatta.org/downloads">http://www.vyatta.org/downloads</a><br/>
+目前这个是我发现的有专门针对虚拟化平台优化的版本。<br/>
+<a href="http://www.vyatta.org/getting-started/how-to-install">http://www.vyatta.org/getting-started/how-to-install</a><br/>
+</p>
+<p><br/>
+Installing Vyatta Core in a Virtualized Environment<br/>
+If you’re deploying Vyatta Core on a hypervisor such as VMWare ESX/ESXi or Citrix XenServer, <br/>
+you’ll want to use the Vyatta virtualization ISO (virt-ISO).<br/>
+Similar to the LiveCD ISO, the virt-ISO provides a bootable ISO,<br/>
+except it also includes virtual machine tools and other optimizations<br/>
+to deliver the best possible experience for users running Vyatta on a virtual machine. <br/>
+</p>
+<p><br/>
+Using the vSphere Client, create a new VM<br/>
+</p><ul>
+<li>Configuration: Custom<br/>
+</li>
+<li>Name: &#8220;vyatta&#8221;<br/>
+</li>
+<li>Datastore: default<br/>
+</li>
+<li>Virtual Machine Version: 7<br/>
+</li>
+<li>Guest OS: Linux/Other 2.6x Linux<br/>
+</li>
+<li>CPU: &#8220;1&#8221;<br/>
+</li>
+<li>Memory: &#8220;512&#8221;<br/>
+</li>
+<li>Network: &#8220;2&#8221; / vmxnet3<br/>
+</li>
+<li>SCSI Controller: default<br/>
+</li>
+<li>Select a Disk: default<br/>
+</li>
+<li>Create a Disk: &#8220;4&#8221;GB (thin provisioning and independent / persistent mode)<br/>
+</li>
+<li>Advanced Options: Enable &#8220;Support VMI Paravirtualization&#8221;<br/>
+</li>
+</ul>
+
+
+<p>        <br/>
+使用了<br/>
+open-vm-tools<br/>
+ec2-api-tools 是不是可以通过api来管理此虚拟机，或者获得性能等。ec2-api是什么东东？<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">获取源代码</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p><a href="http://www.vyatta.org/downloads/source-code">http://www.vyatta.org/downloads/source-code</a><br/>
+</p>
+<p><br/>
+git clone <a href="http://git.vyatta.com/build-iso.git">http://git.vyatta.com/build-iso.git</a><br/>
+cd build-iso<br/>
+注意要先调整到一个分支或者tag<br/>
+build-iso$ git branch &ndash;track &lt;branch&gt; origin/&lt;branch&gt;<br/>
+build-iso$ git checkout &lt;branch&gt;<br/>
+或者<br/>
+git checkout tagv1<br/>
+</p>
+<p><br/>
+获取子模块的代码<br/>
+git submodule init<br/>
+git submodule update pkgs/SUBMODULE<br/>
+</p>
+<p><br/>
+克隆所有模块<br/>
+git submodule update<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">install</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>启动虚拟机,用缺省的用户名/密码 vyatta/vyatta登陆系统<br/>
+install image 基于image安装，推荐,可以切换image<br/>
+install system 基于disk安装，传统硬盘安装方式<br/>
+</p>
+<p><br/>
+There are two types of installations that can be performed on a persistent device: <br/>
+• Image-based install. The simplest, most flexible, and most powerful way to <br/>
+install a Vyatta system is using a binary system image. With this method, you can <br/>
+install multiple versions of the Vyatta system as images and switch between the <br/>
+images simply and easily. You install the image from a LiveCD then you reboot <br/>
+your system and it runs the image. <br/>
+• Disk-based install. A disk-based install also installs from a LiveCD onto a <br/>
+persistent device such as a hard disk partition. However, unlike an image-based <br/>
+install, a disk-based install uses a traditional layout of files on the disk. <br/>
+Additional system images may be added at a later time to a system created using <br/>
+a disk-based install. <br/>
+</p>
+<p><br/>
+nstall-image (is what I would suggest btw) is using squashfs and is capable of booting/running multiple images of versions<br/>
+</p>
+<p><br/>
+真让我好找，找了一天，终于找到安装脚本了，在pkgs/vyatta-cfg-system<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">debian install</h4>
+<div class="outline-text-4" id="text-1-2-3">
+
+<p>这个貌似比较重要，vyatta之所以看不太明白，应该是对d-i不了解。<br/>
+看看internal<br/>
+<a href="http://d-i.alioth.debian.org/doc/internals/">http://d-i.alioth.debian.org/doc/internals/</a><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4">配置ip</h4>
+<div class="outline-text-4" id="text-1-2-4">
+
+<p>vyatta@vyatta:~$ configure<br/>
+vyatta@vyatta# set interfaces ethernet eth0 address 192.168.1.81/24<br/>
+vyatta@vyatta# commit<br/>
+vyatta@vyatta# exit<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-5" class="outline-4">
+<h4 id="sec-1-2-5">启动webui</h4>
+<div class="outline-text-4" id="text-1-2-5">
+
+<p>vyatta@R1# set service https<br/>
+不过需要商业版才能使用webui<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-6" class="outline-4">
+<h4 id="sec-1-2-6">linux-image</h4>
+<div class="outline-text-4" id="text-1-2-6">
+
+<p>vyatta的内核配置<br/>
+/home/liwei/work/src_analysis/tag_vyatta_src/pkgs/linux-image/debian/arch/i386/config.586-vyatta-virt<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/16/shell-skill/">Shell命令技巧收集</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-16T00:00:00+08:00" pubdate data-updated="true">2012年11月16日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">资料，有空在整理</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>隆重推荐，one line command<br/>
+<a href="http://www.catonmat.net/">http://www.catonmat.net/</a><br/>
+</p>
+<p><br/>
+<a href="http://os.51cto.com/art/201008/222287.htm">http://os.51cto.com/art/201008/222287.htm</a><br/>
+<a href="http://os.51cto.com/art/201008/222743.htm">http://os.51cto.com/art/201008/222743.htm</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">添加上一个命令的最后一个参数</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>Alt .<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">字符串比较，注意要用引号</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>字符串比较说明<br/>
+大多数时候，虽然可以不使用括起字符串和字符串变量的双引号，但这并不是好主意。为什么呢？因为如果环境变量中恰巧有一个空格或制表键，bash 将无法分辨，从而无法正常工作。这里有一个错误的比较示例：<br/>
+ if [ $myvar = &#8220;foo bar oni&#8221; ]<br/>
+then <br/>
+     echo &#8220;yes&#8221;<br/>
+fi<br/>
+</p>
+<p><br/>
+在上例中，如果 myvar 等于 &#8220;foo&#8221;，则代码将按预想工作，不进行打印。但是，如果 myvar 等于 &#8220;foo bar oni&#8221;，则代码将因以下错误失败：<br/>
+ [: too many arguments<br/>
+</p>
+<p><br/>
+在这种情况下，&#8221;$myvar&#8221;（等于 &#8220;foo bar oni&#8221;）中的空格迷惑了 bash。bash 扩展 &#8220;$myvar&#8221; 之后，代码如下：<br/>
+ [ foo bar oni = &#8220;foo bar oni&#8221; ]<br/>
+</p>
+<p><br/>
+因为环境变量没放在双引号中，所以 bash 认为方括号中的自变量过多。可以用双引号将字符串自变量括起来消除该问题。请记住，如果养成将所有字符串自变量用双引号括起的习惯，将除去很多类似的编程错误。&#8221;foo bar oni&#8221; 比较 应该写成：<br/>
+if [ &#8220;$myvar&#8221; = &#8220;foo bar oni&#8221; ]<br/>
+then <br/>
+     echo &#8220;yes&#8221;<br/>
+fi<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">算术表达式 $(( ))</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p> $ myvar=&#8221;56&#8221;<br/>
+ $ echo $(( $myvar + 12 ))<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">名字空间，全局性</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>在 bash 中，每当在函数内部创建环境变量，就将其添加到 全局名称空间。这意味着，该变量将重写函数之外的全局变量，并在函数退出之后继续存在<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">捕获脚本的输出 2&gt;&amp;1 | tee T型管道</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>当显示正在生成的输出时，捕获每个脚本的输出 <br/>
+如果脚本不能自动地将输出发送到文件的话，可以利用 Bash shell 的一些函数来捕获所执行脚本的输出，如：<br/>
+./test-bucket-1  -s  2&gt;&amp;1  | tee test-bucket-1.out<br/>
+</p>
+<p><br/>
+让我们来分析上面的命令：<br/>
+&#8220;2&gt;&amp;1&#8221; 命令：<br/>
+使用 &#8220;2&gt;&amp;1&#8221; 将标准错误重定向到标准输出。字符串 &#8220;2&gt;&amp;1&#8221; 表明任何错误都应送到标准输出，即 UNIX/Linux 下 2 的文件标识代表标准错误，而 1 的文件标识代表标准输出。如果不用此字符串，那么所捕捉到的仅仅是正确的信息，错误信息会被忽略。<br/>
+管道 &#8220;|&#8221; 和 &#8220;tee&#8221; 命令：<br/>
+UNIX/Linux 进程和简单的管道概念很相似。既然这样，可以做一个管道将期望脚本的输出作为管道的输入。下一个要决定的是如何处理管道所输出的内容。在这种情况下，我们会将它捕获到输出文件中，在此示例中将之称为 &#8220;test-bucket-1.out&#8221;。<br/>
+但是，除了要捕获到输出结果外，我们还想监视脚本运行时产生的输出。为达到此目的，我们连接允许两件事同时进行的 &#8220;tee&#8221; （T- 形管道）：将输出结果放在文件中同时将输出结果显示在屏幕上。 其管道类似于：<br/>
+process &ndash;&gt; T &mdash;&gt; output file<br/>
+             V<br/>
+           screen<br/>
+</p>
+<p><br/>
+如果 只 想捕获输出结果而不想在屏幕上看到输出结果，那可以忽略多余的管道： ./test-bucket-1 -s 2&gt;&amp;1 &gt; test-bucket-1.out<br/>
+假若这样，相类似的管道如下：<br/>
+process &ndash;&gt; output file<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">产生随机数</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>dd if=/dev/urandom count=1 2&gt; /dev/null | cksum | cut -f1 -d&#8221; &#8221; <br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">取得一些文件名称中的一部分名称</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>interfaces=`ls session_* | sed &#8216;s/^session_//g&#8217; | sed &#8216;s//.log$//g&#8217;`<br/>
 </p>
 <p><br/>
 </p></div>
@@ -744,261 +1473,1812 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 
 <div id="outline-container-1-9" class="outline-3">
-<h3 id="sec-1-9">TODO使用</h3>
+<h3 id="sec-1-9">如何用bash从文件中读一行</h3>
 <div class="outline-text-3" id="text-1-9">
 
-<p>   任何headline前加上TODO都可以变为TODO item<br/>
-   C-c C-t 循环变化TODO的状态<br/>
-   C-c / t 在sparse tree中查看TODO<br/>
-   C-c a t 显示aganda全局TODO<br/>
-</p>
-<p>   <br/>
-   设置多个状态，并添加简写，可以使用C-c C-t + brief 直接设置状态<br/>
-</p>
-<p><br/>
-<pre class="src src-lisp">(setq org-todo-keywords
-'((sequence <span style="color: #00bfff;">"TODO(t)"</span> <span style="color: #00bfff;">"|"</span> <span style="color: #00bfff;">"DONE(d)"</span>)
-(sequence <span style="color: #00bfff;">"REPORT(r)"</span> <span style="color: #00bfff;">"BUG(b)"</span> <span style="color: #00bfff;">"KNOWNCAUSE(k)"</span> <span style="color: #00bfff;">"|"</span> <span style="color: #00bfff;">"FIXED(f)"</span>)
-(sequence <span style="color: #00bfff;">"|"</span> <span style="color: #00bfff;">"CANCELED(c)"</span>)))
-</pre>
-
-
-   C-u C-c C-t  手动输入 TODO 状态，如果设定快捷则使用快捷键输入<br/>
-   S-right      循环切换 TODO 状态，两个以上 TODO 状态时使用<br/>
-   S-left<br/>
-   C-S-right    组间切换<br/>
-   C-S-left<br/>
-   C-c C-v      查询视图<br/>
-   C-c / t<br/>
-   C-c a t      全局 TODO 列表<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-9-1" class="outline-4">
-<h4 id="sec-1-9-1">TODO依赖关系</h4>
-<div class="outline-text-4" id="text-1-9-1">
-
-<p>   父级TODO只有等子TODO都done后才能done<br/>
-   例子： 添加ORDERED属性，subclass也是按照先后顺序执行<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-<pre class="example">* Parent
-:PROPERTIES:
-:END:
-**TODO a
-**TODO b, needs to wait for (a)
-**TODO c, needs to wait for (a) and (b)
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-9-2" class="outline-4">
-<h4 id="sec-1-9-2">tracking todo state change</h4>
-<div class="outline-text-4" id="text-1-9-2">
-
-<p>    This is achieved by adding special markers ‘!’(for a timestamp) <br/>
-    or ‘@’ (for a note with timestamp) in parentheses after each keyword.<br/>
-</p>
-<p>    <br/>
-    exp:<br/>
-    (setq org-todo-keywords<br/>
-    &#8216;((sequence &#8220;TODO(t)&#8221; &#8220;WAIT(w@/!)&#8221; &#8220;|&#8221; &#8220;DONE(d!)&#8221; &#8220;CANCELED(c@)&#8221;)))<br/>
+<p>while read line<br/>
+  do<br/>
+  echo $line<br/>
+done &lt; &#8220;$filename&#8221;<br/>
 </p>
 <p><br/>
 </p></div>
-
-</div>
-
-<div id="outline-container-1-9-3" class="outline-4">
-<h4 id="sec-1-9-3">priotify</h4>
-<div class="outline-text-4" id="text-1-9-3">
-
-<p>    在headline添加priority cookie<br/>
-    *** TODO [#A] Write letter to Sam Fortune<br/>
-    A，B，C<br/>
-    不写priority cookie的headline默认为B<br/>
-    C-c , 设置优先级<br/>
-    S-up，down 调高低<br/>
-</p>
-<p>    <br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-9-4" class="outline-4">
-<h4 id="sec-1-9-4">checkbox</h4>
-<div class="outline-text-4" id="text-1-9-4">
-
-<p>    每行以- [ ] 开头，就是checkbox,注意[ ]之间必须有空格<br/>
-    实际上是列表，所有要加- + 或者*在[ ]之前<br/>
-</p>
-<p><br/>
-    但checkbox不加入global todo list。<br/>
-    试用于把一个任务分成若干个小项。<br/>
-    C-c C-c  toggle checkbox<br/>
-    C-u C-c C-c 在list符后添加一个空的checkbox或者删除<br/>
-    C-u C-u C-c C-c 把checkbox设置为中间状态[-]<br/>
-    还headline后添加[/]或者[%] 可以显示当前项完成的个数或者百分比。<br/>
-</p>
-<p>   <br/>
-</p></div>
-</div>
 
 </div>
 
 <div id="outline-container-1-10" class="outline-3">
-<h3 id="sec-1-10">org capture</h3>
+<h3 id="sec-1-10">如何用bash发现某些文件中是否没有包含string</h3>
 <div class="outline-text-3" id="text-1-10">
 
-<p>  用于快速记录一些想法，可以设置一些模板。<br/>
+
+<p><br/>
+jsps=`find . -name &#8220;*.jsp&#8221;`<br/>
 </p>
 <p><br/>
-<pre class="src src-lisp">(setq org-directory <span style="color: #00bfff;">"~/lwemacs/org"</span>)
-(setq org-default-notes-file (concat org-directory <span style="color: #00bfff;">"/notes.org"</span>))
-(global-set-key <span style="color: #00bfff;">"\C-cc"</span> 'org-capture)
-</pre>
+for jsp in $jsps; do<br/>
+    havegb=`grep gb2312 $jsp`<br/>
+        [ ! -n &#8220;$havegb&#8221; ] &amp;&amp; echo $jsp<br/>
+done<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
 
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/15/centos-kdump/">Centos Kdump</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-15T00:00:00+08:00" pubdate data-updated="true">2012年11月15日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">centos kdump</a>
+<ul>
+<li><a href="#sec-1-1">介绍</a></li>
+<li><a href="#sec-1-2">安装</a></li>
+<li><a href="#sec-1-3">添加内核启动参数</a></li>
+<li><a href="#sec-1-4">配置文件</a></li>
+<li><a href="#sec-1-5">测试</a></li>
+<li><a href="#sec-1-6">用crash 工具分析vmcore 文件</a></li>
+<li><a href="#sec-1-7">参考</a></li>
+<li><a href="#sec-1-8">遗留问题</a></li>
+<li><a href="#sec-1-9">systemtap</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/11/15/centos-kdump/">centos kdump</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
 </p>
-<p>  <br/>
-  C-c C-c 完成编辑<br/>
-  C-c C-k 放弃编辑<br/>
-  C-u C-c c 查看模板，或者定制模板<br/>
-  C-u C-u C-c c 查看last note<br/>
-</p>
-<p>  <br/>
-  添加模板，设置org-capture-templates变量：<br/>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">介绍</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>通过kexec和kdump当内核crash的时候可以显示堆栈信息。方便调试。<br/>
 </p>
 <p><br/>
-<pre class="src src-lisp">(setq org-capture-templates
- '((<span style="color: #00bfff;">"t"</span> <span style="color: #00bfff;">"Todo"</span> entry (file+headline (concat org-directory <span style="color: #00bfff;">"/gtd.org"</span>) <span style="color: #00bfff;">"Tasks"</span>)
-        <span style="color: #00bfff;">"* TODO %?\n %i\n %a"</span>)
-   (<span style="color: #00bfff;">"j"</span> <span style="color: #00bfff;">"Journal"</span> entry (file+datetree (concat org-directory <span style="color: #00bfff;">"/journal.org"</span>))
-        <span style="color: #00bfff;">"* %?\nEntered on %U\n %i\n %a"</span>)))  
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">安装</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>sudo yum install kexec-tools<br/>
+sudo yum install kernel-debug kernel-debug-devel<br/>
+yum install crash gdb<br/>
+</p>
+<p><br/>
+为了让内核都统一，不妨内核也升级一下<br/>
+yum install kernel kernel-devel<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">添加内核启动参数</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>crashkernel=128M@16M<br/>
+在/etc/grub.cfg中添加，表示启动的时候从16M的位置开始，预留128M内存用于crashkernel <br/>
+注意centos6.2我发现可能已经默认支持了kdump，只是没有启动而已，grub.cfg中已经添加了crashkernel=auto<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">配置文件</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>/etc/kdump.conf<br/>
+配置coredump的位置，默认是 /var/crash<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">测试</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>reboot后<br/>
+这会创建/boot/initrd-kdump.img用于capture coredump，这非常重要，否则kdump就会启动失败。<br/>
+该文件就是kdump加载的内核的 initrd文件，收集dump信息的工作就是在该initrd的启动环境下进行的。<br/>
+查看/etc/init.d/kdump脚本的代码，你可看到其中会调用mkdumprd命令创建用于dump的initrd文件。<br/>
+</p>
+<p><br/>
+service kdump status<br/>
+</p>
+<p><br/>
+触发crash<br/>
+echo 1 &gt; /proc/sys/kernel/sysrq<br/>
+echo &#8220;c&#8221; &gt; /proc/sysrq-trigger<br/>
+</p>
+<p><br/>
+等待时间比较长，大概5分钟，系统又重新进入了桌面。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">用crash 工具分析vmcore 文件</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+<p><br/>
+用crash 命令分析vmcore 的命令行格式如下所示. <br/>
+用crash打开vmcore后，主要是用dmesg及 bt 命令打印出问题的执行路径的call trace, <br/>
+用dis 反汇编出代码，最终确认call trace对应的C源码中的位置，再进行逻辑分析.<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">参考</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p><a href="http://www.linuxidc.com/Linux/2011-03/33548.htm">http://www.linuxidc.com/Linux/2011-03/33548.htm</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">遗留问题</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>用crash需要vmlinux，到哪里获得？<br/>
+可能需要安装kernel-debuginfo<br/>
+但标准库里可能没有，需要另外添加。<br/>
+<a href="http://www.dedoimedo.com/computers/centos-debug.html">http://www.dedoimedo.com/computers/centos-debug.html</a><br/>
+</p>
+<p><br/>
+<a href="http://wiki.centos.org/AdditionalResources/Repositories">http://wiki.centos.org/AdditionalResources/Repositories</a><br/>
+已经说得很清楚了，需要额外添加debuginfo的库<br/>
+不过看到centos6.2中自带了<br/>
+ /etc/yum.repos.d/CentOS-Debuginfo.repo<br/>
+<b>注意把其中的enabled改为1</b>,然后就可以安装了<br/>
+kernel-debuginfo 将近300M<br/>
+</p>
+<p><br/>
+先不下了，速度太慢了，10k。<br/>
+</p>
+<p><br/>
+还有个问题，就算能看vmcore了，那模块coredump也能看吗？<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">systemtap</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>有空再研究一下kprobe和systemtap<br/>
+<a href="http://hi.baidu.com/donglix/item/13052275911e7a5f0c0a07f8">http://hi.baidu.com/donglix/item/13052275911e7a5f0c0a07f8</a><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/02/gcov/">Gcov</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-02T00:00:00+08:00" pubdate data-updated="true">2012年11月02日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">gcov</a>
+<ul>
+<li><a href="#sec-1-1">分支覆盖的作用</a></li>
+<li><a href="#sec-1-2">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/11/02/gcov/">gcov</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">分支覆盖的作用</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>所有单元测试跑完后，统计分支覆盖率，统计测试的是否全面。一个程序如果每个分支都执行过了，也不能保证程序就是正确的。<br/>
+毕竟还有很多逻辑错误，但至少能从某种程度上显示出，这些代码测试的是否完善，不完善就还需要补充测试用例。<br/>
+可以显示出每行被执行了多少次，哪行没有被执行。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">参考</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p><a href="http://www.taobaotest.com/blogs/qa?bid=8451">GCOV 实现原理</a><br/>
+&lt;深入浅出Linux平台代码覆盖率测试.pdf&gt;<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/02/cutter/">C单元测试框架:cutter</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-02T00:00:00+08:00" pubdate data-updated="true">2012年11月02日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">特性</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>c的单元测试见的多了，cutter有什么看家本领吗？<br/>
+</p><ol>
+<li>框平台性好<br/>
+   这个貌似意义不大，单元测试框架一般本身都很小巧，移植难度很小。<br/>
+
+<p><br/>
+</p></li>
+<li>自动探测用例<br/>
+   这个功能不错，只要开头是test_ 开头的函数，自动认为是testcase。<br/>
+   其实他是把testcase编译成了库，然后进行符号查找。<br/>
+
+<p><br/>
+</p></li>
+<li>显示友好<br/>
+   尽量精确的提出错误在哪里，有个expect和real，貌似还可以diff。<br/>
+
+<p><br/>
+</p></li>
+<li>支持数据驱动测试<br/>
+   这个功能还有点不明白，貌似应该是测试前准备数据集的功能，不知道是否是mock功能。<br/>
+
+<p><br/>
+</p></li>
+<li>支持代码的分支覆盖率攻击。<br/>
+
+<p><br/>
+</p></li>
+<li>针对ubuntu特别优化。<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">后续待添加功能</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>从他的TODO中可以看到一些，不过我最期望的是：<br/>
+</p><ol>
+<li>测试用例的search<br/>
+</li>
+<li>内存泄漏测试，最好集成memwatch的功能。mem_limit很好。<br/>
+</li>
+<li>是否有mock功能？<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">主页</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p><a href="http://sourceforge.net/projects/cutter/">http://sourceforge.net/projects/cutter/</a><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/30/memwatch-/">Memwatch</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-30T00:00:00+08:00" pubdate data-updated="true">2012年10月30日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">memwatch</a>
+<ul>
+<li><a href="#sec-1-1">Memwatch简介</a></li>
+<li><a href="#sec-1-2">MemWatch的内存处理</a></li>
+<li><a href="#sec-1-3">初始化和结束处理</a></li>
+<li><a href="#sec-1-4">MemWatch的I/O 操作</a></li>
+<li><a href="#sec-1-5">使用</a>
+<ul>
+<li><a href="#sec-1-5-1">使用MemWatch提供的功能</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-6">Memwatch使用注意</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/30/memwatch-/">memwatch</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Memwatch简介</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>在三种检测工具当中，设置最简单的算是memwatch，和dmalloc一样，<br/>
+它能检测未释放的内存、同一段内存被释放多次、位址存取错误及不当使用未分配之内存区域。<br/>
+请往<br/>
+<a href="http://www.linkdata.se/sourcecode.html">http://www.linkdata.se/sourcecode.html</a><br/>
+下载最新版本的Memwatch。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">MemWatch的内存处理</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>MemWatch将所有分配的内存用0xFE填充，所以，如果你看到错误的数据是用0xFE填充的，那就是你没有初始化数据。<br/>
+例外是calloc()，它会直接把分配的内存用0填充。<br/>
+</p>
+<p><br/>
+MemWatch将所有已释放的内存用0xFD填充(zapped with 0xFD).<br/>
+如果你发现你使用的数据是用0xFD填充的，那你就使用的是已释放的内存。<br/>
+在这种情况，注意MemWatch会立即把一个&#8221;释放了的块信息&#8221; 填在释放了的数据前。<br/>
+这个块包括关于内存在哪儿释放的信息，以可读的文本形式存放，格式 为&#8221;FBI&lt;counter&gt;filename(line)&#8221;。<br/>
+如:&#8221;FBI&lt;267&gt;test.c(12)&#8221;.使用FBI会降 低free()的速度，所以默认是关闭的。使用mwFreeBufferInfo(1)开启。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">初始化和结束处理</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>一般来说，在程序中使用MemWatch的功能，可以手动添加mwInit()进行初始化，并用对应的mwTerm ()进行结束处理。<br/>
+一般不需要手动添加，memwatch会在第一个malloc的时候自动初始化，并在atexit中添加mwTerm。<br/>
+</p>
+<p><br/>
+如果自动初始化不合适或者程序比较特殊，请显式调用mwInit()和mwTerm().<br/>
+比如，有的时候明明程序没有问题，而memwatch显示内存泄漏，这时就需要手动调用初始化和结束。<br/>
+</p>
+<p><br/>
+涉及的函数主要有：<br/>
+mwInit()    mwTerm()    mwAbort()<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">MemWatch的I/O 操作</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>对于一般的操作，MemWatch创建memwatch.log文件。有时，该文件不能被创建;<br/>
+MemWatch会试图创建memwatNN.log文件，NN在01~99之间。<br/>
+</p>
+<p><br/>
+如果你不能使用日志，或者不想使用，也没有问题。<br/>
+只要使用类型为&#8221;void func(int c)&#8221;的参数调用mwSetOutFunc()，然后所有的输出都会按字节定向到该函数.<br/>
+</p>
+<p><br/>
+当ASSERT或者VERIFY失败时，MemWatch也有Abort/Retry/Ignore处理机制。<br/>
+默认的处理机制没有I/O操作，但是会自动中断程序。<br/>
+你可以使用任何其他Abort/Retry/Ignore的处理机制,只要以参数&#8221;void func(int c)&#8221;调用mwSetAriFunc()。<br/>
+</p>
+<p><br/>
+涉及的函数主要有：<br/>
+mwTrace()           mwPuts()        mwSetOutFunc()  mwSetAriFunc()<br/>
+mwSetAriAction()    mwAriHandler()  mwBreakOut()<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">使用</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>在要使用MemWatch的.c文件中包含头文件&#8221;memwatch.h&#8221;<br/>
+</p>
+<p><br/>
+使用GCC编译（注意：不是链接）自己的程序时，加入-DMEMWATCH -DMW_STDIO<br/>
+如：gcc -DMEMWATCH -DMW_STDIO –o test.o –c  test1.c memwatch.c<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1">使用MemWatch提供的功能</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+<ol>
+<li>mwTRACE，mwASSERT，mwVERIFY和mwPuts<br/>
+</li>
+<li>ARI机制即程序设置的“Abort, Retry, Ignore选择陷阱<br/>
+</li>
+<li>mwSetOutFunc<br/>
+   将输出转向调用者给出的函数(参数即函数地址)。参数为NULL，表示把输出写入日志文件memwatch.log.<br/>
+</li>
+<li>mwIsReadAddr<br/>
+   检查内存是否有读取的权限<br/>
+</li>
+<li>mwIsSafeAddr<br/>
+   检查内存是否有读、写的权限<br/>
+</li>
+<li>mwStatistics<br/>
+   设置状态搜集器的行为。对应的参数采用宏定义。<br/>
+
+<p><br/>
+   #define MW_STAT_GLOBAL  0       <i>* 仅搜集全局状态信息 *</i><br/>
+   #define MW_STAT_MODULE  1       <i>* 搜集模块级的状态信息 *</i><br/>
+   #define MW_STAT_LINE    2       <i>* 搜集代码行级的状态信息 *</i><br/>
+   #define MW_STAT_DEFAULT 0       <i>* 默认状态设置 *</i><br/>
+</p></li>
+</ol>
+
+
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">Memwatch使用注意</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>Memwatch 的优点是无需特別配置，不需安装便能使用，但缺点是它会拖慢程序的运行速度，尤其是释放内存时它会作大量检查。<br/>
+但它比mtrace和dmalloc多了 一项功能，就是能模拟系统内存不足的情況，<br/>
+使用者只需用mwLimit(long num_of_byte)函数来限制程式的heap memory大小(以byte单位)。<br/>
+</p>
+<p><br/>
+最详细的使用说明(包括优点缺点，运行原理等)已在README中列出，本人强烈建议各位读者参考该文件。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/29/cunit/">CUnit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-29T00:00:00+08:00" pubdate data-updated="true">2012年10月29日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">CUnit</a>
+<ul>
+<li><a href="#sec-1-1">CUnit交叉编译</a></li>
+<li><a href="#sec-1-2">使用bootstrap而不是configure</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/29/cunit/">CUnit</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">CUnit交叉编译</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>我更换到ubuntu12.04上编译CUnit已经编译不过去了，错误原因是：<br/>
+libtool : X&ndash;tag=CC: command not found 编译报错<br/>
+原因据说是因为在项目目录下生成的libtool脚本中定义了$ECHO变量，但是在脚本文件ltmain.sh中，使用的却是$echo(生成的libtool版本太旧)<br/>
+可通过以下方法解决：<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>直接复制系统自带的libtool到项目目录，应该在/usr/bin目录下，覆盖代码文件目录下的libtool，再执行make<br/>
+</li>
+</ol>
+
+<p>（没装就apt-get install libtool 或者 yum install libtool 安装一下吧）<br/>
+但是这有个问题，不能用于交叉编译，系统的libtool会使用系统的ld等，而应该使用交叉工具连的ld。<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>修改aclocal.m4文件，将上面的LIBTOOL=&#8217;$(SHELL) $(top_builddir)/libtool&#8217;改成<br/>
+</li>
+</ol>
+
+<p>LIBTOOL=&#8217;$(SHELL)  /usr/bin/libtool&#8217;后重新执行./configure<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>将源码目录下libtool脚本中所有的$ECHO替换成$echo. 或者将脚本文件ltmain.sh里的$echo替换成$ECHO，<br/>
+</li>
+</ol>
+
+<p>都一样，重新执行./configure<br/>
+</p>
+<p><br/>
+另一种解决方案<br/>
+export echo=echo  回车后 make 正常<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">使用bootstrap而不是configure</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>没有了上边的libtool的问题，直接修改bootstrap，添加CC就ok了。<br/>
+CC=/workspace26/i386-env/cross-tools/bin/i686-unknown-linux-gnu-gcc<br/>
+或者采用&ndash;host的形式：<br/>
+PATH=/workspace26/i386-env/cross-tools/bin/:$PATH LD_LIBRARY_PATH=/workspace26/env-x86-lib <br/>
+./configure &ndash;host=i686-unknown-linux-gnu &ndash;enable-shared=no &ndash;disable-dependency-tracking<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/16/svn/">Svn使用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-16T00:00:00+08:00" pubdate data-updated="true">2012年10月16日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">svn使用</a>
+<ul>
+<li><a href="#sec-1-1">svn libneon的问题</a></li>
+<li><a href="#sec-1-2">自己编译，真的不容易啊</a></li>
+<li><a href="#sec-1-3">tftpd-hpa</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/16/svn/">svn使用</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">svn libneon的问题</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>ubuntu安装的svn要使用https时，默认使用的libneon-gnutls有点兼容性问题。所以导致的错误是：<br/>
+SSL handshake failed: SSL 错误：在证书中检测到违规的密钥用法。<br/>
+解决办法：<br/>
+<a href="http://www.yeap.de/blog2.0/archives/260-Subversion-Certificate-Problems-with-Ubuntu-Precise-Pangolin.html">http://www.yeap.de/blog2.0/archives/260-Subversion-Certificate-Problems-with-Ubuntu-Precise-Pangolin.html</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">自己编译，真的不容易啊</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>cd openssl<br/>
+由于是64bit系统，所以需要添加fPIC<br/>
+./config -fPIC<br/>
+但是cropt目录不好添加fPIC，难道生成的.a难道也需要fPIC吗？，所以无奈，只能先安装系统的openssl<br/>
+apt-get install openssl-dev openssl<br/>
+</p>
+<p><br/>
+cd subversion<br/>
+./configure &ndash;with-ssl=openssl &ndash;with-neon=./neon &ndash;with-openssl=/usr<br/>
+出现warnning无用理会直接make<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">tftpd-hpa</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>atftpd 设置半天不能启动，连直接输入命令行都不能启动。<br/>
+所以换成tftpd-hpa，非常简单。<br/>
+不过要想能够上传文件需要修改配置：<br/>
+vi /etc/default/tftpd-hpa<br/>
+添加&ndash;create<br/>
+注意-s参数不能去掉。<br/>
+</p>
+<p><br/>
+客户端使用atftp。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/16/ckermit/">串口工具ckermit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-16T00:00:00+08:00" pubdate data-updated="true">2012年10月16日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">串口工具ckermit</a>
+<ul>
+<li><a href="#sec-1-1">默认配置文件</a></li>
+<li><a href="#sec-1-2">操作</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/16/ckermit/">串口工具ckermit</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">默认配置文件</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>/etc/kermit/kermrc<br/>
+一般配置一个home下的自己的配置文件就ok了。<br/>
+~/.mykermrc<br/>
+</p>
+<p><br/>
+<pre class="example">set line /dev/ttyS0
+set speed 9600
+set carrier-watch off
+set handshake none
+set flow-control none
+robust
+set file type bin
+set file name lit
+set rec pack 1000
+set send pack 1000
+set window 5
 </pre>
 
-  要学习模板的格式，查看org-capture-templates变量描述。<br/>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">操作</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>C-\ 切换到命令行<br/>
+c 打开链接<br/>
 </p>
-<p>  <br/>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/12/thunderbirdskill/">Thunderbird技巧</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-12T00:00:00+08:00" pubdate data-updated="true">2012年10月12日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">插件</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">mouseless mutt key</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>像mutt一样操作邮件，非常方便。<br/>
+m： write email<br/>
+n/p: next,preview<br/>
+r: re<br/>
+f: forward<br/>
+s: 加星<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">Contact Tabs</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>方便查看联系人<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">Thunderbird Conversations</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>把显示样式呈现的更友好<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">实现回复在前面</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>默认Thunderbird是将回复加在回复邮件的后面，可以通过修改配置项实现回复在前面，<br/>
+首选项&ndash;&gt;高级&ndash;&gt;高级配置&ndash;&gt;配置编辑器<br/>
+找到配置编辑器，将 mail.identity.default.reply_on_top 这一项由默认的0改为1即可。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">3列显示</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>在view显示为垂直视图<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/10/dropbox-under-ubuntu/">Ubuntu使用dropbox</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-10T00:00:00+08:00" pubdate data-updated="true">2012年10月10日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">对ubuntu one有点失望</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>我本来是用ubuntu one，但是我先在使用ubuntu one来同步我的org笔记，同时我的org笔记又使用hg同步。<br/>
+也就是一个文件夹同时使用hg和ubuntu one同步，结果发现ubuntu one同步总是出错，尤其是我使用hg fetch一个版本的时候。<br/>
+经常把我一个文件夹的内容同步没了，幸亏我有hg，否则这些文件就丢失啦。<br/>
+所以决定还是用dropbox吧，本来我手机使用dropbox来同步照片的，所以又申请了一个帐号，专门用于同步笔记。<br/>
+而且最终要的是：<br/>
+ubuntu one没有历史版本功能<br/>
+而dropbox可以可以回退到以前的历史版本，这个非常好。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">dropbox同步任意文件夹问题</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>本来还是我是打算用dropbox的，但是发现dropbox只能指定一个主目录，不想ubuntu one可以随便指定文件夹。<br/>
+但后来发现，其实只要做一个软链接到Dropbox目录就ok了。<br/>
+而且发现dropbox同步的速度非常快。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">dropbox安装</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>需要使用https链接去登录dropbox主页，下边有如何安装的方式，很简单，就是wget一个压缩包，然后解压就ok了。<br/>
+默认是.dropbox_dist目录。<br/>
+然后启动dropboxd就ok了<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">ubuntu one的一些命令</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>查看当前传输字节数<br/>
+<code>u1sdtool --current-transfers</code><br/>
+显示共享的文件夹<br/>
+<code>u1sdtool --list-folders</code><br/>
+删除文件夹<br/>
+<code>u1sdtool --delete-folder=FOLDER_ID</code><br/>
+其他命令使用&ndash;help查看<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/09/ssh-skill/">Ssh的一些技巧</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true">2012年10月09日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">ssh的一些技巧</a>
+<ul>
+<li><a href="#sec-1-1">多条连接共享</a></li>
+<li><a href="#sec-1-2">长连接</a></li>
+<li><a href="#sec-1-3">别再输入密码</a></li>
+<li><a href="#sec-1-4">省去用户名</a></li>
+<li><a href="#sec-1-5">在服务器间跳转</a></li>
+<li><a href="#sec-1-6">穿越Web代理</a></li>
+<li><a href="#sec-1-7">shfs</a></li>
+<li><a href="#sec-1-8">使用本地App连接远程服务器</a></li>
+<li><a href="#sec-1-9">减少延迟</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/09/ssh-skill/">ssh的一些技巧</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">多条连接共享</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>如果你需要在多个窗口中打开到同一个服务器的连接，而不想每次都输入用户名，密码，或是等待连接建立，<br/>
+那么你可以配置SSH的连接共享选项，在本地打开你的SSH配置文件，通常它们位于~/.ssh/config，然后添加下面2行：<br/>
+ControlMaster auto<br/>
+ControlPath /tmp/ssh_mux_%h_%p_%r<br/>
+现在试试断开你与服务器的连接，并建立一条新连接，然后打开一个新窗口，再创建一条连接，你会发现，第二条连接几乎是在瞬间就建立好了。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">长连接</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>如果你发现自己每条需要连接同一个服务器无数次，那么长连接选项就是为你准备的：<br/>
+ControlPersist 4h<br/>
+现在你每次通过SSH与服务器建立连接之后，这条连接将被保持4个小时，即使在你退出服务器之后，这条连接依然可以重用，<br/>
+因此，在你下一次（4小时之内）登录服务器时，你会发现连接以闪电般的速度建立完成，<br/>
+这个选项对于通过scp拷贝多个文件提速尤其明显，因为你不在需要为每个文件做单独的认证了。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">别再输入密码</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>如果你还在通过密码方式登录SSH，那么你或许应该试试SSH Keys，首先使用OpenSSH为自己声称一对密钥：<br/>
+$ ssh-keygen<br/>
+跟随指示，完成之后，你应该可以在你的.ssh目录下看到两个文件，id_rsa就是你的私钥，而id_ras.pub则是你的公钥，<br/>
+现在你需要将你的公钥拷贝到服务器上，如果你的系统有ssh-copy-id命令，拷贝会很简单：<br/>
+$ ssh-copy-id smylers@compo.example.org<br/>
+否则，你需要手动将你的私钥拷贝的服务器上的~/.ssh/authorized_keys文件中：<br/>
+$ &lt; ~/.ssh/id_rsa.pub ssh clegg.example.org ‘mkdir -p .ssh; cat &gt;&gt; .ssh/authorized_keys; chmod go-w .ssh .ssh/authorized_keys’<br/>
+现在试试重新连接到SSH服务器，或是拷贝文件，是不是已经不需要再输入密码了？<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">省去用户名</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>如果你在远程服务器上的用户名和你本地的用户名不同，你同样可以在SSH配置中进行设置：<br/>
+Host www* mail<br/>
+HostName %h.example.com<br/>
+User simon<br/>
+现在就算我的本地用户名是 smylers，我仍然可以这样连接我的服务器：<br/>
+$ ssh www2<br/>
+SSH会使用simon账户连接你的服务器，同样，Putty可以保存这个信息在你的session中。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">在服务器间跳转</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>有些时候，你可能没法直接连接到某台服务器，而需要使用一台中间服务器进行中转，这个过程也可以自动化。首先确保你已经为服务器配置了公钥访问，并开启了agent forwarding，现在你就可以通过2条命令来连接目标服务器，不会有任何提示输入：<br/>
+$ ssh gateway<br/>
+gateway $ ssh db<br/>
+然后在你的本地SSH配置中，添加下面这条配置：<br/>
+Host db<br/>
+HostName db.internal.example.com<br/>
+ProxyCommand ssh gateway netcat -q 600 %h %p<br/>
+现在你就可以通过一条命令来直接连接目标服务器了:<br/>
+$ ssh db<br/>
+这里你可能会需要等待长一点的时间，因为SSH需要进行两次认证，，注意netcat也有可能被写成nc或者ncat或者前面还需要加上g，你需要检查你的中间服务器来确定实际的参数。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">穿越Web代理</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>有些时候，你所在的网络不止封锁SSH端口，它们有可能更进一步，只让你通过Web代理来访问网络，幸运的是我们有一个叫做Corkscrew的程序可以通过Web代理在发送SSH数据。Corkscrew的使用非常简单，一般我都是在需要时搜索，然后直接下载，跟随网站上的指示，然后就搞定了，一般你需要这样一条配置：<br/>
+ProxyCommand corkscrew proxy.example.org 8080 %h %p<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">shfs</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>另一种让远程GUI程序显示在本地的替代方案就是让本地的GUI程序可以直接操作远程文件，你可以通过SSHFS来实现，只需要创建一个空目录，然后使用SSHFS将一个远程目录mount到这个目录就可以了：<br/>
+$ mkdir gallery_src<br/>
+$ sshfs dev:projects/gallery/src gallery_src<br/>
+$ cd gallery_src<br/>
+$ ls<br/>
+现在你就可以使用任何你喜欢的本地程序来便捷这个目录中的文件了，它们看起来是在你的本地，但其实时远程服务器上的文件，你可以使用fusermount命令来unmount这些文件，不要担心记不住，它们就在sshfs手册的顶上：<br/>
+$ cd ..<br/>
+$ fusermount -u gallery_src<br/>
+SSHFS可以在Linux和OSX上工作，Windows用户我目前还没找到什么好办法。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">使用本地App连接远程服务器</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>有时可能有些服务，比如数据库或是Web服务器，它们运行在远程服务器上，但是如果有用方式可以直接从本地程序连接它们，那会非常有用，要做到这一点，你需要用到端口转发(port forwarding)，<br/>
+举个例子，如果你的服务器运行Postgres（并且只允许本地访问），那么你就可以在你的SSH配置中加入：<br/>
+Host db<br/>
+LocalForward 5433 localhost:5432<br/>
+现在当你连接你的SSH服务器时，它会在你本地电脑打开一个5433端口（我随便挑的），并将所有发送到这个端口的数据转发到服务器的5432端口（Postgres的默认端口），然后，只要你和服务器建立了连接，你就可以通过5433端口来访问服务器的Postgres了。<br/>
+$ ssh db<br/>
+现在打开另外一个窗口，你就可以通过下面这条命令在本地连接你的Postgres数据库了：<br/>
+$ psql -h localhost -p 5443 orders<br/>
+如果你想要使用服务器不支持的图形化Postgres客户端时，这条命令会显得尤其有用：<br/>
+$ pgadmin3 &amp;<br/>
+或者你有一个后台的Web服务器，你不希望直接通过Internet访问它，你也可以通过端口转发来访问它：<br/>
+Host api<br/>
+LocalForward 8080 localhost:80<br/>
+现在连接到服务器：<br/>
+$ ssh api<br/>
+然后将浏览器指向你选择的端口号：<br/>
+$ firefox <a href="http://localhost:8080/">http://localhost:8080/</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">减少延迟</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>如果每次连接服务器都意味着你需要等待几十秒而无所事事，那么你或许应该试试在你的SSH配置中加入下面这条：<br/>
+GSSAPIAuthentication no<br/>
+如果这条命令有效的话，你应该通知你的系统管理员让他在服务器上禁用这个选项，这样其他人就不用再分别添加这条配置到它们的本地配置了。<br/>
+在server端修改：<br/>
+/etc/ssh/sshd_config<br/>
+添加<br/>
+USEDNS no<br/>
+service sshd restart<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true">2012年10月09日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">A Unix Utility You Should Know About:lsof</a>
+<ul>
+<li><a href="#sec-1-1">前言</a></li>
+<li><a href="#sec-1-2">如何使用lsof？</a></li>
+<li><a href="#sec-1-3">找出谁在使用某个文件</a></li>
+<li><a href="#sec-1-4">列出某个用户打开的所有文件</a></li>
+<li><a href="#sec-1-5">查找某个程序打开的所有文件</a></li>
+<li><a href="#sec-1-6">列出所有由某个用户或某个进程打开的文件</a></li>
+<li><a href="#sec-1-7">列出除root用户外的所有用户打开的文件</a></li>
+<li><a href="#sec-1-8">列出所有由某个PID对应的进程打开的文件</a></li>
+<li><a href="#sec-1-9">列出所有网络连接</a></li>
+<li><a href="#sec-1-10">列出所有NFS（网络文件系统）文件</a></li>
+<li><a href="#sec-1-11">列出所有UNIX域Socket文件</a></li>
+<li><a href="#sec-1-12">列出所有对应某个组id的进程</a></li>
+<li><a href="#sec-1-13">列出所有与某个描述符关联的文件</a></li>
+<li><a href="#sec-1-14">输出使用某些资源的进程pid</a></li>
+<li><a href="#sec-1-15">循环列出文件</a></li>
+<li><a href="#sec-1-16">如何安装lsof？</a></li>
+<li><a href="#sec-1-17">原文</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">前言</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>这是“你应该知道的Unix和Linux命令”系列的第三篇，在这篇文章中，我会介绍lsof这个工具，如果说netcat是进行网络诊断的瑞士军刀，那么lsof就是Unix调试的瑞士军刀。<br/>
+</p>
+<p><br/>
+Lsof是遵从Unix哲学的典范，它只做一件事情，并且做的相当完美——它可以列出某个进程打开的所有文件信息。<br/>
+打开的文件可能是普通的文件，目录，NFS文件，块文件，字符文件，共享库，常规管道，明明管道，符号链接，Socket流，网络Socket，UNIX域Socket，以及其它更多。因为Unix系统中几乎所有东西都是文件，你可以想象lsof该有多有用。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">如何使用lsof？</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p><br/>
+这篇文章中我会尽力列举我能想到的所有lsof的用法，让我们先从最简单的开始（或许你已经知道了），然后逐渐增加复杂度：<br/>
+</p>
+<p><br/>
+列出所有打开的文件<br/>
+</p>
+<p><br/>
+<code>lsof</code><br/>
+</p>
+<p><br/>
+不带任何参数运行lsof会列出所有进程打开的所有文件。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">找出谁在使用某个文件</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<p><br/>
+<code>lsof /path/to/file</code><br/>
+</p>
+<p><br/>
+只需要执行文件的路径，lsof就会列出所有使用这个文件的进程，你也可以列出多个文件，lsof会列出所有使用这些文件的进程。<br/>
+</p>
+<p><br/>
+你也可以一次制定多个文件：<br/>
+</p>
+<p><br/>
+<code>lsof /path/to/file1 /path/to/file2</code><br/>
+</p>
+<p><br/>
+递归查找某个目录中所有打开的文件<br/>
+</p>
+<p><br/>
+<code>lsof +D /usr/lib</code><br/>
+</p>
+<p><br/>
+加上+D参数，lsof会对指定目录进行递归查找，注意这个参数要比grep版本慢：<br/>
+</p>
+<p><br/>
+= lsof | grep &#8216;/usr/lib&#8217; =<br/>
+</p>
+<p><br/>
+之所以慢是因为+D首先查找所有的文件，然后一次性输出。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">列出某个用户打开的所有文件</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+<code>lsof -u pkrumins</code><br/>
+</p>
+<p><br/>
+-u选项限定只列出所有被用户pkrumins打开的文件，你可以通过逗号指定多个用户：<br/>
+</p>
+<p><br/>
+<code>lsof -u rms,root</code><br/>
+</p>
+<p><br/>
+这条命令会列出所有rms和root用户打开的文件。<br/>
+</p>
+<p><br/>
+你也可以像下面这样使用多个-u做同样的事情：<br/>
+</p>
+<p><br/>
+<code>lsof -u rms -u root</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">查找某个程序打开的所有文件</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+<p><br/>
+<code>lsof -c apache</code><br/>
+</p>
+<p><br/>
+-c选项限定只列出以apache开头的进程打开的文件：<br/>
+</p>
+<p><br/>
+所以你可以不用像下面这样写：<br/>
+</p>
+<p><br/>
+<code>lsof | grep foo</code><br/>
+</p>
+<p><br/>
+而使用下面这个更简短的版本：<br/>
+</p>
+<p><br/>
+<code>lsof -c foo</code><br/>
+</p>
+<p><br/>
+事实上，你可以只制定进程名称的开头：<br/>
+</p>
+<p><br/>
+<code>lsof -c apa</code><br/>
+</p>
+<p><br/>
+这会列出所有以apa开头的进程打开的文件<br/>
+</p>
+<p><br/>
+你同样可以制定多个-c参数：<br/>
+</p>
+<p><br/>
+<code>lsof -c apache -c python</code><br/>
+</p>
+<p><br/>
+这会列出所有由apache和python打开的文件<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">列出所有由某个用户或某个进程打开的文件</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+<p><br/>
+<code>lsof -u pkrumins -c apache</code><br/>
+</p>
+<p><br/>
+你也可以组合使用多个选项，这些选项默认进行或关联，也就是说上面的命令会输入由pkrumins用户或是apache进程打开的文件。<br/>
+</p>
+<p><br/>
+列出所有由一个用户与某个进程打开的文件<br/>
+</p>
+<p><br/>
+<code>lsof -a -u pkrumins -c bash</code><br/>
+</p>
+<p><br/>
+-a参数可以将多个选项的组合条件由或变为与，上面的命令会显示所有由pkrumins用户以及bash进程打开的文件。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">列出除root用户外的所有用户打开的文件</h3>
+<div class="outline-text-3" id="text-1-7">
+
+
+<p><br/>
+<code>lsof -u ^root</code><br/>
+</p>
+<p><br/>
+注意root前面的^符号，它执行取反操作，因此lsof会列出所有root用户之外的用户打开的文件。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">列出所有由某个PID对应的进程打开的文件</h3>
+<div class="outline-text-3" id="text-1-8">
+
+
+<p><br/>
+<code>lsof -p 1</code><br/>
+</p>
+<p><br/>
+-p选项让你可以使用进程id来过滤输出。<br/>
+</p>
+<p><br/>
+记住你也可以用都好来分离多个pid。<br/>
+</p>
+<p><br/>
+<code>lsof -p 450,980,333</code><br/>
+</p>
+<p><br/>
+列出所有进程打开的文件除了某个pid的<br/>
+</p>
+<p><br/>
+<code>lsof -p ^1</code><br/>
+</p>
+<p><br/>
+同前面的用户一样，你也可以对-p选项使用^来进行取反。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">列出所有网络连接</h3>
+<div class="outline-text-3" id="text-1-9">
+
+
+<p><br/>
+<code>lsof -i</code><br/>
+</p>
+<p><br/>
+lsof的-i选项可以列出所有打开了网络套接字（TCP和UDP）的进程。<br/>
+</p>
+<p><br/>
+列出所有TCP网络连接<br/>
+</p>
+<p><br/>
+<code>lsof -i tcp</code><br/>
+</p>
+<p><br/>
+也可以为-i选项加上参数，比如tcp，tcp选项会强制lsof只列出打开TCP sockets的进程。<br/>
+</p>
+<p><br/>
+列出所有UDP网络连接<br/>
+</p>
+<p><br/>
+<code>lsof -i udp</code><br/>
+</p>
+<p><br/>
+同样udp让lsof只列出使用UDP socket的进程。<br/>
+</p>
+<p><br/>
+找到使用某个端口的进程<br/>
+</p>
+<p><br/>
+<code>lsof -i :25</code><br/>
+</p>
+<p><br/>
+:25和-i选项组合可以让lsof列出占用TCP或UDP的25端口的进程。<br/>
+</p>
+<p><br/>
+你也可以使用/etc/services中制定的端口名称来代替端口号，比如：<br/>
+</p>
+<p><br/>
+<code>lsof -i :smtp</code><br/>
+</p>
+<p><br/>
+找到使用某个udp端口号的进程<br/>
+</p>
+<p><br/>
+<code>lsof -i udp:53</code><br/>
+</p>
+<p><br/>
+同样的，也可以找到使用某个tcp端口的进程：<br/>
+</p>
+<p><br/>
+<code>lsof -i tcp:80</code><br/>
+</p>
+<p><br/>
+找到某个用户的所有网络连接<br/>
+</p>
+<p><br/>
+<code>lsof -a -u hacker -i</code><br/>
+</p>
+<p><br/>
+使用-a将-u和-i选项组合可以让lsof列出某个用户的所有网络行为。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-10" class="outline-3">
+<h3 id="sec-1-10">列出所有NFS（网络文件系统）文件</h3>
+<div class="outline-text-3" id="text-1-10">
+
+
+<p><br/>
+<code>lsof -N</code><br/>
+</p>
+<p><br/>
+这个参数很好记，-N就对应NFS。<br/>
+</p>
+<p><br/>
 </p></div>
 
 </div>
 
 <div id="outline-container-1-11" class="outline-3">
-<h3 id="sec-1-11">exports</h3>
+<h3 id="sec-1-11">列出所有UNIX域Socket文件</h3>
 <div class="outline-text-3" id="text-1-11">
 
-<p>   设置如下tag可以控制导出和不导出的headline<br/>
-   (:export:) and &#8216;(:noexport:) <br/>
-</p>
-<p>   <br/>
-</p>
-</div>
 
-<div id="outline-container-1-11-1" class="outline-4">
-<h4 id="sec-1-11-1">export option</h4>
-<div class="outline-text-4" id="text-1-11-1">
-
-<p>   放在文章的任何位置都可以<br/>
-   C-c C-e t 插入option模板<br/>
+<p><br/>
+<code>lsof -U</code><br/>
 </p>
 <p><br/>
-   最好把统一的配置放在一个独立的文件中，然后进行引用<br/>
-   <code>#+SETUPFILE</code><br/>
-</p>
-<p><br/>
-   其中OPTIONS字段是最重要的，有很多选项：<br/>
-   C-c C-e 开始export命令，org-export,然后会提示导出什么格式。<br/>
-   <b>注意，一定要加上\n:t, 导出的时候加入回行，否则都会显示为一行</b><br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-11-1-1" class="outline-5">
-<h5 id="sec-1-11-1-1">export html</h5>
-<div class="outline-text-5" id="text-1-11-1-1">
-
-<p>    org-export-html-postamble 默认此变量时true，会往结尾添加一些作者信息。<br/>
-    css相关：<br/>
-    org-export-html-style 或者 <br/>
-    #+STYLE: &lt;link rel=&#8221;stylesheet&#8221; type=&#8221;text/css&#8221; href=&#8221;stylesheet.css&#8221; /&gt;<br/>
-    #+INFOJS<sub>OPT</sub>: 是设置和js相关的一些属性<br/>
-    view:   <br/>
-    info        Info-like interface with one section per page.<br/>
-    overview    Folding interface, initially showing only top-level.<br/>
-    content     Folding interface, starting with all headlines visible.<br/>
-    showall     Folding interface, all headlines and text visible.<br/>
+这个选项也很好记，-U就对应UNIX。<br/>
 </p>
 <p><br/>
 </p></div>
-
-</div>
-
-<div id="outline-container-1-11-1-2" class="outline-5">
-<h5 id="sec-1-11-1-2">export pdf</h5>
-<div class="outline-text-5" id="text-1-11-1-2">
-
-<p>     apt install letex-recommend 结果还是导出失败。以后再搞吧。<br/>
-     有可能是版本的问题， 网上说要用最新的。我用的org才6.3版本。<br/>
-     解决了问题：需要安装一些包。<br/>
-     texlive-fonts-recommended, texlive-fonts-recommended, texlive-latex-extra<br/>
-</p>
-<p>     <br/>
-     LaTeX Error: File `marvosym.sty&#8217; not found. solution: apt-get install texlive-fonts-recommended<br/>
-     LaTeX Error: File `fullpage.sty&#8217; not found. solution: apt-get install texlive-latex-extra<br/>
-     LaTeX Error: File `multibib.sty&#8217; not found. solution: apt-get install texlive-bibtex-extra<br/>
-     LaTeX Error: File `algorithm.sty&#8217; not found. solution: apt-get install texlive-science<br/>
-</p>
-<p>     <br/>
-     中文问题：<br/>
-     安装texlive-xetex，这样就会有xelatex了。<br/>
-     暂时放弃，太费劲了，有空参考一下：<br/>
-     <a href="http://orgmode.org/worg/org-contrib/babel/examples/article-class.html">http://orgmode.org/worg/org-contrib/babel/examples/article-class.html</a><br/>
-     <a href="http://mathslinux.org/?p=58">用 org-mode 写 LaTeX</a><br/>
-     我这里生成不了org-article.cls?<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-11-1-3" class="outline-5">
-<h5 id="sec-1-11-1-3">使用org-jekyll导出</h5>
-<div class="outline-text-5" id="text-1-11-1-3">
-
-<p>     在一个headline上添加：blog:的tag和on的属性<br/>
-     然后执行：<br/>
-     org-jekyll-export-blog<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
 
 </div>
 
 <div id="outline-container-1-12" class="outline-3">
-<h3 id="sec-1-12">dates and times</h3>
+<h3 id="sec-1-12">列出所有对应某个组id的进程</h3>
 <div class="outline-text-3" id="text-1-12">
 
-<p>   M-x org-time-<br/>
-   C-c . 创建时间<br/>
-   C-c C-d 插入deadline<br/>
-   C-c C-s 插入Schedule<br/>
+
+<p><br/>
+<code>lsof -g 1234</code><br/>
 </p>
 <p><br/>
-   M-x org-clock-<br/>
-   C-c C-x C-i clock in，一个工作的开始计时<br/>
-   C-c C-x C-o clock out<br/>
+进程组用来来逻辑上对进程进行分组，这个例子查找所有PGID为1234的进程打开的文件。<br/>
 </p>
 <p><br/>
 </p></div>
@@ -1006,17 +3286,36 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 
 <div id="outline-container-1-13" class="outline-3">
-<h3 id="sec-1-13">属性</h3>
+<h3 id="sec-1-13">列出所有与某个描述符关联的文件</h3>
 <div class="outline-text-3" id="text-1-13">
 
-<p>   在headline的下一行输入：<br/>
-   <code>C-c C-x p</code> 添加属性<br/>
-   在属性栏上<br/>
-   <code>C-c C-c</code> 弹出属性的action，可以添加删除<br/>
+
+<p><br/>
+<code>lsof -d 2</code><br/>
 </p>
 <p><br/>
-   属性的搜索<br/>
-   <code>c-c \</code> 搜索属性<br/>
+这个命令会列出所有以描述符2打开的文件。<br/>
+</p>
+<p><br/>
+你也可以为描述符指定一个范围：<br/>
+</p>
+<p><br/>
+<code>lsof -d 0-2</code><br/>
+</p>
+<p><br/>
+这会列出所有描述符为0，1，2的文件。<br/>
+</p>
+<p><br/>
+-d选项还支持其它很多特殊值，下面的命令列出所有内存映射文件：<br/>
+</p>
+<p><br/>
+<code>lsof -d mem</code><br/>
+</p>
+<p><br/>
+txt则列出所有加载在内存中并正在执行的进程：<br/>
+</p>
+<p><br/>
+<code>lsof -d txt</code><br/>
 </p>
 <p><br/>
 </p></div>
@@ -1024,60 +3323,37 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 
 <div id="outline-container-1-14" class="outline-3">
-<h3 id="sec-1-14">未分类</h3>
+<h3 id="sec-1-14">输出使用某些资源的进程pid</h3>
 <div class="outline-text-3" id="text-1-14">
 
-<p>   C-c C-x b    在一个新缓冲区中显示当前分支<br/>
-   5个或以上的“-”是一个水平分割符。<br/>
-</p>
-<p><br/>
-</p>
-</div>
 
-<div id="outline-container-1-14-1" class="outline-4">
-<h4 id="sec-1-14-1">byte-recompile-directory</h4>
-<div class="outline-text-4" id="text-1-14-1">
-
-<p>    编译整个目录el<br/>
-    C-u 0 M-x byte-recompile-directory<br/>
+<p><br/>
+<code>lsof -t -i</code><br/>
 </p>
 <p><br/>
-    will compile all the .el files in the directory and in all subdirectories below.<br/>
+-t选项输出进程的PID，你可以将它和-i选项组合输出使用某个端口的进程的PID，下面的命令将会杀掉所有使用网络的进程：<br/>
 </p>
 <p><br/>
-    The C-u 0 part is to make it not ask about every .el file that does not have a .elc counterpart.<br/>
-</p>
-<p><br/>
-    emacs -batch -f batch-byte-compile &lt;filename&gt;<br/>
-    e.g.:   emacs -batch -f batch-byte-compile *.el<br/>
-    简单解释一下，-batch=&ndash;batch 不打开交互界面（emacs窗口），-f=&ndash;funcall 执行一个函数，后面跟的就是函数： batch-byte-compile 编译成字节码。<br/>
-</p>
-<p><br/>
-    给大家补充一点编译知识：<br/>
-    lisp是函数式语言，它的程序不能编译成可执行程序独立执行，只能通过解释器解释执行。<br/>
-    所以emacs只能将.el文件字节编译，编译后的目标代码其实还是源程序，只是用字节码的方式存储，而且在字节编译的过程中进行了语法检查，所以可以提高执行效率。<br/>
-</p>
-<p><br/>
+<code>kill -9 `lsof -t -i`</code><br/>
 </p>
 <p><br/>
 </p></div>
-</div>
 
 </div>
 
 <div id="outline-container-1-15" class="outline-3">
-<h3 id="sec-1-15">问题</h3>
+<h3 id="sec-1-15">循环列出文件</h3>
 <div class="outline-text-3" id="text-1-15">
 
-<p>   1.如果自动添加下一级head，如在lev1中回车后添加lev2，而M-RET添加的是同级的？<br/>
+
+<p><br/>
+<code>lsof -r 1</code><br/>
 </p>
 <p><br/>
-   2.C-c | 转换的表格对不齐，不知如何对其？<br/>
+-r选项让lsof可以循环列出文件直到被中断，参数1的意思是每秒钟重复打印一次，这个选项最好同某个范围比较小的查询组合使用，比如用来监测网络活动：<br/>
 </p>
 <p><br/>
-   3.如果添加不让org解析的字段？<br/>
-</p>
-<p><br/>
+<code>lsof -r 1 -u john -i -a</code><br/>
 </p>
 <p><br/>
 </p></div>
@@ -1085,37 +3361,35 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 
 <div id="outline-container-1-16" class="outline-3">
-<h3 id="sec-1-16">参考资料</h3>
+<h3 id="sec-1-16">如何安装lsof？</h3>
 <div class="outline-text-3" id="text-1-16">
 
-<p>   <a href="http://emacser.com/org-mode.htm">http://emacser.com/org-mode.htm</a><br/>
-   <a href="http://ifq.github.com/blog/2012/08/10/org-octopress/">org结合octopress</a><br/>
-</p>
-<p>   <br/>
-   这个非常好：orgcard<br/>
-   <a href="http://orgmode.org/worg/orgcard.html">http://orgmode.org/worg/orgcard.html</a><br/>
-   <a href="http://orgmode.org/orgcard.pdf">http://orgmode.org/orgcard.pdf</a><br/>
+
+<p><br/>
+许多Unix系统都内置了lsof，如果你的系统没有安装，你可以从这里直接下载源代码。<br/>
 </p>
 <p><br/>
-   这是orgmode的专业社区，完全用orgmode组织<br/>
-   <a href="http://orgmode.org/worg/">http://orgmode.org/worg/</a><br/>
+BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
 </p>
 <p><br/>
+你可以通过man lsof来了解关于lsof的完整文档，或者通过lsof -h查看。<br/>
 </p>
-<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 测试一个脚注测试<br/>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-17" class="outline-3">
+<h3 id="sec-1-17">原文</h3>
+<div class="outline-text-3" id="text-1-17">
+
+<p><a href="http://www.catonmat.net/blog/unix-utilities-lsof/">http://www.catonmat.net/blog/unix-utilities-lsof/</a><br/>
+还有pipe view和netcat，以后再总结<br/>
+翻译：<br/>
+<a href="http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/">http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/</a><br/>
 </p></div>
 </div>
 </div>
-
-</div>
-</div>
-</div>
-
-<div id="postamble">
-
-</div>
-</body>
-</html>
 </div>
   
   
@@ -1126,9 +3400,9 @@ org_html_manager.setup();  // activate after the parameters are set
   
     <article>
       
-  <header>
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/08/15/emacs-markdown-mode/">Emacs Markdown-mode</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">Functional-programming-is-hard-thats-why-its-good</a></h1>
     
     
       <p class="meta">
@@ -1144,410 +3418,65 @@ org_html_manager.setup();  // activate after the parameters are set
   
 
 
-<time datetime="2012-08-15T12:38:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
+<time datetime="2012-09-11T00:00:00+08:00" pubdate data-updated="true">2012年09月11日</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><h4>锚标签 C-c C-a</h4>
-
-<p><code>C-c C-a l</code> 超链接<br/>
-<code>C-c C-a r</code> 参考链接 text 参考链接放到文件最后 [label]: markdown.html<br/>
-<code>C-c C-a w</code> wiki链接 [[wikilink]]</p>
-
-<h4>常用命令 C-c C-c</h4>
-
-<p><code>C-c C-c m</code> 在另一个Buffer显示输出<br/>
-<code>C-c C-c p</code> 在浏览器中预览输出<br/>
-<code>C-c C-c e</code> 输出html文件到相同前缀的.html文件 eg:basename.html<br/>
-<code>C-c C-c v</code> 输出并且在浏览器中查看<br/>
-<code>C-c C-c c</code> 检查是否有未定义的链接</p>
-
-<h4>插入图片 C-c C-i</h4>
-
-<p><code>C-c C-i i</code> 插入一张图片</p>
-
-<h4>物理样式 C-c C-p</h4>
-
-<p><code>C-c C-p b</code> 将选中的文字加粗 bold <strong>bold</strong> 如果为选中则插入 <em><em>**<br/>
-<code>C-c C-p f</code> 将选中的文字设置成等宽字体 <code>fixed width text</code><br/>
-<code>C-c C-p i</code> 将选中的文字设置成斜体 italic</em>italic</em></p>
-
-<h4>逻辑样式 C-c C-s</h4>
-
-<p><code>C-c C-s b</code> 设置引用 > backquoted<br/>
-<code>C-c C-s p</code> 预格式，在之前插入4个空格默认 <code>&lt;pre&gt;pre text&lt;/pre&gt;</code><br/>
-<code>C-c C-s c</code> 插入代码块 <code>code here</code><br/>
-<code>C-c C-s e</code> 强调 emphasis <em>emphasis</em><br/>
-<code>C-c C-s s</code> 加强 strong <strong>strong</strong></p>
-
-<h4>标题章节 C-c C-t</h4>
-
-<p><code>C-c C-t n</code> 插入标题 1-6<br/>
-<code>C-c C-t t</code> 插入一个title<br/>
-<code>C-c C-t s</code> 插入一个section<br/>
-<code>C-c -</code> 插入一条分割线</p>
-
-<hr />
-
-<h4>导航</h4>
-
-<p><code>TAB</code> 折叠或者展开标题<br/>
-<code>C-M-n &amp; C-M-p</code> 在上下可见的标题中前后移动<br/>
-<code>C-M-f &amp; C-M-b</code> 在同一级的标题中前后移动<br/>
-<code>C-M-u</code> 回到上一级标题</p>
-
-<h2>参考</h2>
-
-<p><a href="http://jblevins.org/projects/markdown-mode/">Emacs Markdown Mode</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/">Git常用命令总结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-15T11:58:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>我只记录一些我的常用命令，一些不常用的即使写了过一段时间也会忘掉的。实在要用直接help一下就行。</p>
-
-<h3>gitconfig</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[color]
-</span><span class='line'>  status = true
-</span><span class='line'>  branch = auto
-</span><span class='line'>  diff = auto
-</span><span class='line'>  ui = auto
-</span><span class='line'>
-</span><span class='line'>[alias]
-</span><span class='line'>  st = status
-</span><span class='line'>  co = checkout
-</span><span class='line'>  ci = commit -a
-</span><span class='line'>  l = log --graph
-</span><span class='line'>
-</span><span class='line'>[user]
-</span><span class='line'>  name = username
-</span><span class='line'>  email = youremail</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>备忘</h3>
-
-<p><code>git log --all</code></p>
-
-<p>  git log只会显示HEAD及其祖先的log，要产看全部使用&#8211;all</p>
-
-<p><code>git stash</code></p>
-
-<p>  非常有用的命令，把当前work目录做临时保存，并revert到HEAD。
-  使用git stash apply进行恢复。</p>
-
-<p><a href="http://www.worldhello.net/">git权威指南作者blog</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/">添加微博sidebar</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-15T00:50:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>使用<a href="http://weibo.com/tool/weiboshow">微博秀</a>直接生成对应的代码，然后写到custom/asides/weibo.html中。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;section&gt;</span>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>新浪微博<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;weibo&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;li&gt;</span>
-</span><span class='line'><span class="nt">&lt;iframe</span> <span class="na">width=</span><span class="s">&quot;100%&quot;</span> <span class="na">height=</span><span class="s">&quot;550&quot;</span> <span class="na">class=</span><span class="s">&quot;share_self&quot;</span>  <span class="na">frameborder=</span><span class="s">&quot;0&quot;</span> <span class="na">scrolling=</span><span class="s">&quot;no&quot;</span>
-</span><span class='line'><span class="na">src=</span><span class="s">&quot;http://widget.weibo.com/weiboshow/index.php?</span>
-</span><span class='line'><span class="s">language=&amp;</span>
-</span><span class='line'><span class="s">width=0&amp;</span>
-</span><span class='line'><span class="s">height=550&amp;</span>
-</span><span class='line'><span class="s">fansRow=2&amp;</span>
-</span><span class='line'><span class="s">ptype=1&amp;</span>
-</span><span class='line'><span class="s">speed=0&amp;</span>
-</span><span class='line'><span class="s">skin=5&amp;</span>
-</span><span class='line'><span class="s">isTitle=1&amp;</span>
-</span><span class='line'><span class="s">noborder=1&amp;</span>
-</span><span class='line'><span class="s">isWeibo=1&amp;</span>
-</span><span class='line'><span class="s">isFans=0&amp;</span>
-</span><span class='line'><span class="s">uid=1905507693&amp;</span>
-</span><span class='line'><span class="s">verifier=e659651a&amp;</span>
-</span><span class='line'><span class="s">dpc=1&quot;</span><span class="nt">&gt;&lt;/iframe&gt;</span>
-</span><span class='line'><span class="nt">&lt;/li&gt;</span>
-</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
-</span><span class='line'><span class="nt">&lt;/section&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后在_config.yml中添加default_asides中：</p>
-
-<pre><code>    custom/asides/weibo.html
-</code></pre>
-
-<p>参考：<a href="http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/">http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">Octopress添加分类栏</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-14T23:09:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考：<a href="https://github.com/tokkonopapa/octopress-tagcloud" title="octopress-tagcloud">octopress-tagcloud</a></p>
-
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
 <ul>
-<li><p>下载并copy到对应目录</p>
-
-<pre><code> ├─ plugins/
- │  └── tag_cloud.rb
- └─ source/
-    └─ _includes/
-       └─ custom/
-          └─ asides/
-             ├─ category_list.html
-             └─ tag_cloud.html
-</code></pre></li>
-<li><p>在_config.yml中的default_asides中添加</p>
-
-<pre><code>  custom/asides/category_list.html
-  custom/asides/tag_cloud.html
-</code></pre></li>
+<li><a href="#sec-1">functional-programming-is-hard-thats-why-its-good</a>
+<ul>
+<li><a href="#sec-1-1">函数式编程很难，这正是你要学习它的原因</a>
+<ul>
+<li><a href="#sec-1-1-1">它给你的初次印象不友善</a></li>
+<li><a href="#sec-1-1-2">新奇事物</a></li>
+<li><a href="#sec-1-1-3">眼见为实</a></li>
+<li><a href="#sec-1-1-4">各有所求</a></li>
+<li><a href="#sec-1-1-5">补充</a></li>
+<li><a href="#sec-1-1-6">转载自: http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/</a></li>
 </ul>
-
+</li>
+</ul>
+</li>
+</ul>
 </div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/14/zhong-xin-an-zhuang-octopress/">重新安装octopress</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-14T16:31:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>如果更换机子或者重新安装系统后，要重新获得octopress非常简单。</p>
-
-<p>1.安装ruby就不说了，我喜欢用rben安装。</p>
-
-<p>2.clone已存在的库，需要上传ssh key</p>
-
-<pre><code>git clone git@github.com:username/username.github.com.git octopress
-</code></pre>
-
-<p>3.切换到souce分支<br/>
-  查看远程的所有分支。</p>
-
-<pre><code>  git branch -r
-</code></pre>
-
-<p>  切换分支</p>
-
-<pre><code>  git checkout origin source
-</code></pre>
-
-<p>4.提交代码</p>
-
-<pre><code>git push origin source
-</code></pre>
 </div>
-  
-  
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">functional-programming-is-hard-thats-why-its-good</a></h2>
+<div class="outline-text-2" id="text-1">
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/13/markdown/">Markdown</a></h1>
-    
-    
-      <p class="meta">
-        
+<p><br/>
+</p>
+</div>
 
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">函数式编程很难，这正是你要学习它的原因</h3>
+<div class="outline-text-3" id="text-1-1">
 
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-13T23:10:00+08:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>[转自]<a href="http://wowubuntu.com/markdown/">http://wowubuntu.com/markdown/</a></p>
-
-<h2 id="block">区块元素</h2>
-
-
-
-
-<h3 id="p">段落和换行</h3>
-
-
-<p>一个 Markdown 段落是由一个或多个连续的文本行组成，它的前后要有一个以上的空行（空行的定义是显示上看起来像是空的，便会被视为空行。比方说，若某一行只包含空格和制表符，则该行也会被视为空行）。普通段落不该用空格或制表符来缩进。</p>
-
-<p>「由一个或多个连续的文本行组成」这句话其实暗示了 Markdown 允许段落内的强迫换行（插入换行符），这个特性和其他大部分的 text-to-HTML 格式不一样（包括 Movable Type 的「Convert Line Breaks」选项），其它的格式会把每个换行符都转成 <code>&lt;br /&gt;</code> 标签。</p>
-
-<p>如果你<em>确实</em>想要依赖 Markdown 来插入 <code>&lt;br /&gt;</code> 标签的话，<strong>在插入处先按入两个以上的空格然后回车。</strong></p>
-
+<p>很奇怪不是，很少有人每天都使用函数式编程语言。如果你用Scala，Haskell，Erlang，F#或某个Lisp方言来编程，很可能没有公司会花钱聘你。这个行业里的绝大部分人都是使用像Python，Ruby，Java或C#等面向对象的编程语言——它们用起来很顺手。不错，你也许会偶然用到一两个“函数式语言特征”，例如“block”，但人们不会去做函数式编程。<br/>
+</p>
+<p><br/>
+然而，很多年来，我们一直被教导说函数式编程语言很好很棒。我仍然记得当我第一次阅读ESR的著名的关于学习Lisp语言的论文时的困惑。也许大多数的人对Paul Graham 的《Beating The Averages》这篇文章更加熟悉：<br/>
+</p>
+<p><br/>
+使用Lisp开发使我们的开发周期迭代的如此之快，以至于有时当竞争对手在新闻发布会上推出他们的新功能一两天后，我们就能复制出同样的功能。当报道产品发布的新闻记者打电话给我们时，我们的产品已经拥有了同样的功能特征。<br/>
+</p>
+<p><br/>
+那些皈依函数式编程的人中，一直常见的考虑是：学习这种新的、函数式的语言“对你有好处”；就像是某些人建议说每天30分钟的健身房活动会“让你的身体健康”一样。但这也同时暗示了这样做的难度和需要的付出。Lisp语言跟Haskell、Ocaml和Scala语言不同，被认为是出了名的难学，可以说是臭名昭著。文雅的人说这是Lisp语言的“深度&amp;广度”的体现。不文雅的人说这是“意淫”或“玩弄学术”或简单的“没必要”。我认为，它的难度跟你对它熟不熟悉有关，而且，这种难度是一种重要指标显示：学习这样的一种语言会让你编程更有效率、能力更强。<br/>
+</p>
+<p><br/>
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2012/08/13/markdown/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">Read on &rarr;</a>
     </footer>
   
 
@@ -1557,9 +3486,9 @@ org_html_manager.setup();  // activate after the parameters are set
   
     <article>
       
-  <header>
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/08/12/first-post/">First Post</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/09/11/can-your-programming-language-do-this/">Can Your Programming Language Do This</a></h1>
     
     
       <p class="meta">
@@ -1575,41 +3504,92 @@ org_html_manager.setup();  // activate after the parameters are set
   
 
 
-<time datetime="2012-08-12T23:34:00+08:00" pubdate data-updated="true">Aug 12<span>th</span>, 2012</time>
+<time datetime="2012-09-11T00:00:00+08:00" pubdate data-updated="true">2012年09月11日</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>随便先写一点东西，markdown语法还不熟悉</p>
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">can your programming language do this</a>
+<ul>
+<li><a href="#sec-1-1">你的编程语言能这样做吗？</a></li>
+<li><a href="#sec-1-2">转载自</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 
-<h3>发现的问题</h3>
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/09/11/can-your-programming-language-do-this/">can your programming language do this</a></h2>
+<div class="outline-text-2" id="text-1">
 
-<ol>
-<li>即使本地加载也特别慢 <br/>
-原来是要去加载google的font，可能又要翻墙，所以特别慢。<br/>
-注释掉：source/_include/custom/head.html中注释掉fonts.googleapis.com的link</li>
-</ol>
 
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">你的编程语言能这样做吗？</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>一日，你查看你的程序代码，你有两大块代码看起来几乎完全的一样。事实上它们就是完全一样，除了一个代码里说的是“Spaghetti(意大利面条)”，另一个代码里说的是“Chocolate Moose(巧克力慕丝)”。<br/>
+</p>
+<p><br/>
+<pre class="example">// 一个小例子：
+
+alert("I'd like some Spaghetti!");
+alert("I'd like some Chocolate Moose!");
+</pre>
+
+这个例子恰好是用Javascript写的，但即使是你不懂Javascript，你也应该能看懂我说的。<br/>
+</p>
+<p><br/>
+当然，重复的代码看起来不太好。所以你决定写一个函数：<br/>
+</p>
+<p><br/>
+<pre class="example">function SwedishChef( food )
+{
+    alert("I'd like some " + food + "!");
+}
+
+SwedishChef("Spaghetti");
+SwedishChef("Chocolate Moose");
+</pre>
+
+
+没错，这个例子很简单，但你可以想出一些更有实际价值的例子。这样做是更好一些，有很多理由，这些理由估计你都听说过一万遍了。可维护性，可读性，抽象 = 好！<br/>
+</p>
+<p><br/>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/09/11/can-your-programming-language-do-this/">Read on &rarr;</a>
+    </footer>
   
 
 
     </article>
   
-  <div class="pagination">
+  <ul class="pager">
     
-    <a href="/blog/archives">Blog Archives</a>
+    <li class="previous"><a href="/blog/page/2/">&larr; Older</a></li>
     
-  </div>
+    <li><a href="/blog/archives">Blog Archives</a></li>
+    
+  </ul>
 </div>
-<aside class="sidebar">
+<aside class="sidebar-nav span3">
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (1)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/test'>test (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -1636,28 +3616,28 @@ dpc=1"></iframe>
 </ul>
 </section>
 
-<section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
     
       <li class="post">
-        <a href="/blog/2012/08/31/org-mode-note/">org mode note</a>
+        <a href="/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/08/15/emacs-markdown-mode/">emacs markdown-mode</a>
+        <a href="/blog/2013/01/06/linux-g-dial/">linux_3g拨号</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/08/15/gitchang-yong-ming-ling-zong-jie/">git常用命令总结</a>
+        <a href="/blog/2013/01/01/fstab-recover/">fstab恢复</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/">添加微博sidebar</a>
+        <a href="/blog/2012/12/18/git-server/">git服务器开源软件</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012/08/14/octopresstian-jia-fen-lei-lan/">octopress添加分类栏</a>
+        <a href="/blog/2012/12/05/shell-snippet-collect/">shell代码片段收集</a>
       </li>
     
   </ul>
@@ -1671,15 +3651,16 @@ dpc=1"></iframe>
   
 </aside>
 
-      </div>
     </div>
-    <footer role="contentinfo"><p>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
   Copyright &copy; 2013 - emmoblin -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>. Design by <a href="http://octopressthemes.com">Octopress Themes</a></span>
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
-    
+  
 
 <script type="text/javascript">
       var disqus_shortname = 'emmoblin';
@@ -1704,6 +3685,5 @@ dpc=1"></iframe>
 
 
 
-  </div>
 </body>
 </html>
