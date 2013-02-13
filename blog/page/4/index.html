@@ -109,6 +109,100 @@
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2012/09/11/can-your-programming-language-do-this/">Can Your Programming Language Do This</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-11T00:00:00+08:00" pubdate data-updated="true">2012年09月11日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">can your programming language do this</a>
+<ul>
+<li><a href="#sec-1-1">你的编程语言能这样做吗？</a></li>
+<li><a href="#sec-1-2">转载自</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/09/11/can-your-programming-language-do-this/">can your programming language do this</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">你的编程语言能这样做吗？</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>一日，你查看你的程序代码，你有两大块代码看起来几乎完全的一样。事实上它们就是完全一样，除了一个代码里说的是“Spaghetti(意大利面条)”，另一个代码里说的是“Chocolate Moose(巧克力慕丝)”。<br/>
+</p>
+<p><br/>
+<pre class="example">// 一个小例子：
+
+alert("I'd like some Spaghetti!");
+alert("I'd like some Chocolate Moose!");
+</pre>
+
+这个例子恰好是用Javascript写的，但即使是你不懂Javascript，你也应该能看懂我说的。<br/>
+</p>
+<p><br/>
+当然，重复的代码看起来不太好。所以你决定写一个函数：<br/>
+</p>
+<p><br/>
+<pre class="example">function SwedishChef( food )
+{
+    alert("I'd like some " + food + "!");
+}
+
+SwedishChef("Spaghetti");
+SwedishChef("Chocolate Moose");
+</pre>
+
+
+没错，这个例子很简单，但你可以想出一些更有实际价值的例子。这样做是更好一些，有很多理由，这些理由估计你都听说过一万遍了。可维护性，可读性，抽象 = 好！<br/>
+</p>
+<p><br/>
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/09/11/can-your-programming-language-do-this/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2012/08/31/org-mode-note/">Org-mode学习笔记</a></h1>
     
     
@@ -686,51 +780,6 @@ git log只会显示HEAD及其祖先的log，要产看全部使用&ndash;all<br/>
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/12/first-post/">First Post</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-12T23:34:00+08:00" pubdate data-updated="true">2012年08月12日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>随便先写一点东西，markdown语法还不熟悉</p>
-
-<h3>发现的问题</h3>
-
-<ol>
-<li>即使本地加载也特别慢 <br/>
-原来是要去加载google的font，可能又要翻墙，所以特别慢。<br/>
-注释掉：source/_include/custom/head.html中注释掉fonts.googleapis.com的link</li>
-</ol>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <ul class="pager">
     
     <li class="previous"><a href="/blog/page/5/">&larr; Older</a></li>
@@ -752,7 +801,7 @@ git log只会显示HEAD及其祖先的log，要产看全部使用&ndash;all<br/>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/storage'>storage (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -796,15 +845,15 @@ dpc=1"></iframe>
       </li>
     
       <li class="post">
+        <a href="/blog/2013/02/13/openfiler/">openfiler 2.99创建raid</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/02/13/octopress-install/">octopress安装和定制</a>
       </li>
     
       <li class="post">
         <a href="/blog/2013/02/13/lvm/">LVM介绍</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a>
       </li>
     
   </ul>

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>串口工具ckermit - Emmoblin Blog</title>
+  <title>openfiler 2.99创建raid - Emmoblin Blog</title>
   <meta name="author" content="emmoblin">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://emmoblin.github.com/blog/2012/10/16/ckermit">
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2013/02/13/openfiler">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -107,7 +107,7 @@
   
   <header class="page-header">
     
-      <h1 class="entry-title">串口工具ckermit</h1>
+      <h1 class="entry-title">Openfiler 2.99创建raid</h1>
     
     
       <p class="meta">
@@ -123,7 +123,7 @@
   
 
 
-<time datetime="2012-10-16T00:00:00+08:00" pubdate data-updated="true">2012年10月16日</time>
+<time datetime="2013-02-13T00:00:00+08:00" pubdate data-updated="true">2013年02月13日</time>
         
       </p>
     
@@ -134,10 +134,21 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">串口工具ckermit</a>
+<li><a href="#sec-1">openfiler 2.99创建raid</a>
 <ul>
-<li><a href="#sec-1-1">默认配置文件</a></li>
-<li><a href="#sec-1-2">操作</a></li>
+<li><a href="#sec-1-1">创建raid5</a>
+<ul>
+<li><a href="#sec-1-1-1">设置gpt</a></li>
+<li><a href="#sec-1-1-2">分区</a></li>
+<li><a href="#sec-1-1-3">设置raid标记</a></li>
+<li><a href="#sec-1-1-4">在web上创建raid</a></li>
+<li><a href="#sec-1-1-5">扩展</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">如果web上无法识别raid盘</a></li>
+<li><a href="#sec-1-3">测试速度</a></li>
+<li><a href="#sec-1-4">优缺点</a></li>
+<li><a href="#sec-1-5">资料</a></li>
 </ul>
 </li>
 </ul>
@@ -145,34 +156,36 @@
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/16/ckermit/">串口工具ckermit</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/openfiler/">openfiler 2.99创建raid</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
+<p><br/>
+有人可能担心RAID5的可靠性，我试过，稳定性很好，同步完成后，拷贝数据上去，然后，随意的掉电，RAID5 组上的数据都没事。<br/>
+OpenFiler读写性能很好，随便调整一下就能达到RAID5 下写130MB/S和读220MB/S的成绩，这个远远超过了FREENas的成绩。<br/>
+</p>
 <p><br/>
 </p>
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">默认配置文件</h3>
+<h3 id="sec-1-1">创建raid5</h3>
 <div class="outline-text-3" id="text-1-1">
 
-<p>/etc/kermit/kermrc<br/>
-一般配置一个home下的自己的配置文件就ok了。<br/>
-~/.mykermrc<br/>
+<p>一个磁盘用于安装系统，其他3块作为raid5.<br/>
+进入root<br/>
 </p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">设置gpt</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
 <p><br/>
-<pre class="example">set line /dev/ttyS0
-set speed 9600
-set carrier-watch off
-set handshake none
-set flow-control none
-robust
-set file type bin
-set file name lit
-set rec pack 1000
-set send pack 1000
-set window 5
+<pre class="src src-sh">parted /dec/sdb
+mklabel
+gpt
 </pre>
 
 
@@ -180,15 +193,163 @@ set window 5
 
 </div>
 
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">操作</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">分区</h4>
+<div class="outline-text-4" id="text-1-1-2">
 
-<p>C-\ 切换到命令行<br/>
-c 打开链接<br/>
+<p>整个磁盘化为一个分区，<br/>
+<code>mkpart primary 0 -0</code><br/>
 </p>
 <p><br/>
 </p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">设置raid标记</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>设置为raid分区<br/>
+<code>set 1 raid on</code><br/>
+</p>
+<p><br/>
+同样操作于<br/>
+<code>select /dev/sdc</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4">在web上创建raid</h4>
+<div class="outline-text-4" id="text-1-1-4">
+
+<p>Volumes &gt; Software RAID:<br/>
+Create the software RAID 5 with sdb1, sdc1 and sdd1.<br/>
+</p>
+<p><br/>
+Create the vg0 volume group with /dev/md0<br/>
+Create the lv0 volume, using full space and XFS.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-5" class="outline-4">
+<h4 id="sec-1-1-5">扩展</h4>
+<div class="outline-text-4" id="text-1-1-5">
+
+<p>如果要再添加两块硬盘，<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">[root@localhost]# mdadm --add /dev/md0 /dev/sde1 add the two disks to /dev/md0
+[root@localhost]# mdadm --add /dev/md0 /dev/sdf1
+
+[root@localhost]# mdadm --grow /dev/md0 --raid-devices=5 set the RAID to use the two new disks
+
+In the OpenFiler WEBinterface, Wait for /dev/md0 to be Clean and Synchronized, then:
+
+[root@localhost]# pvresize /dev/md0 resize the physical volume /dev/md0
+</pre>
+
+
+In the OpenFiler WEBinterface &gt; Volumes &gt; Manage Volumes &gt; Edit properties of lv0 to use full capacity.<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">如果web上无法识别raid盘</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>首先需要把/dev/md0  mklabel为gpt<br/>
+然后分区，mkpart primary ext2 <br/>
+设置lvm flag<br/>
+<code>set 1 LVM on</code><br/>
+</p>
+<p><br/>
+手动添加卷组：<br/>
+<code>vgcreate VG1 /dev/md0</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">测试速度</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p><code>dd if=/dev/zero of=tmpfile bs=1M count=10000</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">优缺点</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>优点：<br/>
+</p>
+<p><br/>
+1、兼容性很好，几乎可以识别所有的常见硬件，哪怕识别不了也可以装个REDHAT的驱动，REDHAT的驱动几乎是每个厂商都会提供的，上面那台HP SERVER RAID卡就是装了READHAT的驱动搞定的；<br/>
+</p>
+<p><br/>
+2、性能强大，支持网卡捆绑，上门的PC-SERVER通过网络访问，可以实现RAID5的245MB/S的读写速度，和本地盘没啥区别，要不是受制于HP PCSERVER网卡数量不够的限制，网络服务应该还能实现更高的速度，本地测试RAID5超过400MB/S的读写速度；<br/>
+</p>
+<p><br/>
+3、支持卷管理功能，支持在线扩展功能，支持按用户空间限制配置；<br/>
+</p>
+<p><br/>
+4、内部带OPENLDAP,用户的认证通过OPENLDAP认证，安全性很高；<br/>
+</p>
+<p><br/>
+5、支持WEB管理和系统监控，管理方便。<br/>
+</p>
+<p><br/>
+缺点：<br/>
+</p>
+<p><br/>
+1、页面管理功能要是没用过肯定一头雾水，监控管理功能很一般，只能算有吧；<br/>
+</p>
+<p><br/>
+2、用户认证使用OPENLDAP，配置麻烦，我折腾了一个小时才搞定；<br/>
+</p>
+<p><br/>
+3、不支持BT电驴什么的，虽然可以安装但是无法和WEB页面集成，感觉还是很不爽<br/>
+</p>
+<p><br/>
+4、不知道为何精简了RPM命令和yum命令，要在上面装点东西很麻烦，要先装RPM才能进行下面的工作。<br/>
+应该是改为了conary。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">资料</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<ol>
+<li>LDAP设置<br/>
+   <a href="http://www.njeit.cn/show.aspx?id=831&amp;cid=65">http://www.njeit.cn/show.aspx?id=831&amp;cid=65</a><br/>
+
+<p><br/>
+</p></li>
+<li>创建iscsi <br/>
+   <a href="http://wenku.baidu.com/view/b51fdeedf8c75fbfc77db202.html">http://wenku.baidu.com/view/b51fdeedf8c75fbfc77db202.html</a><br/>
+</li>
+</ol>
+
+</div>
 </div>
 </div>
 </div>
@@ -213,12 +374,12 @@ c 打开链接<br/>
   
 
 
-<time datetime="2012-10-16T00:00:00+08:00" pubdate data-updated="true">2012年10月16日</time>
+<time datetime="2013-02-13T00:00:00+08:00" pubdate data-updated="true">2013年02月13日</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/tools/'>tools</a>
+    <a class='category' href='/blog/categories/storage/'>storage</a>
   
 </span>
 
@@ -242,13 +403,13 @@ c 打开链接<br/>
     <ul class="pager">
       
       <li class="previous"><a class="basic-alignment left"
-        href="/blog/2012/10/12/thunderbirdskill/" title="Previous Post:
-        thunderbird技巧">&laquo; thunderbird技巧</a></li>
+        href="/blog/2013/02/13/octopress-install/" title="Previous Post:
+        octopress安装和定制">&laquo; octopress安装和定制</a></li>
       
       <li><a href="/blog/archives">Blog Archives</a></li>
       
-      <li class="next"><a class="basic-alignment right" href="/blog/2012/10/16/svn/"
-        title="Next Post: svn使用">svn使用
+      <li class="next"><a class="basic-alignment right" href="/blog/2013/02/13/openldap/"
+        title="Next Post: OpenLDAP介绍">OpenLDAP介绍
         &raquo;</a></li>
       
     </ul>
@@ -349,8 +510,8 @@ dpc=1"></iframe>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://emmoblin.github.com/blog/2012/10/16/ckermit/';
-        var disqus_url = 'http://emmoblin.github.com/blog/2012/10/16/ckermit/';
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2013/02/13/openfiler/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2013/02/13/openfiler/';
         var disqus_script = 'embed.js';
       
     (function () {
