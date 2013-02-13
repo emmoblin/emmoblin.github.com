@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>octopress安装和定制 - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2013/02/13/octopress-install">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">Octopress安装和定制</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-13T00:00:00+08:00" pubdate data-updated="true">2013年02月13日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">octopress安装和定制</a>
+<ul>
+<li><a href="#sec-1-1">ruby安装</a>
+<ul>
+<li><a href="#sec-1-1-1">touble shot：</a>
+<ul>
+<li><a href="#sec-1-1-1-1">在zsh中，启动rbenv init -会提示错误</a></li>
+<li><a href="#sec-1-1-1-2">安装ruby rehash</a></li>
+<li><a href="#sec-1-1-1-3">openssl</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">安装octopress</a></li>
+<li><a href="#sec-1-3">Deploying to Github Pages</a>
+<ul>
+<li><a href="#sec-1-3-1">gh-pages</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">重新安装octopress</a></li>
+<li><a href="#sec-1-5">安装主题</a></li>
+<li><a href="#sec-1-6">配置</a></li>
+<li><a href="#sec-1-7">个性化定制</a>
+<ul>
+<li><a href="#sec-1-7-1">邮箱地址图片化</a></li>
+<li><a href="#sec-1-7-2">about分页</a></li>
+<li><a href="#sec-1-7-3">添加友情链接</a></li>
+<li><a href="#sec-1-7-4">侧边栏添加Disqus评论</a></li>
+<li><a href="#sec-1-7-5">增加一键分享</a></li>
+<li><a href="#sec-1-7-6">参考资料</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-8">使用了org-jekyll.el</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/octopress-install/">octopress安装和定制</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">ruby安装</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>参考：<a href="http://octopress.org/docs/setup/">http://octopress.org/docs/setup/</a><br/>
+一个是rvm，rbenv<br/>
+rvm是出现最早功能最强大，但是有点复杂。<br/>
+rbenv是37sigle功能推出的，比较受欢迎。<br/>
+</p>
+<p><br/>
+rvm安装：<br/>
+<code>curl -L https://get.rvm.io | bash -s stable --ruby</code><br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; . "$HOME/.rvm/scripts/rvm" # Load RVM function'</span> &gt;&gt; ~/.bash_profile
+<span style="color: #a52a2a;">source</span> ~/.bash_profile
+
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If using Zsh do this instead</span>
+<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'[[ -s $HOME/.rvm/scripts/rvm ]] &amp;&amp; source $HOME/.rvm/scripts/rvm'</span> &gt;&gt; ~/.zshrc
+<span style="color: #a52a2a;">source</span> ~/.zshrc
+</pre>
+
+
+rbenv安装：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #a52a2a;">cd</span>
+git clone git://github.com/sstephenson/rbenv.git .rbenv
+<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'export PATH="$HOME/.rbenv/bin:$PATH"'</span> &gt;&gt; ~/.bash_profile
+<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'eval "$(</span><span style="color: #ff00ff;">rbenv</span><span style="color: #00bfff;"> init -)"'</span> &gt;&gt; ~/.bash_profile
+git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+<span style="color: #a52a2a;">source</span> ~/.bash_profile
+</pre>
+
+
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">touble shot：</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+</div>
+
+<div id="outline-container-1-1-1-1" class="outline-5">
+<h5 id="sec-1-1-1-1">在zsh中，启动rbenv init -会提示错误</h5>
+<div class="outline-text-5" id="text-1-1-1-1">
+
+<p><code>$HOME/.rbenv/libexec/../completions/rbenv.bash:14: command not found: complete</code><br/>
+修改为：<br/>
+</p>
+<p><br/>
+<pre class="src src-bash">eval <span style="color: #00bfff;">"$(rbenv init - zsh)"</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-1-2" class="outline-5">
+<h5 id="sec-1-1-1-2">安装ruby rehash</h5>
+<div class="outline-text-5" id="text-1-1-1-2">
+
+
+<p><br/>
+<pre class="src src-bash">rbenv install 1.9.3-p0
+rbenv global 1.9.3-p0
+rbenv rehash
+</pre>
+
+
+关于为什么要做rehash，解释如下：<br/>
+新装的gem（以前重没装过）一定要rehash在.rbenv/shims下生成可执行程序，像zsh要自动补全还需要 hash -r ．不过因为　rbenv init -　里会调用rbenv rehash，所有新开个窗口是不需要的．我的用法是bundler管理gemset，在~/.bundle/config里设置BUNDLE_PATH为vendor/bundle , 配合shell的一个小函数为常用命令添加alias，在发现Gemset的时候自动加上bundle exec ( rbenv.zsh )．通过bundler安装bundle exec执行是不需要rehash的。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-1-3" class="outline-5">
+<h5 id="sec-1-1-1-3">openssl</h5>
+<div class="outline-text-5" id="text-1-1-1-3">
+
+<p>启动时提示：<br/>
+<code>require’: cannot load such file – openssl (LoadError)</code><br/>
+解决办法：<br/>
+apt-get install libssl-dev<br/>
+重新安装ruby<br/>
+<code>rbenv install 1.9.3-p0</code><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">安装octopress</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p><br/>
+<pre class="src src-sh">git clone git://github.com/imathis/octopress.git octopress
+<span style="color: #a52a2a;">cd</span> octopress    <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If you use RVM, You'll be asked if you trust the .rvmrc file (say yes).</span>
+ruby --version  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Should report Ruby 1.9.3</span>
+</pre>
+
+
+遇到的问题，安装后我clone了octopress然后执行gem但缺少zlib库。<br/>
+解决办法：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">sudo apt-get install zlib1g-dev
+rvm reinstall 1.9.3 <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#37325;&#26032;&#23433;&#35013;ruby</span>
+</pre>
+
+
+安装依赖：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">gem install bundler
+rbenv rehash    <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If you use rbenv, rehash to be able to run the bundle command</span>
+bundle install
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Deploying to Github Pages</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>参考：<a href="http://octopress.org/docs/deploying/github/">http://octopress.org/docs/deploying/github/</a><br/>
+</p>
+<p><br/>
+<code>rake setup_github_pages</code><br/>
+他会做几件事：<br/>
+</p><ol>
+<li>询问你的github url<br/>
+</li>
+<li>把当前origin rename为imathis/octopress<br/>
+</li>
+<li>把你的github pages作为default origin remote<br/>
+</li>
+<li>从当前master分支转为source分支<br/>
+</li>
+<li>把master分支设置为_deploy目录，用于发布页面<br/>
+</li>
+</ol>
+
+
+<p><br/>
+然后运行<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">rake generate
+rake deploy
+</pre>
+
+这会生成website在_deploy目录，然后提交到github。<br/>
+</p>
+<p><br/>
+然后提交source分支<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">git add .
+git commit -m <span style="color: #00bfff;">'your message'</span>
+git push origin source
+</pre>
+
+
+</p>
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">gh-pages</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>还可以通过project pages页面来部署，这样你的页面的访问地址为：<br/>
+<code>http://username.github.com/project</code><br/>
+适用于多个工程的情况，每个工程一个站点。<br/>
+实际上显示时，github会搜索你工程下的gh-pages分支，作为显示。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">重新安装octopress</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-sh">git clone -b source git@github.com:username/username.github.com.git octopress <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#19979;&#36733;source&#29256;&#26412;&#65288;&#29992;&#20110;&#32534;&#36753;&#65289;</span>
+<span style="color: #a52a2a;">cd</span> octopress
+git clone git@github.com:username/username.github.com.git _deploy <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#19979;&#36733;_deploy&#29256;&#26412;&#65288;&#29992;&#20110;&#21457;&#24067;&#65289;</span>
+bundle install
+</pre>
+
+
+我是升级的octopress，所以我还是需要重复之前的安装过程，需要安装ruby，gem，bunlder等。<br/>
+然后执行<br/>
+<code>rake setup_github_pages</code><br/>
+</p>
+<p><br/>
+rake install[theme]<br/>
+安装一个主题，把github上的source中_post目录cp过来，以及修改的插件等手工合并进来，然后使用git push -f 强行push的。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">安装主题</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>下载后放到.themes目录下，然后执行对应主题的安装，如：<br/>
+rake install[&#8216;bootstrap&#8217;]<br/>
+rake generate<br/>
+</p>
+<p><br/>
+rake install\[&#8216;blanket&#8217;\]<br/>
+有一点不好的是，code区显示不完全。还是有点缺憾。<br/>
+</p>
+<p><br/>
+我目前使用的是：<br/>
+bootstrap-theme虽然使用了bootstrap，基石很强大，但调整的不好。<br/>
+文章和文章之间没有隔离，不方便区分。<br/>
+还有就是字体使用的是固定px，13px行间距是18px，为什么不用em呢？<br/>
+我尝试修改sass中的basefont为1em，但整体显示就乱了，有的code无法显示，所以干脆先这么用这吧。<br/>
+</p>
+<p><br/>
+<a href="http://octopressthemes.com/themes/">主题下载页</a><br/>
+<a href="https://github.com/bkutil/bootstrap-theme">https://github.com/bkutil/bootstrap-theme</a><br/>
+<a href="http://www.cnblogs.com/hangxin1940/archive/2012/03/19/2806438.html">重新安装octopress</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">配置</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>date_format: &#8220;%Y年%m月%d日&#8221;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">个性化定制</h3>
+<div class="outline-text-3" id="text-1-7">
+
+
+</div>
+
+<div id="outline-container-1-7-1" class="outline-4">
+<h4 id="sec-1-7-1">邮箱地址图片化</h4>
+<div class="outline-text-4" id="text-1-7-1">
+
+<p>很多博主都将邮箱地址转化成图片，目的是为了防止垃圾邮件，我也赶了一下时髦。<br/>
+</p>
+<p><br/>
+邮箱地址生成图片的网址是：<br/>
+</p>
+<p><br/>
+<a href="http://services.nexodyne.com/email/index.php">http://services.nexodyne.com/email/index.php</a><br/>
+<a href="http://pic.sdodo.com/tool/mailpic/">http://pic.sdodo.com/tool/mailpic/</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-2" class="outline-4">
+<h4 id="sec-1-7-2">about分页</h4>
+<div class="outline-text-4" id="text-1-7-2">
+
+<p>在source下新建about目录，并在里面添加index.markdown文件。<br/>
+编辑导航条source/_includes/custom/navigation.html<br/>
+注意:index.markdown文件需要加上头，否则会找不到。<br/>
+</p>
+<p><br/>
+在侧边栏中a天际about me<br/>
+在custom/asides/about.html中添加About Me信息<br/>
+</p>
+<p><br/>
+<pre class="src src-html">&lt;<span style="color: #a020f0;">section</span>&gt;
+  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">About Me</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
+  &lt;<span style="color: #a020f0;">p</span>&gt;&lt;<span style="color: #a020f0;">img</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"/images/about.jpg"</span>&gt;&lt;/<span style="color: #a020f0;">p</span>&gt;
+  &lt;<span style="color: #a020f0;">p</span>&gt;some thing&lt;/<span style="color: #a020f0;">p</span>&gt;
+  &lt;<span style="color: #a020f0;">p</span>&gt;&lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"mailto:emmoblin@gmail.com"</span>&gt;&lt;<span style="color: #a020f0;">img</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"/images/my_email.png"</span> <span style="color: #ff1493;">alt</span>=<span style="color: #00bfff;">"emmoblin@gmail.com"</span>&gt;&lt;/<span style="color: #a020f0;">a</span>&gt;&lt;/<span style="color: #a020f0;">p</span>&gt;
+&lt;/<span style="color: #a020f0;">section</span>&gt;
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-3" class="outline-4">
+<h4 id="sec-1-7-3">添加友情链接</h4>
+<div class="outline-text-4" id="text-1-7-3">
+
+<p>在custom/asides/blog_link.html中添加友情链接<br/>
+</p>
+<p><br/>
+<pre class="src src-html">  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">&#22823;&#29275;&#21338;&#23458;</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
+  &lt;<span style="color: #a020f0;">ul</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://coolshell.cn/"</span>&gt;&#37239;&#22771;CoolShell&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://mindhacks.cn/"</span>&gt;&#21016;&#26410;&#40527;MIND HACKS&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://blog.codingnow.com/"</span>&gt;&#20113;&#39118;&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://www.cnblogs.com/Solstice/"</span>&gt;&#38472;&#30805;&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+  &lt;/<span style="color: #a020f0;">ul</span>&gt;
+&lt;/<span style="color: #a020f0;">section</span>&gt;
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-4" class="outline-4">
+<h4 id="sec-1-7-4">侧边栏添加Disqus评论</h4>
+<div class="outline-text-4" id="text-1-7-4">
+
+<p>在custom/asides/recent_comment.html中添加Disqus评论<br/>
+</p>
+<p><br/>
+<pre class="src src-html">&lt;<span style="color: #a020f0;">section</span>&gt;
+  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">&#36817;&#26399;&#35780;&#35770;</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
+&lt;<span style="color: #a020f0;">script</span> <span style="color: #ff1493;">type</span>=<span style="color: #00bfff;">"text/javascript"</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"http://emmoblin.disqus.com/combination_widget.js?num_items=5&amp;hide_mods=0&amp;color=blue&amp;default_tab=recent&amp;excerpt_length=200"</span>&gt;&lt;/<span style="color: #a020f0;">script</span>&gt;&lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://disqus.com/"</span>&gt;Powered by Disqus&lt;/<span style="color: #a020f0;">a</span>&gt;
+&lt;/<span style="color: #a020f0;">section</span>&gt;
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-5" class="outline-4">
+<h4 id="sec-1-7-5">增加一键分享</h4>
+<div class="outline-text-4" id="text-1-7-5">
+
+<p>我目前使用的是bshare。<br/>
+</p>
+<p><br/>
+在_config.yml中增加bshare: true。 在“source_includes\post”下的sharing.html中增加如下代码.<br/>
+上述的代码由bshare产生，可以自己选择所需的外观。 这样，在每一篇文章的最下方会出现一个分享的小工具。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-6" class="outline-4">
+<h4 id="sec-1-7-6">参考资料</h4>
+<div class="outline-text-4" id="text-1-7-6">
+
+<p><a href="http://octopress.org/docs/theme/template/">定制修改页面</a><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">使用了org-jekyll.el</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>我是使用org-mode来管理笔记的，使用了org-jekyll插件来把org笔记转化为jekyll的格式。<br/>
+首先通过C-c C-e 把整个project进行export，生成cache。<br/>
+之后org-jekyll-export-blog，根据cache的内容生成对应的octopress文件。<br/>
+org-jekyll是根据～/.org_timestamp/的cache生成的。所以先要export project，之后再用org-jekyll。<br/>
+</p>
+<p><br/>
+org-jekyll-export-current-entry 使用时光标所在entry进行导出。<br/>
+</p>
+<p><br/>
+所有source/_posts目录下的html都可以重新生成，注意有的时候格式不对，比如title中不能包含中文，<br/>
+会导致rake genernate错误。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-13T00:00:00+08:00" pubdate data-updated="true">2013年02月13日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/octopress/'>octopress</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2013/02/13/lvm/" title="Previous Post:
+        LVM介绍">&laquo; LVM介绍</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2013/02/13/openldap/"
+        title="Next Post: OpenLDAP介绍">OpenLDAP介绍
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><img src="/images/my_avatar.jpg"></p>
+  <p>网络工程师，喜欢折腾linux，emacs。</p>
+  <p>坚持理想，相信一定会实现。</p>
+  <p><a href="mailto:emmoblin@gmail.com"><img src="/images/my_email.png" alt="emmoblin@gmail.com"></a></p>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/storage'>storage (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/raid/">raid介绍</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/openldap/">OpenLDAP介绍</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/octopress-install/">octopress安装和定制</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/lvm/">LVM介绍</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2013/02/13/octopress-install/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2013/02/13/octopress-install/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

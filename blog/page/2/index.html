@@ -109,6 +109,948 @@
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2012/12/05/shell-snippet-collect/">Shell代码片段收集</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-05T00:00:00+08:00" pubdate data-updated="true">2012年12月05日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">shell代码片段收集</a>
+<ul>
+<li><a href="#sec-1-1">获取磁盘大小</a></li>
+<li><a href="#sec-1-2">变为大写</a></li>
+<li><a href="#sec-1-3">判断返回值</a></li>
+<li><a href="#sec-1-4">提问</a></li>
+<li><a href="#sec-1-5">for循环</a></li>
+<li><a href="#sec-1-6">while and until</a></li>
+<li><a href="#sec-1-7">case</a></li>
+<li><a href="#sec-1-8">读取文件</a></li>
+<li><a href="#sec-1-9">awk按域搜索的例子</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/12/05/shell-snippet-collect/">shell代码片段收集</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">获取磁盘大小</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Return the size of the drive in MB</span>
+get_drive_size () {
+  <span style="color: #ff1493;">ldrive</span>=$<span style="color: #ff1493;">1</span>
+
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Make sure you can print disk info using parted</span>
+  parted --script /dev/$<span style="color: #ff1493;">ldrive</span> print &gt;/dev/null 2&gt;&amp;1
+
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If unable to read disk, it's likely it needs a disklabel</span>
+  <span style="color: #0000ff;">if</span> [  <span style="color: #00bfff;">"$?"</span> != <span style="color: #00bfff;">"0"</span> ]; <span style="color: #0000ff;">then</span>
+    <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"Creating a new disklabel on $ldrive"</span> &gt;&gt; $<span style="color: #ff1493;">INSTALL_LOG</span>
+    <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"parted /dev/$ldrive mklabel msdos"</span> &gt;&gt; $<span style="color: #ff1493;">INSTALL_LOG</span>
+    <span style="color: #ff1493;">output</span>=$(<span style="color: #ff00ff;">parted</span> -s /dev/$<span style="color: #ff1493;">ldrive</span> mklabel msdos)
+
+    <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Get the drive size from parted</span>
+    <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">parted</span> -s /dev/$<span style="color: #ff1493;">ldrive</span> p | grep <span style="color: #00bfff;">"^Disk"</span> | awk <span style="color: #00bfff;">'{ print $3 }'</span>)
+
+    <span style="color: #0000ff;">if</span> [ $(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | grep error) ]; <span style="color: #0000ff;">then</span>
+      <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"Unable to read disk label.  Exiting."</span>
+      <span style="color: #0000ff;">exit</span> 1
+    <span style="color: #0000ff;">fi</span>
+  <span style="color: #0000ff;">fi</span>
+
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Get the drive size from parted</span>
+  <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">parted</span> -s /dev/$<span style="color: #ff1493;">ldrive</span> p | grep <span style="color: #00bfff;">"^Disk"</span> | awk <span style="color: #00bfff;">'{ print $3 }'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Get the reported units (mB, GB, kB)</span>
+  <span style="color: #ff1493;">lmodifier</span>=$(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | sed <span style="color: #00bfff;">'s/[0-9\.]//g'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">remove the modifier</span>
+  <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | sed <span style="color: #00bfff;">'s/[a-z,A-Z]//g'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Remove any fractions</span>
+  <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | cut -f1 -d<span style="color: #00bfff;">'.'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Translate our size into mB if not there already</span>
+  <span style="color: #0000ff;">if</span> [ $<span style="color: #ff1493;">lmodifier</span> = <span style="color: #00bfff;">"GB"</span> ]; <span style="color: #0000ff;">then</span> 
+    <span style="color: #ff1493;">lsize</span>=$(($<span style="color: #ff1493;">lsize</span> * 1000))
+  <span style="color: #0000ff;">elif</span> [ $<span style="color: #ff1493;">lmodifier</span> = <span style="color: #00bfff;">"kB"</span> ]; <span style="color: #0000ff;">then</span> 
+    <span style="color: #ff1493;">lsize</span>=$(($<span style="color: #ff1493;">lsize</span> / 1000))
+  <span style="color: #0000ff;">fi</span>
+
+  <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">lsize</span>
+}
+
+</pre>
+
+
+disk_size=`fdisk -l $CF | grep MB | cut -d&#8221;:&#8221; -f2 | cut -d &#8220;,&#8221; -f1| sed s/MB//g `<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">变为大写</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p><br/>
+<pre class="src src-sh">upper_str()
+{
+        <span style="color: #ff1493;">upper</span>=<span style="color: #ff00ff;">`echo $1 | tr "[a-z]" "[A-Z]"`</span>
+        <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">upper</span>
+}
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">判断返回值</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">TOS_VERSION</span> | grep <span style="color: #00bfff;">"^3.3.016"</span> 
+<span style="color: #0000ff;">if</span> [  $? != 0  ]
+<span style="color: #0000ff;">then</span> 
+        <span style="color: #ff1493;">VERSION_016</span>=<span style="color: #00bfff;">"false"</span>
+<span style="color: #0000ff;">else</span>
+        <span style="color: #ff1493;">VERSION_016</span>=<span style="color: #00bfff;">"true"</span>
+<span style="color: #0000ff;">fi</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">提问</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+<pre class="src src-sh">auto_echo <span style="color: #00bfff;">"Are you sure to begin[y/n]:"</span>
+<span style="color: #0000ff;">while </span><span style="color: #a52a2a;">read</span> answer
+<span style="color: #0000ff;">do</span>
+<span style="color: #ff1493;">answer</span>=<span style="color: #ff00ff;">`upper_str $answer`</span>
+<span style="color: #0000ff;">if</span> [ <span style="color: #00bfff;">"$answer"</span> = <span style="color: #00bfff;">"Y"</span> ] 
+<span style="color: #0000ff;">then</span>
+<span style="color: #0000ff;">break</span>
+<span style="color: #0000ff;">elif</span> [ <span style="color: #00bfff;">"$answer"</span> = <span style="color: #00bfff;">"N"</span> ] 
+<span style="color: #0000ff;">then</span>
+write_free
+<span style="color: #0000ff;">exit</span>
+<span style="color: #0000ff;">fi</span>
+auto_echo <span style="color: #00bfff;">"Are you sure to begin[y/n]:"</span>
+<span style="color: #0000ff;">done</span>
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">for循环</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #0000ff;">for</span> x<span style="color: #0000ff;"> in</span> /var/log/*
+<span style="color: #0000ff;">do</span>
+    <span style="color: #a52a2a;">echo</span> <span style="color: #ff00ff;">`basename $x`</span> is a file living<span style="color: #0000ff;"> in</span> /var/log
+<span style="color: #0000ff;">done</span>
+</pre>
+
+</p>
+<p> <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">while and until</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #ff1493;">myvar</span>=0
+<span style="color: #0000ff;">while</span> [ $<span style="color: #ff1493;">myvar</span> -ne 10 ]
+<span style="color: #0000ff;">do</span>
+    <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">myvar</span>
+    <span style="color: #ff1493;">myvar</span>=$(( $<span style="color: #ff1493;">myvar</span> + 1 ))
+<span style="color: #0000ff;">done</span>
+
+
+<span style="color: #ff1493;">myvar</span>=0
+<span style="color: #0000ff;">until</span> [ $<span style="color: #ff1493;">myvar</span> -eq 10 ]
+<span style="color: #0000ff;">do</span>
+    <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">myvar</span>
+    <span style="color: #ff1493;">myvar</span>=$(( $<span style="color: #ff1493;">myvar</span> + 1 ))
+<span style="color: #0000ff;">done</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">case</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>*$x为文件名，只获取文件的后缀，至于是为什么现在不明白? *<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #0000ff;">case</span> <span style="color: #00bfff;">"${x##*.}"</span><span style="color: #0000ff;"> in</span>
+     gz)
+           gzunpack ${<span style="color: #ff1493;">SROOT</span>}/${<span style="color: #ff1493;">x</span>}
+           ;;
+     bz2)
+           bz2unpack ${<span style="color: #ff1493;">SROOT</span>}/${<span style="color: #ff1493;">x</span>}
+           ;;
+     *)
+           <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"Archive format not recognized."</span>
+           <span style="color: #0000ff;">exit</span>
+           ;;
+<span style="color: #0000ff;">esac</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">读取文件</h3>
+<div class="outline-text-3" id="text-1-8">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">! /bin/</span><span style="color: #0000ff;">bash</span><span style="color: #8c8c8c; font-style: italic;">  </span>
+<span style="color: #0000ff;">while </span><span style="color: #a52a2a;">read</span> LINE
+<span style="color: #0000ff;">do</span>
+        <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">LINE</span> 
+<span style="color: #0000ff;">done</span> &lt; /etc/passwd
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">awk按域搜索的例子</h3>
+<div class="outline-text-3" id="text-1-9">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #0000ff;">while </span><span style="color: #a52a2a;">read</span> line; 
+        <span style="color: #0000ff;">do</span> cp aaaa $<span style="color: #ff1493;">line</span>;
+<span style="color: #0000ff;">done</span> &lt;&lt; (awk <span style="color: #00bfff;">'{for(i=1; i &lt;= NF; ++i){if($i ~/^-l/){gsub("^-l","lib",$i); printf("%s.so\n", $i)}}}'</span> libso.txt  | sort -u)
+</pre>
+
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/17/opensources-firewall/">开源防火墙</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-17T00:00:00+08:00" pubdate data-updated="true">2012年11月17日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+要说免费使用的防火墙那多了，但都不开源，而我更喜欢开源的，能学到东西。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">可下到源代码</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">IPCop</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p><a href="http://sourceforge.net/projects/ipcop/develop">http://sourceforge.net/projects/ipcop/develop</a><br/>
+可以下载源代码。<br/>
+<code>svn co https://ipcop.svn.sourceforge.net/svnroot/ipcop ipcop</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">EFW</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p><a href="http://www.endian.com/">http://www.endian.com/</a><br/>
+这个比较大，600M源码包，非常全。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Vyatta</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>基于debian<br/>
+<a href="http://www.vyatta.org/downloads">http://www.vyatta.org/downloads</a><br/>
+目前这个是我发现的有专门针对虚拟化平台优化的版本。<br/>
+<a href="http://www.vyatta.org/getting-started/how-to-install">http://www.vyatta.org/getting-started/how-to-install</a><br/>
+</p>
+<p><br/>
+Installing Vyatta Core in a Virtualized Environment<br/>
+If you’re deploying Vyatta Core on a hypervisor such as VMWare ESX/ESXi or Citrix XenServer, <br/>
+you’ll want to use the Vyatta virtualization ISO (virt-ISO).<br/>
+Similar to the LiveCD ISO, the virt-ISO provides a bootable ISO,<br/>
+except it also includes virtual machine tools and other optimizations<br/>
+to deliver the best possible experience for users running Vyatta on a virtual machine. <br/>
+</p>
+<p><br/>
+Using the vSphere Client, create a new VM<br/>
+</p><ul>
+<li>Configuration: Custom<br/>
+</li>
+<li>Name: &#8220;vyatta&#8221;<br/>
+</li>
+<li>Datastore: default<br/>
+</li>
+<li>Virtual Machine Version: 7<br/>
+</li>
+<li>Guest OS: Linux/Other 2.6x Linux<br/>
+</li>
+<li>CPU: &#8220;1&#8221;<br/>
+</li>
+<li>Memory: &#8220;512&#8221;<br/>
+</li>
+<li>Network: &#8220;2&#8221; / vmxnet3<br/>
+</li>
+<li>SCSI Controller: default<br/>
+</li>
+<li>Select a Disk: default<br/>
+</li>
+<li>Create a Disk: &#8220;4&#8221;GB (thin provisioning and independent / persistent mode)<br/>
+</li>
+<li>Advanced Options: Enable &#8220;Support VMI Paravirtualization&#8221;<br/>
+</li>
+</ul>
+
+
+<p>        <br/>
+使用了<br/>
+open-vm-tools<br/>
+ec2-api-tools 是不是可以通过api来管理此虚拟机，或者获得性能等。ec2-api是什么东东？<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">获取源代码</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p><a href="http://www.vyatta.org/downloads/source-code">http://www.vyatta.org/downloads/source-code</a><br/>
+</p>
+<p><br/>
+git clone <a href="http://git.vyatta.com/build-iso.git">http://git.vyatta.com/build-iso.git</a><br/>
+cd build-iso<br/>
+注意要先调整到一个分支或者tag<br/>
+build-iso$ git branch &ndash;track &lt;branch&gt; origin/&lt;branch&gt;<br/>
+build-iso$ git checkout &lt;branch&gt;<br/>
+或者<br/>
+git checkout tagv1<br/>
+</p>
+<p><br/>
+获取子模块的代码<br/>
+git submodule init<br/>
+git submodule update pkgs/SUBMODULE<br/>
+</p>
+<p><br/>
+克隆所有模块<br/>
+git submodule update<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">install</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>启动虚拟机,用缺省的用户名/密码 vyatta/vyatta登陆系统<br/>
+install image 基于image安装，推荐,可以切换image<br/>
+install system 基于disk安装，传统硬盘安装方式<br/>
+</p>
+<p><br/>
+There are two types of installations that can be performed on a persistent device: <br/>
+• Image-based install. The simplest, most flexible, and most powerful way to <br/>
+install a Vyatta system is using a binary system image. With this method, you can <br/>
+install multiple versions of the Vyatta system as images and switch between the <br/>
+images simply and easily. You install the image from a LiveCD then you reboot <br/>
+your system and it runs the image. <br/>
+• Disk-based install. A disk-based install also installs from a LiveCD onto a <br/>
+persistent device such as a hard disk partition. However, unlike an image-based <br/>
+install, a disk-based install uses a traditional layout of files on the disk. <br/>
+Additional system images may be added at a later time to a system created using <br/>
+a disk-based install. <br/>
+</p>
+<p><br/>
+nstall-image (is what I would suggest btw) is using squashfs and is capable of booting/running multiple images of versions<br/>
+</p>
+<p><br/>
+真让我好找，找了一天，终于找到安装脚本了，在pkgs/vyatta-cfg-system<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">debian install</h4>
+<div class="outline-text-4" id="text-1-2-3">
+
+<p>这个貌似比较重要，vyatta之所以看不太明白，应该是对d-i不了解。<br/>
+看看internal<br/>
+<a href="http://d-i.alioth.debian.org/doc/internals/">http://d-i.alioth.debian.org/doc/internals/</a><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4">配置ip</h4>
+<div class="outline-text-4" id="text-1-2-4">
+
+<p>vyatta@vyatta:~$ configure<br/>
+vyatta@vyatta# set interfaces ethernet eth0 address 192.168.1.81/24<br/>
+vyatta@vyatta# commit<br/>
+vyatta@vyatta# exit<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-5" class="outline-4">
+<h4 id="sec-1-2-5">启动webui</h4>
+<div class="outline-text-4" id="text-1-2-5">
+
+<p>vyatta@R1# set service https<br/>
+不过需要商业版才能使用webui<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-6" class="outline-4">
+<h4 id="sec-1-2-6">linux-image</h4>
+<div class="outline-text-4" id="text-1-2-6">
+
+<p>vyatta的内核配置<br/>
+/home/liwei/work/src_analysis/tag_vyatta_src/pkgs/linux-image/debian/arch/i386/config.586-vyatta-virt<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/16/shell-skill/">Shell命令技巧收集</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-16T00:00:00+08:00" pubdate data-updated="true">2012年11月16日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">资料，有空在整理</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>隆重推荐，one line command<br/>
+<a href="http://www.catonmat.net/">http://www.catonmat.net/</a><br/>
+</p>
+<p><br/>
+<a href="http://os.51cto.com/art/201008/222287.htm">http://os.51cto.com/art/201008/222287.htm</a><br/>
+<a href="http://os.51cto.com/art/201008/222743.htm">http://os.51cto.com/art/201008/222743.htm</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">添加上一个命令的最后一个参数</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>Alt .<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">字符串比较，注意要用引号</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>字符串比较说明<br/>
+大多数时候，虽然可以不使用括起字符串和字符串变量的双引号，但这并不是好主意。为什么呢？因为如果环境变量中恰巧有一个空格或制表键，bash 将无法分辨，从而无法正常工作。这里有一个错误的比较示例：<br/>
+ if [ $myvar = &#8220;foo bar oni&#8221; ]<br/>
+then <br/>
+     echo &#8220;yes&#8221;<br/>
+fi<br/>
+</p>
+<p><br/>
+在上例中，如果 myvar 等于 &#8220;foo&#8221;，则代码将按预想工作，不进行打印。但是，如果 myvar 等于 &#8220;foo bar oni&#8221;，则代码将因以下错误失败：<br/>
+ [: too many arguments<br/>
+</p>
+<p><br/>
+在这种情况下，&#8221;$myvar&#8221;（等于 &#8220;foo bar oni&#8221;）中的空格迷惑了 bash。bash 扩展 &#8220;$myvar&#8221; 之后，代码如下：<br/>
+ [ foo bar oni = &#8220;foo bar oni&#8221; ]<br/>
+</p>
+<p><br/>
+因为环境变量没放在双引号中，所以 bash 认为方括号中的自变量过多。可以用双引号将字符串自变量括起来消除该问题。请记住，如果养成将所有字符串自变量用双引号括起的习惯，将除去很多类似的编程错误。&#8221;foo bar oni&#8221; 比较 应该写成：<br/>
+if [ &#8220;$myvar&#8221; = &#8220;foo bar oni&#8221; ]<br/>
+then <br/>
+     echo &#8220;yes&#8221;<br/>
+fi<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">算术表达式 $(( ))</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p> $ myvar=&#8221;56&#8221;<br/>
+ $ echo $(( $myvar + 12 ))<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">名字空间，全局性</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>在 bash 中，每当在函数内部创建环境变量，就将其添加到 全局名称空间。这意味着，该变量将重写函数之外的全局变量，并在函数退出之后继续存在<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">捕获脚本的输出 2&gt;&amp;1 | tee T型管道</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>当显示正在生成的输出时，捕获每个脚本的输出 <br/>
+如果脚本不能自动地将输出发送到文件的话，可以利用 Bash shell 的一些函数来捕获所执行脚本的输出，如：<br/>
+./test-bucket-1  -s  2&gt;&amp;1  | tee test-bucket-1.out<br/>
+</p>
+<p><br/>
+让我们来分析上面的命令：<br/>
+&#8220;2&gt;&amp;1&#8221; 命令：<br/>
+使用 &#8220;2&gt;&amp;1&#8221; 将标准错误重定向到标准输出。字符串 &#8220;2&gt;&amp;1&#8221; 表明任何错误都应送到标准输出，即 UNIX/Linux 下 2 的文件标识代表标准错误，而 1 的文件标识代表标准输出。如果不用此字符串，那么所捕捉到的仅仅是正确的信息，错误信息会被忽略。<br/>
+管道 &#8220;|&#8221; 和 &#8220;tee&#8221; 命令：<br/>
+UNIX/Linux 进程和简单的管道概念很相似。既然这样，可以做一个管道将期望脚本的输出作为管道的输入。下一个要决定的是如何处理管道所输出的内容。在这种情况下，我们会将它捕获到输出文件中，在此示例中将之称为 &#8220;test-bucket-1.out&#8221;。<br/>
+但是，除了要捕获到输出结果外，我们还想监视脚本运行时产生的输出。为达到此目的，我们连接允许两件事同时进行的 &#8220;tee&#8221; （T- 形管道）：将输出结果放在文件中同时将输出结果显示在屏幕上。 其管道类似于：<br/>
+process &ndash;&gt; T &mdash;&gt; output file<br/>
+             V<br/>
+           screen<br/>
+</p>
+<p><br/>
+如果 只 想捕获输出结果而不想在屏幕上看到输出结果，那可以忽略多余的管道： ./test-bucket-1 -s 2&gt;&amp;1 &gt; test-bucket-1.out<br/>
+假若这样，相类似的管道如下：<br/>
+process &ndash;&gt; output file<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">产生随机数</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>dd if=/dev/urandom count=1 2&gt; /dev/null | cksum | cut -f1 -d&#8221; &#8221; <br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">取得一些文件名称中的一部分名称</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>interfaces=`ls session_* | sed &#8216;s/^session_//g&#8217; | sed &#8216;s//.log$//g&#8217;`<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">如何用bash从文件中读一行</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>while read line<br/>
+  do<br/>
+  echo $line<br/>
+done &lt; &#8220;$filename&#8221;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-10" class="outline-3">
+<h3 id="sec-1-10">如何用bash发现某些文件中是否没有包含string</h3>
+<div class="outline-text-3" id="text-1-10">
+
+
+<p><br/>
+jsps=`find . -name &#8220;*.jsp&#8221;`<br/>
+</p>
+<p><br/>
+for jsp in $jsps; do<br/>
+    havegb=`grep gb2312 $jsp`<br/>
+        [ ! -n &#8220;$havegb&#8221; ] &amp;&amp; echo $jsp<br/>
+done<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/15/centos-kdump/">Centos Kdump</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-15T00:00:00+08:00" pubdate data-updated="true">2012年11月15日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">centos kdump</a>
+<ul>
+<li><a href="#sec-1-1">介绍</a></li>
+<li><a href="#sec-1-2">安装</a></li>
+<li><a href="#sec-1-3">添加内核启动参数</a></li>
+<li><a href="#sec-1-4">配置文件</a></li>
+<li><a href="#sec-1-5">测试</a></li>
+<li><a href="#sec-1-6">用crash 工具分析vmcore 文件</a></li>
+<li><a href="#sec-1-7">参考</a></li>
+<li><a href="#sec-1-8">遗留问题</a></li>
+<li><a href="#sec-1-9">systemtap</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/11/15/centos-kdump/">centos kdump</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">介绍</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>通过kexec和kdump当内核crash的时候可以显示堆栈信息。方便调试。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">安装</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>sudo yum install kexec-tools<br/>
+sudo yum install kernel-debug kernel-debug-devel<br/>
+yum install crash gdb<br/>
+</p>
+<p><br/>
+为了让内核都统一，不妨内核也升级一下<br/>
+yum install kernel kernel-devel<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">添加内核启动参数</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>crashkernel=128M@16M<br/>
+在/etc/grub.cfg中添加，表示启动的时候从16M的位置开始，预留128M内存用于crashkernel <br/>
+注意centos6.2我发现可能已经默认支持了kdump，只是没有启动而已，grub.cfg中已经添加了crashkernel=auto<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">配置文件</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>/etc/kdump.conf<br/>
+配置coredump的位置，默认是 /var/crash<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">测试</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>reboot后<br/>
+这会创建/boot/initrd-kdump.img用于capture coredump，这非常重要，否则kdump就会启动失败。<br/>
+该文件就是kdump加载的内核的 initrd文件，收集dump信息的工作就是在该initrd的启动环境下进行的。<br/>
+查看/etc/init.d/kdump脚本的代码，你可看到其中会调用mkdumprd命令创建用于dump的initrd文件。<br/>
+</p>
+<p><br/>
+service kdump status<br/>
+</p>
+<p><br/>
+触发crash<br/>
+echo 1 &gt; /proc/sys/kernel/sysrq<br/>
+echo &#8220;c&#8221; &gt; /proc/sysrq-trigger<br/>
+</p>
+<p><br/>
+等待时间比较长，大概5分钟，系统又重新进入了桌面。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">用crash 工具分析vmcore 文件</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+<p><br/>
+用crash 命令分析vmcore 的命令行格式如下所示. <br/>
+用crash打开vmcore后，主要是用dmesg及 bt 命令打印出问题的执行路径的call trace, <br/>
+用dis 反汇编出代码，最终确认call trace对应的C源码中的位置，再进行逻辑分析.<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">参考</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p><a href="http://www.linuxidc.com/Linux/2011-03/33548.htm">http://www.linuxidc.com/Linux/2011-03/33548.htm</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">遗留问题</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>用crash需要vmlinux，到哪里获得？<br/>
+可能需要安装kernel-debuginfo<br/>
+但标准库里可能没有，需要另外添加。<br/>
+<a href="http://www.dedoimedo.com/computers/centos-debug.html">http://www.dedoimedo.com/computers/centos-debug.html</a><br/>
+</p>
+<p><br/>
+<a href="http://wiki.centos.org/AdditionalResources/Repositories">http://wiki.centos.org/AdditionalResources/Repositories</a><br/>
+已经说得很清楚了，需要额外添加debuginfo的库<br/>
+不过看到centos6.2中自带了<br/>
+ /etc/yum.repos.d/CentOS-Debuginfo.repo<br/>
+<b>注意把其中的enabled改为1</b>,然后就可以安装了<br/>
+kernel-debuginfo 将近300M<br/>
+</p>
+<p><br/>
+先不下了，速度太慢了，10k。<br/>
+</p>
+<p><br/>
+还有个问题，就算能看vmcore了，那模块coredump也能看吗？<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">systemtap</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>有空再研究一下kprobe和systemtap<br/>
+<a href="http://hi.baidu.com/donglix/item/13052275911e7a5f0c0a07f8">http://hi.baidu.com/donglix/item/13052275911e7a5f0c0a07f8</a><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2012/11/02/gcov/">Gcov</a></h1>
     
     
@@ -630,417 +1572,6 @@ PATH=/workspace26/i386-env/cross-tools/bin/:$PATH LD_LIBRARY_PATH=/workspace26/e
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/16/svn/">Svn使用</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-16T00:00:00+08:00" pubdate data-updated="true">2012年10月16日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">svn使用</a>
-<ul>
-<li><a href="#sec-1-1">svn libneon的问题</a></li>
-<li><a href="#sec-1-2">自己编译，真的不容易啊</a></li>
-<li><a href="#sec-1-3">tftpd-hpa</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/16/svn/">svn使用</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">svn libneon的问题</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>ubuntu安装的svn要使用https时，默认使用的libneon-gnutls有点兼容性问题。所以导致的错误是：<br/>
-SSL handshake failed: SSL 错误：在证书中检测到违规的密钥用法。<br/>
-解决办法：<br/>
-<a href="http://www.yeap.de/blog2.0/archives/260-Subversion-Certificate-Problems-with-Ubuntu-Precise-Pangolin.html">http://www.yeap.de/blog2.0/archives/260-Subversion-Certificate-Problems-with-Ubuntu-Precise-Pangolin.html</a><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">自己编译，真的不容易啊</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>cd openssl<br/>
-由于是64bit系统，所以需要添加fPIC<br/>
-./config -fPIC<br/>
-但是cropt目录不好添加fPIC，难道生成的.a难道也需要fPIC吗？，所以无奈，只能先安装系统的openssl<br/>
-apt-get install openssl-dev openssl<br/>
-</p>
-<p><br/>
-cd subversion<br/>
-./configure &ndash;with-ssl=openssl &ndash;with-neon=./neon &ndash;with-openssl=/usr<br/>
-出现warnning无用理会直接make<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">tftpd-hpa</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>atftpd 设置半天不能启动，连直接输入命令行都不能启动。<br/>
-所以换成tftpd-hpa，非常简单。<br/>
-不过要想能够上传文件需要修改配置：<br/>
-vi /etc/default/tftpd-hpa<br/>
-添加&ndash;create<br/>
-注意-s参数不能去掉。<br/>
-</p>
-<p><br/>
-客户端使用atftp。<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/16/ckermit/">串口工具ckermit</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-16T00:00:00+08:00" pubdate data-updated="true">2012年10月16日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">串口工具ckermit</a>
-<ul>
-<li><a href="#sec-1-1">默认配置文件</a></li>
-<li><a href="#sec-1-2">操作</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/16/ckermit/">串口工具ckermit</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">默认配置文件</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>/etc/kermit/kermrc<br/>
-一般配置一个home下的自己的配置文件就ok了。<br/>
-~/.mykermrc<br/>
-</p>
-<p><br/>
-<pre class="example">set line /dev/ttyS0
-set speed 9600
-set carrier-watch off
-set handshake none
-set flow-control none
-robust
-set file type bin
-set file name lit
-set rec pack 1000
-set send pack 1000
-set window 5
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">操作</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>C-\ 切换到命令行<br/>
-c 打开链接<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/12/thunderbirdskill/">Thunderbird技巧</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-12T00:00:00+08:00" pubdate data-updated="true">2012年10月12日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div><div><p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">插件</h3>
-<div class="outline-text-3" id="text-1-1">
-
-
-</div>
-
-<div id="outline-container-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1">mouseless mutt key</h4>
-<div class="outline-text-4" id="text-1-1-1">
-
-<p>像mutt一样操作邮件，非常方便。<br/>
-m： write email<br/>
-n/p: next,preview<br/>
-r: re<br/>
-f: forward<br/>
-s: 加星<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-2" class="outline-4">
-<h4 id="sec-1-1-2">Contact Tabs</h4>
-<div class="outline-text-4" id="text-1-1-2">
-
-<p>方便查看联系人<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-3" class="outline-4">
-<h4 id="sec-1-1-3">Thunderbird Conversations</h4>
-<div class="outline-text-4" id="text-1-1-3">
-
-<p>把显示样式呈现的更友好<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">实现回复在前面</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>默认Thunderbird是将回复加在回复邮件的后面，可以通过修改配置项实现回复在前面，<br/>
-首选项&ndash;&gt;高级&ndash;&gt;高级配置&ndash;&gt;配置编辑器<br/>
-找到配置编辑器，将 mail.identity.default.reply_on_top 这一项由默认的0改为1即可。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">3列显示</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>在view显示为垂直视图<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/10/dropbox-under-ubuntu/">Ubuntu使用dropbox</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-10T00:00:00+08:00" pubdate data-updated="true">2012年10月10日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div><div><p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">对ubuntu one有点失望</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>我本来是用ubuntu one，但是我先在使用ubuntu one来同步我的org笔记，同时我的org笔记又使用hg同步。<br/>
-也就是一个文件夹同时使用hg和ubuntu one同步，结果发现ubuntu one同步总是出错，尤其是我使用hg fetch一个版本的时候。<br/>
-经常把我一个文件夹的内容同步没了，幸亏我有hg，否则这些文件就丢失啦。<br/>
-所以决定还是用dropbox吧，本来我手机使用dropbox来同步照片的，所以又申请了一个帐号，专门用于同步笔记。<br/>
-而且最终要的是：<br/>
-ubuntu one没有历史版本功能<br/>
-而dropbox可以可以回退到以前的历史版本，这个非常好。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">dropbox同步任意文件夹问题</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>本来还是我是打算用dropbox的，但是发现dropbox只能指定一个主目录，不想ubuntu one可以随便指定文件夹。<br/>
-但后来发现，其实只要做一个软链接到Dropbox目录就ok了。<br/>
-而且发现dropbox同步的速度非常快。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">dropbox安装</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>需要使用https链接去登录dropbox主页，下边有如何安装的方式，很简单，就是wget一个压缩包，然后解压就ok了。<br/>
-默认是.dropbox_dist目录。<br/>
-然后启动dropboxd就ok了<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">ubuntu one的一些命令</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>查看当前传输字节数<br/>
-<code>u1sdtool --current-transfers</code><br/>
-显示共享的文件夹<br/>
-<code>u1sdtool --list-folders</code><br/>
-删除文件夹<br/>
-<code>u1sdtool --delete-folder=FOLDER_ID</code><br/>
-其他命令使用&ndash;help查看<br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <ul class="pager">
     
     <li class="previous"><a href="/blog/page/3/">&larr; Older</a></li>
@@ -1062,7 +1593,7 @@ ubuntu one没有历史版本功能<br/>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/storage'>storage (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -1098,23 +1629,23 @@ dpc=1"></iframe>
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
+        <a href="/blog/2013/02/13/raid/">raid介绍</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/openldap/">OpenLDAP介绍</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/octopress-install/">octopress安装和定制</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/lvm/">LVM介绍</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/01/06/linux-g-dial/">linux_3g拨号</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/01/01/fstab-recover/">fstab恢复</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/12/18/git-server/">git服务器开源软件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/12/05/shell-snippet-collect/">shell代码片段收集</a>
       </li>
     
   </ul>

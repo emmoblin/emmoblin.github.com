@@ -4,7 +4,7 @@
   <title><![CDATA[Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-02-13T01:27:12+08:00</updated>
+  <updated>2013-02-13T13:03:38+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -12,6 +12,1331 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[raid介绍]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/13/raid/"/>
+    <updated>2013-02-13T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/13/raid</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">raid介绍</a>
+<ul>
+<li><a href="#sec-1-1">关键技术</a>
+<ul>
+<li><a href="#sec-1-1-1">数据校验</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">可管理性</a></li>
+<li><a href="#sec-1-3">RAID等级</a>
+<ul>
+<li><a href="#sec-1-3-1">RAID0</a></li>
+<li><a href="#sec-1-3-2">RAID1</a></li>
+<li><a href="#sec-1-3-3">RAID2</a></li>
+<li><a href="#sec-1-3-4">RAID3</a></li>
+<li><a href="#sec-1-3-5">RAID4</a></li>
+<li><a href="#sec-1-3-6">RAID5</a></li>
+<li><a href="#sec-1-3-7">RAID6</a></li>
+<li><a href="#sec-1-3-8">RAID 组合等级</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">linux上创建raid5</a></li>
+<li><a href="#sec-1-5">资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/raid/">raid介绍</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+RAID 的两个关键目标是提高数据可靠性和 I/O 性能。<br/>
+通过把相同数据同时写入到多块磁盘（典型地如镜像），或者将计算的校验数据写入阵列中来获得冗余能力，当单块磁盘出现故障时可以保证不会导致数据丢失。有些 RAID 等级允许更多地 磁盘同时发生故障，比如 RAID6 ，可以是两块磁盘同时损坏。在这样的冗余机制下，可以用新磁盘替换故障磁盘， RAID 会自动根据剩余磁盘中的数据和校验数据重建丢失的数据，保证数据一致性和完整性。数据分散保存在 RAID 中的多个不同磁盘上，并发数据读写要大大优于单个磁盘，因此可以获得更高的聚合 I/O 带宽。当然，磁盘阵列会减少全体磁盘的总可用存储空间，牺牲空间换取更高的可靠性和性能。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">关键技术</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>RAID 中主要有三个关键概念和技术：镜像（ Mirroring ）、数据条带（ Data Stripping ）和数据校验（ Data parity ）<br/>
+数据条带，将数据分片保存在多个不同的磁盘，多个数据分片共同组成一个完整数据副本，这与镜像的多个副本是不同的，它通常用于性能考虑。数据条带具有更高的并发粒度，当访问数据时，可以同时对位于不同磁盘上数据进行读写操作， 从而获得非常可观的 I/O 性能提升 。数据校验，利用冗余数据进行数据错误检测和修复，冗余数据通常采用海明码、异或操作等算法来计算获得。利用校验功能，可以很大程度上提高磁盘阵列的可靠性、鲁棒性和容错能力。不过，数据校验需要从多处读取数据并进行计算和对比，会影响系统性能。 不同等级的 RAID 采用一个或多个以上的三种技术，来获得不同的数据可靠性、可用性和 I/O 性能。<br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">数据校验</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>采用数据校验时， RAID 要在写入数据同时进行校验计算，并将得到的校验数据存储在 RAID 成员磁盘中。校验数据可以集中保存在某个磁盘或分散存储在多个不同磁盘中，甚至校验数据也可以分块，不同 RAID 等级实现各不相同。当其中一部分数据出错时，就可以对剩余数据和校验数据进行反校验计算重建丢失的数据。校验技术相对于镜像技术的优势在于节省大量开销，但由于每次数据读写都要进行大量的校验运算，对计算机的运算速度要求很高，必须使用硬件 RAID 控制器。在数据重建恢复方面，检验技术比镜像技术复杂得多且慢得多。<br/>
+海明校验码和 异或校验是两种最为常用的 数据校验算法。海明校验码是由理查德 · 海明提出的，不仅能检测错误，还能给出错误位置并自动纠正。海明校验的基本思想是：将有效信息按照某种规律分成若干组，对每一个组作奇偶测试并安排一个校验位，从而能提供多位检错信息，以定位错误点并纠正。可见海明校验实质上是一种多重奇偶校验。异或校验通过异或逻辑运算产生，将一个有效信息与一个给定的初始值进行异或运算，会得到校验信息。如果有效信息出现错误，通过校验信息与初始值的异或运算能还原正确的有效信息。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">可管理性</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>实际上， RAID 是一种虚拟化技术，它对多个物理磁盘驱动器虚拟成一个大容量的逻辑驱动器。对于外部主机系统来说， RAID 是一个单一的、快速可靠的大容量磁盘驱动器。这样，用户就可以在这个虚拟驱动器上来组织和存储应用系统数据。 从用户应用角度看，可使存储系统简单易用，管理也很便利。 由于 RAID 内部完成了大量的存储管理工作，管理员只需要管理单个虚拟驱动器，可以节省大量的管理工作。 RAID 可以动态增减磁盘驱动器，可自动进行数据校验和数据重建，这些都可以 大大简化管理工作。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">RAID等级</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">RAID0</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>RAID0 是一种简单的、无数据校验的数据条带化技术。<br/>
+RAID0 的性能在所有 RAID 等级中是最高的。<br/>
+不提供数据冗余保护，一旦数据损坏，将无法恢复。 因此， RAID0 一般适用于对性能要求严格但对数据安全性和可靠性不高的应用，如视频、音频存储、临时数据缓存空间等。<br/>
+<img src="http://emmoblin.github.com/img/raid0.png"  alt="/img/raid0.png" /><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">RAID1</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p>RAID1 称为镜像，它将数据完全一致地分别写到工作磁盘和镜像 磁盘，它的磁盘空间利用率为 50%<br/>
+RAID1 与 RAID0 刚好相反，是为了增强数据安全性使两块 磁盘数据呈现完全镜像，从而达到安全性好、技术简单、管理方便。 RAID1 拥有完全容错的能力.<br/>
+<img src="http://emmoblin.github.com/img/raid1.png"  alt="/img/raid1.png" /><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3">RAID2</h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+<p>RAID2 称为纠错海明码磁盘阵列，其设计思想是利用海明码实现数据校验冗余。海明码是一种在原始数据中加入若干校验码来进行错误检测和纠正的编码技术，其中第 2n 位（ 1, 2, 4, 8, … ）是校验码，其他位置是数据码。因此在 RAID2 中，数据按位存储，每块磁盘存储一位数据编码，磁盘数量取决于所设定的数据存储宽度，可由用户设定。图 4 所示的为数据宽度为 4 的 RAID2 ，它需要 4 块数据磁盘和 3 块校验磁盘。如果是 64 位数据宽度，则需要 64 块 数据磁盘和 7 块校验磁盘。可见， RAID2 的数据宽度越大，存储空间利用率越高，但同时需要的磁盘数量也越多。<br/>
+海明码自身具备纠错能力，因此 RAID2 可以在数据发生错误的情况下对纠正错误，保证数据的安全性。它的数据传输性能相当高，设计复杂性要低于后面介绍的 RAID3 、 RAID4 和 RAID5 。<br/>
+但是，海明码的数据冗余开销太大，而且 RAID2 的数据输出性能受阵列中最慢磁盘驱动器的限制。<br/>
+<img src="http://emmoblin.github.com/img/raid2.png"  alt="/img/raid2.png" /><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4">RAID3</h4>
+<div class="outline-text-4" id="text-1-3-4">
+
+<p>使用专用校验盘的并行访问阵列，它采用一个专用的磁盘作为校验盘，其余磁盘作为数据盘，数据按位可字节的方式交叉存储到各个数据盘中。 RAID3 至少需要三块磁盘，不同磁盘上同一带区的数据作 XOR 校验，校验值写入校验盘中。 RAID3 完好时读性能与 RAID0 完全一致，并行从多个磁盘条带读取数据，性能非常高，同时还提供了数据容错能力。<br/>
+目前， RAID5 算法不断改进，在大数据量读取时能够模拟 RAID3 ，而且 RAID3 在出现坏盘时性能会大幅下降，因此常使用 RAID5 替代 RAID3 来运行具有持续性、高带宽、大量读写特征的应用。<br/>
+<img src="http://emmoblin.github.com/img/raid3.png"  alt="/img/raid3.png" /><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-5" class="outline-4">
+<h4 id="sec-1-3-5">RAID4</h4>
+<div class="outline-text-4" id="text-1-3-5">
+
+<p>RAID4 与 RAID3 的原理大致相同，区别在于条带化的方式不同。 RAID4按照块的方式来组织数据.<br/>
+RAID4 提供了 非常好的读性能，但单一的校验盘往往成为系统性能的瓶颈。对于写操作， RAID4 只能一个磁盘一个磁盘地写，并且还要写入校验数据，因此写性能比较差。而且随着成员磁盘数量的增加，校验盘的系统瓶颈将更加突出。正是如上这些限制和不足， RAID4 在实际应用中很少见，主流存储产品也很少使用 RAID4 保护。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-6" class="outline-4">
+<h4 id="sec-1-3-6">RAID5</h4>
+<div class="outline-text-4" id="text-1-3-6">
+
+<p>RAID5 应该是目前最常见的 RAID 等级，它的原理与 RAID4 相似，区别在于校验数据分布在阵列中的所有磁盘上，而没有采用专门的校验磁盘。对于数据和校验数据，它们的写操作可以同时发生在完全不同的磁盘上。因此， RAID5 不存在 RAID4 中的并发写操作时的校验盘性能瓶颈问题。另外， RAID5 还具备很好的扩展性。当阵列磁盘 数量增加时，并行操作量的能力也随之增长，可比 RAID4 支持更多的磁盘，从而拥有更高的容量以及更高的性能。<br/>
+当一个数据盘损坏时，系统可以根据同一条带的其他数据块和对应的校验数据来重建损坏的数据。与其他 RAID 等级一样，重建数据时， RAID5 的性能会受到较大的影响。<br/>
+RAID5 兼顾存储性能、数据安全和存储成本等各方面因素，它可以理解为 RAID0 和 RAID1 的折中方案，是目前综合性能最佳的数据保护解决方案。 RAID5 基本上可以满足大部分的存储应用需求，数据中心大多采用它作为应用数据的保护方案。<br/>
+<img src="http://emmoblin.github.com/img/raid5.png"  alt="/img/raid5.png" /><br/>
+</p>
+<p><br/>
+有人可能担心RAID5的可靠性，我试过，稳定性很好，同步完成后，拷贝数据上去，然后，随意的掉电，RAID5 组上的数据都没事。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-7" class="outline-4">
+<h4 id="sec-1-3-7">RAID6</h4>
+<div class="outline-text-4" id="text-1-3-7">
+
+<p>前面所 述的各个 RAID 等级都只能保护因单个磁盘失效而造成的数据丢失。如果两个磁盘同时发生故障，数据将无法恢复。 RAID6 （如图 8 ）引入双重校验的概念，它可以保护阵列中同时出现两个磁盘失效时，阵列仍能够继续工作，不会发生数据丢失。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-8" class="outline-4">
+<h4 id="sec-1-3-8">RAID 组合等级</h4>
+<div class="outline-text-4" id="text-1-3-8">
+
+<p>标准 RAID 等级各有优势和不足。自然地，我们想到把多个 RAID 等级组合起来，实现优势互补，弥补相互的不足，从而达到在性能、数据安全性等指标上更高的 RAID 系统。<br/>
+实际得到较为广泛应用的只有 RAID01 和 RAID10 两个等级。<br/>
+RAID01 兼备了 RAID0 和 RAID1 的优点，它先用两块磁盘建立镜像，然后再在镜像内部做条带化。 RAID01 的数据将同时写入到两个磁盘阵列中，如果其中一个阵列损坏，仍可继续工作，保证数据安全性的同时又提高了性能。 RAID01 和 RAID10 内部都含有 RAID1 模式，因此整体磁盘利用率均仅为 50% 。<br/>
+<img src="http://emmoblin.github.com/img/raid10.png"  alt="/img/raid10.png" /><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">linux上创建raid5</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>4个硬盘，每个硬盘都化分为一个区。<br/>
+创建raid5<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">mdadm --create /dev/md0 --level=5 --raid-devices=3 --spare-devices=1 /dev/sd[a-d]1
+</pre>
+
+创建RAID设备名为md0, 级别为RAID 5，使用3个设备建立RAID,空余一个做备用。<br/>
+可以看来做raid只需要分区，所以一个硬盘可以分为多个分区，不同分区作为不同的raid type。<br/>
+</p>
+<p><br/>
+查看raid信息<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">mdadm --detail /dev/md0
+</pre>
+
+
+513984 blocks [2/2] [UU]<br/>
+The second line gives us some more information about the device. [2/2] [UU] tells us both partitions are used.<br/>
+</p>
+<p><br/>
+让RAID开机启动.配置RIAD配置文件<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">mdadm --detail --scan &gt; /etc/mdadm.conf
+</pre>
+
+修改下，格式，去掉devices后的=。<br/>
+<code>devices /dev/sda1,/dev/sdb1,/dev/sdc1,/dev/sdd1</code><br/>
+</p>
+<p><br/>
+如果其中某个硬盘坏了会怎么样呢?系统会自动停止这块硬盘的工作,然后让后备的那块硬盘顶上去工作。我们可以实验下.<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">mdadm /dev/md0 --fail /dev/sdc1
+cat /proc/mdstat&#25110;&#32773;mdadm --detail
+</pre>
+
+
+删除一个硬盘<br/>
+<code>mdadm /dev/md0 --remove /dev/sdc1</code><br/>
+</p>
+<p><br/>
+添加一个硬盘<br/>
+<code>mdadm /dev/md0 --add /dev/sdc1</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">资料</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p><a href="http://blog.csdn.net/liuben/article/details/4581970">http://blog.csdn.net/liuben/article/details/4581970</a><br/>
+</p>
+<p><br/>
+ubuntu使用raid的一个例子：<br/>
+<a href="http://www.dedoimedo.com/computers/linux-raid.html">http://www.dedoimedo.com/computers/linux-raid.html</a><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[OpenLDAP介绍]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/13/openldap/"/>
+    <updated>2013-02-13T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/13/openldap</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">OpenLDAP介绍</a>
+<ul>
+<li><a href="#sec-1-1">LDAP 入门</a></li>
+<li><a href="#sec-1-2">LDAP 目录结构</a>
+<ul>
+<li><a href="#sec-1-2-1">DN</a></li>
+<li><a href="#sec-1-2-2">组织单元</a></li>
+<li><a href="#sec-1-2-3">个别项</a></li>
+<li><a href="#sec-1-2-4">对象类objectclass</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">配置openLDAP</a>
+<ul>
+<li><a href="#sec-1-3-1">rootdn</a></li>
+<li><a href="#sec-1-3-2">AC</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">插入数据</a>
+<ul>
+<li><a href="#sec-1-4-1">LDIF 方法</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/openldap/">OpenLDAP介绍</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">LDAP 入门</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>首字母缩略 LDAP 代表轻量级目录访问协议（Lightweight Directory Access Protocol）。<br/>
+信息被集中存储在服务器上的 LDAP 目录中。LDAP 目录是一种数据库；然而，它不是关系数据库。<br/>
+它的目录或数据库的结构与 UNIX 文件系统非常相似： <br/>
+数据按层次存储；有“根”或“基本 DN”（专有名称，Distinguished Name）；<br/>
+目录被进一步细分成组织单元（Organization Units 或 OU）；<br/>
+在这些 OU 中是包含数据的项。<br/>
+这种树-叶结构不仅使 LDAP 变得可扩展， 而且当进行简单的搜索或查询时，比传统的关系数据库更快。<br/>
+</p>
+<p><br/>
+LDAP 目录几乎可以存储所有类型的数据：电子邮件地址、DNS 信息、NIS 映射、安全性密钥、联系人信息列表和计算机名等。<br/>
+可以通过 ACL（访问控制表，Access Control List）来控制对目录的访问。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">LDAP 目录结构</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">DN</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p>LDAP 目录树的“根”或顶部是基本 DN。基本 DN 通常有两种形式：organization=（例如，o=syroidmanor.com）， 或者从组织的 DNS 域组件派生的 DN（dc=syroidmanor,dc=com）。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">组织单元</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>在目录基本 DN 的下面是容器或组织单元（OU），它们从逻辑上对您的数据进行分隔或分组。<br/>
+</p>
+<p><br/>
+<pre class="example">dc=foobar,dc=com
+                ou=customers
+                        ou=northamerica
+                        ou=southamerica
+                        ou=asia
+                        ou=europe
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">个别项</h4>
+<div class="outline-text-4" id="text-1-2-3">
+
+<p>项只是存储属性的地方。<br/>
+属性是可用来将一种类型的信息存储在目录中的容器。<br/>
+每个属性都有一种类型和一个或多个值。<br/>
+LDAP 目录中的每个项都有唯一的 DN，每个 DN 都由两部分组成 ―“相对专有名称”（或 RDN）和对 LDAP 目录结构中存储记录的位置的引用。 几乎存储在 LDAP 目录中的所有数据都有一个唯一名称，这个名称通常存储在 cn 属性中。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4">对象类objectclass</h4>
+<div class="outline-text-4" id="text-1-2-4">
+
+<p>对象类由 LDAP 目录使用来定义给定类型的对象可以有哪些属性。对象类还定义项必须有什么属性， 以及项可以有什么属性。所有对象类都从其父对象类继承需求，然后添加它们自己的需求。<br/>
+对象类有五个组件：OID（对象标识）、唯一名称、父对象（SUP）、任何需要的属性（MUST）和 允许的属性列表（MAY）。<br/>
+如：<br/>
+</p>
+<p><br/>
+<pre class="example">objectclass ( 2.5.6.6 NAME 'person' SUP top STRUCTURAL
+        MUST ( sn $ cn )
+        MAY ( userPassword $ telephoneNumber $ seeAlso $ description ) )
+</pre>
+
+
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">配置openLDAP</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">rootdn</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>rootdn 项控制谁可以对目录数据库进行写操作，以及他们要这样做所必须提供的密码。<br/>
+您在 rootdn 项的 cn= 部分填充的任何项都是对数据库有完全读／写访问权的用户。<br/>
+如果您打算存储在目录中的数据只有一点点机密性，则对密码进行散列处理。可以用 slappasswd 实用程序完成它，如下所示：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">AC</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+
+<p><br/>
+<pre class="example">access to dn=".*,dc=syroidmanor,dc=com" attr=userPassword
+        by dn="cn=root,dc=syroidmanor,dc=com" write
+        by self write
+        by * auth
+access to dn=".*,dc=syroidmanor,dc=com" attr=mail
+        by dn="cn=root,dc=syroidmanor,dc=com" write
+        by self write
+        by * read
+</pre>
+
+上面的配置仅允许 userPassword 属性的所有者修改项，但仅当所有者提供他或她的优先密码时才允许进行修改。 在所有其它情况下，只能出于认证目的来访问该项，而不能查看它。 第二个 access to&hellip; 项允许用户修改自己的电子邮件地址<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">插入数据</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">LDIF 方法</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+
+<p><br/>
+<pre class="example">dn: uid=juser,ou=people,dc=syroidmanor,dc=com
+uid: juser
+cn: Joe User
+givenname: Joe
+sn: User
+mail: juser@syroidmanor.com
+objectClass: top
+objectClass: mailRecipient
+objectClass: person
+objectClass: inetOrgPerson
+</pre>
+
+
+
+
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">参考资料</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<ol>
+<li><a href="http://www.ibm.com/developerworks/cn/education/linux/l-ldap/section2.html">构建基于 LDAP 的地址簿</a><br/>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[octopress安装和定制]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/13/octopress-install/"/>
+    <updated>2013-02-13T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/13/octopress-install</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">octopress安装和定制</a>
+<ul>
+<li><a href="#sec-1-1">ruby安装</a>
+<ul>
+<li><a href="#sec-1-1-1">touble shot：</a>
+<ul>
+<li><a href="#sec-1-1-1-1">在zsh中，启动rbenv init -会提示错误</a></li>
+<li><a href="#sec-1-1-1-2">安装ruby rehash</a></li>
+<li><a href="#sec-1-1-1-3">openssl</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">安装octopress</a></li>
+<li><a href="#sec-1-3">Deploying to Github Pages</a>
+<ul>
+<li><a href="#sec-1-3-1">gh-pages</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">重新安装octopress</a></li>
+<li><a href="#sec-1-5">安装主题</a></li>
+<li><a href="#sec-1-6">配置</a></li>
+<li><a href="#sec-1-7">个性化定制</a>
+<ul>
+<li><a href="#sec-1-7-1">邮箱地址图片化</a></li>
+<li><a href="#sec-1-7-2">about分页</a></li>
+<li><a href="#sec-1-7-3">添加友情链接</a></li>
+<li><a href="#sec-1-7-4">侧边栏添加Disqus评论</a></li>
+<li><a href="#sec-1-7-5">增加一键分享</a></li>
+<li><a href="#sec-1-7-6">参考资料</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-8">使用了org-jekyll.el</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/octopress-install/">octopress安装和定制</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">ruby安装</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>参考：<a href="http://octopress.org/docs/setup/">http://octopress.org/docs/setup/</a><br/>
+一个是rvm，rbenv<br/>
+rvm是出现最早功能最强大，但是有点复杂。<br/>
+rbenv是37sigle功能推出的，比较受欢迎。<br/>
+</p>
+<p><br/>
+rvm安装：<br/>
+<code>curl -L https://get.rvm.io | bash -s stable --ruby</code><br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; . "$HOME/.rvm/scripts/rvm" # Load RVM function'</span> &gt;&gt; ~/.bash_profile
+<span style="color: #a52a2a;">source</span> ~/.bash_profile
+
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If using Zsh do this instead</span>
+<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'[[ -s $HOME/.rvm/scripts/rvm ]] &amp;&amp; source $HOME/.rvm/scripts/rvm'</span> &gt;&gt; ~/.zshrc
+<span style="color: #a52a2a;">source</span> ~/.zshrc
+</pre>
+
+
+rbenv安装：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #a52a2a;">cd</span>
+git clone git://github.com/sstephenson/rbenv.git .rbenv
+<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'export PATH="$HOME/.rbenv/bin:$PATH"'</span> &gt;&gt; ~/.bash_profile
+<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'eval "$(</span><span style="color: #ff00ff;">rbenv</span><span style="color: #00bfff;"> init -)"'</span> &gt;&gt; ~/.bash_profile
+git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+<span style="color: #a52a2a;">source</span> ~/.bash_profile
+</pre>
+
+
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">touble shot：</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+</div>
+
+<div id="outline-container-1-1-1-1" class="outline-5">
+<h5 id="sec-1-1-1-1">在zsh中，启动rbenv init -会提示错误</h5>
+<div class="outline-text-5" id="text-1-1-1-1">
+
+<p><code>$HOME/.rbenv/libexec/../completions/rbenv.bash:14: command not found: complete</code><br/>
+修改为：<br/>
+</p>
+<p><br/>
+<pre class="src src-bash">eval <span style="color: #00bfff;">"$(rbenv init - zsh)"</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-1-2" class="outline-5">
+<h5 id="sec-1-1-1-2">安装ruby rehash</h5>
+<div class="outline-text-5" id="text-1-1-1-2">
+
+
+<p><br/>
+<pre class="src src-bash">rbenv install 1.9.3-p0
+rbenv global 1.9.3-p0
+rbenv rehash
+</pre>
+
+
+关于为什么要做rehash，解释如下：<br/>
+新装的gem（以前重没装过）一定要rehash在.rbenv/shims下生成可执行程序，像zsh要自动补全还需要 hash -r ．不过因为　rbenv init -　里会调用rbenv rehash，所有新开个窗口是不需要的．我的用法是bundler管理gemset，在~/.bundle/config里设置BUNDLE_PATH为vendor/bundle , 配合shell的一个小函数为常用命令添加alias，在发现Gemset的时候自动加上bundle exec ( rbenv.zsh )．通过bundler安装bundle exec执行是不需要rehash的。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-1-3" class="outline-5">
+<h5 id="sec-1-1-1-3">openssl</h5>
+<div class="outline-text-5" id="text-1-1-1-3">
+
+<p>启动时提示：<br/>
+<code>require’: cannot load such file – openssl (LoadError)</code><br/>
+解决办法：<br/>
+apt-get install libssl-dev<br/>
+重新安装ruby<br/>
+<code>rbenv install 1.9.3-p0</code><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">安装octopress</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p><br/>
+<pre class="src src-sh">git clone git://github.com/imathis/octopress.git octopress
+<span style="color: #a52a2a;">cd</span> octopress    <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If you use RVM, You'll be asked if you trust the .rvmrc file (say yes).</span>
+ruby --version  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Should report Ruby 1.9.3</span>
+</pre>
+
+
+遇到的问题，安装后我clone了octopress然后执行gem但缺少zlib库。<br/>
+解决办法：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">sudo apt-get install zlib1g-dev
+rvm reinstall 1.9.3 <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#37325;&#26032;&#23433;&#35013;ruby</span>
+</pre>
+
+
+安装依赖：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">gem install bundler
+rbenv rehash    <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If you use rbenv, rehash to be able to run the bundle command</span>
+bundle install
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Deploying to Github Pages</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>参考：<a href="http://octopress.org/docs/deploying/github/">http://octopress.org/docs/deploying/github/</a><br/>
+</p>
+<p><br/>
+<code>rake setup_github_pages</code><br/>
+他会做几件事：<br/>
+</p><ol>
+<li>询问你的github url<br/>
+</li>
+<li>把当前origin rename为imathis/octopress<br/>
+</li>
+<li>把你的github pages作为default origin remote<br/>
+</li>
+<li>从当前master分支转为source分支<br/>
+</li>
+<li>把master分支设置为_deploy目录，用于发布页面<br/>
+</li>
+</ol>
+
+
+<p><br/>
+然后运行<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">rake generate
+rake deploy
+</pre>
+
+这会生成website在_deploy目录，然后提交到github。<br/>
+</p>
+<p><br/>
+然后提交source分支<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">git add .
+git commit -m <span style="color: #00bfff;">'your message'</span>
+git push origin source
+</pre>
+
+
+</p>
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">gh-pages</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>还可以通过project pages页面来部署，这样你的页面的访问地址为：<br/>
+<code>http://username.github.com/project</code><br/>
+适用于多个工程的情况，每个工程一个站点。<br/>
+实际上显示时，github会搜索你工程下的gh-pages分支，作为显示。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">重新安装octopress</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-sh">git clone -b source git@github.com:username/username.github.com.git octopress <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#19979;&#36733;source&#29256;&#26412;&#65288;&#29992;&#20110;&#32534;&#36753;&#65289;</span>
+<span style="color: #a52a2a;">cd</span> octopress
+git clone git@github.com:username/username.github.com.git _deploy <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#19979;&#36733;_deploy&#29256;&#26412;&#65288;&#29992;&#20110;&#21457;&#24067;&#65289;</span>
+bundle install
+</pre>
+
+
+我是升级的octopress，所以我还是需要重复之前的安装过程，需要安装ruby，gem，bunlder等。<br/>
+然后执行<br/>
+<code>rake setup_github_pages</code><br/>
+</p>
+<p><br/>
+rake install[theme]<br/>
+安装一个主题，把github上的source中_post目录cp过来，以及修改的插件等手工合并进来，然后使用git push -f 强行push的。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">安装主题</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>下载后放到.themes目录下，然后执行对应主题的安装，如：<br/>
+rake install[&#8216;bootstrap&#8217;]<br/>
+rake generate<br/>
+</p>
+<p><br/>
+rake install\[&#8216;blanket&#8217;\]<br/>
+有一点不好的是，code区显示不完全。还是有点缺憾。<br/>
+</p>
+<p><br/>
+我目前使用的是：<br/>
+bootstrap-theme虽然使用了bootstrap，基石很强大，但调整的不好。<br/>
+文章和文章之间没有隔离，不方便区分。<br/>
+还有就是字体使用的是固定px，13px行间距是18px，为什么不用em呢？<br/>
+我尝试修改sass中的basefont为1em，但整体显示就乱了，有的code无法显示，所以干脆先这么用这吧。<br/>
+</p>
+<p><br/>
+<a href="http://octopressthemes.com/themes/">主题下载页</a><br/>
+<a href="https://github.com/bkutil/bootstrap-theme">https://github.com/bkutil/bootstrap-theme</a><br/>
+<a href="http://www.cnblogs.com/hangxin1940/archive/2012/03/19/2806438.html">重新安装octopress</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">配置</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>date_format: &#8220;%Y年%m月%d日&#8221;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">个性化定制</h3>
+<div class="outline-text-3" id="text-1-7">
+
+
+</div>
+
+<div id="outline-container-1-7-1" class="outline-4">
+<h4 id="sec-1-7-1">邮箱地址图片化</h4>
+<div class="outline-text-4" id="text-1-7-1">
+
+<p>很多博主都将邮箱地址转化成图片，目的是为了防止垃圾邮件，我也赶了一下时髦。<br/>
+</p>
+<p><br/>
+邮箱地址生成图片的网址是：<br/>
+</p>
+<p><br/>
+<a href="http://services.nexodyne.com/email/index.php">http://services.nexodyne.com/email/index.php</a><br/>
+<a href="http://pic.sdodo.com/tool/mailpic/">http://pic.sdodo.com/tool/mailpic/</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-2" class="outline-4">
+<h4 id="sec-1-7-2">about分页</h4>
+<div class="outline-text-4" id="text-1-7-2">
+
+<p>在source下新建about目录，并在里面添加index.markdown文件。<br/>
+编辑导航条source/_includes/custom/navigation.html<br/>
+注意:index.markdown文件需要加上头，否则会找不到。<br/>
+</p>
+<p><br/>
+在侧边栏中a天际about me<br/>
+在custom/asides/about.html中添加About Me信息<br/>
+</p>
+<p><br/>
+<pre class="src src-html">&lt;<span style="color: #a020f0;">section</span>&gt;
+  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">About Me</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
+  &lt;<span style="color: #a020f0;">p</span>&gt;&lt;<span style="color: #a020f0;">img</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"/images/about.jpg"</span>&gt;&lt;/<span style="color: #a020f0;">p</span>&gt;
+  &lt;<span style="color: #a020f0;">p</span>&gt;some thing&lt;/<span style="color: #a020f0;">p</span>&gt;
+  &lt;<span style="color: #a020f0;">p</span>&gt;&lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"mailto:emmoblin@gmail.com"</span>&gt;&lt;<span style="color: #a020f0;">img</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"/images/my_email.png"</span> <span style="color: #ff1493;">alt</span>=<span style="color: #00bfff;">"emmoblin@gmail.com"</span>&gt;&lt;/<span style="color: #a020f0;">a</span>&gt;&lt;/<span style="color: #a020f0;">p</span>&gt;
+&lt;/<span style="color: #a020f0;">section</span>&gt;
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-3" class="outline-4">
+<h4 id="sec-1-7-3">添加友情链接</h4>
+<div class="outline-text-4" id="text-1-7-3">
+
+<p>在custom/asides/blog_link.html中添加友情链接<br/>
+</p>
+<p><br/>
+<pre class="src src-html">  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">&#22823;&#29275;&#21338;&#23458;</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
+  &lt;<span style="color: #a020f0;">ul</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://coolshell.cn/"</span>&gt;&#37239;&#22771;CoolShell&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://mindhacks.cn/"</span>&gt;&#21016;&#26410;&#40527;MIND HACKS&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://blog.codingnow.com/"</span>&gt;&#20113;&#39118;&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://www.cnblogs.com/Solstice/"</span>&gt;&#38472;&#30805;&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+  &lt;/<span style="color: #a020f0;">ul</span>&gt;
+&lt;/<span style="color: #a020f0;">section</span>&gt;
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-4" class="outline-4">
+<h4 id="sec-1-7-4">侧边栏添加Disqus评论</h4>
+<div class="outline-text-4" id="text-1-7-4">
+
+<p>在custom/asides/recent_comment.html中添加Disqus评论<br/>
+</p>
+<p><br/>
+<pre class="src src-html">&lt;<span style="color: #a020f0;">section</span>&gt;
+  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">&#36817;&#26399;&#35780;&#35770;</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
+&lt;<span style="color: #a020f0;">script</span> <span style="color: #ff1493;">type</span>=<span style="color: #00bfff;">"text/javascript"</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"http://emmoblin.disqus.com/combination_widget.js?num_items=5&amp;hide_mods=0&amp;color=blue&amp;default_tab=recent&amp;excerpt_length=200"</span>&gt;&lt;/<span style="color: #a020f0;">script</span>&gt;&lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://disqus.com/"</span>&gt;Powered by Disqus&lt;/<span style="color: #a020f0;">a</span>&gt;
+&lt;/<span style="color: #a020f0;">section</span>&gt;
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-5" class="outline-4">
+<h4 id="sec-1-7-5">增加一键分享</h4>
+<div class="outline-text-4" id="text-1-7-5">
+
+<p>我目前使用的是bshare。<br/>
+</p>
+<p><br/>
+在_config.yml中增加bshare: true。 在“source_includes\post”下的sharing.html中增加如下代码.<br/>
+上述的代码由bshare产生，可以自己选择所需的外观。 这样，在每一篇文章的最下方会出现一个分享的小工具。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-6" class="outline-4">
+<h4 id="sec-1-7-6">参考资料</h4>
+<div class="outline-text-4" id="text-1-7-6">
+
+<p><a href="http://octopress.org/docs/theme/template/">定制修改页面</a><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">使用了org-jekyll.el</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>我是使用org-mode来管理笔记的，使用了org-jekyll插件来把org笔记转化为jekyll的格式。<br/>
+首先通过C-c C-e 把整个project进行export，生成cache。<br/>
+之后org-jekyll-export-blog，根据cache的内容生成对应的octopress文件。<br/>
+org-jekyll是根据～/.org_timestamp/的cache生成的。所以先要export project，之后再用org-jekyll。<br/>
+</p>
+<p><br/>
+org-jekyll-export-current-entry 使用时光标所在entry进行导出。<br/>
+</p>
+<p><br/>
+所有source/_posts目录下的html都可以重新生成，注意有的时候格式不对，比如title中不能包含中文，<br/>
+会导致rake genernate错误。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[LVM介绍]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/13/lvm/"/>
+    <updated>2013-02-13T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/13/lvm</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">LVM介绍</a>
+<ul>
+<li><a href="#sec-1-1">LVM基本术语</a></li>
+<li><a href="#sec-1-2">创建和管理lvm</a>
+<ul>
+<li><a href="#sec-1-2-1">分区</a></li>
+<li><a href="#sec-1-2-2">创建物理卷</a></li>
+<li><a href="#sec-1-2-3">创建卷组</a></li>
+<li><a href="#sec-1-2-4">激活卷组</a></li>
+<li><a href="#sec-1-2-5">添加新的物理卷到卷组中</a></li>
+<li><a href="#sec-1-2-6">查看物理卷信息</a></li>
+<li><a href="#sec-1-2-7">从卷组中删除一个物理卷</a></li>
+<li><a href="#sec-1-2-8">创建逻辑卷</a></li>
+<li><a href="#sec-1-2-9">创建文件系统</a></li>
+<li><a href="#sec-1-2-10">删除一个逻辑卷</a></li>
+<li><a href="#sec-1-2-11">扩展逻辑卷大小</a></li>
+<li><a href="#sec-1-2-12">减少逻辑卷大小</a></li>
+<li><a href="#sec-1-2-13">灵活</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">snapshot</a></li>
+<li><a href="#sec-1-4">lvm常用管理工具：</a></li>
+<li><a href="#sec-1-5">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/lvm/">LVM介绍</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+LVM是建立在硬盘和分区之上的一个逻辑层，来提高磁盘分区管理的灵活性。通过LVM系统管理员可以轻松管理磁盘分区，如：将若干个磁盘分区连接为一个整块的卷组（volumegroup），形成一个存储池。管理员可以在卷组上随意创建逻辑卷组（logicalvolumes），并进一步在逻辑卷组上创建文件系统。管理员通过LVM可以方便的调整存储卷组的大小，并且可以对磁盘存储按照组的方式进行命名、管理和分配。<br/>
+而且当系统添加了新的磁盘，通过LVM管理员就不必将磁盘的文件移动到新的磁盘上以充分利用新的存储空间，而是直接扩展文件系统跨越磁盘即可。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">LVM基本术语</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>物理存储介质（The physical media）<br/>
+这里指系统的存储设备：硬盘，如：/dev/hda1、/dev/sda等等，是存储系统最低层的存储单元。 <br/>
+</p>
+<p><br/>
+物理卷PV（physical volume）<br/>
+物理卷就是指硬盘分区或从逻辑上与磁盘分区具有同样功能的设备(如RAID)，是LVM的基本存储逻辑块，但和基本的物理存储介质（如分区、磁盘等）比较，却包含有与LVM相关的管理参数。 <br/>
+</p>
+<p><br/>
+卷组VG（Volume Group）<br/>
+LVM卷组类似于非LVM系统中的物理硬盘，其由物理卷组成。可以在卷组上创建一个或多个“LVM分区”（逻辑卷），LVM卷组由一个或多个物理卷组成。 <br/>
+</p>
+<p><br/>
+逻辑卷LV（logical volume）<br/>
+LVM的逻辑卷类似于非LVM系统中的硬盘分区，在逻辑卷之上可以建立文件系统(比如/home或者/usr等)。 <br/>
+</p>
+<p><br/>
+PE（physical extent）<br/>
+每一个物理卷被划分为称为PE(Physical Extents)的基本单元，具有唯一编号的PE是可以被LVM寻址的最小单元。PE的大小是可配置的，默认为4MB。 <br/>
+</p>
+<p><br/>
+LE（logical extent）<br/>
+逻辑卷也被划分为被称为LE(Logical Extents) 的可被寻址的基本单位。在同一个卷组中，LE的大小和PE是相同的，并且一一对应。<br/>
+</p>
+<p><br/>
+<img src="http://emmoblin.github.com/img/lvm_vg.jpg"  alt="/img/lvm_vg.jpg" /><br/>
+</p>
+<p><br/>
+VGDA（卷组描述符区域）<br/>
+和非 LVM 系统将包含分区信息的元数据保存在位于分区起始位置的分区表中一样，逻辑卷以及卷组相关的元数据被保存在位于物理卷起始处的 VGDA 中。VGDA 包括以下内容：PV 描述符、VG 描述符、LV 描述符、和一些 PE 描述符。系统启动 LVM 时激活 VG，并将 VGDA 加载至内存，来识别 LV 的实际物理存储位置。当系统进行 I/O 操作时，就会根据 VGDA 建立的映射机制来访问实际的物理位置。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">创建和管理lvm</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">分区</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p>使用分区工具（如：fdisk等）创建LVM分区，方法和创建其他一般分区的方式是一样的，区别仅仅是LVM的分区类型为8e。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">创建物理卷</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>创建物理卷的命令为pvcreate，利用该命令将希望添加到卷组的所有分区或者磁盘创建为物理卷。<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">pvcreate /dev/hda5</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">创建卷组</h4>
+<div class="outline-text-4" id="text-1-2-3">
+
+<p>创建卷组的命令为vgcreate，将使用pvcreate建立的物理卷创建为一个完整的卷组：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgcreate web_document /dev/hda5 /dev/hdb</span>
+</pre>
+
+vgcreate在创建卷组 web_document 以外，还设置使用大小为4 MB的PE（默认为4MB），这表示卷组上创建的所有逻辑卷都以 4 MB 为增量单位来进行扩充或缩减。由于内核原因，PE大小决定了逻辑卷的最大大小，4 MB 的PE决定了单个逻辑卷最大容量为 256 GB，若希望使用大于256G的逻辑卷则创建卷组时指定更大的PE。PE大小范围为8 KB 到 512 MB，并且必须总是 2 的倍数（使用-s指定）<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4">激活卷组</h4>
+<div class="outline-text-4" id="text-1-2-4">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgchange -ay web_document</span>
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-5" class="outline-4">
+<h4 id="sec-1-2-5">添加新的物理卷到卷组中</h4>
+<div class="outline-text-4" id="text-1-2-5">
+
+<p>当系统安装了新的磁盘并创建了新的物理卷，而要将其添加到已有卷组时，就需要使用vgextend命令：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgextend web_document /dev/hdc1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-6" class="outline-4">
+<h4 id="sec-1-2-6">查看物理卷信息</h4>
+<div class="outline-text-4" id="text-1-2-6">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">pvdisplay /dev/hda1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-7" class="outline-4">
+<h4 id="sec-1-2-7">从卷组中删除一个物理卷</h4>
+<div class="outline-text-4" id="text-1-2-7">
+
+<p>要从一个卷组中删除一个物理卷，首先要确认要删除的物理卷没有被任何逻辑卷正在使用.<br/>
+如果某个物理卷正在被逻辑卷所使用，就需要将该物理卷的数据备份到其他地方，然后再删除。<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgreduce web_document /dev/hda1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-8" class="outline-4">
+<h4 id="sec-1-2-8">创建逻辑卷</h4>
+<div class="outline-text-4" id="text-1-2-8">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvcreate -L1500 &#8211;n www1 web_document</span>
+</pre>
+
+该命令就在卷组web_document上创建名字为www1，大小为1500M的逻辑卷，并且设备入口为/dev/web_document/www1<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-9" class="outline-4">
+<h4 id="sec-1-2-9">创建文件系统</h4>
+<div class="outline-text-4" id="text-1-2-9">
+
+<p>推荐使用reiserfs文件系统，来替代ext2和ext3<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-10" class="outline-4">
+<h4 id="sec-1-2-10">删除一个逻辑卷</h4>
+<div class="outline-text-4" id="text-1-2-10">
+
+<p>删除逻辑卷以前首先需要将其卸载，然后删除：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">umount /dev/web_document/www1</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvremove /dev/web_document/www1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-11" class="outline-4">
+<h4 id="sec-1-2-11">扩展逻辑卷大小</h4>
+<div class="outline-text-4" id="text-1-2-11">
+
+<p>LVM提供了方便调整逻辑卷大小的能力，扩大为12G<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvextend -L12G /dev/web_document/www1</span>
+&#22686;&#21152;1G
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvextend -L+1G /dev/web_document/www1</span>
+</pre>
+
+
+增加了逻辑卷的容量以后，就需要修改文件系统大小以实现利用扩充的空间。笔者推荐使用reiserfs文件系统来替代ext2或者ext3。因此这里仅仅讨论reiserfs的情况。Reiserfs文件工具提供了文件系统大小调整工具：resize_reiserfs。对于希望调整被加载的文件系统大小：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">resize_reiserfs -f /dev/web_document/www1</span>
+</pre>
+
+
+对于使用ext2或ext3文件系统的用户可以考虑使用工具<br/>
+ext2resize。<br/>
+<a href="http://sourceforge.net/projects/ext2resize">http://sourceforge.net/projects/ext2resize</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-12" class="outline-4">
+<h4 id="sec-1-2-12">减少逻辑卷大小</h4>
+<div class="outline-text-4" id="text-1-2-12">
+
+<p>使用lvreduce即可实现对逻辑卷的容量，同样需要首先将文件系统卸载：<br/>
+要先减少文件系统，然后再减少逻辑卷<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">umount /data/wwwroot</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">resize_reiserfs -s-2G /dev/web_document/www1</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvreduce -L-2G /dev/web_document/www1</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">mount -treiserfs /dev/web_document/www1 /data/wwwroot</span>
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-13" class="outline-4">
+<h4 id="sec-1-2-13">灵活</h4>
+<div class="outline-text-4" id="text-1-2-13">
+
+<p>逻辑卷可以再组合成pv，和vg，再次进行lvm。<br/>
+而且一个卷组可以跨多个磁盘。<br/>
+如果想自己做实验可以自己创建空洞文件进行lvm练习。<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">dd <span style="color: #ff1493;">if</span>=/dev/zore <span style="color: #ff1493;">of</span>=./loop1.img <span style="color: #ff1493;">bs</span>=1G <span style="color: #ff1493;">count</span>=0 <span style="color: #ff1493;">seek</span>=100
+</pre>
+
+这就创建了一个100G的稀疏文件，文件大小是100G，但占用的空间是0.<br/>
+然后使用losetup进行加载。就可以当/dev/loop0 磁盘使用了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">snapshot</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>lvm可以创建镜像，创建时选择创建允许多大的空间用于记录变化。<br/>
+创建镜像后实际上就是和原始lv独立，但如果原始lv删掉了，则所有的snap也就丢失了。<br/>
+snap和原始lv都可以后续修改，而且snap可以和原始lv进行合并，使原始lv变为snap当前的样子。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">lvm常用管理工具：</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+</p><table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<tbody>
+<tr><td class="left">功能</td><td class="left">物理卷</td><td class="left">卷组</td><td class="left">逻辑卷</td></tr>
+<tr><td class="left">扫描</td><td class="left">pvscan</td><td class="left">vgscan</td><td class="left">lvscan</td></tr>
+<tr><td class="left">查看</td><td class="left">pvdisplay</td><td class="left">vgdisplay</td><td class="left">lvdisplay</td></tr>
+<tr><td class="left">新建</td><td class="left">pvcreat</td><td class="left">vgcreat</td><td class="left">lvcreat</td></tr>
+<tr><td class="left">卸载</td><td class="left">pvremove</td><td class="left">vgremove</td><td class="left">lvremove</td></tr>
+<tr><td class="left">增大</td><td class="left">无</td><td class="left">vgextend</td><td class="left">lvextend</td></tr>
+<tr><td class="left">减小</td><td class="left">无</td><td class="left">vgreduce</td><td class="left">lvreduce</td></tr>
+</tbody>
+</table>
+
+
+<p><br/>
+lvs<br/>
+pvs<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">参考</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p><a href="http://blog.csdn.net/steelren/article/details/1931363">http://blog.csdn.net/steelren/article/details/1931363</a><br/>
+</p>
+<p><br/>
+LVM-HOWTO<br/>
+<a href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a><br/>
+</p>
+<p><br/>
+一些操作例子<br/>
+<a href="http://sapling.me/unixlinux/lvm_howto.html">http://sapling.me/unixlinux/lvm\_howto.html</a><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[先衰竭训练法]]></title>
@@ -2125,1153 +3450,6 @@ ubuntu one没有历史版本功能<br/>
 删除文件夹<br/>
 <code>u1sdtool --delete-folder=FOLDER_ID</code><br/>
 其他命令使用&ndash;help查看<br/>
-</p></div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ssh的一些技巧]]></title>
-    <link href="http://emmoblin.github.com/blog/2012/10/09/ssh-skill/"/>
-    <updated>2012-10-09T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2012/10/09/ssh-skill</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">ssh的一些技巧</a>
-<ul>
-<li><a href="#sec-1-1">多条连接共享</a></li>
-<li><a href="#sec-1-2">长连接</a></li>
-<li><a href="#sec-1-3">别再输入密码</a></li>
-<li><a href="#sec-1-4">省去用户名</a></li>
-<li><a href="#sec-1-5">在服务器间跳转</a></li>
-<li><a href="#sec-1-6">穿越Web代理</a></li>
-<li><a href="#sec-1-7">shfs</a></li>
-<li><a href="#sec-1-8">使用本地App连接远程服务器</a></li>
-<li><a href="#sec-1-9">减少延迟</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/09/ssh-skill/">ssh的一些技巧</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">多条连接共享</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>如果你需要在多个窗口中打开到同一个服务器的连接，而不想每次都输入用户名，密码，或是等待连接建立，<br/>
-那么你可以配置SSH的连接共享选项，在本地打开你的SSH配置文件，通常它们位于~/.ssh/config，然后添加下面2行：<br/>
-ControlMaster auto<br/>
-ControlPath /tmp/ssh_mux_%h_%p_%r<br/>
-现在试试断开你与服务器的连接，并建立一条新连接，然后打开一个新窗口，再创建一条连接，你会发现，第二条连接几乎是在瞬间就建立好了。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">长连接</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>如果你发现自己每条需要连接同一个服务器无数次，那么长连接选项就是为你准备的：<br/>
-ControlPersist 4h<br/>
-现在你每次通过SSH与服务器建立连接之后，这条连接将被保持4个小时，即使在你退出服务器之后，这条连接依然可以重用，<br/>
-因此，在你下一次（4小时之内）登录服务器时，你会发现连接以闪电般的速度建立完成，<br/>
-这个选项对于通过scp拷贝多个文件提速尤其明显，因为你不在需要为每个文件做单独的认证了。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">别再输入密码</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>如果你还在通过密码方式登录SSH，那么你或许应该试试SSH Keys，首先使用OpenSSH为自己声称一对密钥：<br/>
-$ ssh-keygen<br/>
-跟随指示，完成之后，你应该可以在你的.ssh目录下看到两个文件，id_rsa就是你的私钥，而id_ras.pub则是你的公钥，<br/>
-现在你需要将你的公钥拷贝到服务器上，如果你的系统有ssh-copy-id命令，拷贝会很简单：<br/>
-$ ssh-copy-id smylers@compo.example.org<br/>
-否则，你需要手动将你的私钥拷贝的服务器上的~/.ssh/authorized_keys文件中：<br/>
-$ &lt; ~/.ssh/id_rsa.pub ssh clegg.example.org ‘mkdir -p .ssh; cat &gt;&gt; .ssh/authorized_keys; chmod go-w .ssh .ssh/authorized_keys’<br/>
-现在试试重新连接到SSH服务器，或是拷贝文件，是不是已经不需要再输入密码了？<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">省去用户名</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>如果你在远程服务器上的用户名和你本地的用户名不同，你同样可以在SSH配置中进行设置：<br/>
-Host www* mail<br/>
-HostName %h.example.com<br/>
-User simon<br/>
-现在就算我的本地用户名是 smylers，我仍然可以这样连接我的服务器：<br/>
-$ ssh www2<br/>
-SSH会使用simon账户连接你的服务器，同样，Putty可以保存这个信息在你的session中。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">在服务器间跳转</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<p>有些时候，你可能没法直接连接到某台服务器，而需要使用一台中间服务器进行中转，这个过程也可以自动化。首先确保你已经为服务器配置了公钥访问，并开启了agent forwarding，现在你就可以通过2条命令来连接目标服务器，不会有任何提示输入：<br/>
-$ ssh gateway<br/>
-gateway $ ssh db<br/>
-然后在你的本地SSH配置中，添加下面这条配置：<br/>
-Host db<br/>
-HostName db.internal.example.com<br/>
-ProxyCommand ssh gateway netcat -q 600 %h %p<br/>
-现在你就可以通过一条命令来直接连接目标服务器了:<br/>
-$ ssh db<br/>
-这里你可能会需要等待长一点的时间，因为SSH需要进行两次认证，，注意netcat也有可能被写成nc或者ncat或者前面还需要加上g，你需要检查你的中间服务器来确定实际的参数。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">穿越Web代理</h3>
-<div class="outline-text-3" id="text-1-6">
-
-<p>有些时候，你所在的网络不止封锁SSH端口，它们有可能更进一步，只让你通过Web代理来访问网络，幸运的是我们有一个叫做Corkscrew的程序可以通过Web代理在发送SSH数据。Corkscrew的使用非常简单，一般我都是在需要时搜索，然后直接下载，跟随网站上的指示，然后就搞定了，一般你需要这样一条配置：<br/>
-ProxyCommand corkscrew proxy.example.org 8080 %h %p<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7" class="outline-3">
-<h3 id="sec-1-7">shfs</h3>
-<div class="outline-text-3" id="text-1-7">
-
-<p>另一种让远程GUI程序显示在本地的替代方案就是让本地的GUI程序可以直接操作远程文件，你可以通过SSHFS来实现，只需要创建一个空目录，然后使用SSHFS将一个远程目录mount到这个目录就可以了：<br/>
-$ mkdir gallery_src<br/>
-$ sshfs dev:projects/gallery/src gallery_src<br/>
-$ cd gallery_src<br/>
-$ ls<br/>
-现在你就可以使用任何你喜欢的本地程序来便捷这个目录中的文件了，它们看起来是在你的本地，但其实时远程服务器上的文件，你可以使用fusermount命令来unmount这些文件，不要担心记不住，它们就在sshfs手册的顶上：<br/>
-$ cd ..<br/>
-$ fusermount -u gallery_src<br/>
-SSHFS可以在Linux和OSX上工作，Windows用户我目前还没找到什么好办法。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-8" class="outline-3">
-<h3 id="sec-1-8">使用本地App连接远程服务器</h3>
-<div class="outline-text-3" id="text-1-8">
-
-<p>有时可能有些服务，比如数据库或是Web服务器，它们运行在远程服务器上，但是如果有用方式可以直接从本地程序连接它们，那会非常有用，要做到这一点，你需要用到端口转发(port forwarding)，<br/>
-举个例子，如果你的服务器运行Postgres（并且只允许本地访问），那么你就可以在你的SSH配置中加入：<br/>
-Host db<br/>
-LocalForward 5433 localhost:5432<br/>
-现在当你连接你的SSH服务器时，它会在你本地电脑打开一个5433端口（我随便挑的），并将所有发送到这个端口的数据转发到服务器的5432端口（Postgres的默认端口），然后，只要你和服务器建立了连接，你就可以通过5433端口来访问服务器的Postgres了。<br/>
-$ ssh db<br/>
-现在打开另外一个窗口，你就可以通过下面这条命令在本地连接你的Postgres数据库了：<br/>
-$ psql -h localhost -p 5443 orders<br/>
-如果你想要使用服务器不支持的图形化Postgres客户端时，这条命令会显得尤其有用：<br/>
-$ pgadmin3 &amp;<br/>
-或者你有一个后台的Web服务器，你不希望直接通过Internet访问它，你也可以通过端口转发来访问它：<br/>
-Host api<br/>
-LocalForward 8080 localhost:80<br/>
-现在连接到服务器：<br/>
-$ ssh api<br/>
-然后将浏览器指向你选择的端口号：<br/>
-$ firefox <a href="http://localhost:8080/">http://localhost:8080/</a><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-9" class="outline-3">
-<h3 id="sec-1-9">减少延迟</h3>
-<div class="outline-text-3" id="text-1-9">
-
-<p>如果每次连接服务器都意味着你需要等待几十秒而无所事事，那么你或许应该试试在你的SSH配置中加入下面这条：<br/>
-GSSAPIAuthentication no<br/>
-如果这条命令有效的话，你应该通知你的系统管理员让他在服务器上禁用这个选项，这样其他人就不用再分别添加这条配置到它们的本地配置了。<br/>
-在server端修改：<br/>
-/etc/ssh/sshd_config<br/>
-添加<br/>
-USEDNS no<br/>
-service sshd restart<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[A Unix Utility You Should Know About:lsof]]></title>
-    <link href="http://emmoblin.github.com/blog/2012/10/09/lsof/"/>
-    <updated>2012-10-09T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2012/10/09/lsof</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">A Unix Utility You Should Know About:lsof</a>
-<ul>
-<li><a href="#sec-1-1">前言</a></li>
-<li><a href="#sec-1-2">如何使用lsof？</a></li>
-<li><a href="#sec-1-3">找出谁在使用某个文件</a></li>
-<li><a href="#sec-1-4">列出某个用户打开的所有文件</a></li>
-<li><a href="#sec-1-5">查找某个程序打开的所有文件</a></li>
-<li><a href="#sec-1-6">列出所有由某个用户或某个进程打开的文件</a></li>
-<li><a href="#sec-1-7">列出除root用户外的所有用户打开的文件</a></li>
-<li><a href="#sec-1-8">列出所有由某个PID对应的进程打开的文件</a></li>
-<li><a href="#sec-1-9">列出所有网络连接</a></li>
-<li><a href="#sec-1-10">列出所有NFS（网络文件系统）文件</a></li>
-<li><a href="#sec-1-11">列出所有UNIX域Socket文件</a></li>
-<li><a href="#sec-1-12">列出所有对应某个组id的进程</a></li>
-<li><a href="#sec-1-13">列出所有与某个描述符关联的文件</a></li>
-<li><a href="#sec-1-14">输出使用某些资源的进程pid</a></li>
-<li><a href="#sec-1-15">循环列出文件</a></li>
-<li><a href="#sec-1-16">如何安装lsof？</a></li>
-<li><a href="#sec-1-17">原文</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">前言</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>这是“你应该知道的Unix和Linux命令”系列的第三篇，在这篇文章中，我会介绍lsof这个工具，如果说netcat是进行网络诊断的瑞士军刀，那么lsof就是Unix调试的瑞士军刀。<br/>
-</p>
-<p><br/>
-Lsof是遵从Unix哲学的典范，它只做一件事情，并且做的相当完美——它可以列出某个进程打开的所有文件信息。<br/>
-打开的文件可能是普通的文件，目录，NFS文件，块文件，字符文件，共享库，常规管道，明明管道，符号链接，Socket流，网络Socket，UNIX域Socket，以及其它更多。因为Unix系统中几乎所有东西都是文件，你可以想象lsof该有多有用。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">如何使用lsof？</h3>
-<div class="outline-text-3" id="text-1-2">
-
-
-<p><br/>
-这篇文章中我会尽力列举我能想到的所有lsof的用法，让我们先从最简单的开始（或许你已经知道了），然后逐渐增加复杂度：<br/>
-</p>
-<p><br/>
-列出所有打开的文件<br/>
-</p>
-<p><br/>
-<code>lsof</code><br/>
-</p>
-<p><br/>
-不带任何参数运行lsof会列出所有进程打开的所有文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">找出谁在使用某个文件</h3>
-<div class="outline-text-3" id="text-1-3">
-
-
-<p><br/>
-<code>lsof /path/to/file</code><br/>
-</p>
-<p><br/>
-只需要执行文件的路径，lsof就会列出所有使用这个文件的进程，你也可以列出多个文件，lsof会列出所有使用这些文件的进程。<br/>
-</p>
-<p><br/>
-你也可以一次制定多个文件：<br/>
-</p>
-<p><br/>
-<code>lsof /path/to/file1 /path/to/file2</code><br/>
-</p>
-<p><br/>
-递归查找某个目录中所有打开的文件<br/>
-</p>
-<p><br/>
-<code>lsof +D /usr/lib</code><br/>
-</p>
-<p><br/>
-加上+D参数，lsof会对指定目录进行递归查找，注意这个参数要比grep版本慢：<br/>
-</p>
-<p><br/>
-= lsof | grep &#8216;/usr/lib&#8217; =<br/>
-</p>
-<p><br/>
-之所以慢是因为+D首先查找所有的文件，然后一次性输出。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">列出某个用户打开的所有文件</h3>
-<div class="outline-text-3" id="text-1-4">
-
-
-<p><br/>
-<code>lsof -u pkrumins</code><br/>
-</p>
-<p><br/>
--u选项限定只列出所有被用户pkrumins打开的文件，你可以通过逗号指定多个用户：<br/>
-</p>
-<p><br/>
-<code>lsof -u rms,root</code><br/>
-</p>
-<p><br/>
-这条命令会列出所有rms和root用户打开的文件。<br/>
-</p>
-<p><br/>
-你也可以像下面这样使用多个-u做同样的事情：<br/>
-</p>
-<p><br/>
-<code>lsof -u rms -u root</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">查找某个程序打开的所有文件</h3>
-<div class="outline-text-3" id="text-1-5">
-
-
-<p><br/>
-<code>lsof -c apache</code><br/>
-</p>
-<p><br/>
--c选项限定只列出以apache开头的进程打开的文件：<br/>
-</p>
-<p><br/>
-所以你可以不用像下面这样写：<br/>
-</p>
-<p><br/>
-<code>lsof | grep foo</code><br/>
-</p>
-<p><br/>
-而使用下面这个更简短的版本：<br/>
-</p>
-<p><br/>
-<code>lsof -c foo</code><br/>
-</p>
-<p><br/>
-事实上，你可以只制定进程名称的开头：<br/>
-</p>
-<p><br/>
-<code>lsof -c apa</code><br/>
-</p>
-<p><br/>
-这会列出所有以apa开头的进程打开的文件<br/>
-</p>
-<p><br/>
-你同样可以制定多个-c参数：<br/>
-</p>
-<p><br/>
-<code>lsof -c apache -c python</code><br/>
-</p>
-<p><br/>
-这会列出所有由apache和python打开的文件<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">列出所有由某个用户或某个进程打开的文件</h3>
-<div class="outline-text-3" id="text-1-6">
-
-
-<p><br/>
-<code>lsof -u pkrumins -c apache</code><br/>
-</p>
-<p><br/>
-你也可以组合使用多个选项，这些选项默认进行或关联，也就是说上面的命令会输入由pkrumins用户或是apache进程打开的文件。<br/>
-</p>
-<p><br/>
-列出所有由一个用户与某个进程打开的文件<br/>
-</p>
-<p><br/>
-<code>lsof -a -u pkrumins -c bash</code><br/>
-</p>
-<p><br/>
--a参数可以将多个选项的组合条件由或变为与，上面的命令会显示所有由pkrumins用户以及bash进程打开的文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7" class="outline-3">
-<h3 id="sec-1-7">列出除root用户外的所有用户打开的文件</h3>
-<div class="outline-text-3" id="text-1-7">
-
-
-<p><br/>
-<code>lsof -u ^root</code><br/>
-</p>
-<p><br/>
-注意root前面的^符号，它执行取反操作，因此lsof会列出所有root用户之外的用户打开的文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-8" class="outline-3">
-<h3 id="sec-1-8">列出所有由某个PID对应的进程打开的文件</h3>
-<div class="outline-text-3" id="text-1-8">
-
-
-<p><br/>
-<code>lsof -p 1</code><br/>
-</p>
-<p><br/>
--p选项让你可以使用进程id来过滤输出。<br/>
-</p>
-<p><br/>
-记住你也可以用都好来分离多个pid。<br/>
-</p>
-<p><br/>
-<code>lsof -p 450,980,333</code><br/>
-</p>
-<p><br/>
-列出所有进程打开的文件除了某个pid的<br/>
-</p>
-<p><br/>
-<code>lsof -p ^1</code><br/>
-</p>
-<p><br/>
-同前面的用户一样，你也可以对-p选项使用^来进行取反。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-9" class="outline-3">
-<h3 id="sec-1-9">列出所有网络连接</h3>
-<div class="outline-text-3" id="text-1-9">
-
-
-<p><br/>
-<code>lsof -i</code><br/>
-</p>
-<p><br/>
-lsof的-i选项可以列出所有打开了网络套接字（TCP和UDP）的进程。<br/>
-</p>
-<p><br/>
-列出所有TCP网络连接<br/>
-</p>
-<p><br/>
-<code>lsof -i tcp</code><br/>
-</p>
-<p><br/>
-也可以为-i选项加上参数，比如tcp，tcp选项会强制lsof只列出打开TCP sockets的进程。<br/>
-</p>
-<p><br/>
-列出所有UDP网络连接<br/>
-</p>
-<p><br/>
-<code>lsof -i udp</code><br/>
-</p>
-<p><br/>
-同样udp让lsof只列出使用UDP socket的进程。<br/>
-</p>
-<p><br/>
-找到使用某个端口的进程<br/>
-</p>
-<p><br/>
-<code>lsof -i :25</code><br/>
-</p>
-<p><br/>
-:25和-i选项组合可以让lsof列出占用TCP或UDP的25端口的进程。<br/>
-</p>
-<p><br/>
-你也可以使用/etc/services中制定的端口名称来代替端口号，比如：<br/>
-</p>
-<p><br/>
-<code>lsof -i :smtp</code><br/>
-</p>
-<p><br/>
-找到使用某个udp端口号的进程<br/>
-</p>
-<p><br/>
-<code>lsof -i udp:53</code><br/>
-</p>
-<p><br/>
-同样的，也可以找到使用某个tcp端口的进程：<br/>
-</p>
-<p><br/>
-<code>lsof -i tcp:80</code><br/>
-</p>
-<p><br/>
-找到某个用户的所有网络连接<br/>
-</p>
-<p><br/>
-<code>lsof -a -u hacker -i</code><br/>
-</p>
-<p><br/>
-使用-a将-u和-i选项组合可以让lsof列出某个用户的所有网络行为。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-10" class="outline-3">
-<h3 id="sec-1-10">列出所有NFS（网络文件系统）文件</h3>
-<div class="outline-text-3" id="text-1-10">
-
-
-<p><br/>
-<code>lsof -N</code><br/>
-</p>
-<p><br/>
-这个参数很好记，-N就对应NFS。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-11" class="outline-3">
-<h3 id="sec-1-11">列出所有UNIX域Socket文件</h3>
-<div class="outline-text-3" id="text-1-11">
-
-
-<p><br/>
-<code>lsof -U</code><br/>
-</p>
-<p><br/>
-这个选项也很好记，-U就对应UNIX。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-12" class="outline-3">
-<h3 id="sec-1-12">列出所有对应某个组id的进程</h3>
-<div class="outline-text-3" id="text-1-12">
-
-
-<p><br/>
-<code>lsof -g 1234</code><br/>
-</p>
-<p><br/>
-进程组用来来逻辑上对进程进行分组，这个例子查找所有PGID为1234的进程打开的文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-13" class="outline-3">
-<h3 id="sec-1-13">列出所有与某个描述符关联的文件</h3>
-<div class="outline-text-3" id="text-1-13">
-
-
-<p><br/>
-<code>lsof -d 2</code><br/>
-</p>
-<p><br/>
-这个命令会列出所有以描述符2打开的文件。<br/>
-</p>
-<p><br/>
-你也可以为描述符指定一个范围：<br/>
-</p>
-<p><br/>
-<code>lsof -d 0-2</code><br/>
-</p>
-<p><br/>
-这会列出所有描述符为0，1，2的文件。<br/>
-</p>
-<p><br/>
--d选项还支持其它很多特殊值，下面的命令列出所有内存映射文件：<br/>
-</p>
-<p><br/>
-<code>lsof -d mem</code><br/>
-</p>
-<p><br/>
-txt则列出所有加载在内存中并正在执行的进程：<br/>
-</p>
-<p><br/>
-<code>lsof -d txt</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-14" class="outline-3">
-<h3 id="sec-1-14">输出使用某些资源的进程pid</h3>
-<div class="outline-text-3" id="text-1-14">
-
-
-<p><br/>
-<code>lsof -t -i</code><br/>
-</p>
-<p><br/>
--t选项输出进程的PID，你可以将它和-i选项组合输出使用某个端口的进程的PID，下面的命令将会杀掉所有使用网络的进程：<br/>
-</p>
-<p><br/>
-<code>kill -9 `lsof -t -i`</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-15" class="outline-3">
-<h3 id="sec-1-15">循环列出文件</h3>
-<div class="outline-text-3" id="text-1-15">
-
-
-<p><br/>
-<code>lsof -r 1</code><br/>
-</p>
-<p><br/>
--r选项让lsof可以循环列出文件直到被中断，参数1的意思是每秒钟重复打印一次，这个选项最好同某个范围比较小的查询组合使用，比如用来监测网络活动：<br/>
-</p>
-<p><br/>
-<code>lsof -r 1 -u john -i -a</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-16" class="outline-3">
-<h3 id="sec-1-16">如何安装lsof？</h3>
-<div class="outline-text-3" id="text-1-16">
-
-
-<p><br/>
-许多Unix系统都内置了lsof，如果你的系统没有安装，你可以从这里直接下载源代码。<br/>
-</p>
-<p><br/>
-BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
-</p>
-<p><br/>
-你可以通过man lsof来了解关于lsof的完整文档，或者通过lsof -h查看。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-17" class="outline-3">
-<h3 id="sec-1-17">原文</h3>
-<div class="outline-text-3" id="text-1-17">
-
-<p><a href="http://www.catonmat.net/blog/unix-utilities-lsof/">http://www.catonmat.net/blog/unix-utilities-lsof/</a><br/>
-还有pipe view和netcat，以后再总结<br/>
-翻译：<br/>
-<a href="http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/">http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/</a><br/>
-</p></div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[functional-programming-is-hard-thats-why-its-good]]></title>
-    <link href="http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/"/>
-    <updated>2012-09-11T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">functional-programming-is-hard-thats-why-its-good</a>
-<ul>
-<li><a href="#sec-1-1">函数式编程很难，这正是你要学习它的原因</a>
-<ul>
-<li><a href="#sec-1-1-1">它给你的初次印象不友善</a></li>
-<li><a href="#sec-1-1-2">新奇事物</a></li>
-<li><a href="#sec-1-1-3">眼见为实</a></li>
-<li><a href="#sec-1-1-4">各有所求</a></li>
-<li><a href="#sec-1-1-5">补充</a></li>
-<li><a href="#sec-1-1-6">转载自: http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">functional-programming-is-hard-thats-why-its-good</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">函数式编程很难，这正是你要学习它的原因</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>很奇怪不是，很少有人每天都使用函数式编程语言。如果你用Scala，Haskell，Erlang，F#或某个Lisp方言来编程，很可能没有公司会花钱聘你。这个行业里的绝大部分人都是使用像Python，Ruby，Java或C#等面向对象的编程语言——它们用起来很顺手。不错，你也许会偶然用到一两个“函数式语言特征”，例如“block”，但人们不会去做函数式编程。<br/>
-</p>
-<p><br/>
-然而，很多年来，我们一直被教导说函数式编程语言很好很棒。我仍然记得当我第一次阅读ESR的著名的关于学习Lisp语言的论文时的困惑。也许大多数的人对Paul Graham 的《Beating The Averages》这篇文章更加熟悉：<br/>
-</p>
-<p><br/>
-使用Lisp开发使我们的开发周期迭代的如此之快，以至于有时当竞争对手在新闻发布会上推出他们的新功能一两天后，我们就能复制出同样的功能。当报道产品发布的新闻记者打电话给我们时，我们的产品已经拥有了同样的功能特征。<br/>
-</p>
-<p><br/>
-那些皈依函数式编程的人中，一直常见的考虑是：学习这种新的、函数式的语言“对你有好处”；就像是某些人建议说每天30分钟的健身房活动会“让你的身体健康”一样。但这也同时暗示了这样做的难度和需要的付出。Lisp语言跟Haskell、Ocaml和Scala语言不同，被认为是出了名的难学，可以说是臭名昭著。文雅的人说这是Lisp语言的“深度&amp;广度”的体现。不文雅的人说这是“意淫”或“玩弄学术”或简单的“没必要”。我认为，它的难度跟你对它熟不熟悉有关，而且，这种难度是一种重要指标显示：学习这样的一种语言会让你编程更有效率、能力更强。<br/>
-</p>
-<p><br/>
-<!-- more -->
-
-</p>
-</div>
-
-<div id="outline-container-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1">它给你的初次印象不友善</h4>
-<div class="outline-text-4" id="text-1-1-1">
-
-
-<p><br/>
-我7岁时就开始编程，在漫长无聊的郊区夏季里，在我祖父的计算机上瞎搞一气。我学了BASIC，用它在屏幕上画一个蹦跳的球。我学了Pascal，用它写了一个能通过PC喇叭放音乐的程序。大概10岁时我学了C语言，但遇到了一堵越不过去的墙，直到我上了高中。那就是：指针。即使不算这些该死的指针，我写、读、学习、练习中，同样遭遇无数的失败。我把祖父的硬盘给毁掉了两次(一次属意外)，最后弄得不少次要自己重装操作系统。我失败，一遍遍的失败。<br/>
-</p>
-<p><br/>
-也许你也有跟我相似的故事，也许是完全不同的一个。但我想，差不多所有学过编程的人都有过遇到困难的经历。我们在学了一些基本知识后，必然会遇到一些公认的概念上的关口，比如“指针”。很多计算机科学教授会把指针描述为他们课程上的过滤网。如果你想成为一名优秀的程序员，你必须要能理解指针。很少人能轻松的掌握它们。大多数人，包括我，则需要不断的练习和参考例子来理解什么是指针、为什么它们很重要。<br/>
-</p>
-<p><br/>
-这种艰难的努力过程不是偶然的，是一种几乎普遍的现象。指针是一种非常强大和基础功能的概念。学会它能让你成为一名更好的程序员，能让你的思考更加形象化。即使你使用的语言并不提供指针这样的特征，但跟指针类似的数据结构和概念却随处可见。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-2" class="outline-4">
-<h4 id="sec-1-1-2">新奇事物</h4>
-<div class="outline-text-4" id="text-1-1-2">
-
-
-<p><br/>
-一旦你学会了几种语言后，所有的语言都开始看起来都很相似。知道Python的人学习Ruby可能不会遇到太多的问题，知道Java的人学习C#会感到很熟悉。不错，也有意外的地方。Ruby爱好者在学习Python时会对它的comprehension感到吃惊，Java用户会对C#里的委派摸不着头脑。还是那句话，如果你只瞟一眼，它们都很相似。我可以打保票的说，如果你还不曾有过这样的认识，一旦你学了一种Lisp语言，你会发现所有的Lisp变种都很相似。<br/>
-</p>
-<p><br/>
-有人说，大部分人第一次使用Haskell或Ocaml时都完全的不知所措。见鬼了，在Haskell里，连分号都跟别人不一样。这并不是语法的问题；Haskell和ML语言完全基于一种不同的概念、一种新的语言范式。你需要用不同的方式开发应用，不同的方式组织应用，不同的方式扩展应用。<br/>
-</p>
-<p><br/>
-很多这样的新概念都具有不可思议的强大力量。Haskell里的Monads 是跟指针一样基础且强大的概念(你很可能在不知道它叫什么的情况下就已经使用过它们了)。所以，跟学了Java后再学C#不一样，有志向学习函数式语言的人需要往回走的更远，去学习更加基础的概念后才能接下去学习。就像是完全再学习一次指针。并且，就像是当年我们刚开始学习编程一样，一些很大的概念看起来会让人迷惑茫然，让人沮丧，直到你去攻克(以及失败)它们。<br/>
-</p>
-<p><br/>
-吃下你的药丸，找到你的药剂师<br/>
-</p>
-<p><br/>
-尽管不好学，但我坚信，学习这些函数式编程语言会在职业上对你有好处。我相信有些人读到这点时会眼睛翻起来向天看，很难想象出这些monoids 或 monad 会对他们在使用Java或C#时有用处。对我而言，我已经不惊奇于由于这样的思维而阻止他们学习函数式语言的现象；他们需要学习一种跟指针和递归一样基础的新概念。他们需要有一种只有专业人员在完成清晰的商业目标时才具有的耐心和斗志。很少人能在过了可塑的年龄后还受得了挫折——一次又一次的挫折——否则我们现在都早成专家了，不是吗？<br/>
-</p>
-<p><br/>
-还有更复杂的东西，有大量的语言和算法研究都是用函数式语言实施的(尤其是Haskell)。你很容易会被这些不熟悉的概念——例如范畴论， half-finished abstractions，一些失败的研究——弄的迷失方向。没有一个清晰的指导(比如由一个实用主义的作者写的一本好书)，本来已经很困难的学习任务变的更加可怕。<br/>
-</p>
-<p><br/>
-这些叠加起来的复杂因素导致了不出意外的结果：很多人不情愿在函数式编程学习中投入时间。很容易理解这种不情愿，“我干嘛不把花在学习这些东西的时间用在实现什么东西上呢？”但这种思路也表明了你永远不愿意在任何新技术上浪费时间(只用自己熟悉的)。在一个像软件技术这样日新月异的产业里，我不认为这是正确的判断。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-3" class="outline-4">
-<h4 id="sec-1-1-3">眼见为实</h4>
-<div class="outline-text-4" id="text-1-1-3">
-
-
-<p><br/>
-学习一种函数式编程语言最显而易见的好处是，你能学会这种类型语言中的函数式概念。它能帮助你的大脑，让它具有能非常清晰的思考和处理一些惊人的重大概念的能力。这并不是函数式编程具有魔法；各种语言和范式的出现都是为了应对某一特定类别的问题。函数式编程的杀手锏正是应对了当今世界上日益增长的并行性编程和元数据编程趋势。<br/>
-</p>
-<p><br/>
-例如，我们研究一个简化的、本地版本化的Google著名的MapReduce范例。用函数式方式描述这种范例是不可思议的清晰简洁：<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-<pre class="example">mapReducer data partitioner mapper reducer =
-              let partitions = partitioner data
-              in reduce reducer (map mapper partitions)
-</pre>
-
-让这样的代码支持并行计算或分布式并行计算是轻而易举的(对于本地并行计算，很多的功能包都支持“pmap”和“preduce“——只需要利用函数式语言的一些简单特性)。像maps, partitions, generators, streams, reductions, folds, 已以及 function chaining等概念在各种的函数式编程语言中都大同小异，所以，任何对Lisp，Haskell，OCaml，甚至带点函数式语言特征的语言——Python和Ruby熟悉的人，都会很容易的理解这里面的思想精华。<br/>
-</p>
-<p><br/>
-让我们花点时间考虑一下，如何用一种面向对象的语言，以一种常见的面向对象的模式来清楚的描述这种架构。至少你需要做的事情是定义用来描述mapper和reducer的声明。如果你有好奇心，请试着用你喜欢的面向对象语言描述一个最小化的“面向对象”的MapReduce。我发现那是非常罗嗦的。如果使用Java风格的语言，它会像这样：<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-<pre class="example">interface Mapper {
-   B map(A input);
- }
-
- interface Reducer {
-   Y reduce(X a, X b);
- }
-
- abstract class MapReduce {
-   private Mapper mapper;
-   private Reducer reducer;
-
-   public MapReduce(Mapper map, Reducer reduce) {
-     // ...
-   }
-
-   public run(SeqenceType data) {
-     // ...
-   }
- }
-</pre>
-
-即使是没有加入循环逻辑，这种缺乏函数式模式中常见的名词和动词的使用，使得MapReduce这种技术很难被定义。这种定义方式几乎是滑稽可笑的，但它能让你想到函数式概念。另外一个好例子是Scala语言如何利用完备的Java Fork/Join 类库，把它轻松的集成的自己的自有语法中。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-4" class="outline-4">
-<h4 id="sec-1-1-4">各有所求</h4>
-<div class="outline-text-4" id="text-1-1-4">
-
-
-<p><br/>
-所以，我鼓励任何想进步的程序员：请考虑学习一种函数式语言。Haskell和OCaml都是极好的选择，F#和Erlang也相当的不错。它们都不好学，但也许这是个好事。努力弄清楚你遇到的复杂的概念，看看是否有其他人正在利用这些概念；经常的，你会在寻找这些不熟悉的概念的真正用意的时候实现思想上的突破。<br/>
-</p>
-<p><br/>
-当你开始学的时候，请注意，不要过于在意。就像其他任何需要你花时间和精力的事情一样，过度的在函数式编程上进行精力上的投资是很危险的。掉进了认知能力的陷阱后你的投资会血本无归。你很容易会忘掉世界上还有无数种计算模型，你更容易忘掉有多少种优秀的软件根本没有使用任何的函数式概念。<br/>
-</p>
-<p><br/>
-学习的道路会越来越难走，但从另一方面说，在你日常的编程中，你会发现有越来越多的可以使用的重要概念和模型。对于这样紧凑的编程风格你会越来越适应，必然，你也会对如何成为一名更好的软件工程师有了新的认识。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-5" class="outline-4">
-<h4 id="sec-1-1-5">补充</h4>
-<div class="outline-text-4" id="text-1-1-5">
-
-
-<p><br/>
-有不少校对这篇文章的人在看完文章后都问了我一个同样的问题：“听起来不错，大卫，可是我应该学习那种语言呢？”当然，这是他们给我出的难题。<br/>
-</p>
-<p><br/>
-我想，如果你是一个很有经验的程序员，这最能“应付”这个问题的答案是：“选一种符合你的需求的”。如果你需要在JVM上工作，选择Scala或Clojure。如果你想能快速的开发大型分布式软件系统，选择Erlang。如果你想要一种具有超强编译器的超能干活的语言，请选择Haskell或RCaml。如果你想要一种比Ruby或Python更有能力的原型工具，选择Scheme。<br/>
-</p>
-<p><br/>
-请记住，我们在这里要做的这些目的是为了实际的技能和自我进步。如果你能腾出时间学这些，就走出你的安逸环境，挑战自己。<br/>
-</p>
-<p><br/>
-因为我已经学习了Lisp和Erlang，而且使用OCaml做专业工作，我决定研究一下Haskell，这完全是另外一个世界。我发现唯一能帮助我参透这种语言的途径是依赖Learn You A Haskell 和 Real World Haskell 这两本有用的指导材料。这些书写的非常好，很有价值，而且可以免费在网上找到。如果你想试一下Haskell，这些书可以当作你的寻宝图。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-6" class="outline-4">
-<h4 id="sec-1-1-6">转载自: <a href="http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/">http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/</a></h4>
-<div class="outline-text-4" id="text-1-1-6">
-
-</div>
-</div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[can your programming language do this]]></title>
-    <link href="http://emmoblin.github.com/blog/2012/09/11/can-your-programming-language-do-this/"/>
-    <updated>2012-09-11T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2012/09/11/can-your-programming-language-do-this</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">can your programming language do this</a>
-<ul>
-<li><a href="#sec-1-1">你的编程语言能这样做吗？</a></li>
-<li><a href="#sec-1-2">转载自</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/09/11/can-your-programming-language-do-this/">can your programming language do this</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">你的编程语言能这样做吗？</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>一日，你查看你的程序代码，你有两大块代码看起来几乎完全的一样。事实上它们就是完全一样，除了一个代码里说的是“Spaghetti(意大利面条)”，另一个代码里说的是“Chocolate Moose(巧克力慕丝)”。<br/>
-</p>
-<p><br/>
-<pre class="example">// 一个小例子：
-
-alert("I'd like some Spaghetti!");
-alert("I'd like some Chocolate Moose!");
-</pre>
-
-这个例子恰好是用Javascript写的，但即使是你不懂Javascript，你也应该能看懂我说的。<br/>
-</p>
-<p><br/>
-当然，重复的代码看起来不太好。所以你决定写一个函数：<br/>
-</p>
-<p><br/>
-<pre class="example">function SwedishChef( food )
-{
-    alert("I'd like some " + food + "!");
-}
-
-SwedishChef("Spaghetti");
-SwedishChef("Chocolate Moose");
-</pre>
-
-
-没错，这个例子很简单，但你可以想出一些更有实际价值的例子。这样做是更好一些，有很多理由，这些理由估计你都听说过一万遍了。可维护性，可读性，抽象 = 好！<br/>
-</p>
-<p><br/>
-<!-- more -->
-
-现在，你又发现两块代码几乎完全一样，除了一块是不停的调用一个叫BoomBoom的函数，而一块是不停的调用一个叫PutInPot的函数。除此之外，这两块代码完全一样。<br/>
-</p>
-<p><br/>
-<pre class="example">alert("get the lobster");
-PutInPot("lobster");
-PutInPot("water");
-
-alert("get the chicken");
-BoomBoom("chicken");
-BoomBoom("coconut");
-</pre>
-
-现在，你需要一个途径，把一个参数传递到一个函数里，而这个参数本身是个函数。这是一个很重要的功能，它是一个好的方法，能让你发现函数中存在的重复的代码，减少这样的重复。<br/>
-</p>
-<p><br/>
-<pre class="example">function Cook( i1, i2, f )
-{
-    alert("get the " + i1);
-    f(i1);
-    f(i2);
-}
-
-Cook( "lobster", "water", PutInPot );
-Cook( "chicken", "coconut", BoomBoom );
-</pre>
-
-看见了没！我们把一个函数当做了参数。<br/>
-</p>
-<p><br/>
-你的语言能这样做吗？<br/>
-</p>
-<p><br/>
-且慢… 如果你还没有写出PutInPot 或 BoomBoom 函数呢。如果你能把他们写成内联函数，而不是要在其它地方先声明，这样是不是更好？<br/>
-</p>
-<p><br/>
-<pre class="example">Cook( "lobster", 
-      "water", 
-      function(x) { alert("pot " + x); }  );
-Cook( "chicken", 
-      "coconut", 
-      function(x) { alert("boom " + x); } );
-</pre>
-
-老天，这太方便了。注意到了没有，我即时创建了一个方法，甚至都不用麻烦给它起名，只需掂着它的耳朵把它丢进函数里。<br/>
-</p>
-<p><br/>
-当你开始思考把匿名函数当作参数时，你也许会注意到有一种代码到处都是，就是，遍历数组里的所有元素进行操作。<br/>
-</p>
-<p><br/>
-<pre class="example">var a = [1,2,3];
-
-for (i=0; i&lt;a.length; i++)
-{
-    a[i] = a[i] * 2;
-}
-
-for (i=0; i&lt;a.length; i++)
-{
-    alert(a[i]);
-}
-</pre>
-
-对数组里的每个元素进行操作是一种很常见的动作，你可以写出一个函数，让它为你做这些：<br/>
-</p>
-<p><br/>
-<pre class="example">function map(fn, a)
-{
-    for (i = 0; i &lt; a.length; i++)
-    {
-        a[i] = fn(a[i]);
-    }
-}
-</pre>
-
-现在，你可以把上面的代码重写成这样：<br/>
-</p>
-<p><br/>
-<pre class="example">map( function(x){return x*2;}, a );
-map( alert, a );
-</pre>
-
-另一个常见的跟数组相关的操作是，通过某种方式把数组里的所有值组合到一起。<br/>
-</p>
-<p><br/>
-<pre class="example">function sum(a)
-{
-    var s = 0;
-    for (i = 0; i &lt; a.length; i++)
-        s += a[i];
-    return s;
-}
-
-function join(a)
-{
-    var s = "";
-    for (i = 0; i &lt; a.length; i++)
-        s += a[i];
-    return s;
-}
-
-alert(sum([1,2,3]));
-alert(join(["a","b","c"]));
-</pre>
-
-sum 和 join 看起来非常的相似，你也许会想把它们的通用之处提取出来做成一个能把数组里的元素合并成一个值的通用函数：<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-<pre class="example">function reduce(fn, a, init)
-{
-    var s = init;
-    for (i = 0; i &lt; a.length; i++)
-        s = fn( s, a[i] );
-    return s;
-}
-
-function sum(a)
-{
-    return reduce( function(a, b){ return a + b; }, 
-                   a, 0 );
-}
-
-function join(a)
-{
-    return reduce( function(a, b){ return a + b; }, 
-                   a, "" );
-}
-</pre>
-
-很多老式的语言根本没有方法做出这种事情。另外一些语言允许你做这些，但不容易(例如，C语言里有函数指针，但你必须进行声明，并要在什么地方定义它)。面向对象的语言并没有被证实可以允许你对函数做所有的操作。<br/>
-</p>
-<p><br/>
-如果你想在Java里把函数作为一个一等(First Class)对象，你需要建一个只包含一个用来调用功能点的方法的整个对象。把这种现象跟实际情况联系起来，很多的面向对象语言都会要求你为每个class创建一个完整的文件，非常的没效率。如果你的编程语言里要求你去这样的调用功能点，那你根本没有享受到现代语言环境给你带来的所有好处。看看能否退货吧，挽回一点损失。<br/>
-</p>
-<p><br/>
-写这样的小函数，只是做一些遍历数组，处理其中的每个元素的操作，这样做究竟能得到多少好处？<br/>
-</p>
-<p><br/>
-那好，我们来回头看一看map这个函数。当你需要对数组里的每个元素依次做一些操作时，实际情况是，你并不在乎处理这些元素的顺序。你可以向前或向后遍历整个数组，得到的结果是一样的，不是吗？ 事实上，如果你的机器是2cpu的，你可以写出一些程序让每个cpu个处理一半的元素，你的map一下子就变快了2倍。<br/>
-</p>
-<p><br/>
-或者，只是个假设，在你遍布全球的数个数据中心里，你有成千上万的服务器，你有一个非常非常大的数组，我说过，只是假设，它们装载着整个互联网的内容信息。那现在，你就可以在你的成千上万的计算机上运行map函数，每个机器都能分摊掉计算中的一小部分任务。<br/>
-</p>
-<p><br/>
-所以，如今，举个例子，要想写出一个十分高效的能搜索整个互联网内容信息的代码，你只需要简单的用基本搜索字符串当作参数来调用map函数就行了。<br/>
-</p>
-<p><br/>
-这里，我想请你们要真正注意的有趣的事情是，你会发现像map 和 reduce这样的函数每个人都可以使用，当人们使用它时，你只需要找到一个编程能手写出最困难的调用map 和 reduce 函数的代码，让它们能够运行在全球大量的并行执行的计算机上，而以前旧的运行的很好的代码只需要调用这个循环操作，唯一不同的是，它们获得了比以前千万倍快的速度，这意味着你能做瞬间处理完巨大的计算工作。<br/>
-</p>
-<p><br/>
-让我再复述一遍。通过把通用的循环操作提取出来，你可以实现你想要的任何循环操作，包括实现出一种能随硬件设备的增加而性能升级的效果。<br/>
-</p>
-<p><br/>
-我想现在你就该明白为什么我在前段时间写的一篇文章里抱怨学校只教授计算机科学专业的学生Java知识而忽略其它：<br/>
-</p>
-<p><br/>
-缺乏对函数式编程的理解，你不可能发明出MapReduce——这个能够让Google实现大规模按需扩展和升级的算法。Map和Reduce这两个词来自于Lisp语言和函数式编程。回首看来，MapReduce对于任何还存有记忆的人来说都意味着一种纯函数式的编程，没有副作用，易于并行计算。事实恰巧是Google发明了MapReduce，而微软没有，这就说明了为什么微软仍然努力做那些基本的搜索功能研究的原因了，而Google已经开始了它的下一个目标：开发它的Skynet^H^H^H^H^H^H——这世界上最大规模的并行超级计算机。我并不觉得微软已经认识到在如今的潮流中它已经落后的多远。<br/>
-</p>
-<p><br/>
-那么，我希望现在你已经能理解了以函数为一等(First class)特征编程语言能使你更容易的对代码进行提炼抽象，这意味着你的代码更短小，紧凑，可复用性强，更容易扩展升级。大量的Google应用程序都使用了MapReduce，在他们优化程序或修改Bug时，都能从中得到益处。<br/>
-</p>
-<p><br/>
-现在我要说一点怨言牢骚，最高效的语言开发环境应该是一种能让你在不同层次上进行抽象归纳的语言环境。笨拙陈旧的FORTRAN语言甚至不允许你写函数。C语言里有函数指针，但实现的很丑陋，不能匿名，使用之前必须先进行声明实现。Java允许你使用功能点调用(functor)，但更加丑陋。就像Steve Yegge指出的，Java就是一个名词的王国。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">转载自</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>   <a href="http://www.aqee.net/can-your-programming-language-do-this/">http://www.aqee.net/can-your-programming-language-do-this/</a><br/>
 </p></div>
 </div>
 </div>
