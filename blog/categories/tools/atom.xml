@@ -4,7 +4,7 @@
   <title><![CDATA[Category: tools | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/tools/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-02-13T19:19:21+08:00</updated>
+  <updated>2013-02-14T23:57:40+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -12,6 +12,105 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[goagent翻墙]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/14/goagent/"/>
+    <updated>2013-02-14T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/14/goagent</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">安装</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>安装最好直接看官网：<br/>
+<a href="https://code.google.com/p/goagent/">https://code.google.com/p/goagent/</a><br/>
+</p>
+<p><br/>
+不过为了自己方便，我也自己记录一下。<br/>
+</p>
+<p><br/>
+在GAE注册一个appid，<a href="https://appengine.google.com/">https://appengine.google.com/</a><br/>
+</p><ol>
+<li>修改local\proxy.ini中的[gae]下的appid=你的appid<br/>
+</li>
+<li>双击server\uploader.bat(Mac/Linux上传方法请见FAQ)，上传成功后即可使用了(地址127.0.0.1:8087)<br/>
+</li>
+</ol>
+
+<p>对于linux<br/>
+在server目录下，python uploader.zip<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">安装python-gevent</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>参考：<a href="https://code.google.com/p/goagent/wiki/InstallGeventAndPyopensslOnUbuntu">https://code.google.com/p/goagent/wiki/InstallGeventAndPyopensslOnUbuntu</a><br/>
+<code>sudo apt-get install  python-gevent</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">安装pyopenssl</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>这个一般都安装了<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">wget http://pypi.python.org/packages/source/p/pyOpenSSL/pyOpenSSL-0.13.tar.gz &amp;&amp; tar zxvf pyOpenSSL-0.13.tar.gz &amp;&amp; <span style="color: #a52a2a;">cd</span> pyOpenSSL-0.13 &amp;&amp; sudo python setup.py install
+</pre>
+
+
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Chrome下如何使用goagent</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>Chrome可以安装switchysharp插件<br/>
+然后导入local中的SwitchyOptions.bak配置文件，之后就可以选择自动切换模式，他会根据规则自动选择是否使用代理。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">有时goagent无法使用，解决办法</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>可能是google_cn服务被屏蔽<br/>
+我们可以在proxy.ini中将profile=google_cn改成google_hk<br/>
+将[google_hk]段中的mode = http改为mode = https，重启goagent解决。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">遗留问题</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>我现在使用的是2.1.12版本，发现的问题是google analytics总是提示cookiemismatch。<br/>
+搜了半天也解决不了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[linux_3g拨号]]></title>
