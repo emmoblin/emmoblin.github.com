@@ -4,7 +4,7 @@
   <title><![CDATA[Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-02-14T23:57:40+08:00</updated>
+  <updated>2013-02-17T22:21:51+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -12,6 +12,106 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[IPv6 NAT MAP66]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/17/ipv6-nat-map66/"/>
+    <updated>2013-02-17T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/17/ipv6-nat-map66</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">IPv6 NAT MAP66</a>
+<ul>
+<li><a href="#sec-1-1">相关的RFC</a></li>
+<li><a href="#sec-1-2">IPv6子网和NAT的关系</a></li>
+<li><a href="#sec-1-3">checksum无关性和自动转换</a></li>
+<li><a href="#sec-1-4">Linux上的MAP66</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">相关的RFC</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>RFC6296的标题是IPv6-to-IPv6 Network Prefix Translation，描述了IPv6下的NAT的实现要点，给出了一个合理的建议，<br/>
+既保持了IP的无方向性，又可以满足NAT的语义，这就是IPv6之NAT stateless的缘由，你不能再指望像IPv4的NAT那样只需要配置一条rule，然后反方向的rule动态生成，<br/>
+IPv6情况下，两个方向的rule都需要你自己手工来配置。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">IPv6子网和NAT的关系</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>IP地址可以划分为几个段，包括网络前缀，子网标识，主机标识，这在IPv4和IPv6中没有什么不同。<br/>
+IPv4的NAT为了节约IP地址，也就是说，可供映射的IP地址pool中的地址小于或者远远小于其内部主机的数量，因此很有可能多个内部主机被映射成了同一个外部IP地址，<br/>
+这如何来区分它们，因此不得不引入诸如第四层协议，端口等信息了，也就是我们熟知的五元组信息，因此IPv4的NAT实现大多数都是基于五元组流的，这样就保证了内核保持的NAT信息项的唯一性，同时也引入了很多副作用。<br/>
+</p>
+<p><br/>
+IPv6地址持有将近128位可随意调配的位，鉴于地址空间的庞大，一般的单位都会被分配到一个拥有很大量地址的网段，<br/>
+此网段拥有足够多的地址来和内网主机进行一一映射，也就是说可用于映射的IP地址pool容量巨大无比，<br/>
+关键是这个一一映射如何来保持，既然不想再使用非IP层的信息来保持信息，那就要用纯IP层的信息了，这样对上层影响最小。<br/>
+对于IPv4，经典NAT使用了五元组来保持流标识信息，而对于IPv6，则更加绝妙，它利用(而不是使用)了checksum的算法，丝毫不管这个checksum是谁的checksum，因为它根本就不改变数据包的checksum&hellip;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">checksum无关性和自动转换</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>这个很好解释，考虑<br/>
+a+b+c+d=X<br/>
+其中X就是checksum，我们把a，b当成源IP地址的两部分，c，d当成目的IP地址的两部分，我们作源地址转换，将a和b都改变，比如a改变成了A，<br/>
+试问将b改成多少才能保持checksum的值X不变，这其实很简单，就是一个简单的一元一次方程求解的问题。<br/>
+IPv6的建议NAT实现也是这个原理，只不过上面的一元一次方程是实数域的，而这个是计算机布尔数域。<br/>
+既然可以不触动第四层的checksum值，那么NAT对第四层协议的影响也就减小了，虽然它还是解决不了诸如ESP/AH等穿越NAT的问题。<br/>
+基于以上算法，IPv6在做NAT的时候，在给定的子网网段内，可以自动生成一个新的IP地址供映射之用，从算法本身来看，冲突的可能性非常之小致于0，<br/>
+上述的做法对于IPv4几乎是不可能的，因为IPv4地址空间太小了。<br/>
+既然IPv6的NAT机制“自动”为一个连接选择了一个IP地址，那么当返回包到来的时候，如何来把地址转换回原来的呢？<br/>
+我们知道，IPv6的NAT已经不再使用五元组来维护NAT映射信息，也不在内核维护这种信息，那么“转换回去”这件事就要完全靠算法本身了，<br/>
+恰恰就是算法本身能将转换后的地址再转回原来的，其依据就是本小节最开始处给出的一元一次方程解的唯一性，<br/>
+在IPv6的NAT实现中，算法只针对IP地址中16位的地址信息进行自动生成，而其它的则需要手工显式配置，<br/>
+由于内网IPv6地址可以使用MAC地址映射成唯一的地址，由于一元一次方程解的唯一性，那么转换后的地址也是唯一的，将这一切反过来，最后还是能映射回原始的IP地址的。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">Linux上的MAP66</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>Linux上，IPv6的NAT MAP66是一个基本遵循RFC6296建议的Linux实现，编译安装很简单，详见其README，和IPv4的iptables一样：<br/>
+1.配置正向的转换规则，将源地址fdca:ffee:babe::/64网段的地址转换为2008:db8:1::/64网段的地址<br/>
+<code>ip6tables -t mangle -A POSTROUTING -s fdca:ffee:babe::/64 -o eth2 -j MAP66--src-to 2008:db8:1::/64</code><br/>
+可以看出，没有显式指定任何具体地址，类似IPv4的MASQUERADE和IPv4的IP Pool<br/>
+2.配置反向包的转换规则，将正向包被转换过的地址再转换回去<br/>
+<code>ip6tables -t mangle -A PREROUTING -d 2008:db8:1::/64 -i eth2 -j MAP66 --dst-to fdca:ffee:babe::/64</code><br/>
+可以看出，也没有显式指定任何具体的地址，更值得一提的是，内核并不维护任何关于NAT映射的信息，因此MAP66也不再依赖ip(6)_conntrack。<br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[goagent翻墙]]></title>
@@ -3559,75 +3659,6 @@ vi /etc/default/tftpd-hpa<br/>
 客户端使用atftp。<br/>
 </p>
 <p><br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[串口工具ckermit]]></title>
-    <link href="http://emmoblin.github.com/blog/2012/10/16/ckermit/"/>
-    <updated>2012-10-16T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2012/10/16/ckermit</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">串口工具ckermit</a>
-<ul>
-<li><a href="#sec-1-1">默认配置文件</a></li>
-<li><a href="#sec-1-2">操作</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/16/ckermit/">串口工具ckermit</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">默认配置文件</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>/etc/kermit/kermrc<br/>
-一般配置一个home下的自己的配置文件就ok了。<br/>
-~/.mykermrc<br/>
-</p>
-<p><br/>
-<pre class="example">set line /dev/ttyS0
-set speed 9600
-set carrier-watch off
-set handshake none
-set flow-control none
-robust
-set file type bin
-set file name lit
-set rec pack 1000
-set send pack 1000
-set window 5
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">操作</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>C-\ 切换到命令行<br/>
-c 打开链接<br/>
 </p>
 <p><br/>
 </p></div>

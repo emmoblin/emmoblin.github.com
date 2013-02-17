@@ -109,6 +109,118 @@
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2012/11/02/cutter/">C单元测试框架:cutter</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-02T00:00:00+08:00" pubdate data-updated="true">2012年11月02日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">特性</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>c的单元测试见的多了，cutter有什么看家本领吗？<br/>
+</p><ol>
+<li>框平台性好<br/>
+   这个貌似意义不大，单元测试框架一般本身都很小巧，移植难度很小。<br/>
+
+<p><br/>
+</p></li>
+<li>自动探测用例<br/>
+   这个功能不错，只要开头是test_ 开头的函数，自动认为是testcase。<br/>
+   其实他是把testcase编译成了库，然后进行符号查找。<br/>
+
+<p><br/>
+</p></li>
+<li>显示友好<br/>
+   尽量精确的提出错误在哪里，有个expect和real，貌似还可以diff。<br/>
+
+<p><br/>
+</p></li>
+<li>支持数据驱动测试<br/>
+   这个功能还有点不明白，貌似应该是测试前准备数据集的功能，不知道是否是mock功能。<br/>
+
+<p><br/>
+</p></li>
+<li>支持代码的分支覆盖率攻击。<br/>
+
+<p><br/>
+</p></li>
+<li>针对ubuntu特别优化。<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">后续待添加功能</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>从他的TODO中可以看到一些，不过我最期望的是：<br/>
+</p><ol>
+<li>测试用例的search<br/>
+</li>
+<li>内存泄漏测试，最好集成memwatch的功能。mem_limit很好。<br/>
+</li>
+<li>是否有mock功能？<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">主页</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p><a href="http://sourceforge.net/projects/cutter/">http://sourceforge.net/projects/cutter/</a><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2012/10/30/memwatch-/">Memwatch</a></h1>
     
     
@@ -1066,524 +1178,6 @@ service sshd restart<br/>
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true">2012年10月09日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">A Unix Utility You Should Know About:lsof</a>
-<ul>
-<li><a href="#sec-1-1">前言</a></li>
-<li><a href="#sec-1-2">如何使用lsof？</a></li>
-<li><a href="#sec-1-3">找出谁在使用某个文件</a></li>
-<li><a href="#sec-1-4">列出某个用户打开的所有文件</a></li>
-<li><a href="#sec-1-5">查找某个程序打开的所有文件</a></li>
-<li><a href="#sec-1-6">列出所有由某个用户或某个进程打开的文件</a></li>
-<li><a href="#sec-1-7">列出除root用户外的所有用户打开的文件</a></li>
-<li><a href="#sec-1-8">列出所有由某个PID对应的进程打开的文件</a></li>
-<li><a href="#sec-1-9">列出所有网络连接</a></li>
-<li><a href="#sec-1-10">列出所有NFS（网络文件系统）文件</a></li>
-<li><a href="#sec-1-11">列出所有UNIX域Socket文件</a></li>
-<li><a href="#sec-1-12">列出所有对应某个组id的进程</a></li>
-<li><a href="#sec-1-13">列出所有与某个描述符关联的文件</a></li>
-<li><a href="#sec-1-14">输出使用某些资源的进程pid</a></li>
-<li><a href="#sec-1-15">循环列出文件</a></li>
-<li><a href="#sec-1-16">如何安装lsof？</a></li>
-<li><a href="#sec-1-17">原文</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">前言</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>这是“你应该知道的Unix和Linux命令”系列的第三篇，在这篇文章中，我会介绍lsof这个工具，如果说netcat是进行网络诊断的瑞士军刀，那么lsof就是Unix调试的瑞士军刀。<br/>
-</p>
-<p><br/>
-Lsof是遵从Unix哲学的典范，它只做一件事情，并且做的相当完美——它可以列出某个进程打开的所有文件信息。<br/>
-打开的文件可能是普通的文件，目录，NFS文件，块文件，字符文件，共享库，常规管道，明明管道，符号链接，Socket流，网络Socket，UNIX域Socket，以及其它更多。因为Unix系统中几乎所有东西都是文件，你可以想象lsof该有多有用。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">如何使用lsof？</h3>
-<div class="outline-text-3" id="text-1-2">
-
-
-<p><br/>
-这篇文章中我会尽力列举我能想到的所有lsof的用法，让我们先从最简单的开始（或许你已经知道了），然后逐渐增加复杂度：<br/>
-</p>
-<p><br/>
-列出所有打开的文件<br/>
-</p>
-<p><br/>
-<code>lsof</code><br/>
-</p>
-<p><br/>
-不带任何参数运行lsof会列出所有进程打开的所有文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">找出谁在使用某个文件</h3>
-<div class="outline-text-3" id="text-1-3">
-
-
-<p><br/>
-<code>lsof /path/to/file</code><br/>
-</p>
-<p><br/>
-只需要执行文件的路径，lsof就会列出所有使用这个文件的进程，你也可以列出多个文件，lsof会列出所有使用这些文件的进程。<br/>
-</p>
-<p><br/>
-你也可以一次制定多个文件：<br/>
-</p>
-<p><br/>
-<code>lsof /path/to/file1 /path/to/file2</code><br/>
-</p>
-<p><br/>
-递归查找某个目录中所有打开的文件<br/>
-</p>
-<p><br/>
-<code>lsof +D /usr/lib</code><br/>
-</p>
-<p><br/>
-加上+D参数，lsof会对指定目录进行递归查找，注意这个参数要比grep版本慢：<br/>
-</p>
-<p><br/>
-= lsof | grep &#8216;/usr/lib&#8217; =<br/>
-</p>
-<p><br/>
-之所以慢是因为+D首先查找所有的文件，然后一次性输出。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">列出某个用户打开的所有文件</h3>
-<div class="outline-text-3" id="text-1-4">
-
-
-<p><br/>
-<code>lsof -u pkrumins</code><br/>
-</p>
-<p><br/>
--u选项限定只列出所有被用户pkrumins打开的文件，你可以通过逗号指定多个用户：<br/>
-</p>
-<p><br/>
-<code>lsof -u rms,root</code><br/>
-</p>
-<p><br/>
-这条命令会列出所有rms和root用户打开的文件。<br/>
-</p>
-<p><br/>
-你也可以像下面这样使用多个-u做同样的事情：<br/>
-</p>
-<p><br/>
-<code>lsof -u rms -u root</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">查找某个程序打开的所有文件</h3>
-<div class="outline-text-3" id="text-1-5">
-
-
-<p><br/>
-<code>lsof -c apache</code><br/>
-</p>
-<p><br/>
--c选项限定只列出以apache开头的进程打开的文件：<br/>
-</p>
-<p><br/>
-所以你可以不用像下面这样写：<br/>
-</p>
-<p><br/>
-<code>lsof | grep foo</code><br/>
-</p>
-<p><br/>
-而使用下面这个更简短的版本：<br/>
-</p>
-<p><br/>
-<code>lsof -c foo</code><br/>
-</p>
-<p><br/>
-事实上，你可以只制定进程名称的开头：<br/>
-</p>
-<p><br/>
-<code>lsof -c apa</code><br/>
-</p>
-<p><br/>
-这会列出所有以apa开头的进程打开的文件<br/>
-</p>
-<p><br/>
-你同样可以制定多个-c参数：<br/>
-</p>
-<p><br/>
-<code>lsof -c apache -c python</code><br/>
-</p>
-<p><br/>
-这会列出所有由apache和python打开的文件<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">列出所有由某个用户或某个进程打开的文件</h3>
-<div class="outline-text-3" id="text-1-6">
-
-
-<p><br/>
-<code>lsof -u pkrumins -c apache</code><br/>
-</p>
-<p><br/>
-你也可以组合使用多个选项，这些选项默认进行或关联，也就是说上面的命令会输入由pkrumins用户或是apache进程打开的文件。<br/>
-</p>
-<p><br/>
-列出所有由一个用户与某个进程打开的文件<br/>
-</p>
-<p><br/>
-<code>lsof -a -u pkrumins -c bash</code><br/>
-</p>
-<p><br/>
--a参数可以将多个选项的组合条件由或变为与，上面的命令会显示所有由pkrumins用户以及bash进程打开的文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7" class="outline-3">
-<h3 id="sec-1-7">列出除root用户外的所有用户打开的文件</h3>
-<div class="outline-text-3" id="text-1-7">
-
-
-<p><br/>
-<code>lsof -u ^root</code><br/>
-</p>
-<p><br/>
-注意root前面的^符号，它执行取反操作，因此lsof会列出所有root用户之外的用户打开的文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-8" class="outline-3">
-<h3 id="sec-1-8">列出所有由某个PID对应的进程打开的文件</h3>
-<div class="outline-text-3" id="text-1-8">
-
-
-<p><br/>
-<code>lsof -p 1</code><br/>
-</p>
-<p><br/>
--p选项让你可以使用进程id来过滤输出。<br/>
-</p>
-<p><br/>
-记住你也可以用都好来分离多个pid。<br/>
-</p>
-<p><br/>
-<code>lsof -p 450,980,333</code><br/>
-</p>
-<p><br/>
-列出所有进程打开的文件除了某个pid的<br/>
-</p>
-<p><br/>
-<code>lsof -p ^1</code><br/>
-</p>
-<p><br/>
-同前面的用户一样，你也可以对-p选项使用^来进行取反。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-9" class="outline-3">
-<h3 id="sec-1-9">列出所有网络连接</h3>
-<div class="outline-text-3" id="text-1-9">
-
-
-<p><br/>
-<code>lsof -i</code><br/>
-</p>
-<p><br/>
-lsof的-i选项可以列出所有打开了网络套接字（TCP和UDP）的进程。<br/>
-</p>
-<p><br/>
-列出所有TCP网络连接<br/>
-</p>
-<p><br/>
-<code>lsof -i tcp</code><br/>
-</p>
-<p><br/>
-也可以为-i选项加上参数，比如tcp，tcp选项会强制lsof只列出打开TCP sockets的进程。<br/>
-</p>
-<p><br/>
-列出所有UDP网络连接<br/>
-</p>
-<p><br/>
-<code>lsof -i udp</code><br/>
-</p>
-<p><br/>
-同样udp让lsof只列出使用UDP socket的进程。<br/>
-</p>
-<p><br/>
-找到使用某个端口的进程<br/>
-</p>
-<p><br/>
-<code>lsof -i :25</code><br/>
-</p>
-<p><br/>
-:25和-i选项组合可以让lsof列出占用TCP或UDP的25端口的进程。<br/>
-</p>
-<p><br/>
-你也可以使用/etc/services中制定的端口名称来代替端口号，比如：<br/>
-</p>
-<p><br/>
-<code>lsof -i :smtp</code><br/>
-</p>
-<p><br/>
-找到使用某个udp端口号的进程<br/>
-</p>
-<p><br/>
-<code>lsof -i udp:53</code><br/>
-</p>
-<p><br/>
-同样的，也可以找到使用某个tcp端口的进程：<br/>
-</p>
-<p><br/>
-<code>lsof -i tcp:80</code><br/>
-</p>
-<p><br/>
-找到某个用户的所有网络连接<br/>
-</p>
-<p><br/>
-<code>lsof -a -u hacker -i</code><br/>
-</p>
-<p><br/>
-使用-a将-u和-i选项组合可以让lsof列出某个用户的所有网络行为。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-10" class="outline-3">
-<h3 id="sec-1-10">列出所有NFS（网络文件系统）文件</h3>
-<div class="outline-text-3" id="text-1-10">
-
-
-<p><br/>
-<code>lsof -N</code><br/>
-</p>
-<p><br/>
-这个参数很好记，-N就对应NFS。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-11" class="outline-3">
-<h3 id="sec-1-11">列出所有UNIX域Socket文件</h3>
-<div class="outline-text-3" id="text-1-11">
-
-
-<p><br/>
-<code>lsof -U</code><br/>
-</p>
-<p><br/>
-这个选项也很好记，-U就对应UNIX。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-12" class="outline-3">
-<h3 id="sec-1-12">列出所有对应某个组id的进程</h3>
-<div class="outline-text-3" id="text-1-12">
-
-
-<p><br/>
-<code>lsof -g 1234</code><br/>
-</p>
-<p><br/>
-进程组用来来逻辑上对进程进行分组，这个例子查找所有PGID为1234的进程打开的文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-13" class="outline-3">
-<h3 id="sec-1-13">列出所有与某个描述符关联的文件</h3>
-<div class="outline-text-3" id="text-1-13">
-
-
-<p><br/>
-<code>lsof -d 2</code><br/>
-</p>
-<p><br/>
-这个命令会列出所有以描述符2打开的文件。<br/>
-</p>
-<p><br/>
-你也可以为描述符指定一个范围：<br/>
-</p>
-<p><br/>
-<code>lsof -d 0-2</code><br/>
-</p>
-<p><br/>
-这会列出所有描述符为0，1，2的文件。<br/>
-</p>
-<p><br/>
--d选项还支持其它很多特殊值，下面的命令列出所有内存映射文件：<br/>
-</p>
-<p><br/>
-<code>lsof -d mem</code><br/>
-</p>
-<p><br/>
-txt则列出所有加载在内存中并正在执行的进程：<br/>
-</p>
-<p><br/>
-<code>lsof -d txt</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-14" class="outline-3">
-<h3 id="sec-1-14">输出使用某些资源的进程pid</h3>
-<div class="outline-text-3" id="text-1-14">
-
-
-<p><br/>
-<code>lsof -t -i</code><br/>
-</p>
-<p><br/>
--t选项输出进程的PID，你可以将它和-i选项组合输出使用某个端口的进程的PID，下面的命令将会杀掉所有使用网络的进程：<br/>
-</p>
-<p><br/>
-<code>kill -9 `lsof -t -i`</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-15" class="outline-3">
-<h3 id="sec-1-15">循环列出文件</h3>
-<div class="outline-text-3" id="text-1-15">
-
-
-<p><br/>
-<code>lsof -r 1</code><br/>
-</p>
-<p><br/>
--r选项让lsof可以循环列出文件直到被中断，参数1的意思是每秒钟重复打印一次，这个选项最好同某个范围比较小的查询组合使用，比如用来监测网络活动：<br/>
-</p>
-<p><br/>
-<code>lsof -r 1 -u john -i -a</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-16" class="outline-3">
-<h3 id="sec-1-16">如何安装lsof？</h3>
-<div class="outline-text-3" id="text-1-16">
-
-
-<p><br/>
-许多Unix系统都内置了lsof，如果你的系统没有安装，你可以从这里直接下载源代码。<br/>
-</p>
-<p><br/>
-BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
-</p>
-<p><br/>
-你可以通过man lsof来了解关于lsof的完整文档，或者通过lsof -h查看。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-17" class="outline-3">
-<h3 id="sec-1-17">原文</h3>
-<div class="outline-text-3" id="text-1-17">
-
-<p><a href="http://www.catonmat.net/blog/unix-utilities-lsof/">http://www.catonmat.net/blog/unix-utilities-lsof/</a><br/>
-还有pipe view和netcat，以后再总结<br/>
-翻译：<br/>
-<a href="http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/">http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/</a><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <ul class="pager">
     
     <li class="previous"><a href="/blog/page/4/">&larr; Older</a></li>
@@ -1605,7 +1199,7 @@ BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (5)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (5)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -1641,6 +1235,10 @@ dpc=1"></iframe>
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
+        <a href="/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/02/14/goagent/">goagent翻墙</a>
       </li>
     
@@ -1654,10 +1252,6 @@ dpc=1"></iframe>
     
       <li class="post">
         <a href="/blog/2013/02/13/openfiler/">openfiler 2.99创建raid</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/13/octopress-install/">octopress安装和定制</a>
       </li>
     
   </ul>

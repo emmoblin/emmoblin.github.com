@@ -109,6 +109,141 @@
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2013/01/06/linux-g-dial/">Linux_3g拨号</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-06T00:00:00+08:00" pubdate data-updated="true">2013年01月06日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">linux下3g网卡拨号</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>需要安装的软件usb_modeswitch,wvdial<br/>
+usb_modeswitch用于将usb3g转换为usb modem模式，这样才能拨号。最好到官网下载最新代码，包含的3g网卡类型会更全。最主要的就是usb_modeswitch_data。<br/>
+<a href="http://www.draisberghof.de/usb_modeswitch/#download">http://www.draisberghof.de/usb\_modeswitch/#download</a><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">安装usb_modeswitch_data</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>进入目录，执行<br/>
+sudo make install<br/>
+会安装对应的udev文件到/lib/udev/rules.d目录。<br/>
+</p>
+<p><br/>
+不过我发现自动转换没有效果，暂时先不查了。<br/>
+直接使用命令行转：<br/>
+usb_modeswitch -c /etc/usb_modeswitch.conf<br/>
+如果转换成功会出现/dev/ttyUSB0-3，dmesg也会有输出信息。<br/>
+</p>
+<p><br/>
+usb_modeswitch.conf<br/>
+</p>
+<p><br/>
+<pre class="example">######################################################## 
+# ZTE A371B
+#
+# Contributor: Wang Lei
+
+DefaultVendor= 0x19d2
+DefaultProduct=0x0169
+
+TargetVendor=  0x19d2
+TargetProduct= 0x0170
+
+MessageContent="5553424312345678000000000000061b000000020000000000000000000000"
+NeedResponse=1
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">wvdial</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>这个难了，wvdial负责发送AT命令给usb modem，进行拨号。但不同的3g卡发送的指令也不一样。<br/>
+我是在xp上安装了usb抓包软件，把xp上官方的3g拨号过程进行了抓包分析，提取出如下序列：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">[Dialer Defaults]
+Init1 = AT
+Init2 = AT+CIMI
+Init3 = AT+CMEE=1
+Init4 = ATE0
+Init5 = AT+CFUN=1
+Init6 = AT+CLCK="SC",2
+Init7 = AT+cgdcont=1,"ip","CMNET"
+Modem Type = USB Modem
+Baud = 460800
+New PPPD = yes
+Modem = /dev/ttyUSB0
+ISDN = 0
+Phone = *98*1#
+Password = any
+Username = any
+Stupid Mode = 1
+</pre>
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">遇到的问题</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>我的x230上无线鼠标的usb接收器貌似总是捣乱，拔了接收器，换了个usb口插3g，就可以ok了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2013/01/01/fstab-recover/">Fstab恢复</a></h1>
     
     
@@ -1489,118 +1624,6 @@ kernel-debuginfo 将近300M<br/>
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/02/cutter/">C单元测试框架:cutter</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-02T00:00:00+08:00" pubdate data-updated="true">2012年11月02日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div><div><p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">特性</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>c的单元测试见的多了，cutter有什么看家本领吗？<br/>
-</p><ol>
-<li>框平台性好<br/>
-   这个貌似意义不大，单元测试框架一般本身都很小巧，移植难度很小。<br/>
-
-<p><br/>
-</p></li>
-<li>自动探测用例<br/>
-   这个功能不错，只要开头是test_ 开头的函数，自动认为是testcase。<br/>
-   其实他是把testcase编译成了库，然后进行符号查找。<br/>
-
-<p><br/>
-</p></li>
-<li>显示友好<br/>
-   尽量精确的提出错误在哪里，有个expect和real，貌似还可以diff。<br/>
-
-<p><br/>
-</p></li>
-<li>支持数据驱动测试<br/>
-   这个功能还有点不明白，貌似应该是测试前准备数据集的功能，不知道是否是mock功能。<br/>
-
-<p><br/>
-</p></li>
-<li>支持代码的分支覆盖率攻击。<br/>
-
-<p><br/>
-</p></li>
-<li>针对ubuntu特别优化。<br/>
-</li>
-</ol>
-
-
-<p><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">后续待添加功能</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>从他的TODO中可以看到一些，不过我最期望的是：<br/>
-</p><ol>
-<li>测试用例的search<br/>
-</li>
-<li>内存泄漏测试，最好集成memwatch的功能。mem_limit很好。<br/>
-</li>
-<li>是否有mock功能？<br/>
-</li>
-</ol>
-
-
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">主页</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p><a href="http://sourceforge.net/projects/cutter/">http://sourceforge.net/projects/cutter/</a><br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <ul class="pager">
     
     <li class="previous"><a href="/blog/page/3/">&larr; Older</a></li>
@@ -1622,7 +1645,7 @@ kernel-debuginfo 将近300M<br/>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (5)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (5)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -1658,6 +1681,10 @@ dpc=1"></iframe>
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
+        <a href="/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/02/14/goagent/">goagent翻墙</a>
       </li>
     
@@ -1671,10 +1698,6 @@ dpc=1"></iframe>
     
       <li class="post">
         <a href="/blog/2013/02/13/openfiler/">openfiler 2.99创建raid</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/13/octopress-install/">octopress安装和定制</a>
       </li>
     
   </ul>
