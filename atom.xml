@@ -4,7 +4,7 @@
   <title><![CDATA[Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-02-17T22:21:51+08:00</updated>
+  <updated>2013-02-20T00:05:05+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -12,6 +12,248 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ssh隧道技术]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/19/ssh-tunnel/"/>
+    <updated>2013-02-19T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/19/ssh-tunnel</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">ssh隧道技术</a>
+<ul>
+<li><a href="#sec-1-1">什么情况下使用隧道</a></li>
+<li><a href="#sec-1-2">建立本地隧道</a>
+<ul>
+<li><a href="#sec-1-2-1">通过SSH隧道建立SOCKS服务器</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">建立远程SSH隧道</a></li>
+<li><a href="#sec-1-4">一些技巧</a>
+<ul>
+<li><a href="#sec-1-4-1">检查隧道状态</a></li>
+<li><a href="#sec-1-4-2">如何将端口绑定到外部地址上</a></li>
+<li><a href="#sec-1-4-3">自动连接和防断线脚本</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">动态域名</a></li>
+<li><a href="#sec-1-6">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/19/ssh-tunnel/">ssh隧道技术</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">什么情况下使用隧道</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<ol>
+<li>公司为了防止我们用XX软件封锁了它的端口或者服务器地址。<br/>
+</li>
+<li>nat穿越，或者叫ssh反向隧道访问内网的pc，比如：在家里访问我在公司的电脑。<br/>
+</li>
+</ol>
+
+
+<p><br/>
+通过在外网一个ssh服务器做代理，实现穿越功能。<br/>
+我主要使用第二种功能，在家里访问公司的电脑。可以远程办公了。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">建立本地隧道</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>建立本地隧道实现第一种隧道模式。<br/>
+假设内网机子A要访问C，但被拒绝了，这样可以通过中间的B建立ssh本地隧道实现A-B-C的访问。<br/>
+实际上这种一般不太常用，毕竟有很多代理服务器都可以方便实现代理功能。<br/>
+</p>
+<p><br/>
+在A上执行：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">ssh -N -f -L 2121:C:21 B
+ftp localhost:2121 <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">&#29616;&#22312;&#35775;&#38382;&#26412;&#22320;2121&#31471;&#21475;&#65292;&#23601;&#33021;&#36830;&#25509;C&#30340;21&#31471;&#21475;&#20102;</span>
+</pre>
+
+
+这里我们用到了SSH客户端的三个参数:<br/>
+-N 告诉SSH客户端，这个连接不需要执行任何命令。仅仅做端口转发<br/>
+-f 告诉SSH客户端在后台运行<br/>
+-L 做本地映射端口，被冒号分割的三个部分含义分别是<br/>
+需要使用的本地端口号<br/>
+需要访问的目标机器IP地址（IP: 234.234.234.234）<br/>
+需要访问的目标机器端口（端口: 21)<br/>
+最后一个参数是我们用来建立隧道的中间机器的IP地址(IP: 123.123.123.123)<br/>
+</p>
+<p><br/>
+我们再重复一下-L参数的行为。<br/>
+-L X:Y:Z 将IP为Y的机器的Z端口通过中间服务器映射到本地机器的X端口。<br/>
+</p>
+<p><br/>
+在这条命令成功执行之后，我们已经具有绕过公司防火墙的能力，并且成功访问到了我们喜欢的一个FTP服务器了。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">通过SSH隧道建立SOCKS服务器</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p>如果我们需要借助一台中间服务器访问很多资源，一个个映射显然不是高明的办法。<br/>
+幸好，SSH客户端为我们提供了通过SSH隧道建立SOCKS服务器的功能。<br/>
+</p>
+<p><br/>
+通过下面的命令我们可以建立一个通过123.123.123.123的SOCKS服务器。<br/>
+ssh -N -f -D 0.0.0.0:1080 123.123.123.123 # 将端口绑定在0.0.0.0上<br/>
+通过SSH建立的SOCKS服务器使用的是SOCKS5协议，在为应用程序设置SOCKS代理的时候要特别注意。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">建立远程SSH隧道</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>现象我想在家里访问公司内网的电脑，这时从外到内访问显然是不行的，但从公司内往外访问是正常的。<br/>
+所以就是用远程ssh隧道，先通过内网ssh到B，然后通过访问B的端口就可以访问内网的A了。<br/>
+</p>
+<p><br/>
+在A上执行：<br/>
+<code>ssh -N -f -R 2222:127.0.0.1:22 B</code><br/>
+现在，在B机器上我们用下面的命令就可以登陆公司的A机器了。<br/>
+<code>ssh -p 2222 localhost</code><br/>
+</p>
+<p><br/>
+我们现在重点说说参数-R。该参数的三个部分的含义分别是:<br/>
+远程机器使用的端口（2222）<br/>
+需要映射的内部机器的IP地址(127.0.0.1)<br/>
+需要映射的内部机器的端口(22)<br/>
+例如：-R X:Y:Z 就是把我们内部的Y机器的Z端口映射到远程机器的X端口上。<br/>
+</p>
+<p><br/>
+实际上这里所说的本地隧道和远程隧道(-L,-R),实际上指的是ssh代理listen的端口在本地还是在远端。<br/>
+如果在本地listen就是本地隧道，如果要是在远端listen一个端口就是远端隧道。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">一些技巧</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">检查隧道状态</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<p>有些时候隧道会因为一些原因通信不畅而卡死，例如：由于传输数据量太大，被路由器带入stalled状态。这种时候，往往SSH客户端并不退出，而是卡死在那里。一种应对方法是，使用SSH客户端的ServerAliveInterval和ServerAliveCountMax选项。ServerAliveInterval会在隧道无通信后的一段设置好的时间后发送一个请求给服务器要求服务器响应。如果服务器在ServerAliveCountMax次请求后都没能响应，那么SSH客户端就自动断开连接并退出，将控制权交给你的监控程序。这两个选项的设置方法分别是在ssh时加入-o ServerAliveInterval=n和-o ServerAliveCountMax=m。其中n, m可以自行定义。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2">如何将端口绑定到外部地址上</h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+<p>使用上面的方法，映射的端口只能绑定在127.0.0.1这个接口上。也就是说，只能被本机自己访问到。如何才能让其他机器访问这个端口呢？我们可以把这个映射的端口绑定在0.0.0.0的接口上，方法是加上参数-b 0.0.0.0。同时还需要打开SSH服务器端的一个选项－GatewayPorts。默认情况下它应当是被打开的。如果被关闭的话，可以在/etc/sshd_config中修改GatewayPorts no为GatewayPorts yes来打开它。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-3" class="outline-4">
+<h4 id="sec-1-4-3">自动连接和防断线脚本</h4>
+<div class="outline-text-4" id="text-1-4-3">
+
+<p>Linux平台ssh默认不支持把密码作为参数，不过有sshpass可以搞定<br/>
+</p>
+<p><br/>
+<a href="http://sourceforge.net/projects/sshpass/files/latest/download">http://sourceforge.net/projects/sshpass/files/latest/download</a><br/>
+</p>
+<p><br/>
+下载，解压，编译，把可执行文件拷贝到合适的目录，执行命令格式如下：<br/>
+</p>
+<p><br/>
+<code>sshpass -p "password" ssh -D 7070 user@serverip</code><br/>
+</p>
+<p><br/>
+貌似ubuntu下可以直接apt-get install sshpass<br/>
+</p>
+<p><br/>
+然后写脚本autossh.sh，内容如下：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">!/bin/</span><span style="color: #0000ff;">bash</span>
+<span style="color: #0000ff;">while</span> [ <span style="color: #00bfff;">''</span> == <span style="color: #00bfff;">''</span> ]
+<span style="color: #0000ff;">do</span>
+ <span style="color: #ff1493;">ssh_d_process_num</span>=<span style="color: #ff00ff;">`ps aux|grep -E 'ssh \-' |grep -v grep |wc -l`</span>
+ <span style="color: #0000ff;">if</span> [ <span style="color: #00bfff;">"$ssh_d_process_num"</span> == <span style="color: #00bfff;">"0"</span> ]; <span style="color: #0000ff;">then</span>
+  /home/user/sshpass -p <span style="color: #00bfff;">"password"</span> ssh -D 7070 user@ServerIP &amp;
+ <span style="color: #0000ff;">fi</span>
+
+ sleep 300
+<span style="color: #0000ff;">done</span>
+</pre>
+
+
+执行一下这个脚本就可以了。sleep 300代表300秒查看一次，可以根据需要调整。<br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">动态域名</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>花生壳linux程序下载地址：<br/>
+<a href="http://www.oray.com/peanuthull/download_linux.php">http://www.oray.com/peanuthull/download\_linux.php</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">参考</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p><a href="http://blog.creke.net/722.html">http://blog.creke.net/722.html</a><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[IPv6 NAT MAP66]]></title>
@@ -3575,92 +3817,6 @@ CC=/workspace26/i386-env/cross-tools/bin/i686-unknown-linux-gnu-gcc<br/>
 或者采用&ndash;host的形式：<br/>
 PATH=/workspace26/i386-env/cross-tools/bin/:$PATH LD_LIBRARY_PATH=/workspace26/env-x86-lib <br/>
 ./configure &ndash;host=i686-unknown-linux-gnu &ndash;enable-shared=no &ndash;disable-dependency-tracking<br/>
-</p></div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[svn使用]]></title>
-    <link href="http://emmoblin.github.com/blog/2012/10/16/svn/"/>
-    <updated>2012-10-16T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2012/10/16/svn</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">svn使用</a>
-<ul>
-<li><a href="#sec-1-1">svn libneon的问题</a></li>
-<li><a href="#sec-1-2">自己编译，真的不容易啊</a></li>
-<li><a href="#sec-1-3">tftpd-hpa</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/16/svn/">svn使用</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">svn libneon的问题</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>ubuntu安装的svn要使用https时，默认使用的libneon-gnutls有点兼容性问题。所以导致的错误是：<br/>
-SSL handshake failed: SSL 错误：在证书中检测到违规的密钥用法。<br/>
-解决办法：<br/>
-<a href="http://www.yeap.de/blog2.0/archives/260-Subversion-Certificate-Problems-with-Ubuntu-Precise-Pangolin.html">http://www.yeap.de/blog2.0/archives/260-Subversion-Certificate-Problems-with-Ubuntu-Precise-Pangolin.html</a><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">自己编译，真的不容易啊</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>cd openssl<br/>
-由于是64bit系统，所以需要添加fPIC<br/>
-./config -fPIC<br/>
-但是cropt目录不好添加fPIC，难道生成的.a难道也需要fPIC吗？，所以无奈，只能先安装系统的openssl<br/>
-apt-get install openssl-dev openssl<br/>
-</p>
-<p><br/>
-cd subversion<br/>
-./configure &ndash;with-ssl=openssl &ndash;with-neon=./neon &ndash;with-openssl=/usr<br/>
-出现warnning无用理会直接make<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">tftpd-hpa</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>atftpd 设置半天不能启动，连直接输入命令行都不能启动。<br/>
-所以换成tftpd-hpa，非常简单。<br/>
-不过要想能够上传文件需要修改配置：<br/>
-vi /etc/default/tftpd-hpa<br/>
-添加&ndash;create<br/>
-注意-s参数不能去掉。<br/>
-</p>
-<p><br/>
-客户端使用atftp。<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
 </p></div>
 </div>
 </div>
