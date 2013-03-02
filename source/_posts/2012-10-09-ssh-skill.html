@@ -5,7 +5,7 @@ filename: ssh skill
 on: 2012-10-09 12:03:06
 toc: on
 comments: true
-categories: [ubuntu, skill]
+categories: [ubuntu, skill, ssh]
 CATEGORY: ssh_skill
 ---
 
@@ -128,7 +128,7 @@ $ ssh db<br/>
 <h3 id="sec-1-6">穿越Web代理</h3>
 <div class="outline-text-3" id="text-1-6">
 
-<p>有些时候，你所在的网络不止封锁SSH端口，它们有可能更进一步，只让你通过Web代理来访问网络，幸运的是我们有一个叫做Corkscrew的程序可以通过Web代理在发送SSH数据。Corkscrew的使用非常简单，一般我都是在需要时搜索，然后直接下载，跟随网站上的指示，然后就搞定了，一般你需要这样一条配置：<br/>
+<p>有些时候，你所在的网络不止封锁SSH端口，它们有可能更进一步，只让你通过Web代理来访问网络，幸运的是我们有一个叫做Corkscrew的程序可以通过Web代理来发送SSH数据。Corkscrew的使用非常简单，一般我都是在需要时搜索，然后直接下载，跟随网站上的指示，然后就搞定了，一般你需要这样一条配置：<br/>
 ProxyCommand corkscrew proxy.example.org 8080 %h %p<br/>
 </p>
 <p><br/>
@@ -145,7 +145,8 @@ $ mkdir gallery_src<br/>
 $ sshfs dev:projects/gallery/src gallery_src<br/>
 $ cd gallery_src<br/>
 $ ls<br/>
-现在你就可以使用任何你喜欢的本地程序来便捷这个目录中的文件了，它们看起来是在你的本地，但其实时远程服务器上的文件，你可以使用fusermount命令来unmount这些文件，不要担心记不住，它们就在sshfs手册的顶上：<br/>
+现在你就可以使用任何你喜欢的本地程序来便捷这个目录中的文件了，它们看起来是在你的本地，但其实时远程服务器上的文件，你可以使用fusermount命令来unmount这些文件，不要担心记不住，它们就在<br/>
+sshfs手册的顶上：<br/>
 $ cd ..<br/>
 $ fusermount -u gallery_src<br/>
 SSHFS可以在Linux和OSX上工作，Windows用户我目前还没找到什么好办法。<br/>

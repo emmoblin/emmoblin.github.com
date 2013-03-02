@@ -1,0 +1,78 @@
+---
+title: nc使用
+layout: post
+filename: netcat
+on: 2013-02-27 00:31:06
+toc: off
+comments: true
+categories: [tools]
+CATEGORY: nc
+---
+
+<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">基本使用</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>本地监听<br/>
+<code>nc -l 3333</code><br/>
+远端访问<br/>
+<code>nc 192.168.0.1 3333</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">传送文件</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>发送端<br/>
+<code>cat backup.iso | nc -l 3333</code><br/>
+接收端<br/>
+<code>nc 192.168.0.1 3333 &gt; backup.iso</code><br/>
+</p>
+<p><br/>
+显示传送进度，可以使用管道监控,pv命令<br/>
+以上命令修改为：<br/>
+<code>cat backup.iso | pv -b | nc -l 3333</code><br/>
+<code>nc 192.168.0.1 3333 | pv -b &gt; backup.iso</code><br/>
+</p>
+<p><br/>
+本地打包文件，传送到远端<br/>
+<code>tar -czf - /etc/ | nc -l 3333</code><br/>
+接收端<br/>
+<code>nc 192.168.0.1 3333 | pv -b &gt; mybackup.tar.gz</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">端口扫描</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>扫描端口，并返回相关信息<br/>
+<code>nc -z 192.168.0.1 80-90</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">资料</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p><a href="http://www.sans.org/security-resources/sec560/netcat_cheat_sheet_v1.pdf">http://www.sans.org/security-resources/sec560/netcat\_cheat\_sheet\_v1.pdf</a><br/>
+<a href="http://www.g-loaded.eu/2006/11/06/netcat-a-couple-of-useful-examples/">http://www.g-loaded.eu/2006/11/06/netcat-a-couple-of-useful-examples/</a><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>

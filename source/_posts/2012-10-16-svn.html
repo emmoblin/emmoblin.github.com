@@ -17,7 +17,8 @@ CATEGORY: svn
 <ul>
 <li><a href="#sec-1-1">svn libneon的问题</a></li>
 <li><a href="#sec-1-2">自己编译，真的不容易啊</a></li>
-<li><a href="#sec-1-3">tftpd-hpa</a></li>
+<li><a href="#sec-1-3">分支管理</a></li>
+<li><a href="#sec-1-4">tftpd-hpa</a></li>
 </ul>
 </li>
 </ul>
@@ -58,7 +59,7 @@ SSL handshake failed: SSL 错误：在证书中检测到违规的密钥用法。
 apt-get install openssl-dev openssl<br/>
 </p>
 <p><br/>
-cd subversion<br/>
+cd subversionq<br/>
 ./configure &ndash;with-ssl=openssl &ndash;with-neon=./neon &ndash;with-openssl=/usr<br/>
 出现warnning无用理会直接make<br/>
 </p>
@@ -68,8 +69,63 @@ cd subversion<br/>
 </div>
 
 <div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">tftpd-hpa</h3>
+<h3 id="sec-1-3">分支管理</h3>
 <div class="outline-text-3" id="text-1-3">
+
+<p>一般svn版本库目录建议创建trunk、branches和tags三个目录。 <br/>
+trunk主干版本要时刻保持干净，即随时可以基于这个版本进行修改并将应用部署上线。<br/>
+branches是分支目录，存放并行开发的项目代码，因为分支是主干的廉价拷贝，所以你可以放心建立很多分支版本。<br/>
+不过Subversion不支持跨版本库的拷贝，当使用svn copy时你只能在同一个版本库内操作。<br/>
+tags目录存放trunk某个的快照。<br/>
+</p>
+<p><br/>
+</p><ol>
+<li>svn copy 创建分支<br/>
+</li>
+</ol>
+
+
+<p><br/>
+<pre class="src src-sh">svn copy -m <span style="color: #00bfff;">"1.7.2 - theme"</span> svn://localhost/www/trunk svn://localhost/www/branches/branch1.7.2-theme
+svn co svn://localhost/www/branches/branch1.7.2-theme
+</pre>
+
+
+2） 开发了一段实现，要先把trunk版本merge过来<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">branch1.7.2-theme&#26159;&#20998;&#25903;&#30446;&#24405;&#65292;&#27880;&#24847;&#19981;&#21487;&#20197;&#36827;&#21040;&#20998;&#25903;&#23376;&#30446;&#24405;</span>
+<span style="color: #a52a2a;">cd</span> branch1.7.2-theme
+<span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21069;&#38754;&#30340;12972&#26159;&#24320;&#20998;&#25903;&#20043;&#21069;trunk&#30340;&#29256;&#26412;&#21495;&#65292;&#21518;&#38754;&#30340;12991&#26159;merge&#26102;trunk&#30340;&#29256;&#26412;&#21495;</span>
+svn merge -r 12972:12991 svn://localhost/www/trunk
+</pre>
+
+解决冲突后，提交<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">svn ci -m <span style="color: #00bfff;">'svn merge -r 12972:12991 svn://localhost/www/trunk'</span>
+</pre>
+
+
+3） 从分支merge到trunk。上线测试完毕，你很幸运，一切都如预期正常，这时就要将分支回归trunk，将trunk更新到最新。<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20808;&#20174;trunk checkout&#19968;&#20221;&#26032;&#40092;&#30340;&#20195;&#30721;&#65292;&#28982;&#21518;cd&#21040;&#35813;&#29256;&#26412;&#30446;&#24405;&#19979;</span>
+svn co svn://localhost/www/trunk
+<span style="color: #a52a2a;">cd</span> trunk
+<span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">12973&#26159;&#20998;&#25903;&#24320;&#22987;&#30340;&#29256;&#26412;&#21495;&#65292;13006&#26159;&#20998;&#25903;&#32467;&#26463;&#30340;&#29256;&#26412;&#21495;</span>
+svn merge -r 12973:13006 svn://localhost/www/branches/branch1.7.2-theme
+</pre>
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">tftpd-hpa</h3>
+<div class="outline-text-3" id="text-1-4">
 
 <p>atftpd 设置半天不能启动，连直接输入命令行都不能启动。<br/>
 所以换成tftpd-hpa，非常简单。<br/>
