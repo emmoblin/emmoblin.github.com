@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: kernel | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/kernel/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2013-02-20T00:05:05+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[centos kdump]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/11/15/centos-kdump/"/>
+    <updated>2012-11-15T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/11/15/centos-kdump</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">centos kdump</a>
+<ul>
+<li><a href="#sec-1-1">介绍</a></li>
+<li><a href="#sec-1-2">安装</a></li>
+<li><a href="#sec-1-3">添加内核启动参数</a></li>
+<li><a href="#sec-1-4">配置文件</a></li>
+<li><a href="#sec-1-5">测试</a></li>
+<li><a href="#sec-1-6">用crash 工具分析vmcore 文件</a></li>
+<li><a href="#sec-1-7">参考</a></li>
+<li><a href="#sec-1-8">遗留问题</a></li>
+<li><a href="#sec-1-9">systemtap</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/kernel/atom.xml">centos kdump</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">介绍</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>通过kexec和kdump当内核crash的时候可以显示堆栈信息。方便调试。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">安装</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>sudo yum install kexec-tools<br/>
+sudo yum install kernel-debug kernel-debug-devel<br/>
+yum install crash gdb<br/>
+</p>
+<p><br/>
+为了让内核都统一，不妨内核也升级一下<br/>
+yum install kernel kernel-devel<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">添加内核启动参数</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>crashkernel=128M@16M<br/>
+在/etc/grub.cfg中添加，表示启动的时候从16M的位置开始，预留128M内存用于crashkernel <br/>
+注意centos6.2我发现可能已经默认支持了kdump，只是没有启动而已，grub.cfg中已经添加了crashkernel=auto<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">配置文件</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>/etc/kdump.conf<br/>
+配置coredump的位置，默认是 /var/crash<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">测试</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>reboot后<br/>
+这会创建/boot/initrd-kdump.img用于capture coredump，这非常重要，否则kdump就会启动失败。<br/>
+该文件就是kdump加载的内核的 initrd文件，收集dump信息的工作就是在该initrd的启动环境下进行的。<br/>
+查看/etc/init.d/kdump脚本的代码，你可看到其中会调用mkdumprd命令创建用于dump的initrd文件。<br/>
+</p>
+<p><br/>
+service kdump status<br/>
+</p>
+<p><br/>
+触发crash<br/>
+echo 1 &gt; /proc/sys/kernel/sysrq<br/>
+echo "c" &gt; /proc/sysrq-trigger<br/>
+</p>
+<p><br/>
+等待时间比较长，大概5分钟，系统又重新进入了桌面。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">用crash 工具分析vmcore 文件</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+<p><br/>
+用crash 命令分析vmcore 的命令行格式如下所示. <br/>
+用crash打开vmcore后，主要是用dmesg及 bt 命令打印出问题的执行路径的call trace, <br/>
+用dis 反汇编出代码，最终确认call trace对应的C源码中的位置，再进行逻辑分析.<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">参考</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p><a href="http://www.linuxidc.com/Linux/2011-03/33548.htm">http://www.linuxidc.com/Linux/2011-03/33548.htm</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">遗留问题</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>用crash需要vmlinux，到哪里获得？<br/>
+可能需要安装kernel-debuginfo<br/>
+但标准库里可能没有，需要另外添加。<br/>
+<a href="http://www.dedoimedo.com/computers/centos-debug.html">http://www.dedoimedo.com/computers/centos-debug.html</a><br/>
+</p>
+<p><br/>
+<a href="http://wiki.centos.org/AdditionalResources/Repositories">http://wiki.centos.org/AdditionalResources/Repositories</a><br/>
+已经说得很清楚了，需要额外添加debuginfo的库<br/>
+不过看到centos6.2中自带了<br/>
+ /etc/yum.repos.d/CentOS-Debuginfo.repo<br/>
+<b>注意把其中的enabled改为1</b>,然后就可以安装了<br/>
+kernel-debuginfo 将近300M<br/>
+</p>
+<p><br/>
+先不下了，速度太慢了，10k。<br/>
+</p>
+<p><br/>
+还有个问题，就算能看vmcore了，那模块coredump也能看吗？<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">systemtap</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>有空再研究一下kprobe和systemtap<br/>
+<a href="http://hi.baidu.com/donglix/item/13052275911e7a5f0c0a07f8">http://hi.baidu.com/donglix/item/13052275911e7a5f0c0a07f8</a><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

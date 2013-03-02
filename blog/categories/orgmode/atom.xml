@@ -1,0 +1,905 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: orgmode | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/orgmode/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2013-02-20T00:05:05+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[org-mode学习笔记]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/08/31/org-mode-note/"/>
+    <updated>2012-08-31T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/08/31/org-mode-note</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">org-mode学习笔记</a>
+<ul>
+<li><a href="#sec-1-1">头信息注释</a></li>
+<li><a href="#sec-1-2">安装最新的org</a></li>
+<li><a href="#sec-1-3">文档结构相关的操作</a>
+<ul>
+<li><a href="#sec-1-3-1">Motion</a></li>
+<li><a href="#sec-1-3-2">headline结构移动</a></li>
+<li><a href="#sec-1-3-3">Structure editing</a></li>
+<li><a href="#sec-1-3-4">Sparse Tree</a></li>
+<li><a href="#sec-1-3-5">List</a></li>
+<li><a href="#sec-1-3-6">Footnotes</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">加粗</a></li>
+<li><a href="#sec-1-5">链接</a>
+<ul>
+<li><a href="#sec-1-5-1">内部链接 Internal Link</a></li>
+<li><a href="#sec-1-5-2">添加附件</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-6">TABLES</a>
+<ul>
+<li><a href="#sec-1-6-1">表格宽度</a></li>
+<li><a href="#sec-1-6-2">行列操作</a></li>
+<li><a href="#sec-1-6-3">表格计算</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-7">tag</a></li>
+<li><a href="#sec-1-8">code</a></li>
+<li><a href="#sec-1-9">TODO使用</a>
+<ul>
+<li><a href="#sec-1-9-1">TODO依赖关系</a></li>
+<li><a href="#sec-1-9-2">tracking todo state change</a></li>
+<li><a href="#sec-1-9-3">priotify</a></li>
+<li><a href="#sec-1-9-4">checkbox</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-10">org capture</a></li>
+<li><a href="#sec-1-11">exports</a>
+<ul>
+<li><a href="#sec-1-11-1">export option</a>
+<ul>
+<li><a href="#sec-1-11-1-1">防止下横杠被转义</a></li>
+<li><a href="#sec-1-11-1-2">export html</a></li>
+<li><a href="#sec-1-11-1-3">export pdf</a></li>
+<li><a href="#sec-1-11-1-4">使用org-jekyll导出</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-1-12">dates and times</a></li>
+<li><a href="#sec-1-13">属性</a></li>
+<li><a href="#sec-1-14">未分类</a>
+<ul>
+<li><a href="#sec-1-14-1">byte-recompile-directory</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-15">问题</a></li>
+<li><a href="#sec-1-16">参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/orgmode/atom.xml">org-mode学习笔记</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">头信息注释</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p><br/>
+<pre class="example">#+TAGS: { 桌面(d) 服务器(s) }  编辑器(e) 浏览器(f) 多媒体(m) 压缩(z)
+#+TAGS:  { @Windows(w)  @Linux(l) }  
+#+TAGS:  { 糟糕(1) 凑合(2) 不错(3) 很好(4) 极品(5) } 
+#+SEQ_TODO: TODO(T) WAIT(W) | DONE(D!) CANCELED(C@) 
+#+COLUMNS: %10ITEM  %10PRIORITY %15TODO %65TAGS
+</pre>
+
+</p><ol>
+<li>启动时概览<br/>
+</li>
+<li>设定标签，括弧中的为标签快捷键（如果没有指定，默认为首字母）。可以设置在多行中<br/>
+</li>
+<li>花括号为标签组，组中的标签只能选一个<br/>
+</li>
+<li>设定待办状态。将项设置为 | 后面的状态时（DONE CANCELED），会打上 CLOSED 标志<br/>
+</li>
+<li>设定列视图<br/>
+</li>
+<li>更新了参数后在参数区域按C-c C-c进行更新<br/>
+</li>
+</ol>
+
+
+<p><br/>
+<b>这里的内容可以随时更改，但是要记得在改后用 C-c C-c 刷新设置</b><br/>
+</p>
+<p><br/>
+<!-- more -->
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">安装最新的org</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p><a href="http://orgmode.org/org-mode-download.html">http://orgmode.org/org-mode-download.html</a><br/>
+下载最新的org版本，然后解压到home的emacs目录，在.emacs中添加load-path。<br/>
+(require 'org)<br/>
+然后可以使用org-version查看版本号。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">文档结构相关的操作</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">Motion</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left"></th><th scope="col" class="left">向前</th><th scope="col" class="left">向后</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">同级</td><td class="left">C-c C-f</td><td class="left">C-c C-b</td></tr>
+</tbody>
+<tbody>
+<tr><td class="left">跨级</td><td class="left">C-c C-n</td><td class="left">C-c C-p</td></tr>
+</tbody>
+<tbody>
+<tr><td class="left">上一级</td><td class="left">C-c C-u</td><td class="left"></td></tr>
+</tbody>
+<tbody>
+<tr><td class="left">跳转</td><td class="left">C-c C-j</td><td class="left"></td></tr>
+</tbody>
+</table>
+
+
+<p><br/>
+<code>C-c C-j</code>  org-goto 这个功能强大，随意跳转<br/>
+<code>S-TAB</code> 收起所有目录树，相当与C-u TAB<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">headline结构移动</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p><code>M-left,right</code> 移动一级<br/>
+<code>M-S-left，righ</code> subtree移动一级<br/>
+<code>M-S-up，down</code> subtree上下移动一级<br/>
+<code>C-c C-x C-w</code> kill subtree<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3">Structure editing</h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+<p><code>M-RET</code>         添加同级head<br/>
+<code>M-S-RET</code>       插入TODO<br/>
+<code>M-LEFT，RIGHT，UP,DOWN</code> 上下左右调级<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4">Sparse Tree</h4>
+<div class="outline-text-4" id="text-1-3-4">
+
+<p><code>C-/</code>           搜索关键字，折叠其他所有，只显示关心内容<br/>
+<code>C-/ r</code><br/>
+<code>M-g M-n</code>       在结果中跳转<br/>
+<code>M-g M-p</code><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-5" class="outline-4">
+<h4 id="sec-1-3-5">List</h4>
+<div class="outline-text-4" id="text-1-3-5">
+
+
+<p><br/>
+<pre class="example">-，+,*
+1.
+1)
+:: 添加描述
+</pre>
+
+在list中同样支持类似header中的motion快捷键<br/>
+<b>注意一定后边要有个空格</b><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-6" class="outline-4">
+<h4 id="sec-1-3-6">Footnotes</h4>
+<div class="outline-text-4" id="text-1-3-6">
+
+<p><code>C-c C-x f</code> 自动在此处添加脚注，再按一次就可以回到刚才的地方<br/>
+</p>
+<p><br/>
+</p><div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 这是一个脚注,fn是必须的<br/>
+还有一些快捷键，进行脚注的跳转。<br/>
+</p><ul>
+<li>TODO 以后进行扩充<br/>
+</li>
+</ul>
+
+
+<p><br/>
+</p>
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 测试一个脚注测试<br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">加粗</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+<pre class="example">*name*
+/斜体/
+_下划线_
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">链接</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p><code>C-c C-l</code> 添加一个链接<br/>
+</p>
+<p><br/>
+<pre class="example">[[链接地址][链接名称]]
+[[链接地址]]
+</pre>
+
+如果想修改这个链接，在链接后按下 backspace。<br/>
+</p>
+<p><br/>
+在一个链接上按=C-c C-o=即可访问，至于调用什么程序访问，取决于链接的内容<br/>
+</p>
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1">内部链接 Internal Link</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+<p>如下命令定义了一个名为target的跳转目标：<br/>
+</p>
+<p><br/>
+<pre class="example">#&lt;&lt;target&gt;&gt;
+</pre>
+
+
+如下方式可以设置到target的链接：<br/>
+</p>
+<p><br/>
+<pre class="example">[[target]] 或 [[target][description]]
+</pre>
+
+其他常用链接命令 <br/>
+<code>C-c l</code> 可以在光标所在处创建一个跳转目标点，<br/>
+在需要跳转至该目标的位置输入命令 <code>C-c C-l</code> 可以建立到目标的链接<br/>
+</p>
+<p><br/>
+当输入 <code>C-c C-l</code> 命令，光标若处在已经存在的一个链接上的时候，可以编辑改链接。   <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5-2" class="outline-4">
+<h4 id="sec-1-5-2">添加附件</h4>
+<div class="outline-text-4" id="text-1-5-2">
+
+<p>给文档添加附件非常简单 <code>C-c C-a</code> 然后就着菜单选好了，其中 <code>C-c C-a a</code> 是添加文件系统中的文件作为附件。<br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">TABLES</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>在table中按TAB，跳到下一个table<br/>
+在tab中按RET，跳到下一行<br/>
+<code>C-c C-c</code> 整理格式<br/>
+</p>
+<p><br/>
+以 <code>|-</code> 开始的行TAB后扩充为分隔栏<br/>
+</p>
+<p><br/>
+<b>C-c | 自动把一个空格排列的字段转化为表格</b><br/>
+</p>
+<p><br/>
+<code>C-c RET</code> 创建下一行表格<br/>
+<code>C-c -</code> 在下一行插入一行分隔符<br/>
+<code>C-c ^</code> 按当前列排序<br/>
+</p>
+<p>   <br/>
+</p>
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1">表格宽度</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<p>在一列中添加&lt;n&gt;<br/>
+如果一行显示不完全会显示为==&gt;<br/>
+此时通过 <code>C-c `</code> 进入编辑默认， <code>C-c C-c</code> 编辑完毕。<br/>
+还可以添加左中右对齐。<br/>
+<code>l,c,r</code><br/>
+比如：<br/>
+<code>&lt;r10&gt;</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2">行列操作</h4>
+<div class="outline-text-4" id="text-1-6-2">
+
+<p><code>M-上下左右</code><br/>
+<code>M-S-上下左右</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6-3" class="outline-4">
+<h4 id="sec-1-6-3">表格计算</h4>
+<div class="outline-text-4" id="text-1-6-3">
+
+<p>比较复杂，而且不常用，用得时候再说，还可以使用Org-Plot进行画图<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">tag</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>使用冒号扩起来,在headline后边。 <code>:tag1:</code><br/>
+快捷键： <code>C-c C-q</code><br/>
+如果光标在headline行，则可以直接使用 <code>C-c C-c</code><br/>
+</p>
+<p><br/>
+search<br/>
+<code>C-c \</code> 或者 <code>C-c / m</code><br/>
+<code>C-c a m</code> 全局搜索<br/>
+</p>
+<p><br/>
+<code>C-c \</code> 搜索标签<br/>
+<code>C-c / T</code><br/>
+<code>C-u C-c \</code>     搜索带 TODO 的标签<br/>
+可以使用逻辑表达式限制条件，更准确灵活的搜索<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">+       和      a+b     同时有这两个标签
+-       排除    a-b     有 a 但没有 b
+|       或      a|b     有 a 或者有 b
+&amp;       和      a&amp;b     同时有 a 和 b，可以用“+”替代
+</pre>
+
+在查询视图中 <code>C-c C-c</code> 退出<br/>
+</p>
+<p>     <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">code</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>语法：<br/>
+</p>
+<p><br/>
+<pre class="example">#+NAME: &lt;name&gt;
+#+BEGIN_SRC &lt;language&gt; &lt;switches&gt; &lt;header arguments&gt;
+&lt;body&gt;
+#+END_SRC
+</pre>
+
+
+<b>引用文字 #+BEGIN_EXAMPLE/#+END_EXAMPLE</b><br/>
+为了保留引文的格式，还可以使用<br/>
+<code>#+BEGIN_VERSE/#+END_VERSE</code><br/>
+<code>#+BEGIN_QUOTE/#+END_QUOTE</code><br/>
+将引文居中排版可以使用<br/>
+<code>#+BEGIN_CENTER/#+END_CENTER</code><br/>
+</p>
+<p><br/>
+例子：<br/>
+</p>
+<p><br/>
+<pre class="src src-emacs-lisp">(<span style="color: #0000ff;">defun</span> <span style="color: #a020f0;">org-xor</span> (a b)
+<span style="color: #00bfff;">"Exclusive or."</span>
+(<span style="color: #0000ff;">if</span> a (not b) b))
+</pre>
+
+
+输入&lt;e和TAB,得到<br/>
+</p>
+<p><br/>
+<pre class="example">#+end_example
+输入&lt;s和TAB,得到
+#+begin_example
+        #+begin_src
+        #+end_src
+</pre>
+
+
+咳，相应的还有：<br/>
+</p>
+<p><br/>
+<pre class="example">("s" "#+begin_src ?\n\n#+end_src" "&lt;src lang=\"?\"&gt;\n\n&lt;/src&gt;")
+("e" "#+begin_example\n?\n#+end_example" "&lt;example&gt;\n?\n&lt;/example&gt;")
+("q" "#+begin_quote\n?\n#+end_quote" "&lt;quote&gt;\n?\n&lt;/quote&gt;")
+("v" "#+begin_verse\n?\n#+end_verse" "&lt;verse&gt;\n?\n/verse&gt;")
+("c" "#+begin_center\n?\n#+end_center" "&lt;center&gt;\n?\n/center&gt;")
+("l" "#+begin_latex\n?\n#+end_latex" "&lt;literal style=\"latex\"&gt;\n?\n&lt;/literal&gt;")
+("L" "#+latex: " "&lt;literal style=\"latex\"&gt;?&lt;/literal&gt;")
+("h" "#+begin_html\n?\n#+end_html" "&lt;literal style=\"html\"&gt;\n?\n&lt;/literal&gt;")
+("H" "#+html: " "&lt;literal style=\"html\"&gt;?&lt;/literal&gt;")
+("a" "#+begin_ascii\n?\n#+end_ascii")
+("A" "#+ascii: ")
+("i" "#+include %file ?" "&lt;include file=%file markup=\"?\"&gt;"))
+</pre>
+
+这些都是定义在org-structure-template-alist中的变量。<br/>
+</p>
+<p><br/>
+定义快捷插入操作<br/>
+</p>
+<p><br/>
+<pre class="src src-lisp">(<span style="color: #0000ff;">define-skeleton</span> <span style="color: #a020f0;">iexp</span> 
+  <span style="color: #00bfff;">"Input #+BEGIN_EXAMPLE #+END_EXAMPLE in org-mode"</span>
+  <span style="color: #00bfff;">""</span>
+  <span style="color: #00bfff;">"#+BEGIN_EXAMPLE\n"</span>
+  _ <span style="color: #00bfff;">"\n"</span> 
+  <span style="color: #00bfff;">"#+END_EXAMPLE"</span>
+  )
+(define-abbrev org-mode-abbrev-table <span style="color: #00bfff;">"iexp"</span> <span style="color: #00bfff;">""</span> 'iexp)
+</pre>
+
+如果你想插入代码片段，直接M-x iexp RET即可，<br/>
+会自动出现#+BEGIN_EXAMPLE #+END_EXAMPLE，并且光标自动停留在中间等待你的输入，<br/>
+如果文章中已经有了一段内容，直接选中这段内容， <code>M-x iexp RET</code> ，同样可以将这段内容引用起来，非常方便.<br/>
+</p>
+<p><br/>
+貌似使用等号也是有这个作用，用在行内，比如 <code>这样</code> <br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">TODO使用</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>任何headline前加上TODO都可以变为TODO item<br/>
+<code>C-c C-t</code> 循环变化TODO的状态<br/>
+<code>C-c / t</code> 在sparse tree中查看TODO<br/>
+<code>C-c a t</code> 显示aganda全局TODO<br/>
+</p>
+<p><br/>
+设置多个状态，并添加简写，可以使用 <code>C-c C-t + brief</code> 直接设置状态<br/>
+</p>
+<p><br/>
+<pre class="src src-lisp">(setq org-todo-keywords
+'((sequence <span style="color: #00bfff;">"TODO(t)"</span> <span style="color: #00bfff;">"|"</span> <span style="color: #00bfff;">"DONE(d)"</span>)
+(sequence <span style="color: #00bfff;">"REPORT(r)"</span> <span style="color: #00bfff;">"BUG(b)"</span> <span style="color: #00bfff;">"KNOWNCAUSE(k)"</span> <span style="color: #00bfff;">"|"</span> <span style="color: #00bfff;">"FIXED(f)"</span>)
+(sequence <span style="color: #00bfff;">"|"</span> <span style="color: #00bfff;">"CANCELED(c)"</span>)))
+</pre>
+
+
+<code>C-u C-c C-t</code>   手动输入 TODO 状态，如果设定快捷则使用快捷键输入<br/>
+<code>S-right</code>               循环切换 TODO 状态，两个以上 TODO 状态时使用<br/>
+<code>S-left</code><br/>
+<code>C-S-right</code>             组间切换<br/>
+<code>C-S-left</code><br/>
+<code>C-c C-v</code>               查询视图<br/>
+<code>C-c / t</code><br/>
+<code>C-c a t</code>               全局 TODO 列表<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-9-1" class="outline-4">
+<h4 id="sec-1-9-1">TODO依赖关系</h4>
+<div class="outline-text-4" id="text-1-9-1">
+
+<p>父级TODO只有等子TODO都done后才能done<br/>
+例子： 添加ORDERED属性，subclass也是按照先后顺序执行<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">* Parent
+:PROPERTIES:
+:END:
+**TODO a
+**TODO b, needs to wait for (a)
+**TODO c, needs to wait for (a) and (b)
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9-2" class="outline-4">
+<h4 id="sec-1-9-2">tracking todo state change</h4>
+<div class="outline-text-4" id="text-1-9-2">
+
+<p>This is achieved by adding special markers ‘!’(for a timestamp) <br/>
+or ‘@’ (for a note with timestamp) in parentheses after each keyword.<br/>
+</p>
+<p><br/>
+exp:<br/>
+(setq org-todo-keywords<br/>
+'((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9-3" class="outline-4">
+<h4 id="sec-1-9-3">priotify</h4>
+<div class="outline-text-4" id="text-1-9-3">
+
+<p>在headline添加priority cookie<br/>
+<code>*** TODO [#A] Write letter to Sam Fortune</code><br/>
+A，B，C<br/>
+不写priority cookie的headline默认为B<br/>
+=C-c ,= 设置优先级<br/>
+<b>S-up，down 调高低</b><br/>
+</p>
+<p><br/>
+对于显示效果还要设置：<br/>
+org-priority-faces<br/>
+</p>
+<p>    <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9-4" class="outline-4">
+<h4 id="sec-1-9-4">checkbox</h4>
+<div class="outline-text-4" id="text-1-9-4">
+
+<p>每行以- [ ] 开头，就是checkbox,注意[ ]之间必须有空格<br/>
+实际上是列表，所有要加- + 或者*在[ ]之前<br/>
+</p>
+<p><br/>
+但checkbox不加入global todo list。<br/>
+试用于把一个任务分成若干个小项。<br/>
+<code>C-c C-c</code>  toggle checkbox<br/>
+<code>C-u C-c C-c</code> 在list符后添加一个空的checkbox或者删除<br/>
+<code>C-u C-u C-c C-c</code> 把checkbox设置为中间状态[-]<br/>
+还headline后添加[/]或者[%] 可以显示当前项完成的个数或者百分比。<br/>
+</p>
+<p>   <br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-10" class="outline-3">
+<h3 id="sec-1-10">org capture</h3>
+<div class="outline-text-3" id="text-1-10">
+
+<p>用于快速记录一些想法，可以设置一些模板。<br/>
+</p>
+<p><br/>
+<pre class="src src-lisp">(setq org-directory <span style="color: #00bfff;">"~/lwemacs/org"</span>)
+(setq org-default-notes-file (concat org-directory <span style="color: #00bfff;">"/notes.org"</span>))
+(global-set-key <span style="color: #00bfff;">"\C-cc"</span> 'org-capture)
+</pre>
+
+
+<code>C-c C-c</code> 完成编辑<br/>
+<code>C-c C-k</code> 放弃编辑<br/>
+<code>C-u C-c c</code> 查看模板，或者定制模板<br/>
+<code>C-u C-u C-c c</code> 查看last note<br/>
+</p>
+<p><br/>
+添加模板，设置org-capture-templates变量：<br/>
+</p>
+<p><br/>
+<pre class="src src-lisp">(setq org-capture-templates
+ '((<span style="color: #00bfff;">"t"</span> <span style="color: #00bfff;">"Todo"</span> entry (file+headline (concat org-directory <span style="color: #00bfff;">"/gtd.org"</span>) <span style="color: #00bfff;">"Tasks"</span>)
+        <span style="color: #00bfff;">"* TODO %?\n %i\n %a"</span>)
+   (<span style="color: #00bfff;">"j"</span> <span style="color: #00bfff;">"Journal"</span> entry (file+datetree (concat org-directory <span style="color: #00bfff;">"/journal.org"</span>))
+        <span style="color: #00bfff;">"* %?\nEntered on %U\n %i\n %a"</span>)))  
+</pre>
+
+要学习模板的格式，查看org-capture-templates变量描述。<br/>
+</p>
+<p>  <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11" class="outline-3">
+<h3 id="sec-1-11">exports</h3>
+<div class="outline-text-3" id="text-1-11">
+
+<p>设置如下tag可以控制导出和不导出的headline<br/>
+(:export:) and '(:noexport:) <br/>
+</p>
+<p>   <br/>
+</p>
+</div>
+
+<div id="outline-container-1-11-1" class="outline-4">
+<h4 id="sec-1-11-1">export option</h4>
+<div class="outline-text-4" id="text-1-11-1">
+
+<p>放在文章的任何位置都可以<br/>
+<code>C-c C-e t</code> 插入option模板<br/>
+</p>
+<p><br/>
+最好把统一的配置放在一个独立的文件中，然后进行引用<br/>
+<code>#+SETUPFILE</code><br/>
+</p>
+<p><br/>
+其中OPTIONS字段是最重要的，有很多选项：<br/>
+<code>C-c C-e</code> 开始export命令，org-export,然后会提示导出什么格式。<br/>
+<b>注意，一定要加上\n:t, 导出的时候加入回行，否则都会显示为一行</b><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-11-1-1" class="outline-5">
+<h5 id="sec-1-11-1-1">防止下横杠被转义</h5>
+<div class="outline-text-5" id="text-1-11-1-1">
+
+<p>关闭这个功能<br/>
+</p>
+<p><br/>
+也可以直接在配置文件中<br/>
+(setq org-export-with-sub-superscripts nil)<br/>
+</p>
+<p><br/>
+或者只对某个site配置生效，在site的属性中添加<br/>
+:sub-superscript nil<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11-1-2" class="outline-5">
+<h5 id="sec-1-11-1-2">export html</h5>
+<div class="outline-text-5" id="text-1-11-1-2">
+
+<p>org-export-html-postamble 默认此变量时true，会往结尾添加一些作者信息。<br/>
+css相关：<br/>
+org-export-html-style 或者 <br/>
+view:   <br/>
+info    Info-like interface with one section per page.<br/>
+overview        Folding interface, initially showing only top-level.<br/>
+content         Folding interface, starting with all headlines visible.<br/>
+showall         Folding interface, all headlines and text visible.<br/>
+</p>
+<p><br/>
+遇到的问题：<br/>
+使用了org-info.js，但是运行不成功，原因是只要页面出现加载错误，js就无法运行。<br/>
+我的问题是sitemap.html写错了，无法加载，所以info.js没有效果，修改后正常了。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11-1-3" class="outline-5">
+<h5 id="sec-1-11-1-3">export pdf</h5>
+<div class="outline-text-5" id="text-1-11-1-3">
+
+<p>apt install letex-recommend 结果还是导出失败。以后再搞吧。<br/>
+有可能是版本的问题， 网上说要用最新的。我用的org才6.3版本。<br/>
+解决了问题：需要安装一些包。<br/>
+texlive-fonts-recommended, texlive-fonts-recommended, texlive-latex-extra<br/>
+</p>
+<p><br/>
+LaTeX Error: File `marvosym.sty' not found. solution: apt-get install texlive-fonts-recommended<br/>
+LaTeX Error: File `fullpage.sty' not found. solution: apt-get install texlive-latex-extra<br/>
+LaTeX Error: File `multibib.sty' not found. solution: apt-get install texlive-bibtex-extra<br/>
+LaTeX Error: File `algorithm.sty' not found. solution: apt-get install texlive-science<br/>
+</p>
+<p><br/>
+中文问题：<br/>
+安装texlive-xetex，这样就会有xelatex了。<br/>
+暂时放弃，太费劲了，有空参考一下：<br/>
+<a href="http://orgmode.org/worg/org-contrib/babel/examples/article-class.html">http://orgmode.org/worg/org-contrib/babel/examples/article-class.html</a><br/>
+<a href="http://mathslinux.org/?p=58">用 org-mode 写 LaTeX</a><br/>
+<a href="http://www.cnblogs.com/visayafan/archive/2012/06/16/2552023.html">http://www.cnblogs.com/visayafan/archive/2012/06/16/2552023.html</a><br/>
+我这里生成不了org-article.cls?<br/>
+这是从org-article中提取代码，org-babel-tangle总是执行失败。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11-1-4" class="outline-5">
+<h5 id="sec-1-11-1-4">使用org-jekyll导出</h5>
+<div class="outline-text-5" id="text-1-11-1-4">
+
+<p>在一个headline上添加：blog:的tag和on的属性<br/>
+然后执行：<br/>
+org-jekyll-export-blog<br/>
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-12" class="outline-3">
+<h3 id="sec-1-12">dates and times</h3>
+<div class="outline-text-3" id="text-1-12">
+
+<p>M-x org-time-<br/>
+<code>C-c .</code> 创建时间, 还可以添加C-u前缀，可以插入当前时间，默认只是日期<br/>
+<code>C-c C-d</code> 插入deadline<br/>
+<code>C-c C-s</code> 插入Schedule<br/>
+</p>
+<p><br/>
+M-x org-clock-<br/>
+<code>C-c C-x C-i</code> clock in，一个工作的开始计时<br/>
+<code>C-c C-x C-o</code> clock out<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-13" class="outline-3">
+<h3 id="sec-1-13">属性</h3>
+<div class="outline-text-3" id="text-1-13">
+
+<p>在headline的下一行输入：<br/>
+<code>C-c C-x p</code> 添加属性<br/>
+在属性栏上<br/>
+<code>C-c C-c</code> 弹出属性的action，可以添加删除<br/>
+</p>
+<p><br/>
+属性的搜索<br/>
+<code>c-c \</code> 搜索属性<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-14" class="outline-3">
+<h3 id="sec-1-14">未分类</h3>
+<div class="outline-text-3" id="text-1-14">
+
+<p><code>C-c C-x b</code>     在一个新缓冲区中显示当前分支<br/>
+5个或以上的“-”是一个水平分割符。<br/>
+</p>
+</div>
+
+<div id="outline-container-1-14-1" class="outline-4">
+<h4 id="sec-1-14-1">byte-recompile-directory</h4>
+<div class="outline-text-4" id="text-1-14-1">
+
+<p>编译整个目录el<br/>
+<code>C-u 0 M-x byte-recompile-directory</code><br/>
+</p>
+<p><br/>
+will compile all the .el files in the directory and in all subdirectories below.<br/>
+</p>
+<p><br/>
+The C-u 0 part is to make it not ask about every .el file that does not have a .elc counterpart.<br/>
+</p>
+<p><br/>
+emacs -batch -f batch-byte-compile &lt;filename&gt;<br/>
+e.g.:   emacs -batch -f batch-byte-compile *.el<br/>
+简单解释一下，-batch=&ndash;batch 不打开交互界面（emacs窗口），-f=&ndash;funcall 执行一个函数，后面跟的就是函数： batch-byte-compile 编译成字节码。<br/>
+</p>
+<p><br/>
+给大家补充一点编译知识：<br/>
+lisp是函数式语言，它的程序不能编译成可执行程序独立执行，只能通过解释器解释执行。<br/>
+所以emacs只能将.el文件字节编译，编译后的目标代码其实还是源程序，只是用字节码的方式存储，而且在字节编译的过程中进行了语法检查，所以可以提高执行效率。<br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-15" class="outline-3">
+<h3 id="sec-1-15">问题</h3>
+<div class="outline-text-3" id="text-1-15">
+
+<p>1.如果自动添加下一级head，如在lev1中回车后添加lev2，而M-RET添加的是同级的？<br/>
+</p>
+<p><br/>
+2.C-c | 转换的表格对不齐，不知如何对其？<br/>
+主要是中文宽度的问题。<br/>
+</p>
+<p><br/>
+3.如果添加不让org解析的字段？<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-16" class="outline-3">
+<h3 id="sec-1-16">参考资料</h3>
+<div class="outline-text-3" id="text-1-16">
+
+<p><a href="http://emacser.com/org-mode.htm">http://emacser.com/org-mode.htm</a><br/>
+<a href="http://ifq.github.com/blog/2012/08/10/org-octopress/">org结合octopress</a><br/>
+</p>
+<p><br/>
+这个非常好：orgcard<br/>
+<a href="http://orgmode.org/worg/orgcard.html">http://orgmode.org/worg/orgcard.html</a><br/>
+<a href="http://orgmode.org/orgcard.pdf">http://orgmode.org/orgcard.pdf</a><br/>
+</p>
+<p><br/>
+这是orgmode的专业社区，完全用orgmode组织<br/>
+<a href="http://orgmode.org/worg/">http://orgmode.org/worg/</a><br/>
+</p>
+<p><br/>
+可以试试自己搭建worg<br/>
+<a href="http://orgmode.org/worg/worg-setup.html">http://orgmode.org/worg/worg-setup.html</a><br/>
+</p></div>
+</div>
+</div>
+
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>开源防火墙 - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2012/11/17/opensources-firewall">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">开源防火墙</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-17T00:00:00+08:00" pubdate data-updated="true">2012年11月17日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div><div><p><br/>
+要说免费使用的防火墙那多了，但都不开源，而我更喜欢开源的，能学到东西。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">可下到源代码</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">IPCop</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p><a href="http://sourceforge.net/projects/ipcop/develop">http://sourceforge.net/projects/ipcop/develop</a><br/>
+可以下载源代码。<br/>
+<code>svn co https://ipcop.svn.sourceforge.net/svnroot/ipcop ipcop</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">EFW</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p><a href="http://www.endian.com/">http://www.endian.com/</a><br/>
+这个比较大，600M源码包，非常全。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Vyatta</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>基于debian<br/>
+<a href="http://www.vyatta.org/downloads">http://www.vyatta.org/downloads</a><br/>
+目前这个是我发现的有专门针对虚拟化平台优化的版本。<br/>
+<a href="http://www.vyatta.org/getting-started/how-to-install">http://www.vyatta.org/getting-started/how-to-install</a><br/>
+</p>
+<p><br/>
+Installing Vyatta Core in a Virtualized Environment<br/>
+If you’re deploying Vyatta Core on a hypervisor such as VMWare ESX/ESXi or Citrix XenServer, <br/>
+you’ll want to use the Vyatta virtualization ISO (virt-ISO).<br/>
+Similar to the LiveCD ISO, the virt-ISO provides a bootable ISO,<br/>
+except it also includes virtual machine tools and other optimizations<br/>
+to deliver the best possible experience for users running Vyatta on a virtual machine. <br/>
+</p>
+<p><br/>
+Using the vSphere Client, create a new VM<br/>
+</p><ul>
+<li>Configuration: Custom<br/>
+</li>
+<li>Name: &#8220;vyatta&#8221;<br/>
+</li>
+<li>Datastore: default<br/>
+</li>
+<li>Virtual Machine Version: 7<br/>
+</li>
+<li>Guest OS: Linux/Other 2.6x Linux<br/>
+</li>
+<li>CPU: &#8220;1&#8221;<br/>
+</li>
+<li>Memory: &#8220;512&#8221;<br/>
+</li>
+<li>Network: &#8220;2&#8221; / vmxnet3<br/>
+</li>
+<li>SCSI Controller: default<br/>
+</li>
+<li>Select a Disk: default<br/>
+</li>
+<li>Create a Disk: &#8220;4&#8221;GB (thin provisioning and independent / persistent mode)<br/>
+</li>
+<li>Advanced Options: Enable &#8220;Support VMI Paravirtualization&#8221;<br/>
+</li>
+</ul>
+
+
+<p>        <br/>
+使用了<br/>
+open-vm-tools<br/>
+ec2-api-tools 是不是可以通过api来管理此虚拟机，或者获得性能等。ec2-api是什么东东？<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">获取源代码</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p><a href="http://www.vyatta.org/downloads/source-code">http://www.vyatta.org/downloads/source-code</a><br/>
+</p>
+<p><br/>
+git clone <a href="http://git.vyatta.com/build-iso.git">http://git.vyatta.com/build-iso.git</a><br/>
+cd build-iso<br/>
+注意要先调整到一个分支或者tag<br/>
+build-iso$ git branch &ndash;track &lt;branch&gt; origin/&lt;branch&gt;<br/>
+build-iso$ git checkout &lt;branch&gt;<br/>
+或者<br/>
+git checkout tagv1<br/>
+</p>
+<p><br/>
+获取子模块的代码<br/>
+git submodule init<br/>
+git submodule update pkgs/SUBMODULE<br/>
+</p>
+<p><br/>
+克隆所有模块<br/>
+git submodule update<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">install</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>启动虚拟机,用缺省的用户名/密码 vyatta/vyatta登陆系统<br/>
+install image 基于image安装，推荐,可以切换image<br/>
+install system 基于disk安装，传统硬盘安装方式<br/>
+</p>
+<p><br/>
+There are two types of installations that can be performed on a persistent device: <br/>
+• Image-based install. The simplest, most flexible, and most powerful way to <br/>
+install a Vyatta system is using a binary system image. With this method, you can <br/>
+install multiple versions of the Vyatta system as images and switch between the <br/>
+images simply and easily. You install the image from a LiveCD then you reboot <br/>
+your system and it runs the image. <br/>
+• Disk-based install. A disk-based install also installs from a LiveCD onto a <br/>
+persistent device such as a hard disk partition. However, unlike an image-based <br/>
+install, a disk-based install uses a traditional layout of files on the disk. <br/>
+Additional system images may be added at a later time to a system created using <br/>
+a disk-based install. <br/>
+</p>
+<p><br/>
+nstall-image (is what I would suggest btw) is using squashfs and is capable of booting/running multiple images of versions<br/>
+</p>
+<p><br/>
+真让我好找，找了一天，终于找到安装脚本了，在pkgs/vyatta-cfg-system<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">debian install</h4>
+<div class="outline-text-4" id="text-1-2-3">
+
+<p>这个貌似比较重要，vyatta之所以看不太明白，应该是对d-i不了解。<br/>
+看看internal<br/>
+<a href="http://d-i.alioth.debian.org/doc/internals/">http://d-i.alioth.debian.org/doc/internals/</a><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4">配置ip</h4>
+<div class="outline-text-4" id="text-1-2-4">
+
+<p>vyatta@vyatta:~$ configure<br/>
+vyatta@vyatta# set interfaces ethernet eth0 address 192.168.1.81/24<br/>
+vyatta@vyatta# commit<br/>
+vyatta@vyatta# exit<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-5" class="outline-4">
+<h4 id="sec-1-2-5">启动webui</h4>
+<div class="outline-text-4" id="text-1-2-5">
+
+<p>vyatta@R1# set service https<br/>
+不过需要商业版才能使用webui<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-6" class="outline-4">
+<h4 id="sec-1-2-6">linux-image</h4>
+<div class="outline-text-4" id="text-1-2-6">
+
+<p>vyatta的内核配置<br/>
+/home/liwei/work/src_analysis/tag_vyatta_src/pkgs/linux-image/debian/arch/i386/config.586-vyatta-virt<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-17T00:00:00+08:00" pubdate data-updated="true">2012年11月17日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/open-sources/'>open sources</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2012/11/16/shell-skill/" title="Previous Post:
+        shell命令技巧收集">&laquo; shell命令技巧收集</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2012/12/05/shell-snippet-collect/"
+        title="Next Post: shell代码片段收集">shell代码片段收集
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><img src="/images/my_avatar.jpg"></p>
+  <p>网络安全行业，喜欢折腾linux，emacs,虚拟化</p>
+  <p>只要活着就要为理想而奋斗</p>
+  <p><a href="mailto:emmoblin@gmail.com"><img src="/images/my_email.png" alt="emmoblin@gmail.com"></a></p>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (1)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (1)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (5)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/19/ssh-tunnel/">ssh隧道技术</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/14/goagent/">goagent翻墙</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/raid/">raid介绍</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/openldap/">OpenLDAP介绍</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2012/11/17/opensources-firewall/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2012/11/17/opensources-firewall/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

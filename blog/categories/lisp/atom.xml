@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: lisp | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/lisp/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2013-02-20T00:05:05+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[functional-programming-is-hard-thats-why-its-good]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/"/>
+    <updated>2012-09-11T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">functional-programming-is-hard-thats-why-its-good</a>
+<ul>
+<li><a href="#sec-1-1">函数式编程很难，这正是你要学习它的原因</a>
+<ul>
+<li><a href="#sec-1-1-1">它给你的初次印象不友善</a></li>
+<li><a href="#sec-1-1-2">新奇事物</a></li>
+<li><a href="#sec-1-1-3">眼见为实</a></li>
+<li><a href="#sec-1-1-4">各有所求</a></li>
+<li><a href="#sec-1-1-5">补充</a></li>
+<li><a href="#sec-1-1-6">转载自: http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/lisp/atom.xml">functional-programming-is-hard-thats-why-its-good</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">函数式编程很难，这正是你要学习它的原因</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>很奇怪不是，很少有人每天都使用函数式编程语言。如果你用Scala，Haskell，Erlang，F#或某个Lisp方言来编程，很可能没有公司会花钱聘你。这个行业里的绝大部分人都是使用像Python，Ruby，Java或C#等面向对象的编程语言——它们用起来很顺手。不错，你也许会偶然用到一两个“函数式语言特征”，例如“block”，但人们不会去做函数式编程。<br/>
+</p>
+<p><br/>
+然而，很多年来，我们一直被教导说函数式编程语言很好很棒。我仍然记得当我第一次阅读ESR的著名的关于学习Lisp语言的论文时的困惑。也许大多数的人对Paul Graham 的《Beating The Averages》这篇文章更加熟悉：<br/>
+</p>
+<p><br/>
+使用Lisp开发使我们的开发周期迭代的如此之快，以至于有时当竞争对手在新闻发布会上推出他们的新功能一两天后，我们就能复制出同样的功能。当报道产品发布的新闻记者打电话给我们时，我们的产品已经拥有了同样的功能特征。<br/>
+</p>
+<p><br/>
+那些皈依函数式编程的人中，一直常见的考虑是：学习这种新的、函数式的语言“对你有好处”；就像是某些人建议说每天30分钟的健身房活动会“让你的身体健康”一样。但这也同时暗示了这样做的难度和需要的付出。Lisp语言跟Haskell、Ocaml和Scala语言不同，被认为是出了名的难学，可以说是臭名昭著。文雅的人说这是Lisp语言的“深度&amp;广度”的体现。不文雅的人说这是“意淫”或“玩弄学术”或简单的“没必要”。我认为，它的难度跟你对它熟不熟悉有关，而且，这种难度是一种重要指标显示：学习这样的一种语言会让你编程更有效率、能力更强。<br/>
+</p>
+<p><br/>
+<!-- more -->
+
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">它给你的初次印象不友善</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+<p><br/>
+我7岁时就开始编程，在漫长无聊的郊区夏季里，在我祖父的计算机上瞎搞一气。我学了BASIC，用它在屏幕上画一个蹦跳的球。我学了Pascal，用它写了一个能通过PC喇叭放音乐的程序。大概10岁时我学了C语言，但遇到了一堵越不过去的墙，直到我上了高中。那就是：指针。即使不算这些该死的指针，我写、读、学习、练习中，同样遭遇无数的失败。我把祖父的硬盘给毁掉了两次(一次属意外)，最后弄得不少次要自己重装操作系统。我失败，一遍遍的失败。<br/>
+</p>
+<p><br/>
+也许你也有跟我相似的故事，也许是完全不同的一个。但我想，差不多所有学过编程的人都有过遇到困难的经历。我们在学了一些基本知识后，必然会遇到一些公认的概念上的关口，比如“指针”。很多计算机科学教授会把指针描述为他们课程上的过滤网。如果你想成为一名优秀的程序员，你必须要能理解指针。很少人能轻松的掌握它们。大多数人，包括我，则需要不断的练习和参考例子来理解什么是指针、为什么它们很重要。<br/>
+</p>
+<p><br/>
+这种艰难的努力过程不是偶然的，是一种几乎普遍的现象。指针是一种非常强大和基础功能的概念。学会它能让你成为一名更好的程序员，能让你的思考更加形象化。即使你使用的语言并不提供指针这样的特征，但跟指针类似的数据结构和概念却随处可见。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">新奇事物</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+
+<p><br/>
+一旦你学会了几种语言后，所有的语言都开始看起来都很相似。知道Python的人学习Ruby可能不会遇到太多的问题，知道Java的人学习C#会感到很熟悉。不错，也有意外的地方。Ruby爱好者在学习Python时会对它的comprehension感到吃惊，Java用户会对C#里的委派摸不着头脑。还是那句话，如果你只瞟一眼，它们都很相似。我可以打保票的说，如果你还不曾有过这样的认识，一旦你学了一种Lisp语言，你会发现所有的Lisp变种都很相似。<br/>
+</p>
+<p><br/>
+有人说，大部分人第一次使用Haskell或Ocaml时都完全的不知所措。见鬼了，在Haskell里，连分号都跟别人不一样。这并不是语法的问题；Haskell和ML语言完全基于一种不同的概念、一种新的语言范式。你需要用不同的方式开发应用，不同的方式组织应用，不同的方式扩展应用。<br/>
+</p>
+<p><br/>
+很多这样的新概念都具有不可思议的强大力量。Haskell里的Monads 是跟指针一样基础且强大的概念(你很可能在不知道它叫什么的情况下就已经使用过它们了)。所以，跟学了Java后再学C#不一样，有志向学习函数式语言的人需要往回走的更远，去学习更加基础的概念后才能接下去学习。就像是完全再学习一次指针。并且，就像是当年我们刚开始学习编程一样，一些很大的概念看起来会让人迷惑茫然，让人沮丧，直到你去攻克(以及失败)它们。<br/>
+</p>
+<p><br/>
+吃下你的药丸，找到你的药剂师<br/>
+</p>
+<p><br/>
+尽管不好学，但我坚信，学习这些函数式编程语言会在职业上对你有好处。我相信有些人读到这点时会眼睛翻起来向天看，很难想象出这些monoids 或 monad 会对他们在使用Java或C#时有用处。对我而言，我已经不惊奇于由于这样的思维而阻止他们学习函数式语言的现象；他们需要学习一种跟指针和递归一样基础的新概念。他们需要有一种只有专业人员在完成清晰的商业目标时才具有的耐心和斗志。很少人能在过了可塑的年龄后还受得了挫折——一次又一次的挫折——否则我们现在都早成专家了，不是吗？<br/>
+</p>
+<p><br/>
+还有更复杂的东西，有大量的语言和算法研究都是用函数式语言实施的(尤其是Haskell)。你很容易会被这些不熟悉的概念——例如范畴论， half-finished abstractions，一些失败的研究——弄的迷失方向。没有一个清晰的指导(比如由一个实用主义的作者写的一本好书)，本来已经很困难的学习任务变的更加可怕。<br/>
+</p>
+<p><br/>
+这些叠加起来的复杂因素导致了不出意外的结果：很多人不情愿在函数式编程学习中投入时间。很容易理解这种不情愿，“我干嘛不把花在学习这些东西的时间用在实现什么东西上呢？”但这种思路也表明了你永远不愿意在任何新技术上浪费时间(只用自己熟悉的)。在一个像软件技术这样日新月异的产业里，我不认为这是正确的判断。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">眼见为实</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+
+<p><br/>
+学习一种函数式编程语言最显而易见的好处是，你能学会这种类型语言中的函数式概念。它能帮助你的大脑，让它具有能非常清晰的思考和处理一些惊人的重大概念的能力。这并不是函数式编程具有魔法；各种语言和范式的出现都是为了应对某一特定类别的问题。函数式编程的杀手锏正是应对了当今世界上日益增长的并行性编程和元数据编程趋势。<br/>
+</p>
+<p><br/>
+例如，我们研究一个简化的、本地版本化的Google著名的MapReduce范例。用函数式方式描述这种范例是不可思议的清晰简洁：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">mapReducer data partitioner mapper reducer =
+              let partitions = partitioner data
+              in reduce reducer (map mapper partitions)
+</pre>
+
+让这样的代码支持并行计算或分布式并行计算是轻而易举的(对于本地并行计算，很多的功能包都支持“pmap”和“preduce“——只需要利用函数式语言的一些简单特性)。像maps, partitions, generators, streams, reductions, folds, 已以及 function chaining等概念在各种的函数式编程语言中都大同小异，所以，任何对Lisp，Haskell，OCaml，甚至带点函数式语言特征的语言——Python和Ruby熟悉的人，都会很容易的理解这里面的思想精华。<br/>
+</p>
+<p><br/>
+让我们花点时间考虑一下，如何用一种面向对象的语言，以一种常见的面向对象的模式来清楚的描述这种架构。至少你需要做的事情是定义用来描述mapper和reducer的声明。如果你有好奇心，请试着用你喜欢的面向对象语言描述一个最小化的“面向对象”的MapReduce。我发现那是非常罗嗦的。如果使用Java风格的语言，它会像这样：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">interface Mapper {
+   B map(A input);
+ }
+
+ interface Reducer {
+   Y reduce(X a, X b);
+ }
+
+ abstract class MapReduce {
+   private Mapper mapper;
+   private Reducer reducer;
+
+   public MapReduce(Mapper map, Reducer reduce) {
+     // ...
+   }
+
+   public run(SeqenceType data) {
+     // ...
+   }
+ }
+</pre>
+
+即使是没有加入循环逻辑，这种缺乏函数式模式中常见的名词和动词的使用，使得MapReduce这种技术很难被定义。这种定义方式几乎是滑稽可笑的，但它能让你想到函数式概念。另外一个好例子是Scala语言如何利用完备的Java Fork/Join 类库，把它轻松的集成的自己的自有语法中。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4">各有所求</h4>
+<div class="outline-text-4" id="text-1-1-4">
+
+
+<p><br/>
+所以，我鼓励任何想进步的程序员：请考虑学习一种函数式语言。Haskell和OCaml都是极好的选择，F#和Erlang也相当的不错。它们都不好学，但也许这是个好事。努力弄清楚你遇到的复杂的概念，看看是否有其他人正在利用这些概念；经常的，你会在寻找这些不熟悉的概念的真正用意的时候实现思想上的突破。<br/>
+</p>
+<p><br/>
+当你开始学的时候，请注意，不要过于在意。就像其他任何需要你花时间和精力的事情一样，过度的在函数式编程上进行精力上的投资是很危险的。掉进了认知能力的陷阱后你的投资会血本无归。你很容易会忘掉世界上还有无数种计算模型，你更容易忘掉有多少种优秀的软件根本没有使用任何的函数式概念。<br/>
+</p>
+<p><br/>
+学习的道路会越来越难走，但从另一方面说，在你日常的编程中，你会发现有越来越多的可以使用的重要概念和模型。对于这样紧凑的编程风格你会越来越适应，必然，你也会对如何成为一名更好的软件工程师有了新的认识。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-5" class="outline-4">
+<h4 id="sec-1-1-5">补充</h4>
+<div class="outline-text-4" id="text-1-1-5">
+
+
+<p><br/>
+有不少校对这篇文章的人在看完文章后都问了我一个同样的问题：“听起来不错，大卫，可是我应该学习那种语言呢？”当然，这是他们给我出的难题。<br/>
+</p>
+<p><br/>
+我想，如果你是一个很有经验的程序员，这最能“应付”这个问题的答案是：“选一种符合你的需求的”。如果你需要在JVM上工作，选择Scala或Clojure。如果你想能快速的开发大型分布式软件系统，选择Erlang。如果你想要一种具有超强编译器的超能干活的语言，请选择Haskell或RCaml。如果你想要一种比Ruby或Python更有能力的原型工具，选择Scheme。<br/>
+</p>
+<p><br/>
+请记住，我们在这里要做的这些目的是为了实际的技能和自我进步。如果你能腾出时间学这些，就走出你的安逸环境，挑战自己。<br/>
+</p>
+<p><br/>
+因为我已经学习了Lisp和Erlang，而且使用OCaml做专业工作，我决定研究一下Haskell，这完全是另外一个世界。我发现唯一能帮助我参透这种语言的途径是依赖Learn You A Haskell 和 Real World Haskell 这两本有用的指导材料。这些书写的非常好，很有价值，而且可以免费在网上找到。如果你想试一下Haskell，这些书可以当作你的寻宝图。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-6" class="outline-4">
+<h4 id="sec-1-1-6">转载自: <a href="http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/">http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/</a></h4>
+<div class="outline-text-4" id="text-1-1-6">
+
+</div>
+</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[can your programming language do this]]></title>
+    <link href="http://emmoblin.github.com/blog/2012/09/11/can-your-programming-language-do-this/"/>
+    <updated>2012-09-11T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2012/09/11/can-your-programming-language-do-this</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">can your programming language do this</a>
+<ul>
+<li><a href="#sec-1-1">你的编程语言能这样做吗？</a></li>
+<li><a href="#sec-1-2">转载自</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/lisp/atom.xml">can your programming language do this</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">你的编程语言能这样做吗？</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>一日，你查看你的程序代码，你有两大块代码看起来几乎完全的一样。事实上它们就是完全一样，除了一个代码里说的是“Spaghetti(意大利面条)”，另一个代码里说的是“Chocolate Moose(巧克力慕丝)”。<br/>
+</p>
+<p><br/>
+<pre class="example">// 一个小例子：
+
+alert("I'd like some Spaghetti!");
+alert("I'd like some Chocolate Moose!");
+</pre>
+
+这个例子恰好是用Javascript写的，但即使是你不懂Javascript，你也应该能看懂我说的。<br/>
+</p>
+<p><br/>
+当然，重复的代码看起来不太好。所以你决定写一个函数：<br/>
+</p>
+<p><br/>
+<pre class="example">function SwedishChef( food )
+{
+    alert("I'd like some " + food + "!");
+}
+
+SwedishChef("Spaghetti");
+SwedishChef("Chocolate Moose");
+</pre>
+
+
+没错，这个例子很简单，但你可以想出一些更有实际价值的例子。这样做是更好一些，有很多理由，这些理由估计你都听说过一万遍了。可维护性，可读性，抽象 = 好！<br/>
+</p>
+<p><br/>
+<!-- more -->
+
+现在，你又发现两块代码几乎完全一样，除了一块是不停的调用一个叫BoomBoom的函数，而一块是不停的调用一个叫PutInPot的函数。除此之外，这两块代码完全一样。<br/>
+</p>
+<p><br/>
+<pre class="example">alert("get the lobster");
+PutInPot("lobster");
+PutInPot("water");
+
+alert("get the chicken");
+BoomBoom("chicken");
+BoomBoom("coconut");
+</pre>
+
+现在，你需要一个途径，把一个参数传递到一个函数里，而这个参数本身是个函数。这是一个很重要的功能，它是一个好的方法，能让你发现函数中存在的重复的代码，减少这样的重复。<br/>
+</p>
+<p><br/>
+<pre class="example">function Cook( i1, i2, f )
+{
+    alert("get the " + i1);
+    f(i1);
+    f(i2);
+}
+
+Cook( "lobster", "water", PutInPot );
+Cook( "chicken", "coconut", BoomBoom );
+</pre>
+
+看见了没！我们把一个函数当做了参数。<br/>
+</p>
+<p><br/>
+你的语言能这样做吗？<br/>
+</p>
+<p><br/>
+且慢… 如果你还没有写出PutInPot 或 BoomBoom 函数呢。如果你能把他们写成内联函数，而不是要在其它地方先声明，这样是不是更好？<br/>
+</p>
+<p><br/>
+<pre class="example">Cook( "lobster", 
+      "water", 
+      function(x) { alert("pot " + x); }  );
+Cook( "chicken", 
+      "coconut", 
+      function(x) { alert("boom " + x); } );
+</pre>
+
+老天，这太方便了。注意到了没有，我即时创建了一个方法，甚至都不用麻烦给它起名，只需掂着它的耳朵把它丢进函数里。<br/>
+</p>
+<p><br/>
+当你开始思考把匿名函数当作参数时，你也许会注意到有一种代码到处都是，就是，遍历数组里的所有元素进行操作。<br/>
+</p>
+<p><br/>
+<pre class="example">var a = [1,2,3];
+
+for (i=0; i&lt;a.length; i++)
+{
+    a[i] = a[i] * 2;
+}
+
+for (i=0; i&lt;a.length; i++)
+{
+    alert(a[i]);
+}
+</pre>
+
+对数组里的每个元素进行操作是一种很常见的动作，你可以写出一个函数，让它为你做这些：<br/>
+</p>
+<p><br/>
+<pre class="example">function map(fn, a)
+{
+    for (i = 0; i &lt; a.length; i++)
+    {
+        a[i] = fn(a[i]);
+    }
+}
+</pre>
+
+现在，你可以把上面的代码重写成这样：<br/>
+</p>
+<p><br/>
+<pre class="example">map( function(x){return x*2;}, a );
+map( alert, a );
+</pre>
+
+另一个常见的跟数组相关的操作是，通过某种方式把数组里的所有值组合到一起。<br/>
+</p>
+<p><br/>
+<pre class="example">function sum(a)
+{
+    var s = 0;
+    for (i = 0; i &lt; a.length; i++)
+        s += a[i];
+    return s;
+}
+
+function join(a)
+{
+    var s = "";
+    for (i = 0; i &lt; a.length; i++)
+        s += a[i];
+    return s;
+}
+
+alert(sum([1,2,3]));
+alert(join(["a","b","c"]));
+</pre>
+
+sum 和 join 看起来非常的相似，你也许会想把它们的通用之处提取出来做成一个能把数组里的元素合并成一个值的通用函数：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">function reduce(fn, a, init)
+{
+    var s = init;
+    for (i = 0; i &lt; a.length; i++)
+        s = fn( s, a[i] );
+    return s;
+}
+
+function sum(a)
+{
+    return reduce( function(a, b){ return a + b; }, 
+                   a, 0 );
+}
+
+function join(a)
+{
+    return reduce( function(a, b){ return a + b; }, 
+                   a, "" );
+}
+</pre>
+
+很多老式的语言根本没有方法做出这种事情。另外一些语言允许你做这些，但不容易(例如，C语言里有函数指针，但你必须进行声明，并要在什么地方定义它)。面向对象的语言并没有被证实可以允许你对函数做所有的操作。<br/>
+</p>
+<p><br/>
+如果你想在Java里把函数作为一个一等(First Class)对象，你需要建一个只包含一个用来调用功能点的方法的整个对象。把这种现象跟实际情况联系起来，很多的面向对象语言都会要求你为每个class创建一个完整的文件，非常的没效率。如果你的编程语言里要求你去这样的调用功能点，那你根本没有享受到现代语言环境给你带来的所有好处。看看能否退货吧，挽回一点损失。<br/>
+</p>
+<p><br/>
+写这样的小函数，只是做一些遍历数组，处理其中的每个元素的操作，这样做究竟能得到多少好处？<br/>
+</p>
+<p><br/>
+那好，我们来回头看一看map这个函数。当你需要对数组里的每个元素依次做一些操作时，实际情况是，你并不在乎处理这些元素的顺序。你可以向前或向后遍历整个数组，得到的结果是一样的，不是吗？ 事实上，如果你的机器是2cpu的，你可以写出一些程序让每个cpu个处理一半的元素，你的map一下子就变快了2倍。<br/>
+</p>
+<p><br/>
+或者，只是个假设，在你遍布全球的数个数据中心里，你有成千上万的服务器，你有一个非常非常大的数组，我说过，只是假设，它们装载着整个互联网的内容信息。那现在，你就可以在你的成千上万的计算机上运行map函数，每个机器都能分摊掉计算中的一小部分任务。<br/>
+</p>
+<p><br/>
+所以，如今，举个例子，要想写出一个十分高效的能搜索整个互联网内容信息的代码，你只需要简单的用基本搜索字符串当作参数来调用map函数就行了。<br/>
+</p>
+<p><br/>
+这里，我想请你们要真正注意的有趣的事情是，你会发现像map 和 reduce这样的函数每个人都可以使用，当人们使用它时，你只需要找到一个编程能手写出最困难的调用map 和 reduce 函数的代码，让它们能够运行在全球大量的并行执行的计算机上，而以前旧的运行的很好的代码只需要调用这个循环操作，唯一不同的是，它们获得了比以前千万倍快的速度，这意味着你能做瞬间处理完巨大的计算工作。<br/>
+</p>
+<p><br/>
+让我再复述一遍。通过把通用的循环操作提取出来，你可以实现你想要的任何循环操作，包括实现出一种能随硬件设备的增加而性能升级的效果。<br/>
+</p>
+<p><br/>
+我想现在你就该明白为什么我在前段时间写的一篇文章里抱怨学校只教授计算机科学专业的学生Java知识而忽略其它：<br/>
+</p>
+<p><br/>
+缺乏对函数式编程的理解，你不可能发明出MapReduce——这个能够让Google实现大规模按需扩展和升级的算法。Map和Reduce这两个词来自于Lisp语言和函数式编程。回首看来，MapReduce对于任何还存有记忆的人来说都意味着一种纯函数式的编程，没有副作用，易于并行计算。事实恰巧是Google发明了MapReduce，而微软没有，这就说明了为什么微软仍然努力做那些基本的搜索功能研究的原因了，而Google已经开始了它的下一个目标：开发它的Skynet^H^H^H^H^H^H——这世界上最大规模的并行超级计算机。我并不觉得微软已经认识到在如今的潮流中它已经落后的多远。<br/>
+</p>
+<p><br/>
+那么，我希望现在你已经能理解了以函数为一等(First class)特征编程语言能使你更容易的对代码进行提炼抽象，这意味着你的代码更短小，紧凑，可复用性强，更容易扩展升级。大量的Google应用程序都使用了MapReduce，在他们优化程序或修改Bug时，都能从中得到益处。<br/>
+</p>
+<p><br/>
+现在我要说一点怨言牢骚，最高效的语言开发环境应该是一种能让你在不同层次上进行抽象归纳的语言环境。笨拙陈旧的FORTRAN语言甚至不允许你写函数。C语言里有函数指针，但实现的很丑陋，不能匿名，使用之前必须先进行声明实现。Java允许你使用功能点调用(functor)，但更加丑陋。就像Steve Yegge指出的，Java就是一个名词的王国。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">转载自</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>   <a href="http://www.aqee.net/can-your-programming-language-do-this/">http://www.aqee.net/can-your-programming-language-do-this/</a><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>
