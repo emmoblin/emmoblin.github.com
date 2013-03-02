@@ -1,0 +1,886 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: storage | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/storage/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2013-03-02T23:48:56+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[raid介绍]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/13/raid/"/>
+    <updated>2013-02-13T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/13/raid</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">raid介绍</a>
+<ul>
+<li><a href="#sec-1-1">关键技术</a>
+<ul>
+<li><a href="#sec-1-1-1">数据校验</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">可管理性</a></li>
+<li><a href="#sec-1-3">RAID等级</a>
+<ul>
+<li><a href="#sec-1-3-1">RAID0</a></li>
+<li><a href="#sec-1-3-2">RAID1</a></li>
+<li><a href="#sec-1-3-3">RAID2</a></li>
+<li><a href="#sec-1-3-4">RAID3</a></li>
+<li><a href="#sec-1-3-5">RAID4</a></li>
+<li><a href="#sec-1-3-6">RAID5</a></li>
+<li><a href="#sec-1-3-7">RAID6</a></li>
+<li><a href="#sec-1-3-8">RAID 组合等级</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">linux上创建raid5</a></li>
+<li><a href="#sec-1-5">资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/storage/atom.xml">raid介绍</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+RAID 的两个关键目标是提高数据可靠性和 I/O 性能。<br/>
+通过把相同数据同时写入到多块磁盘（典型地如镜像），或者将计算的校验数据写入阵列中来获得冗余能力，当单块磁盘出现故障时可以保证不会导致数据丢失。有些 RAID 等级允许更多地 磁盘同时发生故障，比如 RAID6 ，可以是两块磁盘同时损坏。在这样的冗余机制下，可以用新磁盘替换故障磁盘， RAID 会自动根据剩余磁盘中的数据和校验数据重建丢失的数据，保证数据一致性和完整性。数据分散保存在 RAID 中的多个不同磁盘上，并发数据读写要大大优于单个磁盘，因此可以获得更高的聚合 I/O 带宽。当然，磁盘阵列会减少全体磁盘的总可用存储空间，牺牲空间换取更高的可靠性和性能。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">关键技术</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>RAID 中主要有三个关键概念和技术：镜像（ Mirroring ）、数据条带（ Data Stripping ）和数据校验（ Data parity ）<br/>
+数据条带，将数据分片保存在多个不同的磁盘，多个数据分片共同组成一个完整数据副本，这与镜像的多个副本是不同的，它通常用于性能考虑。数据条带具有更高的并发粒度，当访问数据时，可以同时对位于不同磁盘上数据进行读写操作， 从而获得非常可观的 I/O 性能提升 。数据校验，利用冗余数据进行数据错误检测和修复，冗余数据通常采用海明码、异或操作等算法来计算获得。利用校验功能，可以很大程度上提高磁盘阵列的可靠性、鲁棒性和容错能力。不过，数据校验需要从多处读取数据并进行计算和对比，会影响系统性能。 不同等级的 RAID 采用一个或多个以上的三种技术，来获得不同的数据可靠性、可用性和 I/O 性能。<br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">数据校验</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>采用数据校验时， RAID 要在写入数据同时进行校验计算，并将得到的校验数据存储在 RAID 成员磁盘中。校验数据可以集中保存在某个磁盘或分散存储在多个不同磁盘中，甚至校验数据也可以分块，不同 RAID 等级实现各不相同。当其中一部分数据出错时，就可以对剩余数据和校验数据进行反校验计算重建丢失的数据。校验技术相对于镜像技术的优势在于节省大量开销，但由于每次数据读写都要进行大量的校验运算，对计算机的运算速度要求很高，必须使用硬件 RAID 控制器。在数据重建恢复方面，检验技术比镜像技术复杂得多且慢得多。<br/>
+海明校验码和 异或校验是两种最为常用的 数据校验算法。海明校验码是由理查德 · 海明提出的，不仅能检测错误，还能给出错误位置并自动纠正。海明校验的基本思想是：将有效信息按照某种规律分成若干组，对每一个组作奇偶测试并安排一个校验位，从而能提供多位检错信息，以定位错误点并纠正。可见海明校验实质上是一种多重奇偶校验。异或校验通过异或逻辑运算产生，将一个有效信息与一个给定的初始值进行异或运算，会得到校验信息。如果有效信息出现错误，通过校验信息与初始值的异或运算能还原正确的有效信息。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">可管理性</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>实际上， RAID 是一种虚拟化技术，它对多个物理磁盘驱动器虚拟成一个大容量的逻辑驱动器。对于外部主机系统来说， RAID 是一个单一的、快速可靠的大容量磁盘驱动器。这样，用户就可以在这个虚拟驱动器上来组织和存储应用系统数据。 从用户应用角度看，可使存储系统简单易用，管理也很便利。 由于 RAID 内部完成了大量的存储管理工作，管理员只需要管理单个虚拟驱动器，可以节省大量的管理工作。 RAID 可以动态增减磁盘驱动器，可自动进行数据校验和数据重建，这些都可以 大大简化管理工作。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">RAID等级</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">RAID0</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>RAID0 是一种简单的、无数据校验的数据条带化技术。<br/>
+RAID0 的性能在所有 RAID 等级中是最高的。<br/>
+不提供数据冗余保护，一旦数据损坏，将无法恢复。 因此， RAID0 一般适用于对性能要求严格但对数据安全性和可靠性不高的应用，如视频、音频存储、临时数据缓存空间等。<br/>
+<img src="../img/raid0.png"  alt="../img/raid0.png" /><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">RAID1</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p>RAID1 称为镜像，它将数据完全一致地分别写到工作磁盘和镜像 磁盘，它的磁盘空间利用率为 50%<br/>
+RAID1 与 RAID0 刚好相反，是为了增强数据安全性使两块 磁盘数据呈现完全镜像，从而达到安全性好、技术简单、管理方便。 RAID1 拥有完全容错的能力.<br/>
+<img src="../img/raid1.png"  alt="../img/raid1.png" /><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3">RAID2</h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+<p>RAID2 称为纠错海明码磁盘阵列，其设计思想是利用海明码实现数据校验冗余。海明码是一种在原始数据中加入若干校验码来进行错误检测和纠正的编码技术，其中第 2n 位（ 1, 2, 4, 8, … ）是校验码，其他位置是数据码。因此在 RAID2 中，数据按位存储，每块磁盘存储一位数据编码，磁盘数量取决于所设定的数据存储宽度，可由用户设定。图 4 所示的为数据宽度为 4 的 RAID2 ，它需要 4 块数据磁盘和 3 块校验磁盘。如果是 64 位数据宽度，则需要 64 块 数据磁盘和 7 块校验磁盘。可见， RAID2 的数据宽度越大，存储空间利用率越高，但同时需要的磁盘数量也越多。<br/>
+海明码自身具备纠错能力，因此 RAID2 可以在数据发生错误的情况下对纠正错误，保证数据的安全性。它的数据传输性能相当高，设计复杂性要低于后面介绍的 RAID3 、 RAID4 和 RAID5 。<br/>
+但是，海明码的数据冗余开销太大，而且 RAID2 的数据输出性能受阵列中最慢磁盘驱动器的限制。<br/>
+<img src="../img/raid2.png"  alt="../img/raid2.png" /><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4">RAID3</h4>
+<div class="outline-text-4" id="text-1-3-4">
+
+<p>使用专用校验盘的并行访问阵列，它采用一个专用的磁盘作为校验盘，其余磁盘作为数据盘，数据按位可字节的方式交叉存储到各个数据盘中。 RAID3 至少需要三块磁盘，不同磁盘上同一带区的数据作 XOR 校验，校验值写入校验盘中。 RAID3 完好时读性能与 RAID0 完全一致，并行从多个磁盘条带读取数据，性能非常高，同时还提供了数据容错能力。<br/>
+目前， RAID5 算法不断改进，在大数据量读取时能够模拟 RAID3 ，而且 RAID3 在出现坏盘时性能会大幅下降，因此常使用 RAID5 替代 RAID3 来运行具有持续性、高带宽、大量读写特征的应用。<br/>
+<img src="../img/raid3.png"  alt="../img/raid3.png" /><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-5" class="outline-4">
+<h4 id="sec-1-3-5">RAID4</h4>
+<div class="outline-text-4" id="text-1-3-5">
+
+<p>RAID4 与 RAID3 的原理大致相同，区别在于条带化的方式不同。 RAID4按照块的方式来组织数据.<br/>
+RAID4 提供了 非常好的读性能，但单一的校验盘往往成为系统性能的瓶颈。对于写操作， RAID4 只能一个磁盘一个磁盘地写，并且还要写入校验数据，因此写性能比较差。而且随着成员磁盘数量的增加，校验盘的系统瓶颈将更加突出。正是如上这些限制和不足， RAID4 在实际应用中很少见，主流存储产品也很少使用 RAID4 保护。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-6" class="outline-4">
+<h4 id="sec-1-3-6">RAID5</h4>
+<div class="outline-text-4" id="text-1-3-6">
+
+<p>RAID5 应该是目前最常见的 RAID 等级，它的原理与 RAID4 相似，区别在于校验数据分布在阵列中的所有磁盘上，而没有采用专门的校验磁盘。对于数据和校验数据，它们的写操作可以同时发生在完全不同的磁盘上。因此， RAID5 不存在 RAID4 中的并发写操作时的校验盘性能瓶颈问题。另外， RAID5 还具备很好的扩展性。当阵列磁盘 数量增加时，并行操作量的能力也随之增长，可比 RAID4 支持更多的磁盘，从而拥有更高的容量以及更高的性能。<br/>
+当一个数据盘损坏时，系统可以根据同一条带的其他数据块和对应的校验数据来重建损坏的数据。与其他 RAID 等级一样，重建数据时， RAID5 的性能会受到较大的影响。<br/>
+RAID5 兼顾存储性能、数据安全和存储成本等各方面因素，它可以理解为 RAID0 和 RAID1 的折中方案，是目前综合性能最佳的数据保护解决方案。 RAID5 基本上可以满足大部分的存储应用需求，数据中心大多采用它作为应用数据的保护方案。<br/>
+<img src="../img/raid5.png"  alt="../img/raid5.png" /><br/>
+</p>
+<p><br/>
+有人可能担心RAID5的可靠性，我试过，稳定性很好，同步完成后，拷贝数据上去，然后，随意的掉电，RAID5 组上的数据都没事。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-7" class="outline-4">
+<h4 id="sec-1-3-7">RAID6</h4>
+<div class="outline-text-4" id="text-1-3-7">
+
+<p>前面所 述的各个 RAID 等级都只能保护因单个磁盘失效而造成的数据丢失。如果两个磁盘同时发生故障，数据将无法恢复。 RAID6 （如图 8 ）引入双重校验的概念，它可以保护阵列中同时出现两个磁盘失效时，阵列仍能够继续工作，不会发生数据丢失。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-8" class="outline-4">
+<h4 id="sec-1-3-8">RAID 组合等级</h4>
+<div class="outline-text-4" id="text-1-3-8">
+
+<p>标准 RAID 等级各有优势和不足。自然地，我们想到把多个 RAID 等级组合起来，实现优势互补，弥补相互的不足，从而达到在性能、数据安全性等指标上更高的 RAID 系统。<br/>
+实际得到较为广泛应用的只有 RAID01 和 RAID10 两个等级。<br/>
+RAID01 兼备了 RAID0 和 RAID1 的优点，它先用两块磁盘建立镜像，然后再在镜像内部做条带化。 RAID01 的数据将同时写入到两个磁盘阵列中，如果其中一个阵列损坏，仍可继续工作，保证数据安全性的同时又提高了性能。 RAID01 和 RAID10 内部都含有 RAID1 模式，因此整体磁盘利用率均仅为 50% 。<br/>
+<img src="../img/raid10.png"  alt="../img/raid10.png" /><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">linux上创建raid5</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>4个硬盘，每个硬盘都化分为一个区。<br/>
+创建raid5<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">mdadm --create /dev/md0 --level=5 --raid-devices=3 --spare-devices=1 /dev/sd[a-d]1
+</pre>
+
+创建RAID设备名为md0, 级别为RAID 5，使用3个设备建立RAID,空余一个做备用。<br/>
+可以看来做raid只需要分区，所以一个硬盘可以分为多个分区，不同分区作为不同的raid type。<br/>
+</p>
+<p><br/>
+查看raid信息<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">mdadm --detail /dev/md0
+</pre>
+
+
+513984 blocks [2/2] [UU]<br/>
+The second line gives us some more information about the device. [2/2] [UU] tells us both partitions are used.<br/>
+</p>
+<p><br/>
+让RAID开机启动.配置RIAD配置文件<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">mdadm --detail --scan &gt; /etc/mdadm.conf
+</pre>
+
+修改下，格式，去掉devices后的=。<br/>
+<code>devices /dev/sda1,/dev/sdb1,/dev/sdc1,/dev/sdd1</code><br/>
+</p>
+<p><br/>
+如果其中某个硬盘坏了会怎么样呢?系统会自动停止这块硬盘的工作,然后让后备的那块硬盘顶上去工作。我们可以实验下.<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">mdadm /dev/md0 --fail /dev/sdc1
+cat /proc/mdstat&#25110;&#32773;mdadm --detail
+</pre>
+
+
+删除一个硬盘<br/>
+<code>mdadm /dev/md0 --remove /dev/sdc1</code><br/>
+</p>
+<p><br/>
+添加一个硬盘<br/>
+<code>mdadm /dev/md0 --add /dev/sdc1</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">资料</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p><a href="http://blog.csdn.net/liuben/article/details/4581970">http://blog.csdn.net/liuben/article/details/4581970</a><br/>
+</p>
+<p><br/>
+ubuntu使用raid的一个例子：<br/>
+<a href="http://www.dedoimedo.com/computers/linux-raid.html">http://www.dedoimedo.com/computers/linux-raid.html</a><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[openfiler 2.99创建raid]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/13/openfiler/"/>
+    <updated>2013-02-13T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/13/openfiler</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">openfiler 2.99创建raid</a>
+<ul>
+<li><a href="#sec-1-1">创建raid5</a>
+<ul>
+<li><a href="#sec-1-1-1">设置gpt</a></li>
+<li><a href="#sec-1-1-2">分区</a></li>
+<li><a href="#sec-1-1-3">设置raid标记</a></li>
+<li><a href="#sec-1-1-4">在web上创建raid</a></li>
+<li><a href="#sec-1-1-5">扩展</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">如果web上无法识别raid盘</a></li>
+<li><a href="#sec-1-3">测试速度</a></li>
+<li><a href="#sec-1-4">优缺点</a></li>
+<li><a href="#sec-1-5">资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/storage/atom.xml">openfiler 2.99创建raid</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+有人可能担心RAID5的可靠性，我试过，稳定性很好，同步完成后，拷贝数据上去，然后，随意的掉电，RAID5 组上的数据都没事。<br/>
+OpenFiler读写性能很好，随便调整一下就能达到RAID5 下写130MB/S和读220MB/S的成绩，这个远远超过了FREENas的成绩。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">创建raid5</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>一个磁盘用于安装系统，其他3块作为raid5.<br/>
+进入root<br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">设置gpt</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+<p><br/>
+<pre class="src src-sh">parted /dec/sdb
+mklabel
+gpt
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">分区</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>整个磁盘化为一个分区，<br/>
+<code>mkpart primary 0 -0</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">设置raid标记</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>设置为raid分区<br/>
+<code>set 1 raid on</code><br/>
+</p>
+<p><br/>
+同样操作于<br/>
+<code>select /dev/sdc</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4">在web上创建raid</h4>
+<div class="outline-text-4" id="text-1-1-4">
+
+<p>Volumes &gt; Software RAID:<br/>
+Create the software RAID 5 with sdb1, sdc1 and sdd1.<br/>
+</p>
+<p><br/>
+Create the vg0 volume group with /dev/md0<br/>
+Create the lv0 volume, using full space and XFS.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-5" class="outline-4">
+<h4 id="sec-1-1-5">扩展</h4>
+<div class="outline-text-4" id="text-1-1-5">
+
+<p>如果要再添加两块硬盘，<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">[root@localhost]# mdadm --add /dev/md0 /dev/sde1 add the two disks to /dev/md0
+[root@localhost]# mdadm --add /dev/md0 /dev/sdf1
+
+[root@localhost]# mdadm --grow /dev/md0 --raid-devices=5 set the RAID to use the two new disks
+
+In the OpenFiler WEBinterface, Wait for /dev/md0 to be Clean and Synchronized, then:
+
+[root@localhost]# pvresize /dev/md0 resize the physical volume /dev/md0
+</pre>
+
+
+In the OpenFiler WEBinterface &gt; Volumes &gt; Manage Volumes &gt; Edit properties of lv0 to use full capacity.<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">如果web上无法识别raid盘</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>首先需要把/dev/md0  mklabel为gpt<br/>
+然后分区，mkpart primary ext2 <br/>
+设置lvm flag<br/>
+<code>set 1 LVM on</code><br/>
+</p>
+<p><br/>
+手动添加卷组：<br/>
+<code>vgcreate VG1 /dev/md0</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">测试速度</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p><code>dd if=/dev/zero of=tmpfile bs=1M count=10000</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">优缺点</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>优点：<br/>
+</p>
+<p><br/>
+1、兼容性很好，几乎可以识别所有的常见硬件，哪怕识别不了也可以装个REDHAT的驱动，REDHAT的驱动几乎是每个厂商都会提供的，上面那台HP SERVER RAID卡就是装了READHAT的驱动搞定的；<br/>
+</p>
+<p><br/>
+2、性能强大，支持网卡捆绑，上门的PC-SERVER通过网络访问，可以实现RAID5的245MB/S的读写速度，和本地盘没啥区别，要不是受制于HP PCSERVER网卡数量不够的限制，网络服务应该还能实现更高的速度，本地测试RAID5超过400MB/S的读写速度；<br/>
+</p>
+<p><br/>
+3、支持卷管理功能，支持在线扩展功能，支持按用户空间限制配置；<br/>
+</p>
+<p><br/>
+4、内部带OPENLDAP,用户的认证通过OPENLDAP认证，安全性很高；<br/>
+</p>
+<p><br/>
+5、支持WEB管理和系统监控，管理方便。<br/>
+</p>
+<p><br/>
+缺点：<br/>
+</p>
+<p><br/>
+1、页面管理功能要是没用过肯定一头雾水，监控管理功能很一般，只能算有吧；<br/>
+</p>
+<p><br/>
+2、用户认证使用OPENLDAP，配置麻烦，我折腾了一个小时才搞定；<br/>
+</p>
+<p><br/>
+3、不支持BT电驴什么的，虽然可以安装但是无法和WEB页面集成，感觉还是很不爽<br/>
+</p>
+<p><br/>
+4、不知道为何精简了RPM命令和yum命令，要在上面装点东西很麻烦，要先装RPM才能进行下面的工作。<br/>
+应该是改为了conary。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">资料</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<ol>
+<li>LDAP设置<br/>
+   <a href="http://www.njeit.cn/show.aspx?id=831&amp;cid=65">http://www.njeit.cn/show.aspx?id=831&amp;cid=65</a><br/>
+
+<p><br/>
+</p></li>
+<li>创建iscsi <br/>
+   <a href="http://wenku.baidu.com/view/b51fdeedf8c75fbfc77db202.html">http://wenku.baidu.com/view/b51fdeedf8c75fbfc77db202.html</a><br/>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[LVM介绍]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/13/lvm/"/>
+    <updated>2013-02-13T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/13/lvm</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">LVM介绍</a>
+<ul>
+<li><a href="#sec-1-1">LVM基本术语</a></li>
+<li><a href="#sec-1-2">创建和管理lvm</a>
+<ul>
+<li><a href="#sec-1-2-1">分区</a></li>
+<li><a href="#sec-1-2-2">创建物理卷</a></li>
+<li><a href="#sec-1-2-3">创建卷组</a></li>
+<li><a href="#sec-1-2-4">激活卷组</a></li>
+<li><a href="#sec-1-2-5">添加新的物理卷到卷组中</a></li>
+<li><a href="#sec-1-2-6">查看物理卷信息</a></li>
+<li><a href="#sec-1-2-7">从卷组中删除一个物理卷</a></li>
+<li><a href="#sec-1-2-8">创建逻辑卷</a></li>
+<li><a href="#sec-1-2-9">创建文件系统</a></li>
+<li><a href="#sec-1-2-10">删除一个逻辑卷</a></li>
+<li><a href="#sec-1-2-11">扩展逻辑卷大小</a></li>
+<li><a href="#sec-1-2-12">减少逻辑卷大小</a></li>
+<li><a href="#sec-1-2-13">灵活</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">snapshot</a></li>
+<li><a href="#sec-1-4">lvm常用管理工具：</a></li>
+<li><a href="#sec-1-5">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/storage/atom.xml">LVM介绍</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+LVM是建立在硬盘和分区之上的一个逻辑层，来提高磁盘分区管理的灵活性。通过LVM系统管理员可以轻松管理磁盘分区，如：将若干个磁盘分区连接为一个整块的卷组（volumegroup），形成一个存储池。管理员可以在卷组上随意创建逻辑卷组（logicalvolumes），并进一步在逻辑卷组上创建文件系统。管理员通过LVM可以方便的调整存储卷组的大小，并且可以对磁盘存储按照组的方式进行命名、管理和分配。<br/>
+而且当系统添加了新的磁盘，通过LVM管理员就不必将磁盘的文件移动到新的磁盘上以充分利用新的存储空间，而是直接扩展文件系统跨越磁盘即可。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">LVM基本术语</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>物理存储介质（The physical media）<br/>
+这里指系统的存储设备：硬盘，如：/dev/hda1、/dev/sda等等，是存储系统最低层的存储单元。 <br/>
+</p>
+<p><br/>
+物理卷PV（physical volume）<br/>
+物理卷就是指硬盘分区或从逻辑上与磁盘分区具有同样功能的设备(如RAID)，是LVM的基本存储逻辑块，但和基本的物理存储介质（如分区、磁盘等）比较，却包含有与LVM相关的管理参数。 <br/>
+</p>
+<p><br/>
+卷组VG（Volume Group）<br/>
+LVM卷组类似于非LVM系统中的物理硬盘，其由物理卷组成。可以在卷组上创建一个或多个“LVM分区”（逻辑卷），LVM卷组由一个或多个物理卷组成。 <br/>
+</p>
+<p><br/>
+逻辑卷LV（logical volume）<br/>
+LVM的逻辑卷类似于非LVM系统中的硬盘分区，在逻辑卷之上可以建立文件系统(比如/home或者/usr等)。 <br/>
+</p>
+<p><br/>
+PE（physical extent）<br/>
+每一个物理卷被划分为称为PE(Physical Extents)的基本单元，具有唯一编号的PE是可以被LVM寻址的最小单元。PE的大小是可配置的，默认为4MB。 <br/>
+</p>
+<p><br/>
+LE（logical extent）<br/>
+逻辑卷也被划分为被称为LE(Logical Extents) 的可被寻址的基本单位。在同一个卷组中，LE的大小和PE是相同的，并且一一对应。<br/>
+</p>
+<p><br/>
+<img src="../img/lvm_vg.jpg"  alt="../img/lvm_vg.jpg" /><br/>
+</p>
+<p><br/>
+VGDA（卷组描述符区域）<br/>
+和非 LVM 系统将包含分区信息的元数据保存在位于分区起始位置的分区表中一样，逻辑卷以及卷组相关的元数据被保存在位于物理卷起始处的 VGDA 中。VGDA 包括以下内容：PV 描述符、VG 描述符、LV 描述符、和一些 PE 描述符。系统启动 LVM 时激活 VG，并将 VGDA 加载至内存，来识别 LV 的实际物理存储位置。当系统进行 I/O 操作时，就会根据 VGDA 建立的映射机制来访问实际的物理位置。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">创建和管理lvm</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">分区</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p>使用分区工具（如：fdisk等）创建LVM分区，方法和创建其他一般分区的方式是一样的，区别仅仅是LVM的分区类型为8e。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">创建物理卷</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>创建物理卷的命令为pvcreate，利用该命令将希望添加到卷组的所有分区或者磁盘创建为物理卷。<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">pvcreate /dev/hda5</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">创建卷组</h4>
+<div class="outline-text-4" id="text-1-2-3">
+
+<p>创建卷组的命令为vgcreate，将使用pvcreate建立的物理卷创建为一个完整的卷组：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgcreate web_document /dev/hda5 /dev/hdb</span>
+</pre>
+
+vgcreate在创建卷组 web_document 以外，还设置使用大小为4 MB的PE（默认为4MB），这表示卷组上创建的所有逻辑卷都以 4 MB 为增量单位来进行扩充或缩减。由于内核原因，PE大小决定了逻辑卷的最大大小，4 MB 的PE决定了单个逻辑卷最大容量为 256 GB，若希望使用大于256G的逻辑卷则创建卷组时指定更大的PE。PE大小范围为8 KB 到 512 MB，并且必须总是 2 的倍数（使用-s指定）<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4">激活卷组</h4>
+<div class="outline-text-4" id="text-1-2-4">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgchange -ay web_document</span>
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-5" class="outline-4">
+<h4 id="sec-1-2-5">添加新的物理卷到卷组中</h4>
+<div class="outline-text-4" id="text-1-2-5">
+
+<p>当系统安装了新的磁盘并创建了新的物理卷，而要将其添加到已有卷组时，就需要使用vgextend命令：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgextend web_document /dev/hdc1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-6" class="outline-4">
+<h4 id="sec-1-2-6">查看物理卷信息</h4>
+<div class="outline-text-4" id="text-1-2-6">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">pvdisplay /dev/hda1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-7" class="outline-4">
+<h4 id="sec-1-2-7">从卷组中删除一个物理卷</h4>
+<div class="outline-text-4" id="text-1-2-7">
+
+<p>要从一个卷组中删除一个物理卷，首先要确认要删除的物理卷没有被任何逻辑卷正在使用.<br/>
+如果某个物理卷正在被逻辑卷所使用，就需要将该物理卷的数据备份到其他地方，然后再删除。<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgreduce web_document /dev/hda1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-8" class="outline-4">
+<h4 id="sec-1-2-8">创建逻辑卷</h4>
+<div class="outline-text-4" id="text-1-2-8">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvcreate -L1500 &#8211;n www1 web_document</span>
+</pre>
+
+该命令就在卷组web_document上创建名字为www1，大小为1500M的逻辑卷，并且设备入口为/dev/web_document/www1<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-9" class="outline-4">
+<h4 id="sec-1-2-9">创建文件系统</h4>
+<div class="outline-text-4" id="text-1-2-9">
+
+<p>推荐使用reiserfs文件系统，来替代ext2和ext3<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-10" class="outline-4">
+<h4 id="sec-1-2-10">删除一个逻辑卷</h4>
+<div class="outline-text-4" id="text-1-2-10">
+
+<p>删除逻辑卷以前首先需要将其卸载，然后删除：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">umount /dev/web_document/www1</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvremove /dev/web_document/www1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-11" class="outline-4">
+<h4 id="sec-1-2-11">扩展逻辑卷大小</h4>
+<div class="outline-text-4" id="text-1-2-11">
+
+<p>LVM提供了方便调整逻辑卷大小的能力，扩大为12G<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvextend -L12G /dev/web_document/www1</span>
+&#22686;&#21152;1G
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvextend -L+1G /dev/web_document/www1</span>
+</pre>
+
+
+增加了逻辑卷的容量以后，就需要修改文件系统大小以实现利用扩充的空间。笔者推荐使用reiserfs文件系统来替代ext2或者ext3。因此这里仅仅讨论reiserfs的情况。Reiserfs文件工具提供了文件系统大小调整工具：resize_reiserfs。对于希望调整被加载的文件系统大小：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">resize_reiserfs -f /dev/web_document/www1</span>
+</pre>
+
+
+对于使用ext2或ext3文件系统的用户可以考虑使用工具<br/>
+ext2resize。<br/>
+<a href="http://sourceforge.net/projects/ext2resize">http://sourceforge.net/projects/ext2resize</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-12" class="outline-4">
+<h4 id="sec-1-2-12">减少逻辑卷大小</h4>
+<div class="outline-text-4" id="text-1-2-12">
+
+<p>使用lvreduce即可实现对逻辑卷的容量，同样需要首先将文件系统卸载：<br/>
+要先减少文件系统，然后再减少逻辑卷<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">umount /data/wwwroot</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">resize_reiserfs -s-2G /dev/web_document/www1</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvreduce -L-2G /dev/web_document/www1</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">mount -treiserfs /dev/web_document/www1 /data/wwwroot</span>
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-13" class="outline-4">
+<h4 id="sec-1-2-13">灵活</h4>
+<div class="outline-text-4" id="text-1-2-13">
+
+<p>逻辑卷可以再组合成pv，和vg，再次进行lvm。<br/>
+而且一个卷组可以跨多个磁盘。<br/>
+如果想自己做实验可以自己创建空洞文件进行lvm练习。<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">dd <span style="color: #ff1493;">if</span>=/dev/zore <span style="color: #ff1493;">of</span>=./loop1.img <span style="color: #ff1493;">bs</span>=1G <span style="color: #ff1493;">count</span>=0 <span style="color: #ff1493;">seek</span>=100
+</pre>
+
+这就创建了一个100G的稀疏文件，文件大小是100G，但占用的空间是0.<br/>
+然后使用losetup进行加载。就可以当/dev/loop0 磁盘使用了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">snapshot</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>lvm可以创建镜像，创建时选择创建允许多大的空间用于记录变化。<br/>
+创建镜像后实际上就是和原始lv独立，但如果原始lv删掉了，则所有的snap也就丢失了。<br/>
+snap和原始lv都可以后续修改，而且snap可以和原始lv进行合并，使原始lv变为snap当前的样子。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">lvm常用管理工具：</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+</p><table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<tbody>
+<tr><td class="left">功能</td><td class="left">物理卷</td><td class="left">卷组</td><td class="left">逻辑卷</td></tr>
+<tr><td class="left">扫描</td><td class="left">pvscan</td><td class="left">vgscan</td><td class="left">lvscan</td></tr>
+<tr><td class="left">查看</td><td class="left">pvdisplay</td><td class="left">vgdisplay</td><td class="left">lvdisplay</td></tr>
+<tr><td class="left">新建</td><td class="left">pvcreat</td><td class="left">vgcreat</td><td class="left">lvcreat</td></tr>
+<tr><td class="left">卸载</td><td class="left">pvremove</td><td class="left">vgremove</td><td class="left">lvremove</td></tr>
+<tr><td class="left">增大</td><td class="left">无</td><td class="left">vgextend</td><td class="left">lvextend</td></tr>
+<tr><td class="left">减小</td><td class="left">无</td><td class="left">vgreduce</td><td class="left">lvreduce</td></tr>
+</tbody>
+</table>
+
+
+<p><br/>
+lvs<br/>
+pvs<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">参考</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p><a href="http://blog.csdn.net/steelren/article/details/1931363">http://blog.csdn.net/steelren/article/details/1931363</a><br/>
+</p>
+<p><br/>
+LVM-HOWTO<br/>
+<a href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a><br/>
+</p>
+<p><br/>
+一些操作例子<br/>
+<a href="http://sapling.me/unixlinux/lvm_howto.html">http://sapling.me/unixlinux/lvm\_howto.html</a><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

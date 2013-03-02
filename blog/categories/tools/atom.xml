@@ -4,7 +4,7 @@
   <title><![CDATA[Category: tools | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/tools/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-02-13T01:27:12+08:00</updated>
+  <updated>2013-03-02T23:48:56+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -12,6 +12,181 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[nc使用]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/27/netcat/"/>
+    <updated>2013-02-27T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/27/netcat</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">基本使用</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>本地监听<br/>
+<code>nc -l 3333</code><br/>
+远端访问<br/>
+<code>nc 192.168.0.1 3333</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">传送文件</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>发送端<br/>
+<code>cat backup.iso | nc -l 3333</code><br/>
+接收端<br/>
+<code>nc 192.168.0.1 3333 &gt; backup.iso</code><br/>
+</p>
+<p><br/>
+显示传送进度，可以使用管道监控,pv命令<br/>
+以上命令修改为：<br/>
+<code>cat backup.iso | pv -b | nc -l 3333</code><br/>
+<code>nc 192.168.0.1 3333 | pv -b &gt; backup.iso</code><br/>
+</p>
+<p><br/>
+本地打包文件，传送到远端<br/>
+<code>tar -czf - /etc/ | nc -l 3333</code><br/>
+接收端<br/>
+<code>nc 192.168.0.1 3333 | pv -b &gt; mybackup.tar.gz</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">端口扫描</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>扫描端口，并返回相关信息<br/>
+<code>nc -z 192.168.0.1 80-90</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">资料</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p><a href="http://www.sans.org/security-resources/sec560/netcat_cheat_sheet_v1.pdf">http://www.sans.org/security-resources/sec560/netcat\_cheat\_sheet\_v1.pdf</a><br/>
+<a href="http://www.g-loaded.eu/2006/11/06/netcat-a-couple-of-useful-examples/">http://www.g-loaded.eu/2006/11/06/netcat-a-couple-of-useful-examples/</a><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[goagent翻墙]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/14/goagent/"/>
+    <updated>2013-02-14T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/14/goagent</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">安装</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>安装最好直接看官网：<br/>
+<a href="https://code.google.com/p/goagent/">https://code.google.com/p/goagent/</a><br/>
+</p>
+<p><br/>
+不过为了自己方便，我也自己记录一下。<br/>
+</p>
+<p><br/>
+在GAE注册一个appid，<a href="https://appengine.google.com/">https://appengine.google.com/</a><br/>
+</p><ol>
+<li>修改local\proxy.ini中的[gae]下的appid=你的appid<br/>
+</li>
+<li>双击server\uploader.bat(Mac/Linux上传方法请见FAQ)，上传成功后即可使用了(地址127.0.0.1:8087)<br/>
+</li>
+</ol>
+
+<p>对于linux<br/>
+在server目录下，python uploader.zip<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">安装python-gevent</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>参考：<a href="https://code.google.com/p/goagent/wiki/InstallGeventAndPyopensslOnUbuntu">https://code.google.com/p/goagent/wiki/InstallGeventAndPyopensslOnUbuntu</a><br/>
+<code>sudo apt-get install  python-gevent</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">安装pyopenssl</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>这个一般都安装了<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">wget http://pypi.python.org/packages/source/p/pyOpenSSL/pyOpenSSL-0.13.tar.gz &amp;&amp; tar zxvf pyOpenSSL-0.13.tar.gz &amp;&amp; <span style="color: #a52a2a;">cd</span> pyOpenSSL-0.13 &amp;&amp; sudo python setup.py install
+</pre>
+
+
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Chrome下如何使用goagent</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>Chrome可以安装switchysharp插件<br/>
+然后导入local中的SwitchyOptions.bak配置文件，之后就可以选择自动切换模式，他会根据规则自动选择是否使用代理。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">有时goagent无法使用，解决办法</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>可能是google_cn服务被屏蔽<br/>
+我们可以在proxy.ini中将profile=google_cn改成google_hk<br/>
+将[google_hk]段中的mode = http改为mode = https，重启goagent解决。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">遗留问题</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>我现在使用的是2.1.12版本，发现的问题是google analytics总是提示cookiemismatch。<br/>
+搜了半天也解决不了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[linux_3g拨号]]></title>
@@ -325,7 +500,8 @@ mwSetAriAction()    mwAriHandler()  mwBreakOut()<br/>
 <ul>
 <li><a href="#sec-1-1">svn libneon的问题</a></li>
 <li><a href="#sec-1-2">自己编译，真的不容易啊</a></li>
-<li><a href="#sec-1-3">tftpd-hpa</a></li>
+<li><a href="#sec-1-3">分支管理</a></li>
+<li><a href="#sec-1-4">tftpd-hpa</a></li>
 </ul>
 </li>
 </ul>
@@ -369,7 +545,7 @@ SSL handshake failed: SSL 错误：在证书中检测到违规的密钥用法。
 apt-get install openssl-dev openssl<br/>
 </p>
 <p><br/>
-cd subversion<br/>
+cd subversionq<br/>
 ./configure &ndash;with-ssl=openssl &ndash;with-neon=./neon &ndash;with-openssl=/usr<br/>
 出现warnning无用理会直接make<br/>
 </p>
@@ -379,8 +555,63 @@ cd subversion<br/>
 </div>
 
 <div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">tftpd-hpa</h3>
+<h3 id="sec-1-3">分支管理</h3>
 <div class="outline-text-3" id="text-1-3">
+
+<p>一般svn版本库目录建议创建trunk、branches和tags三个目录。 <br/>
+trunk主干版本要时刻保持干净，即随时可以基于这个版本进行修改并将应用部署上线。<br/>
+branches是分支目录，存放并行开发的项目代码，因为分支是主干的廉价拷贝，所以你可以放心建立很多分支版本。<br/>
+不过Subversion不支持跨版本库的拷贝，当使用svn copy时你只能在同一个版本库内操作。<br/>
+tags目录存放trunk某个的快照。<br/>
+</p>
+<p><br/>
+</p><ol>
+<li>svn copy 创建分支<br/>
+</li>
+</ol>
+
+
+<p><br/>
+<pre class="src src-sh">svn copy -m <span style="color: #00bfff;">"1.7.2 - theme"</span> svn://localhost/www/trunk svn://localhost/www/branches/branch1.7.2-theme
+svn co svn://localhost/www/branches/branch1.7.2-theme
+</pre>
+
+
+2） 开发了一段实现，要先把trunk版本merge过来<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">branch1.7.2-theme&#26159;&#20998;&#25903;&#30446;&#24405;&#65292;&#27880;&#24847;&#19981;&#21487;&#20197;&#36827;&#21040;&#20998;&#25903;&#23376;&#30446;&#24405;</span>
+<span style="color: #a52a2a;">cd</span> branch1.7.2-theme
+<span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21069;&#38754;&#30340;12972&#26159;&#24320;&#20998;&#25903;&#20043;&#21069;trunk&#30340;&#29256;&#26412;&#21495;&#65292;&#21518;&#38754;&#30340;12991&#26159;merge&#26102;trunk&#30340;&#29256;&#26412;&#21495;</span>
+svn merge -r 12972:12991 svn://localhost/www/trunk
+</pre>
+
+解决冲突后，提交<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">svn ci -m <span style="color: #00bfff;">'svn merge -r 12972:12991 svn://localhost/www/trunk'</span>
+</pre>
+
+
+3） 从分支merge到trunk。上线测试完毕，你很幸运，一切都如预期正常，这时就要将分支回归trunk，将trunk更新到最新。<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20808;&#20174;trunk checkout&#19968;&#20221;&#26032;&#40092;&#30340;&#20195;&#30721;&#65292;&#28982;&#21518;cd&#21040;&#35813;&#29256;&#26412;&#30446;&#24405;&#19979;</span>
+svn co svn://localhost/www/trunk
+<span style="color: #a52a2a;">cd</span> trunk
+<span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">12973&#26159;&#20998;&#25903;&#24320;&#22987;&#30340;&#29256;&#26412;&#21495;&#65292;13006&#26159;&#20998;&#25903;&#32467;&#26463;&#30340;&#29256;&#26412;&#21495;</span>
+svn merge -r 12973:13006 svn://localhost/www/branches/branch1.7.2-theme
+</pre>
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">tftpd-hpa</h3>
+<div class="outline-text-3" id="text-1-4">
 
 <p>atftpd 设置半天不能启动，连直接输入命令行都不能启动。<br/>
 所以换成tftpd-hpa，非常简单。<br/>
@@ -393,79 +624,6 @@ vi /etc/default/tftpd-hpa<br/>
 客户端使用atftp。<br/>
 </p>
 <p><br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[串口工具ckermit]]></title>
-    <link href="http://emmoblin.github.com/blog/2012/10/16/ckermit/"/>
-    <updated>2012-10-16T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2012/10/16/ckermit</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">串口工具ckermit</a>
-<ul>
-<li><a href="#sec-1-1">默认配置文件</a></li>
-<li><a href="#sec-1-2">操作</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-
-
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/tools/atom.xml">串口工具ckermit</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">默认配置文件</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>/etc/kermit/kermrc<br/>
-一般配置一个home下的自己的配置文件就ok了。<br/>
-~/.mykermrc<br/>
-</p>
-<p><br/>
-<pre class="example">set line /dev/ttyS0
-set speed 9600
-set carrier-watch off
-set handshake none
-set flow-control none
-robust
-set file type bin
-set file name lit
-set rec pack 1000
-set send pack 1000
-set window 5
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">操作</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>C-\ 切换到命令行<br/>
-c 打开链接<br/>
 </p>
 <p><br/>
 </p></div>

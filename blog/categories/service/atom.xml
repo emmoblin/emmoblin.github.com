@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: service | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/service/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2013-03-02T23:48:56+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[搭建dns服务器]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/20/dnsserver/"/>
+    <updated>2013-02-20T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/20/dnsserver</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">搭建dns服务器</a>
+<ul>
+<li><a href="#sec-1-1">首先提出一些问题</a></li>
+<li><a href="#sec-1-2">BIND服务</a></li>
+<li><a href="#sec-1-3">配置文件</a></li>
+<li><a href="#sec-1-4">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/service/atom.xml">搭建dns服务器</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">首先提出一些问题</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<ol>
+<li>什么是 DNS 的授权模式﹖是怎样进行的?<br/>
+</li>
+<li>zone 和 domain 的差别?<br/>
+</li>
+<li>什么是 DNS 正解和反解?<br/>
+</li>
+<li>什么是 DNS 的查询模式?<br/>
+</li>
+<li>查询过程是怎样进行的?<br/>
+</li>
+<li>DNS cache 的作用和它对查询流程的影响?<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">BIND服务</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>在 Linux 上面﹐提供 DNS 服务的套件是叫 bind，<br/>
+但执行服务程序名称则是 named。<br/>
+请您确定系统上装有 bind﹑bind-utils﹑以及 caching-nameserver 这几个套件。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">配置文件</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>/etc/named.conf<br/>
+如果安装的是bind-chroot，则文件在<br/>
+/var/named/chroot/etc/named.conf<br/>
+</p>
+<p><br/>
+/var/named/chroot/etc/named.caching-nameserver.conf<br/>
+这个是主要配置文件的模板配置文件（区域模板配置文件<br/>
+</p>
+<p><br/>
+首先生成主要配置文件，复制出一份模板配置文件到此目录下，并更改名字为named.conf <br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #a52a2a;">cd</span>  /var/named/chroot/etc    
+cp  named.caching-nameserver.conf  named.conf
+</pre>
+
+
+默认会有三个配置：<br/>
+</p>
+<p><br/>
+<pre class="example">zone "." IN {
+  type hint;
+  file "named.ca";
+};
+</pre>
+
+根区域“ . ”(root zone) 的设定﹐同时它是一个 internet ( IN ) 的区域类别( class )。这里还指定了root zone 的服务器种类( type ) 为“hint”(也只有这个 zone 会使用这样的种类)。最后﹐用 file 指定这个区域记录文件为﹕“named.ca”﹐也就是“/var/named/named.ca”档案。<br/>
+</p>
+<p><br/>
+在 root zone 后面﹐您应该还会看到如下这两段,一个是localhost的正向解析，一个是反向解析。不允许自行更新DNS记录。<br/>
+</p>
+<p><br/>
+<pre class="example">zone "localhost" IN {
+  type master;
+  file "localhost.zone";
+  allow-update { none; };
+};
+
+zone "0.0.127.in-addr.arpa" IN {
+  type master;
+  file "named.local";
+  allow-update { none; };
+}; 
+</pre>
+
+
+首先来看root zone，named.ca<br/>
+里边的记录类似如下：<br/>
+</p>
+<p><br/>
+<pre class="example">. 3600000 NS L.ROOT-SERVERS.NET.
+L.ROOT-SERVERS.NET. 3600000 A 198.32.64.12
+</pre>
+
+以‘ . ’开头的﹐那就是所谓的 root zone 了﹗<br/>
+第二栏都是‘ 3600000 ’﹐这是 TTL (Time To Live) 设定﹐也就是在 cache 中保留的时间，<br/>
+其后的‘ NS ’是“Name Server”的意思﹐是 DNS 记录名称之一﹐也就是负责这个记录的 name server 是哪一台主机。<br/>
+‘ A ’记录﹐也就是 Address 的意思﹐解释 [A-M].ROOT-SERVER.NET. 这些主机各自的 IP 地址所在。<br/>
+</p>
+<p><br/>
+如果您了解 DNS 的查询模式﹐您会知道 DNS 服务器在查询非自己管辖的 zone 的时候﹐首先会向 root 查询下一级的 zone 在哪里﹐然后逐级查询下去。但问题是﹕当 named 刚启动的时候﹐在 cache 里面一片空白﹐它怎么知道 root zone 的 servers 在哪里呢﹖这不是一个矛盾吗﹖所以﹐就必须靠这个档案告诉 named 关于 root zone 的 servers 有哪些﹖以及在哪里﹖<br/>
+</p>
+<p><br/>
+locaohost.zone<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">参考</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p><a href="http://wenku.baidu.com/view/4d88c6bf960590c69ec376a2.html">http://wenku.baidu.com/view/4d88c6bf960590c69ec376a2.html</a><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[OpenLDAP介绍]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/02/13/openldap/"/>
+    <updated>2013-02-13T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/02/13/openldap</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">OpenLDAP介绍</a>
+<ul>
+<li><a href="#sec-1-1">LDAP 入门</a></li>
+<li><a href="#sec-1-2">LDAP 目录结构</a>
+<ul>
+<li><a href="#sec-1-2-1">DN</a></li>
+<li><a href="#sec-1-2-2">组织单元</a></li>
+<li><a href="#sec-1-2-3">个别项</a></li>
+<li><a href="#sec-1-2-4">对象类objectclass</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">配置openLDAP</a>
+<ul>
+<li><a href="#sec-1-3-1">rootdn</a></li>
+<li><a href="#sec-1-3-2">AC</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">插入数据</a>
+<ul>
+<li><a href="#sec-1-4-1">LDIF 方法</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/service/atom.xml">OpenLDAP介绍</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">LDAP 入门</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>首字母缩略 LDAP 代表轻量级目录访问协议（Lightweight Directory Access Protocol）。<br/>
+信息被集中存储在服务器上的 LDAP 目录中。LDAP 目录是一种数据库；然而，它不是关系数据库。<br/>
+它的目录或数据库的结构与 UNIX 文件系统非常相似： <br/>
+数据按层次存储；有“根”或“基本 DN”（专有名称，Distinguished Name）；<br/>
+目录被进一步细分成组织单元（Organization Units 或 OU）；<br/>
+在这些 OU 中是包含数据的项。<br/>
+这种树-叶结构不仅使 LDAP 变得可扩展， 而且当进行简单的搜索或查询时，比传统的关系数据库更快。<br/>
+</p>
+<p><br/>
+LDAP 目录几乎可以存储所有类型的数据：电子邮件地址、DNS 信息、NIS 映射、安全性密钥、联系人信息列表和计算机名等。<br/>
+可以通过 ACL（访问控制表，Access Control List）来控制对目录的访问。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">LDAP 目录结构</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">DN</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p>LDAP 目录树的“根”或顶部是基本 DN。基本 DN 通常有两种形式：organization=（例如，o=syroidmanor.com）， 或者从组织的 DNS 域组件派生的 DN（dc=syroidmanor,dc=com）。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">组织单元</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>在目录基本 DN 的下面是容器或组织单元（OU），它们从逻辑上对您的数据进行分隔或分组。<br/>
+</p>
+<p><br/>
+<pre class="example">dc=foobar,dc=com
+                ou=customers
+                        ou=northamerica
+                        ou=southamerica
+                        ou=asia
+                        ou=europe
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">个别项</h4>
+<div class="outline-text-4" id="text-1-2-3">
+
+<p>项只是存储属性的地方。<br/>
+属性是可用来将一种类型的信息存储在目录中的容器。<br/>
+每个属性都有一种类型和一个或多个值。<br/>
+LDAP 目录中的每个项都有唯一的 DN，每个 DN 都由两部分组成 ―“相对专有名称”（或 RDN）和对 LDAP 目录结构中存储记录的位置的引用。 几乎存储在 LDAP 目录中的所有数据都有一个唯一名称，这个名称通常存储在 cn 属性中。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4">对象类objectclass</h4>
+<div class="outline-text-4" id="text-1-2-4">
+
+<p>对象类由 LDAP 目录使用来定义给定类型的对象可以有哪些属性。对象类还定义项必须有什么属性， 以及项可以有什么属性。所有对象类都从其父对象类继承需求，然后添加它们自己的需求。<br/>
+对象类有五个组件：OID（对象标识）、唯一名称、父对象（SUP）、任何需要的属性（MUST）和 允许的属性列表（MAY）。<br/>
+如：<br/>
+</p>
+<p><br/>
+<pre class="example">objectclass ( 2.5.6.6 NAME 'person' SUP top STRUCTURAL
+        MUST ( sn $ cn )
+        MAY ( userPassword $ telephoneNumber $ seeAlso $ description ) )
+</pre>
+
+
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">配置openLDAP</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">rootdn</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>rootdn 项控制谁可以对目录数据库进行写操作，以及他们要这样做所必须提供的密码。<br/>
+您在 rootdn 项的 cn= 部分填充的任何项都是对数据库有完全读／写访问权的用户。<br/>
+如果您打算存储在目录中的数据只有一点点机密性，则对密码进行散列处理。可以用 slappasswd 实用程序完成它，如下所示：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">AC</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+
+<p><br/>
+<pre class="example">access to dn=".*,dc=syroidmanor,dc=com" attr=userPassword
+        by dn="cn=root,dc=syroidmanor,dc=com" write
+        by self write
+        by * auth
+access to dn=".*,dc=syroidmanor,dc=com" attr=mail
+        by dn="cn=root,dc=syroidmanor,dc=com" write
+        by self write
+        by * read
+</pre>
+
+上面的配置仅允许 userPassword 属性的所有者修改项，但仅当所有者提供他或她的优先密码时才允许进行修改。 在所有其它情况下，只能出于认证目的来访问该项，而不能查看它。 第二个 access to&hellip; 项允许用户修改自己的电子邮件地址<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">插入数据</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">LDIF 方法</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+
+<p><br/>
+<pre class="example">dn: uid=juser,ou=people,dc=syroidmanor,dc=com
+uid: juser
+cn: Joe User
+givenname: Joe
+sn: User
+mail: juser@syroidmanor.com
+objectClass: top
+objectClass: mailRecipient
+objectClass: person
+objectClass: inetOrgPerson
+</pre>
+
+
+
+
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">参考资料</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<ol>
+<li><a href="http://www.ibm.com/developerworks/cn/education/linux/l-ldap/section2.html">构建基于 LDAP 的地址簿</a><br/>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

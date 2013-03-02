@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>搭建dns服务器 - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2013/02/20/dnsserver">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">搭建dns服务器</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-20T00:00:00+08:00" pubdate data-updated="true">2013年02月20日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">搭建dns服务器</a>
+<ul>
+<li><a href="#sec-1-1">首先提出一些问题</a></li>
+<li><a href="#sec-1-2">BIND服务</a></li>
+<li><a href="#sec-1-3">配置文件</a></li>
+<li><a href="#sec-1-4">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/20/dnsserver/">搭建dns服务器</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">首先提出一些问题</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<ol>
+<li>什么是 DNS 的授权模式﹖是怎样进行的?<br/>
+</li>
+<li>zone 和 domain 的差别?<br/>
+</li>
+<li>什么是 DNS 正解和反解?<br/>
+</li>
+<li>什么是 DNS 的查询模式?<br/>
+</li>
+<li>查询过程是怎样进行的?<br/>
+</li>
+<li>DNS cache 的作用和它对查询流程的影响?<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">BIND服务</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>在 Linux 上面﹐提供 DNS 服务的套件是叫 bind，<br/>
+但执行服务程序名称则是 named。<br/>
+请您确定系统上装有 bind﹑bind-utils﹑以及 caching-nameserver 这几个套件。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">配置文件</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>/etc/named.conf<br/>
+如果安装的是bind-chroot，则文件在<br/>
+/var/named/chroot/etc/named.conf<br/>
+</p>
+<p><br/>
+/var/named/chroot/etc/named.caching-nameserver.conf<br/>
+这个是主要配置文件的模板配置文件（区域模板配置文件<br/>
+</p>
+<p><br/>
+首先生成主要配置文件，复制出一份模板配置文件到此目录下，并更改名字为named.conf <br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #a52a2a;">cd</span>  /var/named/chroot/etc    
+cp  named.caching-nameserver.conf  named.conf
+</pre>
+
+
+默认会有三个配置：<br/>
+</p>
+<p><br/>
+<pre class="example">zone "." IN {
+  type hint;
+  file "named.ca";
+};
+</pre>
+
+根区域“ . ”(root zone) 的设定﹐同时它是一个 internet ( IN ) 的区域类别( class )。这里还指定了root zone 的服务器种类( type ) 为“hint”(也只有这个 zone 会使用这样的种类)。最后﹐用 file 指定这个区域记录文件为﹕“named.ca”﹐也就是“/var/named/named.ca”档案。<br/>
+</p>
+<p><br/>
+在 root zone 后面﹐您应该还会看到如下这两段,一个是localhost的正向解析，一个是反向解析。不允许自行更新DNS记录。<br/>
+</p>
+<p><br/>
+<pre class="example">zone "localhost" IN {
+  type master;
+  file "localhost.zone";
+  allow-update { none; };
+};
+
+zone "0.0.127.in-addr.arpa" IN {
+  type master;
+  file "named.local";
+  allow-update { none; };
+}; 
+</pre>
+
+
+首先来看root zone，named.ca<br/>
+里边的记录类似如下：<br/>
+</p>
+<p><br/>
+<pre class="example">. 3600000 NS L.ROOT-SERVERS.NET.
+L.ROOT-SERVERS.NET. 3600000 A 198.32.64.12
+</pre>
+
+以‘ . ’开头的﹐那就是所谓的 root zone 了﹗<br/>
+第二栏都是‘ 3600000 ’﹐这是 TTL (Time To Live) 设定﹐也就是在 cache 中保留的时间，<br/>
+其后的‘ NS ’是“Name Server”的意思﹐是 DNS 记录名称之一﹐也就是负责这个记录的 name server 是哪一台主机。<br/>
+‘ A ’记录﹐也就是 Address 的意思﹐解释 [A-M].ROOT-SERVER.NET. 这些主机各自的 IP 地址所在。<br/>
+</p>
+<p><br/>
+如果您了解 DNS 的查询模式﹐您会知道 DNS 服务器在查询非自己管辖的 zone 的时候﹐首先会向 root 查询下一级的 zone 在哪里﹐然后逐级查询下去。但问题是﹕当 named 刚启动的时候﹐在 cache 里面一片空白﹐它怎么知道 root zone 的 servers 在哪里呢﹖这不是一个矛盾吗﹖所以﹐就必须靠这个档案告诉 named 关于 root zone 的 servers 有哪些﹖以及在哪里﹖<br/>
+</p>
+<p><br/>
+locaohost.zone<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">参考</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p><a href="http://wenku.baidu.com/view/4d88c6bf960590c69ec376a2.html">http://wenku.baidu.com/view/4d88c6bf960590c69ec376a2.html</a><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-20T00:00:00+08:00" pubdate data-updated="true">2013年02月20日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/service/'>service</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2013/02/19/ssh-tunnel/" title="Previous Post:
+        ssh隧道技术">&laquo; ssh隧道技术</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2013/02/27/netcat/"
+        title="Next Post: nc使用">nc使用
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><img src="/images/my_avatar.jpg"></p>
+  <p>网络工程师，喜欢折腾linux，emacs。</p>
+  <p>坚持理想，相信一定会实现。</p>
+  <p><a href="mailto:emmoblin@gmail.com"><img src="/images/my_email.png" alt="emmoblin@gmail.com"></a></p>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (2)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (6)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/27/netcat/">nc使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/20/dnsserver/">搭建dns服务器</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/19/ssh-tunnel/">ssh隧道技术</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/14/goagent/">goagent翻墙</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2013/02/20/dnsserver/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2013/02/20/dnsserver/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

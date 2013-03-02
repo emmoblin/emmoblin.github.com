@@ -1,0 +1,547 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ssh隧道技术 - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2013/02/19/ssh-tunnel">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">Ssh隧道技术</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-19T00:00:00+08:00" pubdate data-updated="true">2013年02月19日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">ssh隧道技术</a>
+<ul>
+<li><a href="#sec-1-1">什么情况下使用隧道</a></li>
+<li><a href="#sec-1-2">建立本地隧道</a>
+<ul>
+<li><a href="#sec-1-2-1">通过SSH隧道建立SOCKS服务器</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">建立远程SSH隧道</a></li>
+<li><a href="#sec-1-4">一些技巧</a>
+<ul>
+<li><a href="#sec-1-4-1">检查隧道状态</a></li>
+<li><a href="#sec-1-4-2">如何将端口绑定到外部地址上</a></li>
+<li><a href="#sec-1-4-3">自动连接和防断线脚本</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">动态域名</a></li>
+<li><a href="#sec-1-6">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/19/ssh-tunnel/">ssh隧道技术</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">什么情况下使用隧道</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<ol>
+<li>公司为了防止我们用XX软件封锁了它的端口或者服务器地址。<br/>
+</li>
+<li>nat穿越，或者叫ssh反向隧道访问内网的pc，比如：在家里访问我在公司的电脑。<br/>
+</li>
+</ol>
+
+
+<p><br/>
+通过在外网一个ssh服务器做代理，实现穿越功能。<br/>
+我主要使用第二种功能，在家里访问公司的电脑。可以远程办公了。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">建立本地隧道</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>建立本地隧道实现第一种隧道模式。<br/>
+假设内网机子A要访问C，但被拒绝了，这样可以通过中间的B建立ssh本地隧道实现A-B-C的访问。<br/>
+实际上这种一般不太常用，毕竟有很多代理服务器都可以方便实现代理功能。<br/>
+</p>
+<p><br/>
+在A上执行：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">ssh -N -f -L 2121:C:21 B
+ftp localhost:2121 <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">&#29616;&#22312;&#35775;&#38382;&#26412;&#22320;2121&#31471;&#21475;&#65292;&#23601;&#33021;&#36830;&#25509;C&#30340;21&#31471;&#21475;&#20102;</span>
+</pre>
+
+
+这里我们用到了SSH客户端的三个参数:<br/>
+-N 告诉SSH客户端，这个连接不需要执行任何命令。仅仅做端口转发<br/>
+-f 告诉SSH客户端在后台运行<br/>
+-L 做本地映射端口，被冒号分割的三个部分含义分别是<br/>
+需要使用的本地端口号<br/>
+需要访问的目标机器IP地址（IP: 234.234.234.234）<br/>
+需要访问的目标机器端口（端口: 21)<br/>
+最后一个参数是我们用来建立隧道的中间机器的IP地址(IP: 123.123.123.123)<br/>
+</p>
+<p><br/>
+我们再重复一下-L参数的行为。<br/>
+-L X:Y:Z 将IP为Y的机器的Z端口通过中间服务器映射到本地机器的X端口。<br/>
+</p>
+<p><br/>
+在这条命令成功执行之后，我们已经具有绕过公司防火墙的能力，并且成功访问到了我们喜欢的一个FTP服务器了。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">通过SSH隧道建立SOCKS服务器</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p>如果我们需要借助一台中间服务器访问很多资源，一个个映射显然不是高明的办法。<br/>
+幸好，SSH客户端为我们提供了通过SSH隧道建立SOCKS服务器的功能。<br/>
+</p>
+<p><br/>
+通过下面的命令我们可以建立一个通过123.123.123.123的SOCKS服务器。<br/>
+ssh -N -f -D 0.0.0.0:1080 123.123.123.123 # 将端口绑定在0.0.0.0上<br/>
+通过SSH建立的SOCKS服务器使用的是SOCKS5协议，在为应用程序设置SOCKS代理的时候要特别注意。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">建立远程SSH隧道</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>现象我想在家里访问公司内网的电脑，这时从外到内访问显然是不行的，但从公司内往外访问是正常的。<br/>
+所以就是用远程ssh隧道，先通过内网ssh到B，然后通过访问B的端口就可以访问内网的A了。<br/>
+</p>
+<p><br/>
+在A上执行：<br/>
+<code>ssh -N -f -R 2222:127.0.0.1:22 B</code><br/>
+现在，在B机器上我们用下面的命令就可以登陆公司的A机器了。<br/>
+<code>ssh -p 2222 localhost</code><br/>
+</p>
+<p><br/>
+我们现在重点说说参数-R。该参数的三个部分的含义分别是:<br/>
+远程机器使用的端口（2222）<br/>
+需要映射的内部机器的IP地址(127.0.0.1)<br/>
+需要映射的内部机器的端口(22)<br/>
+例如：-R X:Y:Z 就是把我们内部的Y机器的Z端口映射到远程机器的X端口上。<br/>
+</p>
+<p><br/>
+实际上这里所说的本地隧道和远程隧道(-L,-R),实际上指的是ssh代理listen的端口在本地还是在远端。<br/>
+如果在本地listen就是本地隧道，如果要是在远端listen一个端口就是远端隧道。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">一些技巧</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">检查隧道状态</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<p>有些时候隧道会因为一些原因通信不畅而卡死，例如：由于传输数据量太大，被路由器带入stalled状态。这种时候，往往SSH客户端并不退出，而是卡死在那里。一种应对方法是，使用SSH客户端的ServerAliveInterval和ServerAliveCountMax选项。ServerAliveInterval会在隧道无通信后的一段设置好的时间后发送一个请求给服务器要求服务器响应。如果服务器在ServerAliveCountMax次请求后都没能响应，那么SSH客户端就自动断开连接并退出，将控制权交给你的监控程序。这两个选项的设置方法分别是在ssh时加入-o ServerAliveInterval=n和-o ServerAliveCountMax=m。其中n, m可以自行定义。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2">如何将端口绑定到外部地址上</h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+<p>使用上面的方法，映射的端口只能绑定在127.0.0.1这个接口上。也就是说，只能被本机自己访问到。如何才能让其他机器访问这个端口呢？我们可以把这个映射的端口绑定在0.0.0.0的接口上，方法是加上参数-b 0.0.0.0。同时还需要打开SSH服务器端的一个选项－GatewayPorts。默认情况下它应当是被打开的。如果被关闭的话，可以在/etc/sshd_config中修改GatewayPorts no为GatewayPorts yes来打开它。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-3" class="outline-4">
+<h4 id="sec-1-4-3">自动连接和防断线脚本</h4>
+<div class="outline-text-4" id="text-1-4-3">
+
+<p>Linux平台ssh默认不支持把密码作为参数，不过有sshpass可以搞定<br/>
+</p>
+<p><br/>
+<a href="http://sourceforge.net/projects/sshpass/files/latest/download">http://sourceforge.net/projects/sshpass/files/latest/download</a><br/>
+</p>
+<p><br/>
+下载，解压，编译，把可执行文件拷贝到合适的目录，执行命令格式如下：<br/>
+</p>
+<p><br/>
+<code>sshpass -p "password" ssh -D 7070 user@serverip</code><br/>
+</p>
+<p><br/>
+貌似ubuntu下可以直接apt-get install sshpass<br/>
+</p>
+<p><br/>
+然后写脚本autossh.sh，内容如下：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">!/bin/</span><span style="color: #0000ff;">bash</span>
+<span style="color: #0000ff;">while</span> [ <span style="color: #00bfff;">''</span> == <span style="color: #00bfff;">''</span> ]
+<span style="color: #0000ff;">do</span>
+ <span style="color: #ff1493;">ssh_d_process_num</span>=<span style="color: #ff00ff;">`ps aux|grep -E 'ssh \-' |grep -v grep |wc -l`</span>
+ <span style="color: #0000ff;">if</span> [ <span style="color: #00bfff;">"$ssh_d_process_num"</span> == <span style="color: #00bfff;">"0"</span> ]; <span style="color: #0000ff;">then</span>
+  /home/user/sshpass -p <span style="color: #00bfff;">"password"</span> ssh -D 7070 user@ServerIP &amp;
+ <span style="color: #0000ff;">fi</span>
+
+ sleep 300
+<span style="color: #0000ff;">done</span>
+</pre>
+
+
+执行一下这个脚本就可以了。sleep 300代表300秒查看一次，可以根据需要调整。<br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">动态域名</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>花生壳linux程序下载地址：<br/>
+<a href="http://www.oray.com/peanuthull/download_linux.php">http://www.oray.com/peanuthull/download\_linux.php</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">参考</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p><a href="http://blog.creke.net/722.html">http://blog.creke.net/722.html</a><br/>
+</p></div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-19T00:00:00+08:00" pubdate data-updated="true">2013年02月19日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ssh/'>ssh</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2013/02/17/ipv6-nat-map66/" title="Previous Post:
+        IPv6 NAT MAP66">&laquo; IPv6 NAT MAP66</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2013/02/20/dnsserver/"
+        title="Next Post: 搭建dns服务器">搭建dns服务器
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><img src="/images/my_avatar.jpg"></p>
+  <p>网络工程师，喜欢折腾linux，emacs。</p>
+  <p>坚持理想，相信一定会实现。</p>
+  <p><a href="mailto:emmoblin@gmail.com"><img src="/images/my_email.png" alt="emmoblin@gmail.com"></a></p>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (2)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (6)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/27/netcat/">nc使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/20/dnsserver/">搭建dns服务器</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/19/ssh-tunnel/">ssh隧道技术</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/14/goagent/">goagent翻墙</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2013/02/19/ssh-tunnel/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2013/02/19/ssh-tunnel/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
