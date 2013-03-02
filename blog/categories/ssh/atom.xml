@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ssh | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/ssh/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-03-02T23:48:56+08:00</updated>
+  <updated>2013-03-03T00:06:52+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -50,7 +50,7 @@
 
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/ssh/atom.xml">ssh隧道技术</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.com{{ page.url }}">ssh隧道技术</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -289,7 +289,7 @@ ssh -N -f -D 0.0.0.0:1080 123.123.123.123 # 将端口绑定在0.0.0.0上<br/>
 
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/ssh/atom.xml">ssh的一些技巧</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.com{{ page.url }}">ssh的一些技巧</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
