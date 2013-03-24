@@ -1,0 +1,195 @@
+---
+title: syslinux/extlinux制作usb启动盘
+layout: post
+filename: syslinux liveusb
+on: 2013-02-25 23:54:57
+toc: on
+comments: true
+categories: [tools]
+CATEGORY: syslinux
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">syslinux/extlinux制作usb启动盘</a>
+<ul>
+<li><a href="#sec-1-1">isolinux,syslinux，pxelinux,extlinux的区别</a></li>
+<li><a href="#sec-1-2">什么是extlinux</a></li>
+<li><a href="#sec-1-3">extlinux</a></li>
+<li><a href="#sec-1-4">分区</a></li>
+<li><a href="#sec-1-5">参考archlinux的usb制作</a></li>
+<li><a href="#sec-1-6">syslinux安装到u盘</a></li>
+<li><a href="#sec-1-7">syslinux.conf</a></li>
+<li><a href="#sec-1-8">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com{{ page.url }}">syslinux/extlinux制作usb启动盘</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">isolinux,syslinux，pxelinux,extlinux的区别</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>isolinux 用于cdrom启动<br/>
+pxelinux 用于网络启动<br/>
+syslinux/extlinux 用于u盘或者cf卡启动<br/>
+</p>
+<p><br/>
+不过貌似syslinux现在越来越强大，任何都可以支持，cdrom，usb，gpxe，memdisk引导等。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">什么是extlinux</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>extlinux是由syslinux派生来的，可以从ext2和ext3，btrfs， linux文件系统启动系统。<br/>
+其工作方式和syslinux差不多，只是做了了很小的修改。<br/>
+也就是说，使用extlinux先要格式化为fat32文件系统，然后直接安装。<br/>
+既可以当usb启动盘，同时又不影响u盘使用。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">extlinux</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>(1) 下载syslinux的包。已经编译好可以直接运行。<br/>
+<a href="http://www.kernel.org/pub/linux/utils/boot/syslinux/">http://www.kernel.org/pub/linux/utils/boot/syslinux/</a><br/>
+</p>
+<p><br/>
+ubuntu发行版只需要apt-get install syslinux extlinux -y<br/>
+</p>
+<p><br/>
+(2) 插上U盘，并挂载上。（注意：必须先挂载上分区，这和syslinux相反！）<br/>
+</p>
+<p><br/>
+(3) 解开syslinux程序包，到extlinux所在的目录，执行：<br/>
+<code>./extlinux -i /mnt/usbdisk/</code><br/>
+其中 －i表示安装，如果已经安装过extlinux，参数可用-u表示更新安装。第二个参数表示安装的路径。<br/>
+将当前盘保存到主分区表，并且设为启动分区可执行:<br/>
+<code>cat mbr.bin &gt;/dev/sdb</code><br/>
+mbr.bin在syslinux程序包可以找到。<br/>
+</p>
+<p><br/>
+写extlinux引导配置文件extlinux.conf。<br/>
+格式和syslinux一样，只是名字不同。从iso文件中复制syslinux.cfg出来就可以了。<br/>
+<code>cp isolinux.cfg extlinux.conf</code><br/>
+</p>
+<p><br/>
+设置为启动分区<br/>
+<code>parted /dev/sdx toggle 1 boot</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">分区</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>using gparted, or from a terminal:<br/>
+For EXT2/3/4 (adjust accordingly), it would be:<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">cfdisk /dev/sdx</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">mkfs.ext4 /dev/sdx1</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">e2label /dev/sdx1 USB_STICK</span>
+</pre>
+
+For FAT32, install the dosfstools package and run:<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">cfdisk /dev/sdx</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">mkfs.vfat -F32 /dev/sdx1</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">dosfslabel /dev/sdx1 USB_STICK</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">参考archlinux的usb制作</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">Where somefolder is the USB drive's mount point. Do not skip this step.</span>
+<span style="color: #a52a2a;">cd</span> /media/somefolder/arch/boot/syslinux
+<span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">Type it exactly as you see it, including the dot.</span>
+extlinux --install .
+dd <span style="color: #ff1493;">bs</span>=440 <span style="color: #ff1493;">conv</span>=notrunc <span style="color: #ff1493;">count</span>=1 <span style="color: #ff1493;">if</span>=/usr/lib/syslinux/mbr.bin <span style="color: #ff1493;">of</span>=/dev/sdx
+parted /dev/sdx toggle 1 boot
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">syslinux安装到u盘</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p><code>syslinux --directory /boot/syslinux/ --install /dev/sdb1</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">syslinux.conf</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>syslinux 按照如下顺序搜索配置文件<br/>
+</p>
+<p><br/>
+<pre class="example">/boot/syslinux/syslinux.cfg
+/syslinux/syslinux.cfg
+/syslinux.cfg
+</pre>
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">参考</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<ol>
+<li><a href="http://www.syslinux.org/wiki/index.php/EXTLINUX">http://www.syslinux.org/wiki/index.php/EXTLINUX</a><br/>
+</li>
+<li><a href="http://forum.ubuntu.com.cn/viewtopic.php?f=139&amp;t=156590&amp;start=0">http://forum.ubuntu.com.cn/viewtopic.php?f=139&amp;t=156590&amp;start=0</a><br/>
+</li>
+<li><a href="http://www.syslinux.org/wiki/index.php/The_Syslinux_Project">http://www.syslinux.org/wiki/index.php/The\_Syslinux\_Project</a><br/>
+</li>
+<li><a href="https://wiki.archlinux.org/index.php/USB_Installation_Media">https://wiki.archlinux.org/index.php/USB\_Installation\_Media</a><br/>
+</li>
+</ol>
+
+</div>
+</div>
+</div>

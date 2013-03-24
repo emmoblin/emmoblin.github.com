@@ -1,0 +1,43 @@
+---
+title: xlicp在命令行下使用剪切板
+layout: post
+filename: xclip
+on: 2013-03-11 23:00:05
+toc: off
+comments: true
+categories: [tools]
+CATEGORY: xclip
+---
+
+<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">xlicp在命令行下使用剪切板</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>一、安装xclip<br/>
+ubuntu下的用户可以只用apt-get来安装：<br/>
+</p>
+<p><br/>
+sudo apt-get install xclip<br/>
+其他发行版的用户可以选择自己的安装方式，也可以用源码编译安装，xclip项目的主页是：<a href="http://sourceforge.net/projects/xclip/">http://sourceforge.net/projects/xclip/</a><br/>
+</p>
+<p><br/>
+二、使用<br/>
+xclip可以将内容输出到‘X’的剪切板中，比如：<br/>
+</p>
+<p><br/>
+echo "Hello, world" | xclip<br/>
+执行这个命令后你就可以用鼠标中键来在X程序中将内容粘贴出来。但是更多的时候，我们需要不仅仅把内容输出到‘X’的剪切板中，而是希望可以在GUI程序中用ctrl + v也可以粘贴（比如，输出到gnome的剪切板中），下面这段命令就可以让你将内容输出到gnome的剪切板中：<br/>
+</p>
+<p><br/>
+echo "Hello, world" | xclip -selection clipboard<br/>
+再在一个GUI程序中按下ctrl + v，看下是不是粘贴上去了呢？顺着这个命令，我也重新写了一下ifconfig，让它在执行后输入内容到终端的同时，也将ip地址输出到剪切板中，因为通常情况下，查看ifconfig就是为了获取机器的ip地址：<br/>
+</p>
+<p><br/>
+alias ifconfig='/sbin/ifconfig &amp;&amp; echo `/sbin/ifconfig | sed -n 2p | awk "{ print \\$2 }" | grep -o "[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}"` | xclip -selection clipboard'<br/>
+</p></div>
+</div>
+</div>

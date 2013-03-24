@@ -1,0 +1,42 @@
+---
+title: expect自动ssh登录
+layout: post
+filename: expect
+on: 2013-03-17 23:18:04
+toc: off
+comments: true
+categories: [tools,shell]
+CATEGORY: expect
+---
+
+<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">自动ssh的expect脚本</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">!/usr/bin/</span><span style="color: #0000ff;">expect</span><span style="color: #8c8c8c; font-style: italic;"> </span>
+<span style="color: #a52a2a;">set</span> timeout 5
+<span style="color: #a52a2a;">set</span> cmd_prompt <span style="color: #00bfff;">"]#|~]?"</span>
+<span style="color: #a52a2a;">set</span> server [lindex $<span style="color: #ff1493;">argv</span> 0] 
+<span style="color: #a52a2a;">set</span> user [lindex $<span style="color: #ff1493;">argv</span> 1] 
+<span style="color: #a52a2a;">set</span> passwd [lindex $<span style="color: #ff1493;">argv</span> 2] 
+
+spawn ssh -l $<span style="color: #ff1493;">user</span> $<span style="color: #ff1493;">server</span> 
+expect { 
+<span style="color: #00bfff;">"(yes/no)"</span> { send <span style="color: #00bfff;">"yes\r"</span>; exp_continue } 
+<span style="color: #00bfff;">"password:"</span> { send <span style="color: #00bfff;">"$passwd\r"</span> } 
+}
+<span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">expect "$cmd_prompt" interact</span>
+expect <span style="color: #00bfff;">"*Last login*"</span> interact
+</pre>
+
+
+
+</p></div>
+</div>
+</div>

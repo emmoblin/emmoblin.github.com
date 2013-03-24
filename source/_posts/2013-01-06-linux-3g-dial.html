@@ -1,0 +1,111 @@
+---
+title: linux_3g拨号
+layout: post
+filename: linux 3g dial
+on: 2013-01-06 23:14:39
+toc: off
+comments: true
+categories: [tools]
+CATEGORY: linux_3g拨号
+---
+
+<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">linux下3g网卡拨号</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>需要安装的软件usb_modeswitch,wvdial<br/>
+usb_modeswitch用于将usb3g转换为usb modem模式，这样才能拨号。最好到官网下载最新代码，包含的3g网卡类型会更全。最主要的就是usb_modeswitch_data。<br/>
+<a href="http://www.draisberghof.de/usb_modeswitch/#download">http://www.draisberghof.de/usb\_modeswitch/#download</a><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">安装usb_modeswitch_data</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>进入目录，执行<br/>
+sudo make install<br/>
+会安装对应的udev文件到/lib/udev/rules.d目录。<br/>
+</p>
+<p><br/>
+不过我发现自动转换没有效果，暂时先不查了。<br/>
+直接使用命令行转：<br/>
+usb_modeswitch -c /etc/usb_modeswitch.conf<br/>
+如果转换成功会出现/dev/ttyUSB0-3，dmesg也会有输出信息。<br/>
+</p>
+<p><br/>
+usb_modeswitch.conf<br/>
+</p>
+<p><br/>
+<pre class="example">######################################################## 
+# ZTE A371B
+#
+# Contributor: Wang Lei
+
+DefaultVendor= 0x19d2
+DefaultProduct=0x0169
+
+TargetVendor=  0x19d2
+TargetProduct= 0x0170
+
+MessageContent="5553424312345678000000000000061b000000020000000000000000000000"
+NeedResponse=1
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">wvdial</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>这个难了，wvdial负责发送AT命令给usb modem，进行拨号。但不同的3g卡发送的指令也不一样。<br/>
+我是在xp上安装了usb抓包软件，把xp上官方的3g拨号过程进行了抓包分析，提取出如下序列：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">[Dialer Defaults]
+Init1 = AT
+Init2 = AT+CIMI
+Init3 = AT+CMEE=1
+Init4 = ATE0
+Init5 = AT+CFUN=1
+Init6 = AT+CLCK="SC",2
+Init7 = AT+cgdcont=1,"ip","CMNET"
+Modem Type = USB Modem
+Baud = 460800
+New PPPD = yes
+Modem = /dev/ttyUSB0
+ISDN = 0
+Phone = *98*1#
+Password = any
+Username = any
+Stupid Mode = 1
+</pre>
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">遇到的问题</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>我的x230上无线鼠标的usb接收器貌似总是捣乱，拔了接收器，换了个usb口插3g，就可以ok了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>

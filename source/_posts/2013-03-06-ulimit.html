@@ -1,0 +1,120 @@
+---
+title: ulimit
+layout: post
+filename: ulimit
+on: 2013-03-06 23:17:30
+toc: off
+comments: true
+categories: [ubuntu]
+CATEGORY: ulimit
+---
+
+<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">解决too many open file的有关问题</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>ulimit是bash的内建命令，并不是一个程序。<br/>
+<code>ulimit -a</code> 查看所有设置<br/>
+</p>
+<p><br/>
+通过ulimit -n 命令可以查看linux系统里打开文件描述符的最大值，一般缺省值是1024，对一台繁忙的服务器来说，这个值偏小，所以有必要重新设置linux系统里打开文件描述符的最大值。<br/>
+</p>
+<p><br/>
+如果单个进程打开的文件句柄数量超过了系统定义的值，就会提到“too many files open”的错误提示。如何知道当前进程打开了多少个文件句柄呢？下面一段小脚本可以帮你查看：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-sh">lsof -n |awk &#8216;{print $<span style="color: #ff1493;">2</span>}&#8217;|sort|uniq -c |sort -nr|more
+</pre>
+
+其中第一行是打开的文件句柄数量，第二行是进程号。<br/>
+</p>
+<p><br/>
+Linux有硬性限制和软性限制。可以通过ulimit来设定这两个参数<br/>
+<code>ulimit -HSn 4096</code><br/>
+H指定了硬性大小，S指定了软性大小，n表示设定单个进程最大的打开文件句柄数量.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">limits.conf</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>此修改只是临时有效，要想长期有效需要修改：/etc/security/limits.conf<br/>
+在文件末尾加上：<br/>
+</p>
+<p><br/>
+<pre class="example">* soft nofile 65536
+* hard nofile 65536
+</pre>
+
+
+此文件还有其他的相关设置：<br/>
+以下是文件描述：<br/>
+</p>
+<p><br/>
+<pre class="example">#Each line describes a limit for a user in the form:
+#
+#&lt;domain&gt;  &lt;type&gt;  &lt;item&gt;  &lt;value&gt;
+#
+#Where:
+#&lt;domain&gt; can be:
+#        - an user name
+#        - a group name, with @group syntax
+#        - the wildcard *, for default entry
+#        - the wildcard %, can be also used with %group syntax,
+#                 for maxlogin limit
+#
+#&lt;type&gt; can have the two values:
+#        - "soft" for enforcing the soft limits
+#        - "hard" for enforcing hard limits
+#
+#&lt;item&gt; can be one of the following:
+#        - core - limits the core file size (KB)
+#        - data - max data size (KB)
+#        - fsize - maximum filesize (KB)
+#        - memlock - max locked-in-memory address space (KB)
+#        - nofile - max number of open files
+#        - rss - max resident set size (KB)
+#        - stack - max stack size (KB)
+#        - cpu - max CPU time (MIN)
+#        - nproc - max number of processes
+#        - as - address space limit
+#        - maxlogins - max number of logins for this user
+#        - maxsyslogins - max number of logins on the system
+#        - priority - the priority to run user process with
+#        - locks - max number of file locks the user can hold
+#        - sigpending - max number of pending signals
+#        - msgqueue - max memory used by POSIX message queues (bytes)
+#        - nice - max nice priority allowed to raise to
+#        - rtprio - max realtime priority
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">ubuntu还需要修改pam</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>对于ubuntu还需要修改pam.d配置，才能生效<br/>
+</p>
+<p><br/>
+<pre class="example">1. sudo vi /etc/pam.d/common-session
+2. Add session required pam_limits.so to the end of the file.
+3. Reboot the OS.
+</pre>
+
+</p></div>
+</div>
+</div>

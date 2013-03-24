@@ -1,0 +1,179 @@
+---
+title: NFS server
+layout: post
+filename: nfs server
+on: 2013-03-12 23:31:12
+toc: on
+comments: true
+categories: [service]
+CATEGORY: nfs-server
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">NFS server</a>
+<ul>
+<li><a href="#sec-1-1">开启nfs-server和client</a>
+<ul>
+<li><a href="#sec-1-1-1">server端</a>
+<ul>
+<li><a href="#sec-1-1-1-1">exportfs</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-1-2">client端</a></li>
+<li><a href="#sec-1-1-3">nfs卡住问题</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com{{ page.url }}">NFS server</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">开启nfs-server和client</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>fc18上启动nfs真是比较麻烦，server和client端都需要启动好几个服务，所以需要特别记录一下。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">server端</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+<p><br/>
+<pre class="example">[root@dlp ~]# vi /etc/idmapd.conf 
+# line 5: uncomment and change to your domain name
+Domain = server.world 
+[root@dlp ~]# vi /etc/exports 
+# write like below *note
+/home 10.0.0.0/24(rw,sync,no_root_squash,no_all_squash)
+</pre>
+
+
+/home 表示目录<br/>
+ip  允许访问的子网，*代表所有<br/>
+no_root_squash:对于登陆NFS主机的共享目录用户如果是root的话则对该目录具有root权限。建议不用为好！<br/>
+root_squash:对于登陆NFS主机的共享目录用户使用者如果是root则它的权限将被压缩成匿名使用者，<br/>
+同时它的UID和GID都会变成nobody那个系统账号的身份。<br/>
+all_squash:不管登陆NFS主机用户身份如何，它的身份都会被压缩成匿名使用者，通常就是nobody<br/>
+anonuid:anonuid=xxx,制定NFS服务器/etc/passwd中匿名用户的UID<br/>
+anongid:anonuid=xxx,制定NFS服务器/etc/passwd中匿名用户的GID<br/>
+sync:数据在请求时写入共享<br/>
+async:NFS在写入数据前可响应请求<br/>
+secure:NFS通过1024以下的安全端口发送<br/>
+insecure:NFS通过1024以上端口发送<br/>
+hide:不共享NFS目录的子目录<br/>
+no_hide:共享NFS目录的子目录<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-sh">[root@dlp ~]# systemctl start rpcbind.service 
+[root@dlp ~]# systemctl start nfs-server.service 
+[root@dlp ~]# systemctl start nfs-lock.service 
+[root@dlp ~]# systemctl start nfs-idmap.service 
+[root@dlp ~]# systemctl enable rpcbind.service 
+[root@dlp ~]# systemctl enable nfs-server.service 
+[root@dlp ~]# systemctl enable nfs-lock.service 
+[root@dlp ~]# systemctl enable nfs-idmap.service
+</pre>
+
+
+ 最终要的还要关闭防火墙：<br/>
+ systemctl disable firewalld.service<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1-1" class="outline-5">
+<h5 id="sec-1-1-1-1">exportfs</h5>
+<div class="outline-text-5" id="text-1-1-1-1">
+
+<p>exportfs [-aruv]<br/>
+ -a:全部挂载(或卸载) /etc/exports文件设定<br/>
+ -r:重新挂载 /etc/exports设定,也可以同步更新/etc/exports设定<br/>
+ -u:卸载某一目录<br/>
+ -v:在export时,将共享目录显示在屏幕上<br/>
+</p>
+<p><br/>
+showmount -a<br/>
+在NFS Server上显示已经mount上本机NFS目录的Client机器。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">client端</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+
+<p><br/>
+<pre class="example">[root@www ~]# vi /etc/idmapd.conf 
+# line 5: uncomment and change to your domain name
+ Domain = server.world 
+ [root@www ~]# systemctl start rpcbind.service 
+ [root@www ~]# systemctl start nfs-lock.service 
+ [root@www ~]# systemctl start nfs-idmap.service 
+ [root@www ~]# systemctl start nfs-mountd.service 
+ [root@www ~]# systemctl enable rpcbind.service 
+ [root@www ~]# systemctl enable nfs-lock.service 
+ [root@www ~]# systemctl enable nfs-idmap.service 
+ [root@www ~]# systemctl enable nfs-mountd.service 
+ [root@www ~]# mount -t nfs dlp.server.world:/home /home 
+ [root@www ~]# df -h 
+Filesystem               Size  Used Avail Use% Mounted on
+devtmpfs                 992M     0  992M   0% /dev
+tmpfs                   1002M     0 1002M   0% /dev/shm
+tmpfs                   1002M  1.5M 1001M   1% /run
+tmpfs                   1002M     0 1002M   0% /sys/fs/cgroup
+/dev/mapper/fedora-root   16G  1.2G   14G   8% /
+tmpfs                   1002M     0 1002M   0% /tmp
+/dev/vda1                485M   71M  389M  16% /boot
+dlp.server.world:/home    16G  1.2G   14G   8% /home
+# home directory on NFS is mounted 
+ [root@www ~]# vi /etc/fstab 
+/dev/mapper/VolGroup-lv_root /                       ext4    defaults  1 1
+UUID=65ec32e2-f459-4d63-b8b0-e18124b50f3a /boot      ext4    defaults  1 2
+/dev/mapper/VolGroup-lv_swap swap                    swap    defaults  0 0
+# add at the lat line: change home directory this server mounts to the one on NFS
+dlp.server.world:/home /home                         nfs     defaults  0 0
+
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">nfs卡住问题</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>如果服务端意外停止，在客户机上使用 ls，df等磁盘查看命令时，会卡住，并且ctrl+c都不能强制退出。<br/>
+原因是默认的mount是“硬”挂载，会不断的重试。解决办法是：<br/>
+1、mount的时候加上 -s 参数，作为“软”挂载<br/>
+2、umount -f /xxxxx/xxxx 用这个命令来取消挂载。<br/>
+如果出现device busy的错误，说明还有进程在使用该挂载点，要把进程停了，才能umount<br/>
+</p></div>
+</div>
+</div>
+</div>

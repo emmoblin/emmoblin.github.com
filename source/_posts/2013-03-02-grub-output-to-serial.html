@@ -1,0 +1,104 @@
+---
+title: grub重定向到串口
+layout: post
+filename: grub output to serial
+on: 2013-03-02 01:01:49
+toc: off
+comments: true
+categories: [tools]
+CATEGORY: grub_serial
+---
+
+<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">** grub输出到串口</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>将GRUB输出重定向到串口(Edit /boot/grub/grub.conf)<br/>
+</p>
+<p><br/>
+<pre class="example">serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1
+terminal --timeout=5 console serial
+</pre>
+
+
+grub引导过程中, 会将输出同时发送到终端屏幕和串口. <br/>
+grub引导过程中将在终端和连接到串口的超级终端上提示Press any key to continue, <br/>
+每秒钟提示一次, 共5次, 可修改menu.lst文件terminal行中的&ndash;timeout=10改变提示次数, <br/>
+在这一段时间内, 可以在终端的键盘, 或者连接到串口的超级终端中按任意键进入grub选择菜单. <br/>
+如果5秒内没有在终端和连接串口的超级终端上按任意键, 则grub的选择菜单将出现在console上, <br/>
+如果希望默认情况下, grub选择菜单出现在串口上, 则可修改grub.conf将<br/>
+console serial修改为serial console.<br/>
+</p>
+<p><br/>
+将kernel输出信息输出到串口(编辑 /boot/grub/grub.conf 有的为menu.lst)<br/>
+增加kernel引导参数如下:<br/>
+</p>
+<p><br/>
+<pre class="example">kernel  /boot/vmlinuz-2.6.32-29 root=/dev/hda1 ro console=ttyS0,115200n8 console=tty0
+</pre>
+
+
+grub2的例子<br/>
+修改文件/etc/default/grub<br/>
+</p>
+<p><br/>
+<pre class="example">#显示启动菜单
+#GRUB_HIDDEN_TIMEOUT=0
+修改相应的变量如下：
+GRUB_CMDLINE_LINUX="console=ttyS0,115200"
+GRUB_TERMINAL=serial
+GRUB_SERIAL_COMMAND="serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
+</pre>
+
+
+</p><ol>
+<li>运行命令， 更新grub<br/>
+   <code>sudo update-grub</code><br/>
+
+<p><br/>
+</p></li>
+<li>在/etc/init/下，创建文件ttyS0.conf：<br/>
+</li>
+</ol>
+
+
+<p><br/>
+<pre class="example"># ttyS0 - getty
+start on stopped rc RUNLEVEL=[23]
+stop on runlevel [!23]
+
+respawn
+exec /sbin/getty -L 115200 ttyS0 vt100
+</pre>
+
+
+</p><ol>
+<li>查看/etc/securetty中，含有ttyS0否。没有则加上。<br/>
+</li>
+<li>BIOS开启串口<br/>
+</li>
+<li>另一台机器，联上串口线，开启teraterm,设置115200 8n1<br/>
+</li>
+<li>重启机器, 看到teraterm输出Linux的启动信息。<br/>
+</li>
+</ol>
+
+
+<p><br/>
+通过比较生成的grub.cfg<br/>
+发现多了一个<br/>
+</p>
+<p><br/>
+<pre class="example">terminal_output serial
+terminal_input serial
+</pre>
+
+</p>
+<p> <br/>
+</p></div>
+</div>
+</div>
