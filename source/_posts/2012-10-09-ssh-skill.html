@@ -24,6 +24,7 @@ CATEGORY: ssh_skill
 <li><a href="#sec-1-7">shfs</a></li>
 <li><a href="#sec-1-8">使用本地App连接远程服务器</a></li>
 <li><a href="#sec-1-9">减少延迟</a></li>
+<li><a href="#sec-1-10">ssh-agent</a></li>
 </ul>
 </li>
 </ul>
@@ -80,6 +81,9 @@ $ ssh-keygen<br/>
 $ ssh-copy-id smylers@compo.example.org<br/>
 否则，你需要手动将你的私钥拷贝的服务器上的~/.ssh/authorized_keys文件中：<br/>
 $ &lt; ~/.ssh/id_rsa.pub ssh clegg.example.org ‘mkdir -p .ssh; cat &gt;&gt; .ssh/authorized_keys; chmod go-w .ssh .ssh/authorized_keys’<br/>
+</p>
+<p><br/>
+或者 cat ~/.ssh/id_dsa.pub | ssh you@remote 'cat - &gt;&gt; ~/.ssh/authorized_keys'<br/>
 现在试试重新连接到SSH服务器，或是拷贝文件，是不是已经不需要再输入密码了？<br/>
 </p>
 <p><br/>
@@ -108,7 +112,8 @@ SSH会使用simon账户连接你的服务器，同样，Putty可以保存这个�
 <h3 id="sec-1-5">在服务器间跳转</h3>
 <div class="outline-text-3" id="text-1-5">
 
-<p>有些时候，你可能没法直接连接到某台服务器，而需要使用一台中间服务器进行中转，这个过程也可以自动化。首先确保你已经为服务器配置了公钥访问，并开启了agent forwarding，现在你就可以通过2条命令来连接目标服务器，不会有任何提示输入：<br/>
+<p>有些时候，你可能没法直接连接到某台服务器，而需要使用一台中间服务器进行中转，这个过程也可以自动化。<br/>
+首先确保你已经为服务器配置了公钥访问，并开启了agent forwarding，现在你就可以通过2条命令来连接目标服务器，不会有任何提示输入：<br/>
 $ ssh gateway<br/>
 gateway $ ssh db<br/>
 然后在你的本地SSH配置中，添加下面这条配置：<br/>
@@ -117,7 +122,7 @@ HostName db.internal.example.com<br/>
 ProxyCommand ssh gateway netcat -q 600 %h %p<br/>
 现在你就可以通过一条命令来直接连接目标服务器了:<br/>
 $ ssh db<br/>
-这里你可能会需要等待长一点的时间，因为SSH需要进行两次认证，，注意netcat也有可能被写成nc或者ncat或者前面还需要加上g，你需要检查你的中间服务器来确定实际的参数。<br/>
+这里你可能会需要等待长一点的时间，因为SSH需要进行两次认证，注意netcat也有可能被写成nc或者ncat或者前面还需要加上g，你需要检查你的中间服务器来确定实际的参数。<br/>
 </p>
 <p><br/>
 </p></div>
@@ -195,6 +200,19 @@ GSSAPIAuthentication no<br/>
 添加<br/>
 USEDNS no<br/>
 service sshd restart<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-10" class="outline-3">
+<h3 id="sec-1-10">ssh-agent</h3>
+<div class="outline-text-3" id="text-1-10">
+
+<p>如果你的密码加了密码，每次使用密钥都需要输入密码，则这时ssh-agent就起到作用了。<br/>
+启动ssh-agent后，通过ssh-add ~/.ssh/id_rsa <br/>
+把自己的私钥添加到agent后，以后再使用次密钥就不需要输入密码了。<br/>
 </p>
 <p><br/>
 </p></div>

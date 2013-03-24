@@ -34,8 +34,7 @@ CATEGORY: shell_skill
 <div class="outline-text-3" id="text-1-2">
 
 <p>Alt .<br/>
-</p>
-<p><br/>
+反复按会继续向上搜索<br/>
 </p>
 <p><br/>
 </p></div>
@@ -176,6 +175,36 @@ for jsp in $jsps; do<br/>
     havegb=`grep gb2312 $jsp`<br/>
         [ ! -n "$havegb" ] &amp;&amp; echo $jsp<br/>
 done<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11" class="outline-3">
+<h3 id="sec-1-11">cd 替换技巧</h3>
+<div class="outline-text-3" id="text-1-11">
+
+<p>cd dir1/abc<br/>
+使用cd old new实现替换<br/>
+如：<br/>
+cd dir1 dir2<br/>
+等效于<br/>
+cd dir2/abc<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-12" class="outline-3">
+<h3 id="sec-1-12">上一条命令替换</h3>
+<div class="outline-text-3" id="text-1-12">
+
+<p>^foo^bar<br/>
+将上一条命令中的foo替换为bar，然后执行<br/>
+</p>
+<p><br/>
 </p></div>
 </div>
 </div>
