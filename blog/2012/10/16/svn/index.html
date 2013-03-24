@@ -139,7 +139,20 @@
 <li><a href="#sec-1-1">svn libneon的问题</a></li>
 <li><a href="#sec-1-2">自己编译，真的不容易啊</a></li>
 <li><a href="#sec-1-3">分支管理</a></li>
-<li><a href="#sec-1-4">tftpd-hpa</a></li>
+<li><a href="#sec-1-4">svn-commit.tmp</a></li>
+<li><a href="#sec-1-5">删除文件</a></li>
+<li><a href="#sec-1-6">merge</a>
+<ul>
+<li><a href="#sec-1-6-1">代码回滚</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-7">cat</a></li>
+<li><a href="#sec-1-8">status -u</a></li>
+<li><a href="#sec-1-9">ignore</a></li>
+<li><a href="#sec-1-10">add * &ndash;force</a></li>
+<li><a href="#sec-1-11">svn服务器IP修改后,本地怎么跟新svn同步,svn relocate 操作</a></li>
+<li><a href="#sec-1-12">svn -v log</a></li>
+<li><a href="#sec-1-13">参考资料</a></li>
 </ul>
 </li>
 </ul>
@@ -180,7 +193,7 @@ SSL handshake failed: SSL 错误：在证书中检测到违规的密钥用法。
 apt-get install openssl-dev openssl<br/>
 </p>
 <p><br/>
-cd subversionq<br/>
+cd subversion<br/>
 ./configure &ndash;with-ssl=openssl &ndash;with-neon=./neon &ndash;with-openssl=/usr<br/>
 出现warnning无用理会直接make<br/>
 </p>
@@ -212,6 +225,10 @@ svn co svn://localhost/www/branches/branch1.7.2-theme
 </pre>
 
 
+注意，如果想更换其他用户，可以使用：<br/>
+svn &ndash;username john &ndash;password pass<br/>
+</p>
+<p><br/>
 2） 开发了一段实现，要先把trunk版本merge过来<br/>
 </p>
 <p><br/>
@@ -239,26 +256,189 @@ svn merge -r 12973:13006 svn://localhost/www/branches/branch1.7.2-theme
 </pre>
 
 
-
 </p></div>
 
 </div>
 
 <div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">tftpd-hpa</h3>
+<h3 id="sec-1-4">svn-commit.tmp</h3>
 <div class="outline-text-3" id="text-1-4">
 
-<p>atftpd 设置半天不能启动，连直接输入命令行都不能启动。<br/>
-所以换成tftpd-hpa，非常简单。<br/>
-不过要想能够上传文件需要修改配置：<br/>
-vi /etc/default/tftpd-hpa<br/>
-添加&ndash;create<br/>
-注意-s参数不能去掉。<br/>
+<p>看看 svn help commit, 发现有 -F 可以用, 平常都只有用 -m &#8216;message&#8217; 而已.<br/>
+-m: 在于只有一行打完, 可以快速 commit 用. <br/>
 </p>
 <p><br/>
-客户端使用atftp。<br/>
+<pre class="example">ex: svn ci -m 'log message'
+</pre>
+
+-F: 会把档案内容读进来, 然后直接 commit, 想当然就用 -F 直接取 svn-commit.tmp 来 commit. <br/>
 </p>
 <p><br/>
+<pre class="example">ex: svn ci -F svn-commit.tmp
+</pre>
+
+
+PS: commit 完后, 还是要手动 rm svn-commit.tmp<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">删除文件</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p><code>svn delete path -m “delete test fle“</code><br/>
+例如：<br/>
+<code>svn delete svn://192.168.1.1/pro/domain/test.php -m “delete test file”</code><br/>
+或者直接<br/>
+</p>
+<p><br/>
+<pre class="example">svn delete test.php
+svn ci -m ‘delete test file‘
+</pre>
+
+推荐使用这种简写：svn (del, remove, rm)<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">merge</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p><code>svn merge -r m:n path</code><br/>
+例如：<br/>
+<code>svn merge -r 200:205 test.php</code><br/>
+（将版本200与205之间的差异合并到当前文件，但是一般都会产生冲突，需要处理一下）<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1">代码回滚</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<p>撤销一个已提交的版本,修改有误，不应该提交，需要回滚到上一个版本<br/>
+执行命令<br/>
+<code>$svn merge -r 20:19 $URL</code><br/>
+检查工作拷贝结果<br/>
+<code>$svn status</code><br/>
+提交拷贝结果<br/>
+=$svn ci -m &#8220;undo change commited in r20&#8221;=<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">cat</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p> svn cat -r 2 filename 显示文件指定版本内容<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">status -u</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>与版本库最新版本比较，*提示文件需要更新<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">ignore</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>添加ignore<br/>
+svn propedit svn:ignore calc<br/>
+</p>
+<p><br/>
+被svn坑了，原来默认是忽略.o,.a，.so之类的。<br/>
+svn add &ndash;no-ignore .<br/>
+</p>
+<p><br/>
+查看某次提交忽略的文件：svn status &ndash;no-ignore xxxroot <br/>
+设置忽略文件列表svn pe svn:ignore xxxx <br/>
+设置全局忽略文件列表<br/>
+编辑~/.subversion/config文件，修改此文件中的global-ignores，<br/>
+例如，想让subversion忽略vim的交换文件文件，可以这样设置：<br/>
+global-ignores = *.o *.swp<br/>
+</p>
+<p><br/>
+<b>root用户的配置是 /etc/subversion/config</b><br/>
+</p>
+<p><br/>
+svn st &ndash;no-ignore 查看所有<br/>
+遇到的问题，添加的时候<br/>
+svn add &ndash;no-ignore *<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-10" class="outline-3">
+<h3 id="sec-1-10">add * &ndash;force</h3>
+<div class="outline-text-3" id="text-1-10">
+
+<p>并没有把剩余的添加上，只能通过一个一个目录来添加，不知道为什么?<br/>
+解决：<br/>
+通常情况下，命令svn add *会忽略所有已经在版本控制之下的目录，<br/>
+有时候，你会希望添加所有工作拷贝的未版本化文件，包括那些隐藏在深处的文件，可以使用svn add的&ndash;force递归到版本化的目录下：<br/>
+<code>$ svn add * --force</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11" class="outline-3">
+<h3 id="sec-1-11">svn服务器IP修改后,本地怎么跟新svn同步,svn relocate 操作</h3>
+<div class="outline-text-3" id="text-1-11">
+
+<p>svn switch &ndash;relocate URL1 URL2<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-12" class="outline-3">
+<h3 id="sec-1-12">svn -v log</h3>
+<div class="outline-text-3" id="text-1-12">
+
+<p>查看每次提交修改的文件列表。<br/>
+svn -v log<br/>
+svn -v -r 35 log dir/<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-13" class="outline-3">
+<h3 id="sec-1-13">参考资料</h3>
+<div class="outline-text-3" id="text-1-13">
+
+<p><a href="http://subversion.apache.org/faq.zh.html">FAQ</a><br/>
 </p>
 <p><br/>
 </p></div>
@@ -291,7 +471,7 @@ vi /etc/default/tftpd-hpa<br/>
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/tools/'>tools</a>
+    <a class='category' href='/blog/categories/scm/'>scm</a>, <a class='category' href='/blog/categories/svn/'>svn</a>
   
 </span>
 
@@ -339,7 +519,7 @@ vi /etc/default/tftpd-hpa<br/>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (2)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (6)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (3)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (11)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -375,23 +555,23 @@ dpc=1"></iframe>
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
-        <a href="/blog/2013/02/27/netcat/">nc使用</a>
+        <a href="/blog/2013/03/19/emacs-desktop/">emacs的desktop保存</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/20/dnsserver/">搭建dns服务器</a>
+        <a href="/blog/2013/03/17/expect/">expect自动ssh登录</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/19/ssh-tunnel/">ssh隧道技术</a>
+        <a href="/blog/2013/03/12/nfs-server/">NFS server</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a>
+        <a href="/blog/2013/03/11/xclip/">xlicp在命令行下使用剪切板</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/14/goagent/">goagent翻墙</a>
+        <a href="/blog/2013/03/10/zsh/">zsh</a>
       </li>
     
   </ul>
@@ -412,7 +592,7 @@ dpc=1"></iframe>
 <p>
   Copyright &copy; 2013 - emmoblin -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-  <br><script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
+  <br> <script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
 </p>
 
 </footer>

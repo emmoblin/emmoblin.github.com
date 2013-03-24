@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-03-03T00:06:52+08:00</updated>
+  <updated>2013-03-24T21:03:31+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -51,7 +51,7 @@
 
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com{{ page.url }}">git服务器开源软件</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/git/atom.xml">git服务器开源软件</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -306,7 +306,7 @@ Git对于写操作可以精细到目录和分支级别（使用Gitolite作为服
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">gitconfig</h3>
+<h3 id="sec-1-1">~/.gitconfig</h3>
 <div class="outline-text-3" id="text-1-1">
 
 
@@ -344,7 +344,208 @@ git log只会显示HEAD及其祖先的log，要产看全部使用&ndash;all<br/>
 <code>git stash</code><br/>
 非常有用的命令，把当前work目录做临时保存，并revert到HEAD。<br/>
 使用git stash apply进行恢复。<br/>
+</p>
+<p><br/>
+回滚代码<br/>
+<code>git revert HEAD</code><br/>
+</p>
+<p><br/>
+你也可以revert更早的commit，例如：<br/>
+<code>git revert HEAD^</code><br/>
+</p>
+<p><br/>
+销毁自己的修改<br/>
+<code>git reset --hard</code><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">远程仓库相关命令</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p>检出仓库：$ git clone git://github.com/jquery/jquery.git<br/>
+查看远程仓库：$ git remote -v<br/>
+添加远程仓库：$ git remote add [name] [url]<br/>
+删除远程仓库：$ git remote rm [name]<br/>
+修改远程仓库：$ git remote set-url &ndash;push [name] [newUrl]<br/>
+拉取远程仓库：$ git pull [remoteName] [localBranchName]<br/>
+推送远程仓库：$ git push [remoteName] [localBranchName]<br/>
+</p>
+<p><br/>
+如果想把本地的某个分支test提交到远程仓库，并作为远程仓库的master分支，或者作为另外一个名叫test的分支，如下：<br/>
+$ git push origin test:master         // 提交本地test分支作为远程的master分支<br/>
+$ git push origin test:test              // 提交本地test分支作为远程的test分支<br/>
+</p>
+<p><br/>
 </p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">分支(branch)操作相关命令</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>查看本地分支：$ git branch<br/>
+查看远程分支：$ git branch -r （如果还是看不到就先 git fetch origin 先）<br/>
+创建本地分支：$ git branch [name] -&mdash;注意新分支创建后不会自动切换为当前分支<br/>
+切换分支：$ git checkout [name]<br/>
+创建新分支并立即切换到新分支：$ git checkout -b [name]<br/>
+直接检出远程分支：$ git checkout -b [name] [remoteName] (如：git checkout -b myNewBranch origin/dragon)<br/>
+删除分支：$ git branch -d [name] -&mdash; -d选项只能删除已经参与了合并的分支，对于未有合并的分支是无法删除的。如果想强制删除一个分支，可以使用-D选项<br/>
+合并分支：$ git merge [name] -&mdash;将名称为[name]的分支与当前分支合并<br/>
+创建远程分支(本地分支push到远程)：$ git push origin [name]<br/>
+删除远程分支：$ git push origin :heads/[name] 或 $ git push origin :[name] <br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">版本(tag)操作相关命令</h4>
+<div class="outline-text-4" id="text-1-2-3">
+
+<p>查看版本：$ git tag<br/>
+创建版本：$ git tag [name]<br/>
+删除版本：$ git tag -d [name]<br/>
+查看远程版本：$ git tag -r<br/>
+创建远程版本(本地版本push到远程)：$ git push origin [tagname]<br/>
+删除远程版本：$ git push origin :refs/tags/[name]<br/>
+合并远程仓库的tag到本地：$ git pull origin &ndash;tags<br/>
+上传本地tag到远程仓库：$ git push origin &ndash;tags<br/>
+创建带注释的tag：$ git tag -a [name] -m 'yourMessage'<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4">rebase</h4>
+<div class="outline-text-4" id="text-1-2-4">
+
+<p>git-rebase命令主要用在从上游分支获取最新commit信息，并有机的将当前分支和上游分支进行合并。<br/>
+假设master和develop是一个项目的两个分支，其中master是主分支，<br/>
+develop是从master而来的开发分支，如果在develop分支上提交过2次，<br/>
+之后又切换到master分支，做了一些修改并提交2次，<br/>
+这时，如果想将master分支的最新修改内容合并到develop分支，但同时也不能影响master分支时，<br/>
+就需要使用git rebase了，这时的上游分支为master。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">执行git rebase master前：
+              develop: 1 --&gt; develop: 2
+            /
+master: 0 --&gt; master: 1 --&gt; master: 2
+
+执行git rebase master后：
+                                    develop: 1 --&gt; develop: 2
+                                   /
+master: 0 --&gt; master: 1 --&gt; master: 2
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-5" class="outline-4">
+<h4 id="sec-1-2-5">blame</h4>
+<div class="outline-text-4" id="text-1-2-5">
+
+<p>如果找到某个版本出现了问题，而之前的版本没问题，我们可以用git blame找出文件是何时被何人怎么修改的。 <br/>
+<code>git blame [-L 行号1， 行号2] file</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-6" class="outline-4">
+<h4 id="sec-1-2-6">打包文件archive</h4>
+<div class="outline-text-4" id="text-1-2-6">
+
+<p>git archive &ndash;format=zip -o arch.zip HEAD<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-7" class="outline-4">
+<h4 id="sec-1-2-7">bisect</h4>
+<div class="outline-text-4" id="text-1-2-7">
+
+<p>如果我们发现有个问题在某些版本没问题，而在有些版本有问题时，我们可以借助git bisect来帮助我们定位问题。<br/>
+</p>
+<p><br/>
+<pre class="example">git bisect start 
+git bisect good commit-id1 
+git bisect bad commit-id2 
+</pre>
+
+这时，git会按照二分法找出good版本和bad版本中间的那个提交版本，并自动将工作状态切换到那个版本，<br/>
+这时我们可以验证这个版本是不是有问题，如果有问题，通过<br/>
+<code>git bisect bad</code><br/>
+告诉git，这时git会继续找出一个中间版本让我们来验证，直到我们找出，并告知git<br/>
+<code>git bisect good</code><br/>
+</p>
+<p><br/>
+这样一步一步我们就可以找出引入问题的版本，最后，我们可以使用<br/>
+<code>git bisect reset</code><br/>
+结束查找，git会删除查找过程中在仓库中生成的临时文件，并将状态恢复到。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-8" class="outline-4">
+<h4 id="sec-1-2-8">git fetch,pull区别？</h4>
+<div class="outline-text-4" id="text-1-2-8">
+
+<p>git pull 就是git fetch 然后 git merge<br/>
+git fetch 从另一个repository中下载objects and refs<br/>
+You can do a "git fetch" at any time to update your local copy of a remote branch.<br/>
+This operation never changes any of your own branches and is safe to do without changing your working copy.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-9" class="outline-4">
+<h4 id="sec-1-2-9">git的requet-pull作用？</h4>
+<div class="outline-text-4" id="text-1-2-9">
+
+
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-10" class="outline-4">
+<h4 id="sec-1-2-10">git cherry-pick</h4>
+<div class="outline-text-4" id="text-1-2-10">
+
+<p>Apply the changes introduced by some existing commits<br/>
+就是对已经存在的commit 进行apply (可以理解为再次提交）<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-11" class="outline-4">
+<h4 id="sec-1-2-11">git submodule</h4>
+<div class="outline-text-4" id="text-1-2-11">
+
+<p>用于包含其他库，比如一个项目包含了一个开源的mp3解码库。<br/>
+</p></div>
+</div>
 </div>
 </div>
 

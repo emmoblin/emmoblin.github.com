@@ -4,7 +4,7 @@
   <title><![CDATA[Category: lua | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/lua/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-03-03T00:06:52+08:00</updated>
+  <updated>2013-03-24T21:03:31+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -211,7 +211,7 @@ qostest.qos_add_e(iptable)
 
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com{{ page.url }}">Luasocket和lua CAPI</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/lua/atom.xml">Luasocket和lua CAPI</a></h2>
 <div class="outline-text-2" id="text-1">
 
 

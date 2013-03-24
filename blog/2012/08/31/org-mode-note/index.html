@@ -905,6 +905,12 @@ org-jekyll-export-blog<br/>
 <code>C-c .</code> 创建时间, 还可以添加C-u前缀，可以插入当前时间，默认只是日期<br/>
 <code>C-c C-d</code> 插入deadline<br/>
 <code>C-c C-s</code> 插入Schedule<br/>
+<code>C-c !</code> 插入非激活的时间戳，并不激活到agenda<br/>
+<code>C-u C-c .</code> 插入date+time<br/>
+<code>C-c C-o</code> 访问agenda在这个时间点<br/>
+<code>S-up,down,left,right</code> 调整当前j时间戳<br/>
+</p>
+<p><br/>
 </p>
 <p><br/>
 M-x org-clock-<br/>
@@ -1082,7 +1088,7 @@ lisp是函数式语言，它的程序不能编译成可执行程序独立执行�
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (2)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (6)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (3)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (11)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -1118,23 +1124,23 @@ dpc=1"></iframe>
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
-        <a href="/blog/2013/02/27/netcat/">nc使用</a>
+        <a href="/blog/2013/03/19/emacs-desktop/">emacs的desktop保存</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/20/dnsserver/">搭建dns服务器</a>
+        <a href="/blog/2013/03/17/expect/">expect自动ssh登录</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/19/ssh-tunnel/">ssh隧道技术</a>
+        <a href="/blog/2013/03/12/nfs-server/">NFS server</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a>
+        <a href="/blog/2013/03/11/xclip/">xlicp在命令行下使用剪切板</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/14/goagent/">goagent翻墙</a>
+        <a href="/blog/2013/03/10/zsh/">zsh</a>
       </li>
     
   </ul>
@@ -1155,7 +1161,7 @@ dpc=1"></iframe>
 <p>
   Copyright &copy; 2013 - emmoblin -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-  <br><script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
+  <br> <script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
 </p>
 
 </footer>

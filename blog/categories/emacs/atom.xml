@@ -4,7 +4,7 @@
   <title><![CDATA[Category: emacs | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-03-03T00:06:52+08:00</updated>
+  <updated>2013-03-24T21:03:31+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[emacs的desktop保存]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/03/19/emacs-desktop/"/>
+    <updated>2013-03-19T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/03/19/emacs-desktop</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+emacs session折腾了一晚上，使用了session.el发现没什么用，<br/>
+只是在file下多了一个最近打开和最近修改。用处不大。<br/>
+反倒是后来找了一个可以命名的desktop，把desktop环境保存一个项目名字。<br/>
+而且不像desktop那样每个目录一个，而是全局的。<br/>
+每次关闭的时候自动保存为last-session<br/>
+方便以后保存一个工程很方便。<br/>
+</p>
+<p><br/>
+参考：<br/>
+<a href="http://scottfrazersblog.blogspot.com/2009/12/emacs-named-desktop-sessions.html">http://scottfrazersblog.blogspot.com/2009/12/emacs-named-desktop-sessions.html</a><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[org-mode学习笔记]]></title>
@@ -91,7 +119,7 @@
 
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com{{ page.url }}">org-mode学习笔记</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/emacs/atom.xml">org-mode学习笔记</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -796,6 +824,12 @@ org-jekyll-export-blog<br/>
 <code>C-c .</code> 创建时间, 还可以添加C-u前缀，可以插入当前时间，默认只是日期<br/>
 <code>C-c C-d</code> 插入deadline<br/>
 <code>C-c C-s</code> 插入Schedule<br/>
+<code>C-c !</code> 插入非激活的时间戳，并不激活到agenda<br/>
+<code>C-u C-c .</code> 插入date+time<br/>
+<code>C-c C-o</code> 访问agenda在这个时间点<br/>
+<code>S-up,down,left,right</code> 调整当前j时间戳<br/>
+</p>
+<p><br/>
 </p>
 <p><br/>
 M-x org-clock-<br/>

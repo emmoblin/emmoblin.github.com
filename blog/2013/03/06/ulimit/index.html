@@ -1,0 +1,423 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ulimit - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2013/03/06/ulimit">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">Ulimit</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-06T00:00:00+08:00" pubdate data-updated="true">2013年03月06日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">解决too many open file的有关问题</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>ulimit是bash的内建命令，并不是一个程序。<br/>
+<code>ulimit -a</code> 查看所有设置<br/>
+</p>
+<p><br/>
+通过ulimit -n 命令可以查看linux系统里打开文件描述符的最大值，一般缺省值是1024，对一台繁忙的服务器来说，这个值偏小，所以有必要重新设置linux系统里打开文件描述符的最大值。<br/>
+</p>
+<p><br/>
+如果单个进程打开的文件句柄数量超过了系统定义的值，就会提到“too many files open”的错误提示。如何知道当前进程打开了多少个文件句柄呢？下面一段小脚本可以帮你查看：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-sh">lsof -n |awk &#8216;{print $<span style="color: #ff1493;">2</span>}&#8217;|sort|uniq -c |sort -nr|more
+</pre>
+
+其中第一行是打开的文件句柄数量，第二行是进程号。<br/>
+</p>
+<p><br/>
+Linux有硬性限制和软性限制。可以通过ulimit来设定这两个参数<br/>
+<code>ulimit -HSn 4096</code><br/>
+H指定了硬性大小，S指定了软性大小，n表示设定单个进程最大的打开文件句柄数量.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">limits.conf</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>此修改只是临时有效，要想长期有效需要修改：/etc/security/limits.conf<br/>
+在文件末尾加上：<br/>
+</p>
+<p><br/>
+<pre class="example">* soft nofile 65536
+* hard nofile 65536
+</pre>
+
+
+此文件还有其他的相关设置：<br/>
+以下是文件描述：<br/>
+</p>
+<p><br/>
+<pre class="example">#Each line describes a limit for a user in the form:
+#
+#&lt;domain&gt;  &lt;type&gt;  &lt;item&gt;  &lt;value&gt;
+#
+#Where:
+#&lt;domain&gt; can be:
+#        - an user name
+#        - a group name, with @group syntax
+#        - the wildcard *, for default entry
+#        - the wildcard %, can be also used with %group syntax,
+#                 for maxlogin limit
+#
+#&lt;type&gt; can have the two values:
+#        - "soft" for enforcing the soft limits
+#        - "hard" for enforcing hard limits
+#
+#&lt;item&gt; can be one of the following:
+#        - core - limits the core file size (KB)
+#        - data - max data size (KB)
+#        - fsize - maximum filesize (KB)
+#        - memlock - max locked-in-memory address space (KB)
+#        - nofile - max number of open files
+#        - rss - max resident set size (KB)
+#        - stack - max stack size (KB)
+#        - cpu - max CPU time (MIN)
+#        - nproc - max number of processes
+#        - as - address space limit
+#        - maxlogins - max number of logins for this user
+#        - maxsyslogins - max number of logins on the system
+#        - priority - the priority to run user process with
+#        - locks - max number of file locks the user can hold
+#        - sigpending - max number of pending signals
+#        - msgqueue - max memory used by POSIX message queues (bytes)
+#        - nice - max nice priority allowed to raise to
+#        - rtprio - max realtime priority
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">ubuntu还需要修改pam</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>对于ubuntu还需要修改pam.d配置，才能生效<br/>
+</p>
+<p><br/>
+<pre class="example">1. sudo vi /etc/pam.d/common-session
+2. Add session required pam_limits.so to the end of the file.
+3. Reboot the OS.
+</pre>
+
+</p></div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-06T00:00:00+08:00" pubdate data-updated="true">2013年03月06日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2013/03/06/difference-svn-and-cvs/" title="Previous Post:
+        svn与cvs的区别">&laquo; svn与cvs的区别</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2013/03/10/zsh/"
+        title="Next Post: zsh">zsh
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><img src="/images/my_avatar.jpg"></p>
+  <p>网络工程师，喜欢折腾linux，emacs。</p>
+  <p>坚持理想，相信一定会实现。</p>
+  <p><a href="mailto:emmoblin@gmail.com"><img src="/images/my_email.png" alt="emmoblin@gmail.com"></a></p>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (3)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (11)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/emacs-desktop/">emacs的desktop保存</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/17/expect/">expect自动ssh登录</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/nfs-server/">NFS server</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/11/xclip/">xlicp在命令行下使用剪切板</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/10/zsh/">zsh</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+  <br> <script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2013/03/06/ulimit/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2013/03/06/ulimit/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

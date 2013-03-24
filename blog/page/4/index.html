@@ -109,7 +109,7 @@
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/10/10/dropbox-under-ubuntu/">Ubuntu使用dropbox</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/12/05/shell-snippet-collect/">Shell代码片段收集</a></h1>
     
     
       <p class="meta">
@@ -125,7 +125,536 @@
   
 
 
-<time datetime="2012-10-10T00:00:00+08:00" pubdate data-updated="true">2012年10月10日</time>
+<time datetime="2012-12-05T00:00:00+08:00" pubdate data-updated="true">2012年12月05日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">shell代码片段收集</a>
+<ul>
+<li><a href="#sec-1-1">获取磁盘大小</a></li>
+<li><a href="#sec-1-2">变为大写</a></li>
+<li><a href="#sec-1-3">判断返回值</a></li>
+<li><a href="#sec-1-4">提问</a></li>
+<li><a href="#sec-1-5">for循环</a></li>
+<li><a href="#sec-1-6">while and until</a></li>
+<li><a href="#sec-1-7">case</a></li>
+<li><a href="#sec-1-8">读取文件</a></li>
+<li><a href="#sec-1-9">awk按域搜索的例子</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/12/05/shell-snippet-collect/">shell代码片段收集</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">获取磁盘大小</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Return the size of the drive in MB</span>
+get_drive_size () {
+  <span style="color: #ff1493;">ldrive</span>=$<span style="color: #ff1493;">1</span>
+
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Make sure you can print disk info using parted</span>
+  parted --script /dev/$<span style="color: #ff1493;">ldrive</span> print &gt;/dev/null 2&gt;&amp;1
+
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If unable to read disk, it's likely it needs a disklabel</span>
+  <span style="color: #0000ff;">if</span> [  <span style="color: #00bfff;">"$?"</span> != <span style="color: #00bfff;">"0"</span> ]; <span style="color: #0000ff;">then</span>
+    <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"Creating a new disklabel on $ldrive"</span> &gt;&gt; $<span style="color: #ff1493;">INSTALL_LOG</span>
+    <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"parted /dev/$ldrive mklabel msdos"</span> &gt;&gt; $<span style="color: #ff1493;">INSTALL_LOG</span>
+    <span style="color: #ff1493;">output</span>=$(<span style="color: #ff00ff;">parted</span> -s /dev/$<span style="color: #ff1493;">ldrive</span> mklabel msdos)
+
+    <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Get the drive size from parted</span>
+    <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">parted</span> -s /dev/$<span style="color: #ff1493;">ldrive</span> p | grep <span style="color: #00bfff;">"^Disk"</span> | awk <span style="color: #00bfff;">'{ print $3 }'</span>)
+
+    <span style="color: #0000ff;">if</span> [ $(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | grep error) ]; <span style="color: #0000ff;">then</span>
+      <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"Unable to read disk label.  Exiting."</span>
+      <span style="color: #0000ff;">exit</span> 1
+    <span style="color: #0000ff;">fi</span>
+  <span style="color: #0000ff;">fi</span>
+
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Get the drive size from parted</span>
+  <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">parted</span> -s /dev/$<span style="color: #ff1493;">ldrive</span> p | grep <span style="color: #00bfff;">"^Disk"</span> | awk <span style="color: #00bfff;">'{ print $3 }'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Get the reported units (mB, GB, kB)</span>
+  <span style="color: #ff1493;">lmodifier</span>=$(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | sed <span style="color: #00bfff;">'s/[0-9\.]//g'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">remove the modifier</span>
+  <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | sed <span style="color: #00bfff;">'s/[a-z,A-Z]//g'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Remove any fractions</span>
+  <span style="color: #ff1493;">lsize</span>=$(<span style="color: #ff00ff;">echo</span> $<span style="color: #ff1493;">lsize</span> | cut -f1 -d<span style="color: #00bfff;">'.'</span>)
+  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Translate our size into mB if not there already</span>
+  <span style="color: #0000ff;">if</span> [ $<span style="color: #ff1493;">lmodifier</span> = <span style="color: #00bfff;">"GB"</span> ]; <span style="color: #0000ff;">then</span> 
+    <span style="color: #ff1493;">lsize</span>=$(($<span style="color: #ff1493;">lsize</span> * 1000))
+  <span style="color: #0000ff;">elif</span> [ $<span style="color: #ff1493;">lmodifier</span> = <span style="color: #00bfff;">"kB"</span> ]; <span style="color: #0000ff;">then</span> 
+    <span style="color: #ff1493;">lsize</span>=$(($<span style="color: #ff1493;">lsize</span> / 1000))
+  <span style="color: #0000ff;">fi</span>
+
+  <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">lsize</span>
+}
+
+</pre>
+
+
+disk_size=`fdisk -l $CF | grep MB | cut -d&#8221;:&#8221; -f2 | cut -d &#8220;,&#8221; -f1| sed s/MB//g `<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">变为大写</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p><br/>
+<pre class="src src-sh">upper_str()
+{
+        <span style="color: #ff1493;">upper</span>=<span style="color: #ff00ff;">`echo $1 | tr "[a-z]" "[A-Z]"`</span>
+        <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">upper</span>
+}
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">判断返回值</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">TOS_VERSION</span> | grep <span style="color: #00bfff;">"^3.3.016"</span> 
+<span style="color: #0000ff;">if</span> [  $? != 0  ]
+<span style="color: #0000ff;">then</span> 
+        <span style="color: #ff1493;">VERSION_016</span>=<span style="color: #00bfff;">"false"</span>
+<span style="color: #0000ff;">else</span>
+        <span style="color: #ff1493;">VERSION_016</span>=<span style="color: #00bfff;">"true"</span>
+<span style="color: #0000ff;">fi</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">提问</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+<pre class="src src-sh">auto_echo <span style="color: #00bfff;">"Are you sure to begin[y/n]:"</span>
+<span style="color: #0000ff;">while </span><span style="color: #a52a2a;">read</span> answer
+<span style="color: #0000ff;">do</span>
+<span style="color: #ff1493;">answer</span>=<span style="color: #ff00ff;">`upper_str $answer`</span>
+<span style="color: #0000ff;">if</span> [ <span style="color: #00bfff;">"$answer"</span> = <span style="color: #00bfff;">"Y"</span> ] 
+<span style="color: #0000ff;">then</span>
+<span style="color: #0000ff;">break</span>
+<span style="color: #0000ff;">elif</span> [ <span style="color: #00bfff;">"$answer"</span> = <span style="color: #00bfff;">"N"</span> ] 
+<span style="color: #0000ff;">then</span>
+write_free
+<span style="color: #0000ff;">exit</span>
+<span style="color: #0000ff;">fi</span>
+auto_echo <span style="color: #00bfff;">"Are you sure to begin[y/n]:"</span>
+<span style="color: #0000ff;">done</span>
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">for循环</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #0000ff;">for</span> x<span style="color: #0000ff;"> in</span> /var/log/*
+<span style="color: #0000ff;">do</span>
+    <span style="color: #a52a2a;">echo</span> <span style="color: #ff00ff;">`basename $x`</span> is a file living<span style="color: #0000ff;"> in</span> /var/log
+<span style="color: #0000ff;">done</span>
+</pre>
+
+</p>
+<p> <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">while and until</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #ff1493;">myvar</span>=0
+<span style="color: #0000ff;">while</span> [ $<span style="color: #ff1493;">myvar</span> -ne 10 ]
+<span style="color: #0000ff;">do</span>
+    <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">myvar</span>
+    <span style="color: #ff1493;">myvar</span>=$(( $<span style="color: #ff1493;">myvar</span> + 1 ))
+<span style="color: #0000ff;">done</span>
+
+
+<span style="color: #ff1493;">myvar</span>=0
+<span style="color: #0000ff;">until</span> [ $<span style="color: #ff1493;">myvar</span> -eq 10 ]
+<span style="color: #0000ff;">do</span>
+    <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">myvar</span>
+    <span style="color: #ff1493;">myvar</span>=$(( $<span style="color: #ff1493;">myvar</span> + 1 ))
+<span style="color: #0000ff;">done</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">case</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>*$x为文件名，只获取文件的后缀，至于是为什么现在不明白? *<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #0000ff;">case</span> <span style="color: #00bfff;">"${x##*.}"</span><span style="color: #0000ff;"> in</span>
+     gz)
+           gzunpack ${<span style="color: #ff1493;">SROOT</span>}/${<span style="color: #ff1493;">x</span>}
+           ;;
+     bz2)
+           bz2unpack ${<span style="color: #ff1493;">SROOT</span>}/${<span style="color: #ff1493;">x</span>}
+           ;;
+     *)
+           <span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">"Archive format not recognized."</span>
+           <span style="color: #0000ff;">exit</span>
+           ;;
+<span style="color: #0000ff;">esac</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">读取文件</h3>
+<div class="outline-text-3" id="text-1-8">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">! /bin/</span><span style="color: #0000ff;">bash</span><span style="color: #8c8c8c; font-style: italic;">  </span>
+<span style="color: #0000ff;">while </span><span style="color: #a52a2a;">read</span> LINE
+<span style="color: #0000ff;">do</span>
+        <span style="color: #a52a2a;">echo</span> $<span style="color: #ff1493;">LINE</span> 
+<span style="color: #0000ff;">done</span> &lt; /etc/passwd
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">awk按域搜索的例子</h3>
+<div class="outline-text-3" id="text-1-9">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #0000ff;">while </span><span style="color: #a52a2a;">read</span> line; 
+        <span style="color: #0000ff;">do</span> cp aaaa $<span style="color: #ff1493;">line</span>;
+<span style="color: #0000ff;">done</span> &lt;&lt; (awk <span style="color: #00bfff;">'{for(i=1; i &lt;= NF; ++i){if($i ~/^-l/){gsub("^-l","lib",$i); printf("%s.so\n", $i)}}}'</span> libso.txt  | sort -u)
+</pre>
+
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/17/opensources-firewall/">开源防火墙</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-17T00:00:00+08:00" pubdate data-updated="true">2012年11月17日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+要说免费使用的防火墙那多了，但都不开源，而我更喜欢开源的，能学到东西。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">可下到源代码</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">IPCop</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p><a href="http://sourceforge.net/projects/ipcop/develop">http://sourceforge.net/projects/ipcop/develop</a><br/>
+可以下载源代码。<br/>
+<code>svn co https://ipcop.svn.sourceforge.net/svnroot/ipcop ipcop</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">EFW</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p><a href="http://www.endian.com/">http://www.endian.com/</a><br/>
+这个比较大，600M源码包，非常全。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Vyatta</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>基于debian<br/>
+<a href="http://www.vyatta.org/downloads">http://www.vyatta.org/downloads</a><br/>
+目前这个是我发现的有专门针对虚拟化平台优化的版本。<br/>
+<a href="http://www.vyatta.org/getting-started/how-to-install">http://www.vyatta.org/getting-started/how-to-install</a><br/>
+</p>
+<p><br/>
+Installing Vyatta Core in a Virtualized Environment<br/>
+If you’re deploying Vyatta Core on a hypervisor such as VMWare ESX/ESXi or Citrix XenServer, <br/>
+you’ll want to use the Vyatta virtualization ISO (virt-ISO).<br/>
+Similar to the LiveCD ISO, the virt-ISO provides a bootable ISO,<br/>
+except it also includes virtual machine tools and other optimizations<br/>
+to deliver the best possible experience for users running Vyatta on a virtual machine. <br/>
+</p>
+<p><br/>
+Using the vSphere Client, create a new VM<br/>
+</p><ul>
+<li>Configuration: Custom<br/>
+</li>
+<li>Name: &#8220;vyatta&#8221;<br/>
+</li>
+<li>Datastore: default<br/>
+</li>
+<li>Virtual Machine Version: 7<br/>
+</li>
+<li>Guest OS: Linux/Other 2.6x Linux<br/>
+</li>
+<li>CPU: &#8220;1&#8221;<br/>
+</li>
+<li>Memory: &#8220;512&#8221;<br/>
+</li>
+<li>Network: &#8220;2&#8221; / vmxnet3<br/>
+</li>
+<li>SCSI Controller: default<br/>
+</li>
+<li>Select a Disk: default<br/>
+</li>
+<li>Create a Disk: &#8220;4&#8221;GB (thin provisioning and independent / persistent mode)<br/>
+</li>
+<li>Advanced Options: Enable &#8220;Support VMI Paravirtualization&#8221;<br/>
+</li>
+</ul>
+
+
+<p>        <br/>
+使用了<br/>
+open-vm-tools<br/>
+ec2-api-tools 是不是可以通过api来管理此虚拟机，或者获得性能等。ec2-api是什么东东？<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">获取源代码</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p><a href="http://www.vyatta.org/downloads/source-code">http://www.vyatta.org/downloads/source-code</a><br/>
+</p>
+<p><br/>
+git clone <a href="http://git.vyatta.com/build-iso.git">http://git.vyatta.com/build-iso.git</a><br/>
+cd build-iso<br/>
+注意要先调整到一个分支或者tag<br/>
+build-iso$ git branch &ndash;track &lt;branch&gt; origin/&lt;branch&gt;<br/>
+build-iso$ git checkout &lt;branch&gt;<br/>
+或者<br/>
+git checkout tagv1<br/>
+</p>
+<p><br/>
+获取子模块的代码<br/>
+git submodule init<br/>
+git submodule update pkgs/SUBMODULE<br/>
+</p>
+<p><br/>
+克隆所有模块<br/>
+git submodule update<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">install</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>启动虚拟机,用缺省的用户名/密码 vyatta/vyatta登陆系统<br/>
+install image 基于image安装，推荐,可以切换image<br/>
+install system 基于disk安装，传统硬盘安装方式<br/>
+</p>
+<p><br/>
+There are two types of installations that can be performed on a persistent device: <br/>
+• Image-based install. The simplest, most flexible, and most powerful way to <br/>
+install a Vyatta system is using a binary system image. With this method, you can <br/>
+install multiple versions of the Vyatta system as images and switch between the <br/>
+images simply and easily. You install the image from a LiveCD then you reboot <br/>
+your system and it runs the image. <br/>
+• Disk-based install. A disk-based install also installs from a LiveCD onto a <br/>
+persistent device such as a hard disk partition. However, unlike an image-based <br/>
+install, a disk-based install uses a traditional layout of files on the disk. <br/>
+Additional system images may be added at a later time to a system created using <br/>
+a disk-based install. <br/>
+</p>
+<p><br/>
+nstall-image (is what I would suggest btw) is using squashfs and is capable of booting/running multiple images of versions<br/>
+</p>
+<p><br/>
+真让我好找，找了一天，终于找到安装脚本了，在pkgs/vyatta-cfg-system<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">debian install</h4>
+<div class="outline-text-4" id="text-1-2-3">
+
+<p>这个貌似比较重要，vyatta之所以看不太明白，应该是对d-i不了解。<br/>
+看看internal<br/>
+<a href="http://d-i.alioth.debian.org/doc/internals/">http://d-i.alioth.debian.org/doc/internals/</a><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4">配置ip</h4>
+<div class="outline-text-4" id="text-1-2-4">
+
+<p>vyatta@vyatta:~$ configure<br/>
+vyatta@vyatta# set interfaces ethernet eth0 address 192.168.1.81/24<br/>
+vyatta@vyatta# commit<br/>
+vyatta@vyatta# exit<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-5" class="outline-4">
+<h4 id="sec-1-2-5">启动webui</h4>
+<div class="outline-text-4" id="text-1-2-5">
+
+<p>vyatta@R1# set service https<br/>
+不过需要商业版才能使用webui<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-6" class="outline-4">
+<h4 id="sec-1-2-6">linux-image</h4>
+<div class="outline-text-4" id="text-1-2-6">
+
+<p>vyatta的内核配置<br/>
+/home/liwei/work/src_analysis/tag_vyatta_src/pkgs/linux-image/debian/arch/i386/config.586-vyatta-virt<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/16/shell-skill/">Shell命令技巧收集</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-16T00:00:00+08:00" pubdate data-updated="true">2012年11月16日</time>
         
       </p>
     
@@ -137,16 +666,15 @@
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">对ubuntu one有点失望</h3>
+<h3 id="sec-1-1">资料，有空在整理</h3>
 <div class="outline-text-3" id="text-1-1">
 
-<p>我本来是用ubuntu one，但是我先在使用ubuntu one来同步我的org笔记，同时我的org笔记又使用hg同步。<br/>
-也就是一个文件夹同时使用hg和ubuntu one同步，结果发现ubuntu one同步总是出错，尤其是我使用hg fetch一个版本的时候。<br/>
-经常把我一个文件夹的内容同步没了，幸亏我有hg，否则这些文件就丢失啦。<br/>
-所以决定还是用dropbox吧，本来我手机使用dropbox来同步照片的，所以又申请了一个帐号，专门用于同步笔记。<br/>
-而且最终要的是：<br/>
-ubuntu one没有历史版本功能<br/>
-而dropbox可以可以回退到以前的历史版本，这个非常好。<br/>
+<p>隆重推荐，one line command<br/>
+<a href="http://www.catonmat.net/">http://www.catonmat.net/</a><br/>
+</p>
+<p><br/>
+<a href="http://os.51cto.com/art/201008/222287.htm">http://os.51cto.com/art/201008/222287.htm</a><br/>
+<a href="http://os.51cto.com/art/201008/222743.htm">http://os.51cto.com/art/201008/222743.htm</a><br/>
 </p>
 <p><br/>
 </p></div>
@@ -154,12 +682,11 @@ ubuntu one没有历史版本功能<br/>
 </div>
 
 <div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">dropbox同步任意文件夹问题</h3>
+<h3 id="sec-1-2">添加上一个命令的最后一个参数</h3>
 <div class="outline-text-3" id="text-1-2">
 
-<p>本来还是我是打算用dropbox的，但是发现dropbox只能指定一个主目录，不想ubuntu one可以随便指定文件夹。<br/>
-但后来发现，其实只要做一个软链接到Dropbox目录就ok了。<br/>
-而且发现dropbox同步的速度非常快。<br/>
+<p>Alt .<br/>
+反复按会继续向上搜索<br/>
 </p>
 <p><br/>
 </p></div>
@@ -167,12 +694,32 @@ ubuntu one没有历史版本功能<br/>
 </div>
 
 <div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">dropbox安装</h3>
+<h3 id="sec-1-3">字符串比较，注意要用引号</h3>
 <div class="outline-text-3" id="text-1-3">
 
-<p>需要使用https链接去登录dropbox主页，下边有如何安装的方式，很简单，就是wget一个压缩包，然后解压就ok了。<br/>
-默认是.dropbox_dist目录。<br/>
-然后启动dropboxd就ok了<br/>
+<p>字符串比较说明<br/>
+大多数时候，虽然可以不使用括起字符串和字符串变量的双引号，但这并不是好主意。为什么呢？因为如果环境变量中恰巧有一个空格或制表键，bash 将无法分辨，从而无法正常工作。这里有一个错误的比较示例：<br/>
+ if [ $myvar = &#8220;foo bar oni&#8221; ]<br/>
+then <br/>
+     echo &#8220;yes&#8221;<br/>
+fi<br/>
+</p>
+<p><br/>
+在上例中，如果 myvar 等于 &#8220;foo&#8221;，则代码将按预想工作，不进行打印。但是，如果 myvar 等于 &#8220;foo bar oni&#8221;，则代码将因以下错误失败：<br/>
+ [: too many arguments<br/>
+</p>
+<p><br/>
+在这种情况下，&#8221;$myvar&#8221;（等于 &#8220;foo bar oni&#8221;）中的空格迷惑了 bash。bash 扩展 &#8220;$myvar&#8221; 之后，代码如下：<br/>
+ [ foo bar oni = &#8220;foo bar oni&#8221; ]<br/>
+</p>
+<p><br/>
+因为环境变量没放在双引号中，所以 bash 认为方括号中的自变量过多。可以用双引号将字符串自变量括起来消除该问题。请记住，如果养成将所有字符串自变量用双引号括起的习惯，将除去很多类似的编程错误。&#8221;foo bar oni&#8221; 比较 应该写成：<br/>
+if [ &#8220;$myvar&#8221; = &#8220;foo bar oni&#8221; ]<br/>
+then <br/>
+     echo &#8220;yes&#8221;<br/>
+fi<br/>
+</p>
+<p><br/>
 </p>
 <p><br/>
 </p></div>
@@ -180,143 +727,11 @@ ubuntu one没有历史版本功能<br/>
 </div>
 
 <div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">ubuntu one的一些命令</h3>
+<h3 id="sec-1-4">算术表达式 $(( ))</h3>
 <div class="outline-text-3" id="text-1-4">
 
-<p>查看当前传输字节数<br/>
-<code>u1sdtool --current-transfers</code><br/>
-显示共享的文件夹<br/>
-<code>u1sdtool --list-folders</code><br/>
-删除文件夹<br/>
-<code>u1sdtool --delete-folder=FOLDER_ID</code><br/>
-其他命令使用&ndash;help查看<br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/09/ssh-skill/">Ssh的一些技巧</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true">2012年10月09日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">ssh的一些技巧</a>
-<ul>
-<li><a href="#sec-1-1">多条连接共享</a></li>
-<li><a href="#sec-1-2">长连接</a></li>
-<li><a href="#sec-1-3">别再输入密码</a></li>
-<li><a href="#sec-1-4">省去用户名</a></li>
-<li><a href="#sec-1-5">在服务器间跳转</a></li>
-<li><a href="#sec-1-6">穿越Web代理</a></li>
-<li><a href="#sec-1-7">shfs</a></li>
-<li><a href="#sec-1-8">使用本地App连接远程服务器</a></li>
-<li><a href="#sec-1-9">减少延迟</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/09/ssh-skill/">ssh的一些技巧</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">多条连接共享</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>如果你需要在多个窗口中打开到同一个服务器的连接，而不想每次都输入用户名，密码，或是等待连接建立，<br/>
-那么你可以配置SSH的连接共享选项，在本地打开你的SSH配置文件，通常它们位于~/.ssh/config，然后添加下面2行：<br/>
-ControlMaster auto<br/>
-ControlPath /tmp/ssh_mux_%h_%p_%r<br/>
-现在试试断开你与服务器的连接，并建立一条新连接，然后打开一个新窗口，再创建一条连接，你会发现，第二条连接几乎是在瞬间就建立好了。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">长连接</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>如果你发现自己每条需要连接同一个服务器无数次，那么长连接选项就是为你准备的：<br/>
-ControlPersist 4h<br/>
-现在你每次通过SSH与服务器建立连接之后，这条连接将被保持4个小时，即使在你退出服务器之后，这条连接依然可以重用，<br/>
-因此，在你下一次（4小时之内）登录服务器时，你会发现连接以闪电般的速度建立完成，<br/>
-这个选项对于通过scp拷贝多个文件提速尤其明显，因为你不在需要为每个文件做单独的认证了。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">别再输入密码</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>如果你还在通过密码方式登录SSH，那么你或许应该试试SSH Keys，首先使用OpenSSH为自己声称一对密钥：<br/>
-$ ssh-keygen<br/>
-跟随指示，完成之后，你应该可以在你的.ssh目录下看到两个文件，id_rsa就是你的私钥，而id_ras.pub则是你的公钥，<br/>
-现在你需要将你的公钥拷贝到服务器上，如果你的系统有ssh-copy-id命令，拷贝会很简单：<br/>
-$ ssh-copy-id smylers@compo.example.org<br/>
-否则，你需要手动将你的私钥拷贝的服务器上的~/.ssh/authorized_keys文件中：<br/>
-$ &lt; ~/.ssh/id_rsa.pub ssh clegg.example.org ‘mkdir -p .ssh; cat &gt;&gt; .ssh/authorized_keys; chmod go-w .ssh .ssh/authorized_keys’<br/>
-现在试试重新连接到SSH服务器，或是拷贝文件，是不是已经不需要再输入密码了？<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">省去用户名</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>如果你在远程服务器上的用户名和你本地的用户名不同，你同样可以在SSH配置中进行设置：<br/>
-Host www* mail<br/>
-HostName %h.example.com<br/>
-User simon<br/>
-现在就算我的本地用户名是 smylers，我仍然可以这样连接我的服务器：<br/>
-$ ssh www2<br/>
-SSH会使用simon账户连接你的服务器，同样，Putty可以保存这个信息在你的session中。<br/>
+<p> $ myvar=&#8221;56&#8221;<br/>
+ $ echo $(( $myvar + 12 ))<br/>
 </p>
 <p><br/>
 </p></div>
@@ -324,19 +739,10 @@ SSH会使用simon账户连接你的服务器，同样，Putty可以保存这个�
 </div>
 
 <div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">在服务器间跳转</h3>
+<h3 id="sec-1-5">名字空间，全局性</h3>
 <div class="outline-text-3" id="text-1-5">
 
-<p>有些时候，你可能没法直接连接到某台服务器，而需要使用一台中间服务器进行中转，这个过程也可以自动化。首先确保你已经为服务器配置了公钥访问，并开启了agent forwarding，现在你就可以通过2条命令来连接目标服务器，不会有任何提示输入：<br/>
-$ ssh gateway<br/>
-gateway $ ssh db<br/>
-然后在你的本地SSH配置中，添加下面这条配置：<br/>
-Host db<br/>
-HostName db.internal.example.com<br/>
-ProxyCommand ssh gateway netcat -q 600 %h %p<br/>
-现在你就可以通过一条命令来直接连接目标服务器了:<br/>
-$ ssh db<br/>
-这里你可能会需要等待长一点的时间，因为SSH需要进行两次认证，，注意netcat也有可能被写成nc或者ncat或者前面还需要加上g，你需要检查你的中间服务器来确定实际的参数。<br/>
+<p>在 bash 中，每当在函数内部创建环境变量，就将其添加到 全局名称空间。这意味着，该变量将重写函数之外的全局变量，并在函数退出之后继续存在<br/>
 </p>
 <p><br/>
 </p></div>
@@ -344,11 +750,28 @@ $ ssh db<br/>
 </div>
 
 <div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">穿越Web代理</h3>
+<h3 id="sec-1-6">捕获脚本的输出 2&gt;&amp;1 | tee T型管道</h3>
 <div class="outline-text-3" id="text-1-6">
 
-<p>有些时候，你所在的网络不止封锁SSH端口，它们有可能更进一步，只让你通过Web代理来访问网络，幸运的是我们有一个叫做Corkscrew的程序可以通过Web代理来发送SSH数据。Corkscrew的使用非常简单，一般我都是在需要时搜索，然后直接下载，跟随网站上的指示，然后就搞定了，一般你需要这样一条配置：<br/>
-ProxyCommand corkscrew proxy.example.org 8080 %h %p<br/>
+<p>当显示正在生成的输出时，捕获每个脚本的输出 <br/>
+如果脚本不能自动地将输出发送到文件的话，可以利用 Bash shell 的一些函数来捕获所执行脚本的输出，如：<br/>
+./test-bucket-1  -s  2&gt;&amp;1  | tee test-bucket-1.out<br/>
+</p>
+<p><br/>
+让我们来分析上面的命令：<br/>
+&#8220;2&gt;&amp;1&#8221; 命令：<br/>
+使用 &#8220;2&gt;&amp;1&#8221; 将标准错误重定向到标准输出。字符串 &#8220;2&gt;&amp;1&#8221; 表明任何错误都应送到标准输出，即 UNIX/Linux 下 2 的文件标识代表标准错误，而 1 的文件标识代表标准输出。如果不用此字符串，那么所捕捉到的仅仅是正确的信息，错误信息会被忽略。<br/>
+管道 &#8220;|&#8221; 和 &#8220;tee&#8221; 命令：<br/>
+UNIX/Linux 进程和简单的管道概念很相似。既然这样，可以做一个管道将期望脚本的输出作为管道的输入。下一个要决定的是如何处理管道所输出的内容。在这种情况下，我们会将它捕获到输出文件中，在此示例中将之称为 &#8220;test-bucket-1.out&#8221;。<br/>
+但是，除了要捕获到输出结果外，我们还想监视脚本运行时产生的输出。为达到此目的，我们连接允许两件事同时进行的 &#8220;tee&#8221; （T- 形管道）：将输出结果放在文件中同时将输出结果显示在屏幕上。 其管道类似于：<br/>
+process &ndash;&gt; T &mdash;&gt; output file<br/>
+             V<br/>
+           screen<br/>
+</p>
+<p><br/>
+如果 只 想捕获输出结果而不想在屏幕上看到输出结果，那可以忽略多余的管道： ./test-bucket-1 -s 2&gt;&amp;1 &gt; test-bucket-1.out<br/>
+假若这样，相类似的管道如下：<br/>
+process &ndash;&gt; output file<br/>
 </p>
 <p><br/>
 </p></div>
@@ -356,19 +779,10 @@ ProxyCommand corkscrew proxy.example.org 8080 %h %p<br/>
 </div>
 
 <div id="outline-container-1-7" class="outline-3">
-<h3 id="sec-1-7">shfs</h3>
+<h3 id="sec-1-7">产生随机数</h3>
 <div class="outline-text-3" id="text-1-7">
 
-<p>另一种让远程GUI程序显示在本地的替代方案就是让本地的GUI程序可以直接操作远程文件，你可以通过SSHFS来实现，只需要创建一个空目录，然后使用SSHFS将一个远程目录mount到这个目录就可以了：<br/>
-$ mkdir gallery_src<br/>
-$ sshfs dev:projects/gallery/src gallery_src<br/>
-$ cd gallery_src<br/>
-$ ls<br/>
-现在你就可以使用任何你喜欢的本地程序来便捷这个目录中的文件了，它们看起来是在你的本地，但其实时远程服务器上的文件，你可以使用fusermount命令来unmount这些文件，不要担心记不住，它们就在<br/>
-sshfs手册的顶上：<br/>
-$ cd ..<br/>
-$ fusermount -u gallery_src<br/>
-SSHFS可以在Linux和OSX上工作，Windows用户我目前还没找到什么好办法。<br/>
+<p>dd if=/dev/urandom count=1 2&gt; /dev/null | cksum | cut -f1 -d&#8221; &#8221; <br/>
 </p>
 <p><br/>
 </p></div>
@@ -376,26 +790,10 @@ SSHFS可以在Linux和OSX上工作，Windows用户我目前还没找到什么好
 </div>
 
 <div id="outline-container-1-8" class="outline-3">
-<h3 id="sec-1-8">使用本地App连接远程服务器</h3>
+<h3 id="sec-1-8">取得一些文件名称中的一部分名称</h3>
 <div class="outline-text-3" id="text-1-8">
 
-<p>有时可能有些服务，比如数据库或是Web服务器，它们运行在远程服务器上，但是如果有用方式可以直接从本地程序连接它们，那会非常有用，要做到这一点，你需要用到端口转发(port forwarding)，<br/>
-举个例子，如果你的服务器运行Postgres（并且只允许本地访问），那么你就可以在你的SSH配置中加入：<br/>
-Host db<br/>
-LocalForward 5433 localhost:5432<br/>
-现在当你连接你的SSH服务器时，它会在你本地电脑打开一个5433端口（我随便挑的），并将所有发送到这个端口的数据转发到服务器的5432端口（Postgres的默认端口），然后，只要你和服务器建立了连接，你就可以通过5433端口来访问服务器的Postgres了。<br/>
-$ ssh db<br/>
-现在打开另外一个窗口，你就可以通过下面这条命令在本地连接你的Postgres数据库了：<br/>
-$ psql -h localhost -p 5443 orders<br/>
-如果你想要使用服务器不支持的图形化Postgres客户端时，这条命令会显得尤其有用：<br/>
-$ pgadmin3 &amp;<br/>
-或者你有一个后台的Web服务器，你不希望直接通过Internet访问它，你也可以通过端口转发来访问它：<br/>
-Host api<br/>
-LocalForward 8080 localhost:80<br/>
-现在连接到服务器：<br/>
-$ ssh api<br/>
-然后将浏览器指向你选择的端口号：<br/>
-$ firefox <a href="http://localhost:8080/">http://localhost:8080/</a><br/>
+<p>interfaces=`ls session_* | sed &#8216;s/^session_//g&#8217; | sed &#8216;s//.log$//g&#8217;`<br/>
 </p>
 <p><br/>
 </p></div>
@@ -403,381 +801,13 @@ $ firefox <a href="http://localhost:8080/">http://localhost:8080/</a><br/>
 </div>
 
 <div id="outline-container-1-9" class="outline-3">
-<h3 id="sec-1-9">减少延迟</h3>
+<h3 id="sec-1-9">如何用bash从文件中读一行</h3>
 <div class="outline-text-3" id="text-1-9">
 
-<p>如果每次连接服务器都意味着你需要等待几十秒而无所事事，那么你或许应该试试在你的SSH配置中加入下面这条：<br/>
-GSSAPIAuthentication no<br/>
-如果这条命令有效的话，你应该通知你的系统管理员让他在服务器上禁用这个选项，这样其他人就不用再分别添加这条配置到它们的本地配置了。<br/>
-在server端修改：<br/>
-/etc/ssh/sshd_config<br/>
-添加<br/>
-USEDNS no<br/>
-service sshd restart<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true">2012年10月09日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">A Unix Utility You Should Know About:lsof</a>
-<ul>
-<li><a href="#sec-1-1">前言</a></li>
-<li><a href="#sec-1-2">如何使用lsof？</a></li>
-<li><a href="#sec-1-3">找出谁在使用某个文件</a></li>
-<li><a href="#sec-1-4">列出某个用户打开的所有文件</a></li>
-<li><a href="#sec-1-5">查找某个程序打开的所有文件</a></li>
-<li><a href="#sec-1-6">列出所有由某个用户或某个进程打开的文件</a></li>
-<li><a href="#sec-1-7">列出除root用户外的所有用户打开的文件</a></li>
-<li><a href="#sec-1-8">列出所有由某个PID对应的进程打开的文件</a></li>
-<li><a href="#sec-1-9">列出所有网络连接</a></li>
-<li><a href="#sec-1-10">列出所有NFS（网络文件系统）文件</a></li>
-<li><a href="#sec-1-11">列出所有UNIX域Socket文件</a></li>
-<li><a href="#sec-1-12">列出所有对应某个组id的进程</a></li>
-<li><a href="#sec-1-13">列出所有与某个描述符关联的文件</a></li>
-<li><a href="#sec-1-14">输出使用某些资源的进程pid</a></li>
-<li><a href="#sec-1-15">循环列出文件</a></li>
-<li><a href="#sec-1-16">如何安装lsof？</a></li>
-<li><a href="#sec-1-17">原文</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/09/lsof/">A Unix Utility You Should Know About:lsof</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">前言</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>这是“你应该知道的Unix和Linux命令”系列的第三篇，在这篇文章中，我会介绍lsof这个工具，如果说netcat是进行网络诊断的瑞士军刀，那么lsof就是Unix调试的瑞士军刀。<br/>
-</p>
-<p><br/>
-Lsof是遵从Unix哲学的典范，它只做一件事情，并且做的相当完美——它可以列出某个进程打开的所有文件信息。<br/>
-打开的文件可能是普通的文件，目录，NFS文件，块文件，字符文件，共享库，常规管道，明明管道，符号链接，Socket流，网络Socket，UNIX域Socket，以及其它更多。因为Unix系统中几乎所有东西都是文件，你可以想象lsof该有多有用。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">如何使用lsof？</h3>
-<div class="outline-text-3" id="text-1-2">
-
-
-<p><br/>
-这篇文章中我会尽力列举我能想到的所有lsof的用法，让我们先从最简单的开始（或许你已经知道了），然后逐渐增加复杂度：<br/>
-</p>
-<p><br/>
-列出所有打开的文件<br/>
-</p>
-<p><br/>
-<code>lsof</code><br/>
-</p>
-<p><br/>
-不带任何参数运行lsof会列出所有进程打开的所有文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">找出谁在使用某个文件</h3>
-<div class="outline-text-3" id="text-1-3">
-
-
-<p><br/>
-<code>lsof /path/to/file</code><br/>
-</p>
-<p><br/>
-只需要执行文件的路径，lsof就会列出所有使用这个文件的进程，你也可以列出多个文件，lsof会列出所有使用这些文件的进程。<br/>
-</p>
-<p><br/>
-你也可以一次制定多个文件：<br/>
-</p>
-<p><br/>
-<code>lsof /path/to/file1 /path/to/file2</code><br/>
-</p>
-<p><br/>
-递归查找某个目录中所有打开的文件<br/>
-</p>
-<p><br/>
-<code>lsof +D /usr/lib</code><br/>
-</p>
-<p><br/>
-加上+D参数，lsof会对指定目录进行递归查找，注意这个参数要比grep版本慢：<br/>
-</p>
-<p><br/>
-= lsof | grep &#8216;/usr/lib&#8217; =<br/>
-</p>
-<p><br/>
-之所以慢是因为+D首先查找所有的文件，然后一次性输出。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">列出某个用户打开的所有文件</h3>
-<div class="outline-text-3" id="text-1-4">
-
-
-<p><br/>
-<code>lsof -u pkrumins</code><br/>
-</p>
-<p><br/>
--u选项限定只列出所有被用户pkrumins打开的文件，你可以通过逗号指定多个用户：<br/>
-</p>
-<p><br/>
-<code>lsof -u rms,root</code><br/>
-</p>
-<p><br/>
-这条命令会列出所有rms和root用户打开的文件。<br/>
-</p>
-<p><br/>
-你也可以像下面这样使用多个-u做同样的事情：<br/>
-</p>
-<p><br/>
-<code>lsof -u rms -u root</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">查找某个程序打开的所有文件</h3>
-<div class="outline-text-3" id="text-1-5">
-
-
-<p><br/>
-<code>lsof -c apache</code><br/>
-</p>
-<p><br/>
--c选项限定只列出以apache开头的进程打开的文件：<br/>
-</p>
-<p><br/>
-所以你可以不用像下面这样写：<br/>
-</p>
-<p><br/>
-<code>lsof | grep foo</code><br/>
-</p>
-<p><br/>
-而使用下面这个更简短的版本：<br/>
-</p>
-<p><br/>
-<code>lsof -c foo</code><br/>
-</p>
-<p><br/>
-事实上，你可以只制定进程名称的开头：<br/>
-</p>
-<p><br/>
-<code>lsof -c apa</code><br/>
-</p>
-<p><br/>
-这会列出所有以apa开头的进程打开的文件<br/>
-</p>
-<p><br/>
-你同样可以制定多个-c参数：<br/>
-</p>
-<p><br/>
-<code>lsof -c apache -c python</code><br/>
-</p>
-<p><br/>
-这会列出所有由apache和python打开的文件<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">列出所有由某个用户或某个进程打开的文件</h3>
-<div class="outline-text-3" id="text-1-6">
-
-
-<p><br/>
-<code>lsof -u pkrumins -c apache</code><br/>
-</p>
-<p><br/>
-你也可以组合使用多个选项，这些选项默认进行或关联，也就是说上面的命令会输入由pkrumins用户或是apache进程打开的文件。<br/>
-</p>
-<p><br/>
-列出所有由一个用户与某个进程打开的文件<br/>
-</p>
-<p><br/>
-<code>lsof -a -u pkrumins -c bash</code><br/>
-</p>
-<p><br/>
--a参数可以将多个选项的组合条件由或变为与，上面的命令会显示所有由pkrumins用户以及bash进程打开的文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7" class="outline-3">
-<h3 id="sec-1-7">列出除root用户外的所有用户打开的文件</h3>
-<div class="outline-text-3" id="text-1-7">
-
-
-<p><br/>
-<code>lsof -u ^root</code><br/>
-</p>
-<p><br/>
-注意root前面的^符号，它执行取反操作，因此lsof会列出所有root用户之外的用户打开的文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-8" class="outline-3">
-<h3 id="sec-1-8">列出所有由某个PID对应的进程打开的文件</h3>
-<div class="outline-text-3" id="text-1-8">
-
-
-<p><br/>
-<code>lsof -p 1</code><br/>
-</p>
-<p><br/>
--p选项让你可以使用进程id来过滤输出。<br/>
-</p>
-<p><br/>
-记住你也可以用都好来分离多个pid。<br/>
-</p>
-<p><br/>
-<code>lsof -p 450,980,333</code><br/>
-</p>
-<p><br/>
-列出所有进程打开的文件除了某个pid的<br/>
-</p>
-<p><br/>
-<code>lsof -p ^1</code><br/>
-</p>
-<p><br/>
-同前面的用户一样，你也可以对-p选项使用^来进行取反。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-9" class="outline-3">
-<h3 id="sec-1-9">列出所有网络连接</h3>
-<div class="outline-text-3" id="text-1-9">
-
-
-<p><br/>
-<code>lsof -i</code><br/>
-</p>
-<p><br/>
-lsof的-i选项可以列出所有打开了网络套接字（TCP和UDP）的进程。<br/>
-</p>
-<p><br/>
-列出所有TCP网络连接<br/>
-</p>
-<p><br/>
-<code>lsof -i tcp</code><br/>
-</p>
-<p><br/>
-也可以为-i选项加上参数，比如tcp，tcp选项会强制lsof只列出打开TCP sockets的进程。<br/>
-</p>
-<p><br/>
-列出所有UDP网络连接<br/>
-</p>
-<p><br/>
-<code>lsof -i udp</code><br/>
-</p>
-<p><br/>
-同样udp让lsof只列出使用UDP socket的进程。<br/>
-</p>
-<p><br/>
-找到使用某个端口的进程<br/>
-</p>
-<p><br/>
-<code>lsof -i :25</code><br/>
-</p>
-<p><br/>
-:25和-i选项组合可以让lsof列出占用TCP或UDP的25端口的进程。<br/>
-</p>
-<p><br/>
-你也可以使用/etc/services中制定的端口名称来代替端口号，比如：<br/>
-</p>
-<p><br/>
-<code>lsof -i :smtp</code><br/>
-</p>
-<p><br/>
-找到使用某个udp端口号的进程<br/>
-</p>
-<p><br/>
-<code>lsof -i udp:53</code><br/>
-</p>
-<p><br/>
-同样的，也可以找到使用某个tcp端口的进程：<br/>
-</p>
-<p><br/>
-<code>lsof -i tcp:80</code><br/>
-</p>
-<p><br/>
-找到某个用户的所有网络连接<br/>
-</p>
-<p><br/>
-<code>lsof -a -u hacker -i</code><br/>
-</p>
-<p><br/>
-使用-a将-u和-i选项组合可以让lsof列出某个用户的所有网络行为。<br/>
+<p>while read line<br/>
+  do<br/>
+  echo $line<br/>
+done &lt; &#8220;$filename&#8221;<br/>
 </p>
 <p><br/>
 </p></div>
@@ -785,15 +815,18 @@ lsof的-i选项可以列出所有打开了网络套接字（TCP和UDP）的进�
 </div>
 
 <div id="outline-container-1-10" class="outline-3">
-<h3 id="sec-1-10">列出所有NFS（网络文件系统）文件</h3>
+<h3 id="sec-1-10">如何用bash发现某些文件中是否没有包含string</h3>
 <div class="outline-text-3" id="text-1-10">
 
 
 <p><br/>
-<code>lsof -N</code><br/>
+jsps=`find . -name &#8220;*.jsp&#8221;`<br/>
 </p>
 <p><br/>
-这个参数很好记，-N就对应NFS。<br/>
+for jsp in $jsps; do<br/>
+    havegb=`grep gb2312 $jsp`<br/>
+        [ ! -n &#8220;$havegb&#8221; ] &amp;&amp; echo $jsp<br/>
+done<br/>
 </p>
 <p><br/>
 </p></div>
@@ -801,15 +834,15 @@ lsof的-i选项可以列出所有打开了网络套接字（TCP和UDP）的进�
 </div>
 
 <div id="outline-container-1-11" class="outline-3">
-<h3 id="sec-1-11">列出所有UNIX域Socket文件</h3>
+<h3 id="sec-1-11">cd 替换技巧</h3>
 <div class="outline-text-3" id="text-1-11">
 
-
-<p><br/>
-<code>lsof -U</code><br/>
-</p>
-<p><br/>
-这个选项也很好记，-U就对应UNIX。<br/>
+<p>cd dir1/abc<br/>
+使用cd old new实现替换<br/>
+如：<br/>
+cd dir1 dir2<br/>
+等效于<br/>
+cd dir2/abc<br/>
 </p>
 <p><br/>
 </p></div>
@@ -817,123 +850,13 @@ lsof的-i选项可以列出所有打开了网络套接字（TCP和UDP）的进�
 </div>
 
 <div id="outline-container-1-12" class="outline-3">
-<h3 id="sec-1-12">列出所有对应某个组id的进程</h3>
+<h3 id="sec-1-12">上一条命令替换</h3>
 <div class="outline-text-3" id="text-1-12">
 
-
-<p><br/>
-<code>lsof -g 1234</code><br/>
+<p>^foo^bar<br/>
+将上一条命令中的foo替换为bar，然后执行<br/>
 </p>
 <p><br/>
-进程组用来来逻辑上对进程进行分组，这个例子查找所有PGID为1234的进程打开的文件。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-13" class="outline-3">
-<h3 id="sec-1-13">列出所有与某个描述符关联的文件</h3>
-<div class="outline-text-3" id="text-1-13">
-
-
-<p><br/>
-<code>lsof -d 2</code><br/>
-</p>
-<p><br/>
-这个命令会列出所有以描述符2打开的文件。<br/>
-</p>
-<p><br/>
-你也可以为描述符指定一个范围：<br/>
-</p>
-<p><br/>
-<code>lsof -d 0-2</code><br/>
-</p>
-<p><br/>
-这会列出所有描述符为0，1，2的文件。<br/>
-</p>
-<p><br/>
--d选项还支持其它很多特殊值，下面的命令列出所有内存映射文件：<br/>
-</p>
-<p><br/>
-<code>lsof -d mem</code><br/>
-</p>
-<p><br/>
-txt则列出所有加载在内存中并正在执行的进程：<br/>
-</p>
-<p><br/>
-<code>lsof -d txt</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-14" class="outline-3">
-<h3 id="sec-1-14">输出使用某些资源的进程pid</h3>
-<div class="outline-text-3" id="text-1-14">
-
-
-<p><br/>
-<code>lsof -t -i</code><br/>
-</p>
-<p><br/>
--t选项输出进程的PID，你可以将它和-i选项组合输出使用某个端口的进程的PID，下面的命令将会杀掉所有使用网络的进程：<br/>
-</p>
-<p><br/>
-<code>kill -9 `lsof -t -i`</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-15" class="outline-3">
-<h3 id="sec-1-15">循环列出文件</h3>
-<div class="outline-text-3" id="text-1-15">
-
-
-<p><br/>
-<code>lsof -r 1</code><br/>
-</p>
-<p><br/>
--r选项让lsof可以循环列出文件直到被中断，参数1的意思是每秒钟重复打印一次，这个选项最好同某个范围比较小的查询组合使用，比如用来监测网络活动：<br/>
-</p>
-<p><br/>
-<code>lsof -r 1 -u john -i -a</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-16" class="outline-3">
-<h3 id="sec-1-16">如何安装lsof？</h3>
-<div class="outline-text-3" id="text-1-16">
-
-
-<p><br/>
-许多Unix系统都内置了lsof，如果你的系统没有安装，你可以从这里直接下载源代码。<br/>
-</p>
-<p><br/>
-BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
-</p>
-<p><br/>
-你可以通过man lsof来了解关于lsof的完整文档，或者通过lsof -h查看。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-17" class="outline-3">
-<h3 id="sec-1-17">原文</h3>
-<div class="outline-text-3" id="text-1-17">
-
-<p><a href="http://www.catonmat.net/blog/unix-utilities-lsof/">http://www.catonmat.net/blog/unix-utilities-lsof/</a><br/>
-还有pipe view和netcat，以后再总结<br/>
-翻译：<br/>
-<a href="http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/">http://heikezhi.com/2011/06/19/swiss-army-knife-of-unix-debugging-lsof/</a><br/>
 </p></div>
 </div>
 </div>
@@ -949,7 +872,7 @@ BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">Functional-programming-is-hard-thats-why-its-good</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/11/15/centos-kdump/">Centos Kdump</a></h1>
     
     
       <p class="meta">
@@ -965,7 +888,7 @@ BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
   
 
 
-<time datetime="2012-09-11T00:00:00+08:00" pubdate data-updated="true">2012年09月11日</time>
+<time datetime="2012-11-15T00:00:00+08:00" pubdate data-updated="true">2012年11月15日</time>
         
       </p>
     
@@ -976,18 +899,17 @@ BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">functional-programming-is-hard-thats-why-its-good</a>
+<li><a href="#sec-1">centos kdump</a>
 <ul>
-<li><a href="#sec-1-1">函数式编程很难，这正是你要学习它的原因</a>
-<ul>
-<li><a href="#sec-1-1-1">它给你的初次印象不友善</a></li>
-<li><a href="#sec-1-1-2">新奇事物</a></li>
-<li><a href="#sec-1-1-3">眼见为实</a></li>
-<li><a href="#sec-1-1-4">各有所求</a></li>
-<li><a href="#sec-1-1-5">补充</a></li>
-<li><a href="#sec-1-1-6">转载自: http://www.aqee.net/functional-programming-is-hard-thats-why-its-good/</a></li>
-</ul>
-</li>
+<li><a href="#sec-1-1">介绍</a></li>
+<li><a href="#sec-1-2">安装</a></li>
+<li><a href="#sec-1-3">添加内核启动参数</a></li>
+<li><a href="#sec-1-4">配置文件</a></li>
+<li><a href="#sec-1-5">测试</a></li>
+<li><a href="#sec-1-6">用crash 工具分析vmcore 文件</a></li>
+<li><a href="#sec-1-7">参考</a></li>
+<li><a href="#sec-1-8">遗留问题</a></li>
+<li><a href="#sec-1-9">systemtap</a></li>
 </ul>
 </li>
 </ul>
@@ -995,7 +917,7 @@ BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">functional-programming-is-hard-thats-why-its-good</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/11/15/centos-kdump/">centos kdump</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -1004,27 +926,150 @@ BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">函数式编程很难，这正是你要学习它的原因</h3>
+<h3 id="sec-1-1">介绍</h3>
 <div class="outline-text-3" id="text-1-1">
 
-<p>很奇怪不是，很少有人每天都使用函数式编程语言。如果你用Scala，Haskell，Erlang，F#或某个Lisp方言来编程，很可能没有公司会花钱聘你。这个行业里的绝大部分人都是使用像Python，Ruby，Java或C#等面向对象的编程语言——它们用起来很顺手。不错，你也许会偶然用到一两个“函数式语言特征”，例如“block”，但人们不会去做函数式编程。<br/>
+<p>通过kexec和kdump当内核crash的时候可以显示堆栈信息。方便调试。<br/>
 </p>
 <p><br/>
-然而，很多年来，我们一直被教导说函数式编程语言很好很棒。我仍然记得当我第一次阅读ESR的著名的关于学习Lisp语言的论文时的困惑。也许大多数的人对Paul Graham 的《Beating The Averages》这篇文章更加熟悉：<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">安装</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>sudo yum install kexec-tools<br/>
+sudo yum install kernel-debug kernel-debug-devel<br/>
+yum install crash gdb<br/>
 </p>
 <p><br/>
-使用Lisp开发使我们的开发周期迭代的如此之快，以至于有时当竞争对手在新闻发布会上推出他们的新功能一两天后，我们就能复制出同样的功能。当报道产品发布的新闻记者打电话给我们时，我们的产品已经拥有了同样的功能特征。<br/>
+为了让内核都统一，不妨内核也升级一下<br/>
+yum install kernel kernel-devel<br/>
 </p>
 <p><br/>
-那些皈依函数式编程的人中，一直常见的考虑是：学习这种新的、函数式的语言“对你有好处”；就像是某些人建议说每天30分钟的健身房活动会“让你的身体健康”一样。但这也同时暗示了这样做的难度和需要的付出。Lisp语言跟Haskell、Ocaml和Scala语言不同，被认为是出了名的难学，可以说是臭名昭著。文雅的人说这是Lisp语言的“深度&amp;广度”的体现。不文雅的人说这是“意淫”或“玩弄学术”或简单的“没必要”。我认为，它的难度跟你对它熟不熟悉有关，而且，这种难度是一种重要指标显示：学习这样的一种语言会让你编程更有效率、能力更强。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">添加内核启动参数</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>crashkernel=128M@16M<br/>
+在/etc/grub.cfg中添加，表示启动的时候从16M的位置开始，预留128M内存用于crashkernel <br/>
+注意centos6.2我发现可能已经默认支持了kdump，只是没有启动而已，grub.cfg中已经添加了crashkernel=auto<br/>
 </p>
 <p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">配置文件</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>/etc/kdump.conf<br/>
+配置coredump的位置，默认是 /var/crash<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">测试</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>reboot后<br/>
+这会创建/boot/initrd-kdump.img用于capture coredump，这非常重要，否则kdump就会启动失败。<br/>
+该文件就是kdump加载的内核的 initrd文件，收集dump信息的工作就是在该initrd的启动环境下进行的。<br/>
+查看/etc/init.d/kdump脚本的代码，你可看到其中会调用mkdumprd命令创建用于dump的initrd文件。<br/>
+</p>
+<p><br/>
+service kdump status<br/>
+</p>
+<p><br/>
+触发crash<br/>
+echo 1 &gt; /proc/sys/kernel/sysrq<br/>
+echo &#8220;c&#8221; &gt; /proc/sysrq-trigger<br/>
+</p>
+<p><br/>
+等待时间比较长，大概5分钟，系统又重新进入了桌面。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">用crash 工具分析vmcore 文件</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+<p><br/>
+用crash 命令分析vmcore 的命令行格式如下所示. <br/>
+用crash打开vmcore后，主要是用dmesg及 bt 命令打印出问题的执行路径的call trace, <br/>
+用dis 反汇编出代码，最终确认call trace对应的C源码中的位置，再进行逻辑分析.<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">参考</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p><a href="http://www.linuxidc.com/Linux/2011-03/33548.htm">http://www.linuxidc.com/Linux/2011-03/33548.htm</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">遗留问题</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>用crash需要vmlinux，到哪里获得？<br/>
+可能需要安装kernel-debuginfo<br/>
+但标准库里可能没有，需要另外添加。<br/>
+<a href="http://www.dedoimedo.com/computers/centos-debug.html">http://www.dedoimedo.com/computers/centos-debug.html</a><br/>
+</p>
+<p><br/>
+<a href="http://wiki.centos.org/AdditionalResources/Repositories">http://wiki.centos.org/AdditionalResources/Repositories</a><br/>
+已经说得很清楚了，需要额外添加debuginfo的库<br/>
+不过看到centos6.2中自带了<br/>
+ /etc/yum.repos.d/CentOS-Debuginfo.repo<br/>
+<b>注意把其中的enabled改为1</b>,然后就可以安装了<br/>
+kernel-debuginfo 将近300M<br/>
+</p>
+<p><br/>
+先不下了，速度太慢了，10k。<br/>
+</p>
+<p><br/>
+还有个问题，就算能看vmcore了，那模块coredump也能看吗？<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">systemtap</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>有空再研究一下kprobe和systemtap<br/>
+<a href="http://hi.baidu.com/donglix/item/13052275911e7a5f0c0a07f8">http://hi.baidu.com/donglix/item/13052275911e7a5f0c0a07f8</a><br/>
+</p></div>
+</div>
+</div>
 </div>
   
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/09/11/functional-programming-is-hard-thats-why-its-good/">Read on &rarr;</a>
-    </footer>
   
 
 
@@ -1035,7 +1080,7 @@ BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/09/11/can-your-programming-language-do-this/">Can Your Programming Language Do This</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/11/02/gcov/">Gcov</a></h1>
     
     
       <p class="meta">
@@ -1051,7 +1096,7 @@ BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
   
 
 
-<time datetime="2012-09-11T00:00:00+08:00" pubdate data-updated="true">2012年09月11日</time>
+<time datetime="2012-11-02T00:00:00+08:00" pubdate data-updated="true">2012年11月02日</time>
         
       </p>
     
@@ -1062,10 +1107,10 @@ BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">can your programming language do this</a>
+<li><a href="#sec-1">gcov</a>
 <ul>
-<li><a href="#sec-1-1">你的编程语言能这样做吗？</a></li>
-<li><a href="#sec-1-2">转载自</a></li>
+<li><a href="#sec-1-1">分支覆盖的作用</a></li>
+<li><a href="#sec-1-2">参考</a></li>
 </ul>
 </li>
 </ul>
@@ -1073,7 +1118,7 @@ BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/09/11/can-your-programming-language-do-this/">can your programming language do this</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/11/02/gcov/">gcov</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -1082,43 +1127,37 @@ BSD系统有一个类似的工具可以做同样的事情，叫做fstat。<br/>
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">你的编程语言能这样做吗？</h3>
+<h3 id="sec-1-1">分支覆盖的作用</h3>
 <div class="outline-text-3" id="text-1-1">
 
-<p>一日，你查看你的程序代码，你有两大块代码看起来几乎完全的一样。事实上它们就是完全一样，除了一个代码里说的是“Spaghetti(意大利面条)”，另一个代码里说的是“Chocolate Moose(巧克力慕丝)”。<br/>
+<p>所有单元测试跑完后，统计分支覆盖率，统计测试的是否全面。一个程序如果每个分支都执行过了，也不能保证程序就是正确的。<br/>
+毕竟还有很多逻辑错误，但至少能从某种程度上显示出，这些代码测试的是否完善，不完善就还需要补充测试用例。<br/>
+可以显示出每行被执行了多少次，哪行没有被执行。<br/>
 </p>
 <p><br/>
-<pre class="example">// 一个小例子：
-
-alert("I'd like some Spaghetti!");
-alert("I'd like some Chocolate Moose!");
-</pre>
-
-这个例子恰好是用Javascript写的，但即使是你不懂Javascript，你也应该能看懂我说的。<br/>
 </p>
 <p><br/>
-当然，重复的代码看起来不太好。所以你决定写一个函数：<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">参考</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p><a href="http://www.taobaotest.com/blogs/qa?bid=8451">GCOV 实现原理</a><br/>
+&lt;深入浅出Linux平台代码覆盖率测试.pdf&gt;<br/>
 </p>
 <p><br/>
-<pre class="example">function SwedishChef( food )
-{
-    alert("I'd like some " + food + "!");
-}
-
-SwedishChef("Spaghetti");
-SwedishChef("Chocolate Moose");
-</pre>
-
-
-没错，这个例子很简单，但你可以想出一些更有实际价值的例子。这样做是更好一些，有很多理由，这些理由估计你都听说过一万遍了。可维护性，可读性，抽象 = 好！<br/>
 </p>
 <p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
 </div>
   
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/09/11/can-your-programming-language-do-this/">Read on &rarr;</a>
-    </footer>
   
 
 
@@ -1129,7 +1168,7 @@ SwedishChef("Chocolate Moose");
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/08/31/org-mode-note/">Org-mode学习笔记</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/11/02/cutter/">C单元测试框架:cutter</a></h1>
     
     
       <p class="meta">
@@ -1145,130 +1184,92 @@ SwedishChef("Chocolate Moose");
   
 
 
-<time datetime="2012-08-31T00:00:00+08:00" pubdate data-updated="true">2012年08月31日</time>
+<time datetime="2012-11-02T00:00:00+08:00" pubdate data-updated="true">2012年11月02日</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">org-mode学习笔记</a>
-<ul>
-<li><a href="#sec-1-1">头信息注释</a></li>
-<li><a href="#sec-1-2">安装最新的org</a></li>
-<li><a href="#sec-1-3">文档结构相关的操作</a>
-<ul>
-<li><a href="#sec-1-3-1">Motion</a></li>
-<li><a href="#sec-1-3-2">headline结构移动</a></li>
-<li><a href="#sec-1-3-3">Structure editing</a></li>
-<li><a href="#sec-1-3-4">Sparse Tree</a></li>
-<li><a href="#sec-1-3-5">List</a></li>
-<li><a href="#sec-1-3-6">Footnotes</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-4">加粗</a></li>
-<li><a href="#sec-1-5">链接</a>
-<ul>
-<li><a href="#sec-1-5-1">内部链接 Internal Link</a></li>
-<li><a href="#sec-1-5-2">添加附件</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-6">TABLES</a>
-<ul>
-<li><a href="#sec-1-6-1">表格宽度</a></li>
-<li><a href="#sec-1-6-2">行列操作</a></li>
-<li><a href="#sec-1-6-3">表格计算</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-7">tag</a></li>
-<li><a href="#sec-1-8">code</a></li>
-<li><a href="#sec-1-9">TODO使用</a>
-<ul>
-<li><a href="#sec-1-9-1">TODO依赖关系</a></li>
-<li><a href="#sec-1-9-2">tracking todo state change</a></li>
-<li><a href="#sec-1-9-3">priotify</a></li>
-<li><a href="#sec-1-9-4">checkbox</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-10">org capture</a></li>
-<li><a href="#sec-1-11">exports</a>
-<ul>
-<li><a href="#sec-1-11-1">export option</a>
-<ul>
-<li><a href="#sec-1-11-1-1">防止下横杠被转义</a></li>
-<li><a href="#sec-1-11-1-2">export html</a></li>
-<li><a href="#sec-1-11-1-3">export pdf</a></li>
-<li><a href="#sec-1-11-1-4">使用org-jekyll导出</a></li>
-</ul></li>
-</ul>
-</li>
-<li><a href="#sec-1-12">dates and times</a></li>
-<li><a href="#sec-1-13">属性</a></li>
-<li><a href="#sec-1-14">未分类</a>
-<ul>
-<li><a href="#sec-1-14-1">byte-recompile-directory</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-15">问题</a></li>
-<li><a href="#sec-1-16">参考资料</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/08/31/org-mode-note/">org-mode学习笔记</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
+  <div class="entry-content"><div><div><p><br/>
 </p>
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">头信息注释</h3>
+<h3 id="sec-1-1">特性</h3>
 <div class="outline-text-3" id="text-1-1">
 
-
-<p><br/>
-<pre class="example">#+TAGS: { 桌面(d) 服务器(s) }  编辑器(e) 浏览器(f) 多媒体(m) 压缩(z)
-#+TAGS:  { @Windows(w)  @Linux(l) }  
-#+TAGS:  { 糟糕(1) 凑合(2) 不错(3) 很好(4) 极品(5) } 
-#+SEQ_TODO: TODO(T) WAIT(W) | DONE(D!) CANCELED(C@) 
-#+COLUMNS: %10ITEM  %10PRIORITY %15TODO %65TAGS
-</pre>
-
+<p>c的单元测试见的多了，cutter有什么看家本领吗？<br/>
 </p><ol>
-<li>启动时概览<br/>
-</li>
-<li>设定标签，括弧中的为标签快捷键（如果没有指定，默认为首字母）。可以设置在多行中<br/>
-</li>
-<li>花括号为标签组，组中的标签只能选一个<br/>
-</li>
-<li>设定待办状态。将项设置为 | 后面的状态时（DONE CANCELED），会打上 CLOSED 标志<br/>
-</li>
-<li>设定列视图<br/>
-</li>
-<li>更新了参数后在参数区域按C-c C-c进行更新<br/>
+<li>框平台性好<br/>
+   这个貌似意义不大，单元测试框架一般本身都很小巧，移植难度很小。<br/>
+
+<p><br/>
+</p></li>
+<li>自动探测用例<br/>
+   这个功能不错，只要开头是test_ 开头的函数，自动认为是testcase。<br/>
+   其实他是把testcase编译成了库，然后进行符号查找。<br/>
+
+<p><br/>
+</p></li>
+<li>显示友好<br/>
+   尽量精确的提出错误在哪里，有个expect和real，貌似还可以diff。<br/>
+
+<p><br/>
+</p></li>
+<li>支持数据驱动测试<br/>
+   这个功能还有点不明白，貌似应该是测试前准备数据集的功能，不知道是否是mock功能。<br/>
+
+<p><br/>
+</p></li>
+<li>支持代码的分支覆盖率攻击。<br/>
+
+<p><br/>
+</p></li>
+<li>针对ubuntu特别优化。<br/>
 </li>
 </ol>
 
 
 <p><br/>
-<b>这里的内容可以随时更改，但是要记得在改后用 C-c C-c 刷新设置</b><br/>
 </p>
 <p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">后续待添加功能</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>从他的TODO中可以看到一些，不过我最期望的是：<br/>
+</p><ol>
+<li>测试用例的search<br/>
+</li>
+<li>内存泄漏测试，最好集成memwatch的功能。mem_limit很好。<br/>
+</li>
+<li>是否有mock功能？<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">主页</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p><a href="http://sourceforge.net/projects/cutter/">http://sourceforge.net/projects/cutter/</a><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
 </div>
   
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/08/31/org-mode-note/">Read on &rarr;</a>
-    </footer>
   
 
 
@@ -1279,7 +1280,7 @@ SwedishChef("Chocolate Moose");
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/08/15/emacs-markdown-mode/">Emacs Markdown-mode</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/10/30/memwatch-/">Memwatch</a></h1>
     
     
       <p class="meta">
@@ -1295,64 +1296,191 @@ SwedishChef("Chocolate Moose");
   
 
 
-<time datetime="2012-08-15T12:38:00+08:00" pubdate data-updated="true">2012年08月15日</time>
+<time datetime="2012-10-30T00:00:00+08:00" pubdate data-updated="true">2012年10月30日</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><h4>锚标签 C-c C-a</h4>
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">memwatch</a>
+<ul>
+<li><a href="#sec-1-1">Memwatch简介</a></li>
+<li><a href="#sec-1-2">MemWatch的内存处理</a></li>
+<li><a href="#sec-1-3">初始化和结束处理</a></li>
+<li><a href="#sec-1-4">MemWatch的I/O 操作</a></li>
+<li><a href="#sec-1-5">使用</a>
+<ul>
+<li><a href="#sec-1-5-1">使用MemWatch提供的功能</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-6">Memwatch使用注意</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 
-<p><code>C-c C-a l</code> 超链接<br/>
-<code>C-c C-a r</code> 参考链接 text 参考链接放到文件最后 [label]: markdown.html<br/>
-<code>C-c C-a w</code> wiki链接 [[wikilink]]</p>
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/30/memwatch-/">memwatch</a></h2>
+<div class="outline-text-2" id="text-1">
 
-<h4>常用命令 C-c C-c</h4>
 
-<p><code>C-c C-c m</code> 在另一个Buffer显示输出<br/>
-<code>C-c C-c p</code> 在浏览器中预览输出<br/>
-<code>C-c C-c e</code> 输出html文件到相同前缀的.html文件 eg:basename.html<br/>
-<code>C-c C-c v</code> 输出并且在浏览器中查看<br/>
-<code>C-c C-c c</code> 检查是否有未定义的链接</p>
+<p><br/>
+</p>
+</div>
 
-<h4>插入图片 C-c C-i</h4>
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Memwatch简介</h3>
+<div class="outline-text-3" id="text-1-1">
 
-<p><code>C-c C-i i</code> 插入一张图片</p>
+<p>在三种检测工具当中，设置最简单的算是memwatch，和dmalloc一样，<br/>
+它能检测未释放的内存、同一段内存被释放多次、位址存取错误及不当使用未分配之内存区域。<br/>
+请往<br/>
+<a href="http://www.linkdata.se/sourcecode.html">http://www.linkdata.se/sourcecode.html</a><br/>
+下载最新版本的Memwatch。<br/>
+</p>
+<p><br/>
+</p></div>
 
-<h4>物理样式 C-c C-p</h4>
+</div>
 
-<p><code>C-c C-p b</code> 将选中的文字加粗 bold <strong>bold</strong> 如果为选中则插入 <em><em>**<br/>
-<code>C-c C-p f</code> 将选中的文字设置成等宽字体 <code>fixed width text</code><br/>
-<code>C-c C-p i</code> 将选中的文字设置成斜体 italic</em>italic</em></p>
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">MemWatch的内存处理</h3>
+<div class="outline-text-3" id="text-1-2">
 
-<h4>逻辑样式 C-c C-s</h4>
+<p>MemWatch将所有分配的内存用0xFE填充，所以，如果你看到错误的数据是用0xFE填充的，那就是你没有初始化数据。<br/>
+例外是calloc()，它会直接把分配的内存用0填充。<br/>
+</p>
+<p><br/>
+MemWatch将所有已释放的内存用0xFD填充(zapped with 0xFD).<br/>
+如果你发现你使用的数据是用0xFD填充的，那你就使用的是已释放的内存。<br/>
+在这种情况，注意MemWatch会立即把一个&#8221;释放了的块信息&#8221; 填在释放了的数据前。<br/>
+这个块包括关于内存在哪儿释放的信息，以可读的文本形式存放，格式 为&#8221;FBI&lt;counter&gt;filename(line)&#8221;。<br/>
+如:&#8221;FBI&lt;267&gt;test.c(12)&#8221;.使用FBI会降 低free()的速度，所以默认是关闭的。使用mwFreeBufferInfo(1)开启。<br/>
+</p>
+<p><br/>
+</p></div>
 
-<p><code>C-c C-s b</code> 设置引用 > backquoted<br/>
-<code>C-c C-s p</code> 预格式，在之前插入4个空格默认 <code>&lt;pre&gt;pre text&lt;/pre&gt;</code><br/>
-<code>C-c C-s c</code> 插入代码块 <code>code here</code><br/>
-<code>C-c C-s e</code> 强调 emphasis <em>emphasis</em><br/>
-<code>C-c C-s s</code> 加强 strong <strong>strong</strong></p>
+</div>
 
-<h4>标题章节 C-c C-t</h4>
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">初始化和结束处理</h3>
+<div class="outline-text-3" id="text-1-3">
 
-<p><code>C-c C-t n</code> 插入标题 1-6<br/>
-<code>C-c C-t t</code> 插入一个title<br/>
-<code>C-c C-t s</code> 插入一个section<br/>
-<code>C-c -</code> 插入一条分割线</p>
+<p>一般来说，在程序中使用MemWatch的功能，可以手动添加mwInit()进行初始化，并用对应的mwTerm ()进行结束处理。<br/>
+一般不需要手动添加，memwatch会在第一个malloc的时候自动初始化，并在atexit中添加mwTerm。<br/>
+</p>
+<p><br/>
+如果自动初始化不合适或者程序比较特殊，请显式调用mwInit()和mwTerm().<br/>
+比如，有的时候明明程序没有问题，而memwatch显示内存泄漏，这时就需要手动调用初始化和结束。<br/>
+</p>
+<p><br/>
+涉及的函数主要有：<br/>
+mwInit()    mwTerm()    mwAbort()<br/>
+</p>
+<p><br/>
+</p></div>
 
-<hr />
+</div>
 
-<h4>导航</h4>
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">MemWatch的I/O 操作</h3>
+<div class="outline-text-3" id="text-1-4">
 
-<p><code>TAB</code> 折叠或者展开标题<br/>
-<code>C-M-n &amp; C-M-p</code> 在上下可见的标题中前后移动<br/>
-<code>C-M-f &amp; C-M-b</code> 在同一级的标题中前后移动<br/>
-<code>C-M-u</code> 回到上一级标题</p>
+<p>对于一般的操作，MemWatch创建memwatch.log文件。有时，该文件不能被创建;<br/>
+MemWatch会试图创建memwatNN.log文件，NN在01~99之间。<br/>
+</p>
+<p><br/>
+如果你不能使用日志，或者不想使用，也没有问题。<br/>
+只要使用类型为&#8221;void func(int c)&#8221;的参数调用mwSetOutFunc()，然后所有的输出都会按字节定向到该函数.<br/>
+</p>
+<p><br/>
+当ASSERT或者VERIFY失败时，MemWatch也有Abort/Retry/Ignore处理机制。<br/>
+默认的处理机制没有I/O操作，但是会自动中断程序。<br/>
+你可以使用任何其他Abort/Retry/Ignore的处理机制,只要以参数&#8221;void func(int c)&#8221;调用mwSetAriFunc()。<br/>
+</p>
+<p><br/>
+涉及的函数主要有：<br/>
+mwTrace()           mwPuts()        mwSetOutFunc()  mwSetAriFunc()<br/>
+mwSetAriAction()    mwAriHandler()  mwBreakOut()<br/>
+</p>
+<p><br/>
+</p></div>
 
-<h2>参考</h2>
+</div>
 
-<p><a href="http://jblevins.org/projects/markdown-mode/">Emacs Markdown Mode</a></p>
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">使用</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>在要使用MemWatch的.c文件中包含头文件&#8221;memwatch.h&#8221;<br/>
+</p>
+<p><br/>
+使用GCC编译（注意：不是链接）自己的程序时，加入-DMEMWATCH -DMW_STDIO<br/>
+如：gcc -DMEMWATCH -DMW_STDIO –o test.o –c  test1.c memwatch.c<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1">使用MemWatch提供的功能</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+<ol>
+<li>mwTRACE，mwASSERT，mwVERIFY和mwPuts<br/>
+</li>
+<li>ARI机制即程序设置的“Abort, Retry, Ignore选择陷阱<br/>
+</li>
+<li>mwSetOutFunc<br/>
+   将输出转向调用者给出的函数(参数即函数地址)。参数为NULL，表示把输出写入日志文件memwatch.log.<br/>
+</li>
+<li>mwIsReadAddr<br/>
+   检查内存是否有读取的权限<br/>
+</li>
+<li>mwIsSafeAddr<br/>
+   检查内存是否有读、写的权限<br/>
+</li>
+<li>mwStatistics<br/>
+   设置状态搜集器的行为。对应的参数采用宏定义。<br/>
+
+<p><br/>
+   #define MW_STAT_GLOBAL  0       <i>* 仅搜集全局状态信息 *</i><br/>
+   #define MW_STAT_MODULE  1       <i>* 搜集模块级的状态信息 *</i><br/>
+   #define MW_STAT_LINE    2       <i>* 搜集代码行级的状态信息 *</i><br/>
+   #define MW_STAT_DEFAULT 0       <i>* 默认状态设置 *</i><br/>
+</p></li>
+</ol>
+
+
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">Memwatch使用注意</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>Memwatch 的优点是无需特別配置，不需安装便能使用，但缺点是它会拖慢程序的运行速度，尤其是释放内存时它会作大量检查。<br/>
+但它比mtrace和dmalloc多了 一项功能，就是能模拟系统内存不足的情況，<br/>
+使用者只需用mwLimit(long num_of_byte)函数来限制程式的heap memory大小(以byte单位)。<br/>
+</p>
+<p><br/>
+最详细的使用说明(包括优点缺点，运行原理等)已在README中列出，本人强烈建议各位读者参考该文件。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
 </div>
   
   
@@ -1365,7 +1493,7 @@ SwedishChef("Chocolate Moose");
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/08/15/tian-jia-wei-bo-sidebar/">添加微博sidebar</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/10/29/cunit/">CUnit</a></h1>
     
     
       <p class="meta">
@@ -1381,70 +1509,91 @@ SwedishChef("Chocolate Moose");
   
 
 
-<time datetime="2012-08-15T00:50:00+08:00" pubdate data-updated="true">2012年08月15日</time>
+<time datetime="2012-10-29T00:00:00+08:00" pubdate data-updated="true">2012年10月29日</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>使用<a href="http://weibo.com/tool/weiboshow">微博秀</a>直接生成对应的代码，然后写到custom/asides/weibo.html中。</p>
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">CUnit</a>
+<ul>
+<li><a href="#sec-1-1">CUnit交叉编译</a></li>
+<li><a href="#sec-1-2">使用bootstrap而不是configure</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;section&gt;</span>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>新浪微博<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;weibo&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;li&gt;</span>
-</span><span class='line'><span class="nt">&lt;iframe</span> <span class="na">width=</span><span class="s">&quot;100%&quot;</span> <span class="na">height=</span><span class="s">&quot;550&quot;</span> <span class="na">class=</span><span class="s">&quot;share_self&quot;</span>  <span class="na">frameborder=</span><span class="s">&quot;0&quot;</span> <span class="na">scrolling=</span><span class="s">&quot;no&quot;</span>
-</span><span class='line'><span class="na">src=</span><span class="s">&quot;http://widget.weibo.com/weiboshow/index.php?</span>
-</span><span class='line'><span class="s">language=&amp;</span>
-</span><span class='line'><span class="s">width=0&amp;</span>
-</span><span class='line'><span class="s">height=550&amp;</span>
-</span><span class='line'><span class="s">fansRow=2&amp;</span>
-</span><span class='line'><span class="s">ptype=1&amp;</span>
-</span><span class='line'><span class="s">speed=0&amp;</span>
-</span><span class='line'><span class="s">skin=5&amp;</span>
-</span><span class='line'><span class="s">isTitle=1&amp;</span>
-</span><span class='line'><span class="s">noborder=1&amp;</span>
-</span><span class='line'><span class="s">isWeibo=1&amp;</span>
-</span><span class='line'><span class="s">isFans=0&amp;</span>
-</span><span class='line'><span class="s">uid=1905507693&amp;</span>
-</span><span class='line'><span class="s">verifier=e659651a&amp;</span>
-</span><span class='line'><span class="s">dpc=1&quot;</span><span class="nt">&gt;&lt;/iframe&gt;</span>
-</span><span class='line'><span class="nt">&lt;/li&gt;</span>
-</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
-</span><span class='line'><span class="nt">&lt;/section&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/29/cunit/">CUnit</a></h2>
+<div class="outline-text-2" id="text-1">
 
 
-<p>然后在_config.yml中添加default_asides中：</p>
+<p><br/>
+</p>
+</div>
 
-<pre><code>    custom/asides/weibo.html
-</code></pre>
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">CUnit交叉编译</h3>
+<div class="outline-text-3" id="text-1-1">
 
-<p>参考：<a href="http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/">http://programus.github.com/blog/2012/03/03/add-weibo-sidebar-into-octopress/</a></p>
+<p>我更换到ubuntu12.04上编译CUnit已经编译不过去了，错误原因是：<br/>
+libtool : X&ndash;tag=CC: command not found 编译报错<br/>
+原因据说是因为在项目目录下生成的libtool脚本中定义了$ECHO变量，但是在脚本文件ltmain.sh中，使用的却是$echo(生成的libtool版本太旧)<br/>
+可通过以下方法解决：<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>直接复制系统自带的libtool到项目目录，应该在/usr/bin目录下，覆盖代码文件目录下的libtool，再执行make<br/>
+</li>
+</ol>
+
+<p>（没装就apt-get install libtool 或者 yum install libtool 安装一下吧）<br/>
+但是这有个问题，不能用于交叉编译，系统的libtool会使用系统的ld等，而应该使用交叉工具连的ld。<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>修改aclocal.m4文件，将上面的LIBTOOL=&#8217;$(SHELL) $(top_builddir)/libtool&#8217;改成<br/>
+</li>
+</ol>
+
+<p>LIBTOOL=&#8217;$(SHELL)  /usr/bin/libtool&#8217;后重新执行./configure<br/>
+</p>
+<p> <br/>
+</p><ol>
+<li>将源码目录下libtool脚本中所有的$ECHO替换成$echo. 或者将脚本文件ltmain.sh里的$echo替换成$ECHO，<br/>
+</li>
+</ol>
+
+<p>都一样，重新执行./configure<br/>
+</p>
+<p><br/>
+另一种解决方案<br/>
+export echo=echo  回车后 make 正常<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">使用bootstrap而不是configure</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>没有了上边的libtool的问题，直接修改bootstrap，添加CC就ok了。<br/>
+CC=/workspace26/i386-env/cross-tools/bin/i686-unknown-linux-gnu-gcc<br/>
+或者采用&ndash;host的形式：<br/>
+PATH=/workspace26/i386-env/cross-tools/bin/:$PATH LD_LIBRARY_PATH=/workspace26/env-x86-lib <br/>
+./configure &ndash;host=i686-unknown-linux-gnu &ndash;enable-shared=no &ndash;disable-dependency-tracking<br/>
+</p></div>
+</div>
+</div>
 </div>
   
   
@@ -1473,7 +1622,7 @@ SwedishChef("Chocolate Moose");
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (2)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (6)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (3)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (11)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -1509,23 +1658,23 @@ dpc=1"></iframe>
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
-        <a href="/blog/2013/02/27/netcat/">nc使用</a>
+        <a href="/blog/2013/03/19/emacs-desktop/">emacs的desktop保存</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/20/dnsserver/">搭建dns服务器</a>
+        <a href="/blog/2013/03/17/expect/">expect自动ssh登录</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/19/ssh-tunnel/">ssh隧道技术</a>
+        <a href="/blog/2013/03/12/nfs-server/">NFS server</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a>
+        <a href="/blog/2013/03/11/xclip/">xlicp在命令行下使用剪切板</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/14/goagent/">goagent翻墙</a>
+        <a href="/blog/2013/03/10/zsh/">zsh</a>
       </li>
     
   </ul>
@@ -1545,7 +1694,7 @@ dpc=1"></iframe>
 <p>
   Copyright &copy; 2013 - emmoblin -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-  <br><script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
+  <br> <script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
 </p>
 
 </footer>

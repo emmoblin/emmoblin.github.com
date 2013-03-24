@@ -1,0 +1,482 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>NFS server - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2013/03/12/nfs-server">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">NFS Server</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-12T00:00:00+08:00" pubdate data-updated="true">2013年03月12日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">NFS server</a>
+<ul>
+<li><a href="#sec-1-1">开启nfs-server和client</a>
+<ul>
+<li><a href="#sec-1-1-1">server端</a>
+<ul>
+<li><a href="#sec-1-1-1-1">exportfs</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-1-2">client端</a></li>
+<li><a href="#sec-1-1-3">nfs卡住问题</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/03/12/nfs-server/">NFS server</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">开启nfs-server和client</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>fc18上启动nfs真是比较麻烦，server和client端都需要启动好几个服务，所以需要特别记录一下。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">server端</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+<p><br/>
+<pre class="example">[root@dlp ~]# vi /etc/idmapd.conf 
+# line 5: uncomment and change to your domain name
+Domain = server.world 
+[root@dlp ~]# vi /etc/exports 
+# write like below *note
+/home 10.0.0.0/24(rw,sync,no_root_squash,no_all_squash)
+</pre>
+
+
+/home 表示目录<br/>
+ip  允许访问的子网，*代表所有<br/>
+no_root_squash:对于登陆NFS主机的共享目录用户如果是root的话则对该目录具有root权限。建议不用为好！<br/>
+root_squash:对于登陆NFS主机的共享目录用户使用者如果是root则它的权限将被压缩成匿名使用者，<br/>
+同时它的UID和GID都会变成nobody那个系统账号的身份。<br/>
+all_squash:不管登陆NFS主机用户身份如何，它的身份都会被压缩成匿名使用者，通常就是nobody<br/>
+anonuid:anonuid=xxx,制定NFS服务器/etc/passwd中匿名用户的UID<br/>
+anongid:anonuid=xxx,制定NFS服务器/etc/passwd中匿名用户的GID<br/>
+sync:数据在请求时写入共享<br/>
+async:NFS在写入数据前可响应请求<br/>
+secure:NFS通过1024以下的安全端口发送<br/>
+insecure:NFS通过1024以上端口发送<br/>
+hide:不共享NFS目录的子目录<br/>
+no_hide:共享NFS目录的子目录<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-sh">[root@dlp ~]# systemctl start rpcbind.service 
+[root@dlp ~]# systemctl start nfs-server.service 
+[root@dlp ~]# systemctl start nfs-lock.service 
+[root@dlp ~]# systemctl start nfs-idmap.service 
+[root@dlp ~]# systemctl enable rpcbind.service 
+[root@dlp ~]# systemctl enable nfs-server.service 
+[root@dlp ~]# systemctl enable nfs-lock.service 
+[root@dlp ~]# systemctl enable nfs-idmap.service
+</pre>
+
+
+ 最终要的还要关闭防火墙：<br/>
+ systemctl disable firewalld.service<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1-1" class="outline-5">
+<h5 id="sec-1-1-1-1">exportfs</h5>
+<div class="outline-text-5" id="text-1-1-1-1">
+
+<p>exportfs [-aruv]<br/>
+ -a:全部挂载(或卸载) /etc/exports文件设定<br/>
+ -r:重新挂载 /etc/exports设定,也可以同步更新/etc/exports设定<br/>
+ -u:卸载某一目录<br/>
+ -v:在export时,将共享目录显示在屏幕上<br/>
+</p>
+<p><br/>
+showmount -a<br/>
+在NFS Server上显示已经mount上本机NFS目录的Client机器。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">client端</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+
+<p><br/>
+<pre class="example">[root@www ~]# vi /etc/idmapd.conf 
+# line 5: uncomment and change to your domain name
+ Domain = server.world 
+ [root@www ~]# systemctl start rpcbind.service 
+ [root@www ~]# systemctl start nfs-lock.service 
+ [root@www ~]# systemctl start nfs-idmap.service 
+ [root@www ~]# systemctl start nfs-mountd.service 
+ [root@www ~]# systemctl enable rpcbind.service 
+ [root@www ~]# systemctl enable nfs-lock.service 
+ [root@www ~]# systemctl enable nfs-idmap.service 
+ [root@www ~]# systemctl enable nfs-mountd.service 
+ [root@www ~]# mount -t nfs dlp.server.world:/home /home 
+ [root@www ~]# df -h 
+Filesystem               Size  Used Avail Use% Mounted on
+devtmpfs                 992M     0  992M   0% /dev
+tmpfs                   1002M     0 1002M   0% /dev/shm
+tmpfs                   1002M  1.5M 1001M   1% /run
+tmpfs                   1002M     0 1002M   0% /sys/fs/cgroup
+/dev/mapper/fedora-root   16G  1.2G   14G   8% /
+tmpfs                   1002M     0 1002M   0% /tmp
+/dev/vda1                485M   71M  389M  16% /boot
+dlp.server.world:/home    16G  1.2G   14G   8% /home
+# home directory on NFS is mounted 
+ [root@www ~]# vi /etc/fstab 
+/dev/mapper/VolGroup-lv_root /                       ext4    defaults  1 1
+UUID=65ec32e2-f459-4d63-b8b0-e18124b50f3a /boot      ext4    defaults  1 2
+/dev/mapper/VolGroup-lv_swap swap                    swap    defaults  0 0
+# add at the lat line: change home directory this server mounts to the one on NFS
+dlp.server.world:/home /home                         nfs     defaults  0 0
+
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">nfs卡住问题</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>如果服务端意外停止，在客户机上使用 ls，df等磁盘查看命令时，会卡住，并且ctrl+c都不能强制退出。<br/>
+原因是默认的mount是“硬”挂载，会不断的重试。解决办法是：<br/>
+1、mount的时候加上 -s 参数，作为“软”挂载<br/>
+2、umount -f /xxxxx/xxxx 用这个命令来取消挂载。<br/>
+如果出现device busy的错误，说明还有进程在使用该挂载点，要把进程停了，才能umount<br/>
+</p></div>
+</div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-12T00:00:00+08:00" pubdate data-updated="true">2013年03月12日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/service/'>service</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2013/03/11/xclip/" title="Previous Post:
+        xlicp在命令行下使用剪切板">&laquo; xlicp在命令行下使用剪切板</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2013/03/17/expect/"
+        title="Next Post: expect自动ssh登录">expect自动ssh登录
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><img src="/images/my_avatar.jpg"></p>
+  <p>网络工程师，喜欢折腾linux，emacs。</p>
+  <p>坚持理想，相信一定会实现。</p>
+  <p><a href="mailto:emmoblin@gmail.com"><img src="/images/my_email.png" alt="emmoblin@gmail.com"></a></p>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (3)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (11)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/emacs-desktop/">emacs的desktop保存</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/17/expect/">expect自动ssh登录</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/nfs-server/">NFS server</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/11/xclip/">xlicp在命令行下使用剪切板</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/10/zsh/">zsh</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+  <br> <script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2013/03/12/nfs-server/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2013/03/12/nfs-server/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

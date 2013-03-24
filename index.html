@@ -109,7 +109,7 @@
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2013/02/27/netcat/">Nc使用</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/03/19/emacs-desktop/">Emacs的desktop保存</a></h1>
     
     
       <p class="meta">
@@ -125,7 +125,61 @@
   
 
 
-<time datetime="2013-02-27T00:00:00+08:00" pubdate data-updated="true">2013年02月27日</time>
+<time datetime="2013-03-19T00:00:00+08:00" pubdate data-updated="true">2013年03月19日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+emacs session折腾了一晚上，使用了session.el发现没什么用，<br/>
+只是在file下多了一个最近打开和最近修改。用处不大。<br/>
+反倒是后来找了一个可以命名的desktop，把desktop环境保存一个项目名字。<br/>
+而且不像desktop那样每个目录一个，而是全局的。<br/>
+每次关闭的时候自动保存为last-session<br/>
+方便以后保存一个工程很方便。<br/>
+</p>
+<p><br/>
+参考：<br/>
+<a href="http://scottfrazersblog.blogspot.com/2009/12/emacs-named-desktop-sessions.html">http://scottfrazersblog.blogspot.com/2009/12/emacs-named-desktop-sessions.html</a><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/17/expect/">Expect自动ssh登录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-17T00:00:00+08:00" pubdate data-updated="true">2013年03月17日</time>
         
       </p>
     
@@ -137,65 +191,29 @@
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">基本使用</h3>
+<h3 id="sec-1-1">自动ssh的expect脚本</h3>
 <div class="outline-text-3" id="text-1-1">
 
-<p>本地监听<br/>
-<code>nc -l 3333</code><br/>
-远端访问<br/>
-<code>nc 192.168.0.1 3333</code><br/>
-</p>
+
 <p><br/>
-</p></div>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">!/usr/bin/</span><span style="color: #0000ff;">expect</span><span style="color: #8c8c8c; font-style: italic;"> </span>
+<span style="color: #a52a2a;">set</span> timeout 5
+<span style="color: #a52a2a;">set</span> cmd_prompt <span style="color: #00bfff;">"]#|~]?"</span>
+<span style="color: #a52a2a;">set</span> server [lindex $<span style="color: #ff1493;">argv</span> 0] 
+<span style="color: #a52a2a;">set</span> user [lindex $<span style="color: #ff1493;">argv</span> 1] 
+<span style="color: #a52a2a;">set</span> passwd [lindex $<span style="color: #ff1493;">argv</span> 2] 
 
-</div>
+spawn ssh -l $<span style="color: #ff1493;">user</span> $<span style="color: #ff1493;">server</span> 
+expect { 
+<span style="color: #00bfff;">"(yes/no)"</span> { send <span style="color: #00bfff;">"yes\r"</span>; exp_continue } 
+<span style="color: #00bfff;">"password:"</span> { send <span style="color: #00bfff;">"$passwd\r"</span> } 
+}
+<span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">expect "$cmd_prompt" interact</span>
+expect <span style="color: #00bfff;">"*Last login*"</span> interact
+</pre>
 
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">传送文件</h3>
-<div class="outline-text-3" id="text-1-2">
 
-<p>发送端<br/>
-<code>cat backup.iso | nc -l 3333</code><br/>
-接收端<br/>
-<code>nc 192.168.0.1 3333 &gt; backup.iso</code><br/>
-</p>
-<p><br/>
-显示传送进度，可以使用管道监控,pv命令<br/>
-以上命令修改为：<br/>
-<code>cat backup.iso | pv -b | nc -l 3333</code><br/>
-<code>nc 192.168.0.1 3333 | pv -b &gt; backup.iso</code><br/>
-</p>
-<p><br/>
-本地打包文件，传送到远端<br/>
-<code>tar -czf - /etc/ | nc -l 3333</code><br/>
-接收端<br/>
-<code>nc 192.168.0.1 3333 | pv -b &gt; mybackup.tar.gz</code><br/>
-</p>
-<p><br/>
-</p></div>
 
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">端口扫描</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>扫描端口，并返回相关信息<br/>
-<code>nc -z 192.168.0.1 80-90</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">资料</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p><a href="http://www.sans.org/security-resources/sec560/netcat_cheat_sheet_v1.pdf">http://www.sans.org/security-resources/sec560/netcat\_cheat\_sheet\_v1.pdf</a><br/>
-<a href="http://www.g-loaded.eu/2006/11/06/netcat-a-couple-of-useful-examples/">http://www.g-loaded.eu/2006/11/06/netcat-a-couple-of-useful-examples/</a><br/>
-</p>
-<p><br/>
 </p></div>
 </div>
 </div>
@@ -211,7 +229,7 @@
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2013/02/20/dnsserver/">搭建dns服务器</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/03/12/nfs-server/">NFS Server</a></h1>
     
     
       <p class="meta">
@@ -227,7 +245,7 @@
   
 
 
-<time datetime="2013-02-20T00:00:00+08:00" pubdate data-updated="true">2013年02月20日</time>
+<time datetime="2013-03-12T00:00:00+08:00" pubdate data-updated="true">2013年03月12日</time>
         
       </p>
     
@@ -238,12 +256,19 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">搭建dns服务器</a>
+<li><a href="#sec-1">NFS server</a>
 <ul>
-<li><a href="#sec-1-1">首先提出一些问题</a></li>
-<li><a href="#sec-1-2">BIND服务</a></li>
-<li><a href="#sec-1-3">配置文件</a></li>
-<li><a href="#sec-1-4">参考</a></li>
+<li><a href="#sec-1-1">开启nfs-server和client</a>
+<ul>
+<li><a href="#sec-1-1-1">server端</a>
+<ul>
+<li><a href="#sec-1-1-1-1">exportfs</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-1-2">client端</a></li>
+<li><a href="#sec-1-1-3">nfs卡住问题</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -251,7 +276,7 @@
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/20/dnsserver/">搭建dns服务器</a></h2>
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/03/12/nfs-server/">NFS server</a></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -260,137 +285,139 @@
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">首先提出一些问题</h3>
+<h3 id="sec-1-1">开启nfs-server和client</h3>
 <div class="outline-text-3" id="text-1-1">
 
-<ol>
-<li>什么是 DNS 的授权模式﹖是怎样进行的?<br/>
-</li>
-<li>zone 和 domain 的差别?<br/>
-</li>
-<li>什么是 DNS 正解和反解?<br/>
-</li>
-<li>什么是 DNS 的查询模式?<br/>
-</li>
-<li>查询过程是怎样进行的?<br/>
-</li>
-<li>DNS cache 的作用和它对查询流程的影响?<br/>
-</li>
-</ol>
+<p>fc18上启动nfs真是比较麻烦，server和client端都需要启动好几个服务，所以需要特别记录一下。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">server端</h4>
+<div class="outline-text-4" id="text-1-1-1">
 
 
 <p><br/>
+<pre class="example">[root@dlp ~]# vi /etc/idmapd.conf 
+# line 5: uncomment and change to your domain name
+Domain = server.world 
+[root@dlp ~]# vi /etc/exports 
+# write like below *note
+/home 10.0.0.0/24(rw,sync,no_root_squash,no_all_squash)
+</pre>
+
+
+/home 表示目录<br/>
+ip  允许访问的子网，*代表所有<br/>
+no_root_squash:对于登陆NFS主机的共享目录用户如果是root的话则对该目录具有root权限。建议不用为好！<br/>
+root_squash:对于登陆NFS主机的共享目录用户使用者如果是root则它的权限将被压缩成匿名使用者，<br/>
+同时它的UID和GID都会变成nobody那个系统账号的身份。<br/>
+all_squash:不管登陆NFS主机用户身份如何，它的身份都会被压缩成匿名使用者，通常就是nobody<br/>
+anonuid:anonuid=xxx,制定NFS服务器/etc/passwd中匿名用户的UID<br/>
+anongid:anonuid=xxx,制定NFS服务器/etc/passwd中匿名用户的GID<br/>
+sync:数据在请求时写入共享<br/>
+async:NFS在写入数据前可响应请求<br/>
+secure:NFS通过1024以下的安全端口发送<br/>
+insecure:NFS通过1024以上端口发送<br/>
+hide:不共享NFS目录的子目录<br/>
+no_hide:共享NFS目录的子目录<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-sh">[root@dlp ~]# systemctl start rpcbind.service 
+[root@dlp ~]# systemctl start nfs-server.service 
+[root@dlp ~]# systemctl start nfs-lock.service 
+[root@dlp ~]# systemctl start nfs-idmap.service 
+[root@dlp ~]# systemctl enable rpcbind.service 
+[root@dlp ~]# systemctl enable nfs-server.service 
+[root@dlp ~]# systemctl enable nfs-lock.service 
+[root@dlp ~]# systemctl enable nfs-idmap.service
+</pre>
+
+
+ 最终要的还要关闭防火墙：<br/>
+ systemctl disable firewalld.service<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1-1" class="outline-5">
+<h5 id="sec-1-1-1-1">exportfs</h5>
+<div class="outline-text-5" id="text-1-1-1-1">
+
+<p>exportfs [-aruv]<br/>
+ -a:全部挂载(或卸载) /etc/exports文件设定<br/>
+ -r:重新挂载 /etc/exports设定,也可以同步更新/etc/exports设定<br/>
+ -u:卸载某一目录<br/>
+ -v:在export时,将共享目录显示在屏幕上<br/>
+</p>
+<p><br/>
+showmount -a<br/>
+在NFS Server上显示已经mount上本机NFS目录的Client机器。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">client端</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+
+<p><br/>
+<pre class="example">[root@www ~]# vi /etc/idmapd.conf 
+# line 5: uncomment and change to your domain name
+ Domain = server.world 
+ [root@www ~]# systemctl start rpcbind.service 
+ [root@www ~]# systemctl start nfs-lock.service 
+ [root@www ~]# systemctl start nfs-idmap.service 
+ [root@www ~]# systemctl start nfs-mountd.service 
+ [root@www ~]# systemctl enable rpcbind.service 
+ [root@www ~]# systemctl enable nfs-lock.service 
+ [root@www ~]# systemctl enable nfs-idmap.service 
+ [root@www ~]# systemctl enable nfs-mountd.service 
+ [root@www ~]# mount -t nfs dlp.server.world:/home /home 
+ [root@www ~]# df -h 
+Filesystem               Size  Used Avail Use% Mounted on
+devtmpfs                 992M     0  992M   0% /dev
+tmpfs                   1002M     0 1002M   0% /dev/shm
+tmpfs                   1002M  1.5M 1001M   1% /run
+tmpfs                   1002M     0 1002M   0% /sys/fs/cgroup
+/dev/mapper/fedora-root   16G  1.2G   14G   8% /
+tmpfs                   1002M     0 1002M   0% /tmp
+/dev/vda1                485M   71M  389M  16% /boot
+dlp.server.world:/home    16G  1.2G   14G   8% /home
+# home directory on NFS is mounted 
+ [root@www ~]# vi /etc/fstab 
+/dev/mapper/VolGroup-lv_root /                       ext4    defaults  1 1
+UUID=65ec32e2-f459-4d63-b8b0-e18124b50f3a /boot      ext4    defaults  1 2
+/dev/mapper/VolGroup-lv_swap swap                    swap    defaults  0 0
+# add at the lat line: change home directory this server mounts to the one on NFS
+dlp.server.world:/home /home                         nfs     defaults  0 0
+
+</pre>
+
 </p></div>
 
 </div>
 
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">BIND服务</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">nfs卡住问题</h4>
+<div class="outline-text-4" id="text-1-1-3">
 
-<p>在 Linux 上面﹐提供 DNS 服务的套件是叫 bind，<br/>
-但执行服务程序名称则是 named。<br/>
-请您确定系统上装有 bind﹑bind-utils﹑以及 caching-nameserver 这几个套件。<br/>
-</p>
-<p><br/>
+<p>如果服务端意外停止，在客户机上使用 ls，df等磁盘查看命令时，会卡住，并且ctrl+c都不能强制退出。<br/>
+原因是默认的mount是“硬”挂载，会不断的重试。解决办法是：<br/>
+1、mount的时候加上 -s 参数，作为“软”挂载<br/>
+2、umount -f /xxxxx/xxxx 用这个命令来取消挂载。<br/>
+如果出现device busy的错误，说明还有进程在使用该挂载点，要把进程停了，才能umount<br/>
 </p></div>
-
 </div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">配置文件</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>/etc/named.conf<br/>
-如果安装的是bind-chroot，则文件在<br/>
-/var/named/chroot/etc/named.conf<br/>
-</p>
-<p><br/>
-/var/named/chroot/etc/named.caching-nameserver.conf<br/>
-这个是主要配置文件的模板配置文件（区域模板配置文件<br/>
-</p>
-<p><br/>
-首先生成主要配置文件，复制出一份模板配置文件到此目录下，并更改名字为named.conf <br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #a52a2a;">cd</span>  /var/named/chroot/etc    
-cp  named.caching-nameserver.conf  named.conf
-</pre>
-
-
-默认会有三个配置：<br/>
-</p>
-<p><br/>
-<pre class="example">zone "." IN {
-  type hint;
-  file "named.ca";
-};
-</pre>
-
-根区域“ . ”(root zone) 的设定﹐同时它是一个 internet ( IN ) 的区域类别( class )。这里还指定了root zone 的服务器种类( type ) 为“hint”(也只有这个 zone 会使用这样的种类)。最后﹐用 file 指定这个区域记录文件为﹕“named.ca”﹐也就是“/var/named/named.ca”档案。<br/>
-</p>
-<p><br/>
-在 root zone 后面﹐您应该还会看到如下这两段,一个是localhost的正向解析，一个是反向解析。不允许自行更新DNS记录。<br/>
-</p>
-<p><br/>
-<pre class="example">zone "localhost" IN {
-  type master;
-  file "localhost.zone";
-  allow-update { none; };
-};
-
-zone "0.0.127.in-addr.arpa" IN {
-  type master;
-  file "named.local";
-  allow-update { none; };
-}; 
-</pre>
-
-
-首先来看root zone，named.ca<br/>
-里边的记录类似如下：<br/>
-</p>
-<p><br/>
-<pre class="example">. 3600000 NS L.ROOT-SERVERS.NET.
-L.ROOT-SERVERS.NET. 3600000 A 198.32.64.12
-</pre>
-
-以‘ . ’开头的﹐那就是所谓的 root zone 了﹗<br/>
-第二栏都是‘ 3600000 ’﹐这是 TTL (Time To Live) 设定﹐也就是在 cache 中保留的时间，<br/>
-其后的‘ NS ’是“Name Server”的意思﹐是 DNS 记录名称之一﹐也就是负责这个记录的 name server 是哪一台主机。<br/>
-‘ A ’记录﹐也就是 Address 的意思﹐解释 [A-M].ROOT-SERVER.NET. 这些主机各自的 IP 地址所在。<br/>
-</p>
-<p><br/>
-如果您了解 DNS 的查询模式﹐您会知道 DNS 服务器在查询非自己管辖的 zone 的时候﹐首先会向 root 查询下一级的 zone 在哪里﹐然后逐级查询下去。但问题是﹕当 named 刚启动的时候﹐在 cache 里面一片空白﹐它怎么知道 root zone 的 servers 在哪里呢﹖这不是一个矛盾吗﹖所以﹐就必须靠这个档案告诉 named 关于 root zone 的 servers 有哪些﹖以及在哪里﹖<br/>
-</p>
-<p><br/>
-locaohost.zone<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">参考</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p><a href="http://wenku.baidu.com/view/4d88c6bf960590c69ec376a2.html">http://wenku.baidu.com/view/4d88c6bf960590c69ec376a2.html</a><br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p></div>
 </div>
 </div>
 </div>
@@ -405,7 +432,7 @@ locaohost.zone<br/>
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2013/02/19/ssh-tunnel/">Ssh隧道技术</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/03/11/xclip/">Xlicp在命令行下使用剪切板</a></h1>
     
     
       <p class="meta">
@@ -421,403 +448,7 @@ locaohost.zone<br/>
   
 
 
-<time datetime="2013-02-19T00:00:00+08:00" pubdate data-updated="true">2013年02月19日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">ssh隧道技术</a>
-<ul>
-<li><a href="#sec-1-1">什么情况下使用隧道</a></li>
-<li><a href="#sec-1-2">建立本地隧道</a>
-<ul>
-<li><a href="#sec-1-2-1">通过SSH隧道建立SOCKS服务器</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-3">建立远程SSH隧道</a></li>
-<li><a href="#sec-1-4">一些技巧</a>
-<ul>
-<li><a href="#sec-1-4-1">检查隧道状态</a></li>
-<li><a href="#sec-1-4-2">如何将端口绑定到外部地址上</a></li>
-<li><a href="#sec-1-4-3">自动连接和防断线脚本</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-5">动态域名</a></li>
-<li><a href="#sec-1-6">参考</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/19/ssh-tunnel/">ssh隧道技术</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">什么情况下使用隧道</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<ol>
-<li>公司为了防止我们用XX软件封锁了它的端口或者服务器地址。<br/>
-</li>
-<li>nat穿越，或者叫ssh反向隧道访问内网的pc，比如：在家里访问我在公司的电脑。<br/>
-</li>
-</ol>
-
-
-<p><br/>
-通过在外网一个ssh服务器做代理，实现穿越功能。<br/>
-我主要使用第二种功能，在家里访问公司的电脑。可以远程办公了。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">建立本地隧道</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>建立本地隧道实现第一种隧道模式。<br/>
-假设内网机子A要访问C，但被拒绝了，这样可以通过中间的B建立ssh本地隧道实现A-B-C的访问。<br/>
-实际上这种一般不太常用，毕竟有很多代理服务器都可以方便实现代理功能。<br/>
-</p>
-<p><br/>
-在A上执行：<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">ssh -N -f -L 2121:C:21 B
-ftp localhost:2121 <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">&#29616;&#22312;&#35775;&#38382;&#26412;&#22320;2121&#31471;&#21475;&#65292;&#23601;&#33021;&#36830;&#25509;C&#30340;21&#31471;&#21475;&#20102;</span>
-</pre>
-
-
-这里我们用到了SSH客户端的三个参数:<br/>
--N 告诉SSH客户端，这个连接不需要执行任何命令。仅仅做端口转发<br/>
--f 告诉SSH客户端在后台运行<br/>
--L 做本地映射端口，被冒号分割的三个部分含义分别是<br/>
-需要使用的本地端口号<br/>
-需要访问的目标机器IP地址（IP: 234.234.234.234）<br/>
-需要访问的目标机器端口（端口: 21)<br/>
-最后一个参数是我们用来建立隧道的中间机器的IP地址(IP: 123.123.123.123)<br/>
-</p>
-<p><br/>
-我们再重复一下-L参数的行为。<br/>
--L X:Y:Z 将IP为Y的机器的Z端口通过中间服务器映射到本地机器的X端口。<br/>
-</p>
-<p><br/>
-在这条命令成功执行之后，我们已经具有绕过公司防火墙的能力，并且成功访问到了我们喜欢的一个FTP服务器了。<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-2-1" class="outline-4">
-<h4 id="sec-1-2-1">通过SSH隧道建立SOCKS服务器</h4>
-<div class="outline-text-4" id="text-1-2-1">
-
-<p>如果我们需要借助一台中间服务器访问很多资源，一个个映射显然不是高明的办法。<br/>
-幸好，SSH客户端为我们提供了通过SSH隧道建立SOCKS服务器的功能。<br/>
-</p>
-<p><br/>
-通过下面的命令我们可以建立一个通过123.123.123.123的SOCKS服务器。<br/>
-ssh -N -f -D 0.0.0.0:1080 123.123.123.123 # 将端口绑定在0.0.0.0上<br/>
-通过SSH建立的SOCKS服务器使用的是SOCKS5协议，在为应用程序设置SOCKS代理的时候要特别注意。<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">建立远程SSH隧道</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>现象我想在家里访问公司内网的电脑，这时从外到内访问显然是不行的，但从公司内往外访问是正常的。<br/>
-所以就是用远程ssh隧道，先通过内网ssh到B，然后通过访问B的端口就可以访问内网的A了。<br/>
-</p>
-<p><br/>
-在A上执行：<br/>
-<code>ssh -N -f -R 2222:127.0.0.1:22 B</code><br/>
-现在，在B机器上我们用下面的命令就可以登陆公司的A机器了。<br/>
-<code>ssh -p 2222 localhost</code><br/>
-</p>
-<p><br/>
-我们现在重点说说参数-R。该参数的三个部分的含义分别是:<br/>
-远程机器使用的端口（2222）<br/>
-需要映射的内部机器的IP地址(127.0.0.1)<br/>
-需要映射的内部机器的端口(22)<br/>
-例如：-R X:Y:Z 就是把我们内部的Y机器的Z端口映射到远程机器的X端口上。<br/>
-</p>
-<p><br/>
-实际上这里所说的本地隧道和远程隧道(-L,-R),实际上指的是ssh代理listen的端口在本地还是在远端。<br/>
-如果在本地listen就是本地隧道，如果要是在远端listen一个端口就是远端隧道。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">一些技巧</h3>
-<div class="outline-text-3" id="text-1-4">
-
-
-</div>
-
-<div id="outline-container-1-4-1" class="outline-4">
-<h4 id="sec-1-4-1">检查隧道状态</h4>
-<div class="outline-text-4" id="text-1-4-1">
-
-<p>有些时候隧道会因为一些原因通信不畅而卡死，例如：由于传输数据量太大，被路由器带入stalled状态。这种时候，往往SSH客户端并不退出，而是卡死在那里。一种应对方法是，使用SSH客户端的ServerAliveInterval和ServerAliveCountMax选项。ServerAliveInterval会在隧道无通信后的一段设置好的时间后发送一个请求给服务器要求服务器响应。如果服务器在ServerAliveCountMax次请求后都没能响应，那么SSH客户端就自动断开连接并退出，将控制权交给你的监控程序。这两个选项的设置方法分别是在ssh时加入-o ServerAliveInterval=n和-o ServerAliveCountMax=m。其中n, m可以自行定义。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4-2" class="outline-4">
-<h4 id="sec-1-4-2">如何将端口绑定到外部地址上</h4>
-<div class="outline-text-4" id="text-1-4-2">
-
-<p>使用上面的方法，映射的端口只能绑定在127.0.0.1这个接口上。也就是说，只能被本机自己访问到。如何才能让其他机器访问这个端口呢？我们可以把这个映射的端口绑定在0.0.0.0的接口上，方法是加上参数-b 0.0.0.0。同时还需要打开SSH服务器端的一个选项－GatewayPorts。默认情况下它应当是被打开的。如果被关闭的话，可以在/etc/sshd_config中修改GatewayPorts no为GatewayPorts yes来打开它。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4-3" class="outline-4">
-<h4 id="sec-1-4-3">自动连接和防断线脚本</h4>
-<div class="outline-text-4" id="text-1-4-3">
-
-<p>Linux平台ssh默认不支持把密码作为参数，不过有sshpass可以搞定<br/>
-</p>
-<p><br/>
-<a href="http://sourceforge.net/projects/sshpass/files/latest/download">http://sourceforge.net/projects/sshpass/files/latest/download</a><br/>
-</p>
-<p><br/>
-下载，解压，编译，把可执行文件拷贝到合适的目录，执行命令格式如下：<br/>
-</p>
-<p><br/>
-<code>sshpass -p "password" ssh -D 7070 user@serverip</code><br/>
-</p>
-<p><br/>
-貌似ubuntu下可以直接apt-get install sshpass<br/>
-</p>
-<p><br/>
-然后写脚本autossh.sh，内容如下：<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">!/bin/</span><span style="color: #0000ff;">bash</span>
-<span style="color: #0000ff;">while</span> [ <span style="color: #00bfff;">''</span> == <span style="color: #00bfff;">''</span> ]
-<span style="color: #0000ff;">do</span>
- <span style="color: #ff1493;">ssh_d_process_num</span>=<span style="color: #ff00ff;">`ps aux|grep -E 'ssh \-' |grep -v grep |wc -l`</span>
- <span style="color: #0000ff;">if</span> [ <span style="color: #00bfff;">"$ssh_d_process_num"</span> == <span style="color: #00bfff;">"0"</span> ]; <span style="color: #0000ff;">then</span>
-  /home/user/sshpass -p <span style="color: #00bfff;">"password"</span> ssh -D 7070 user@ServerIP &amp;
- <span style="color: #0000ff;">fi</span>
-
- sleep 300
-<span style="color: #0000ff;">done</span>
-</pre>
-
-
-执行一下这个脚本就可以了。sleep 300代表300秒查看一次，可以根据需要调整。<br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">动态域名</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<p>花生壳linux程序下载地址：<br/>
-<a href="http://www.oray.com/peanuthull/download_linux.php">http://www.oray.com/peanuthull/download\_linux.php</a><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">参考</h3>
-<div class="outline-text-3" id="text-1-6">
-
-<p><a href="http://blog.creke.net/722.html">http://blog.creke.net/722.html</a><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-17T00:00:00+08:00" pubdate data-updated="true">2013年02月17日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">IPv6 NAT MAP66</a>
-<ul>
-<li><a href="#sec-1-1">相关的RFC</a></li>
-<li><a href="#sec-1-2">IPv6子网和NAT的关系</a></li>
-<li><a href="#sec-1-3">checksum无关性和自动转换</a></li>
-<li><a href="#sec-1-4">Linux上的MAP66</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">相关的RFC</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>RFC6296的标题是IPv6-to-IPv6 Network Prefix Translation，描述了IPv6下的NAT的实现要点，给出了一个合理的建议，<br/>
-既保持了IP的无方向性，又可以满足NAT的语义，这就是IPv6之NAT stateless的缘由，你不能再指望像IPv4的NAT那样只需要配置一条rule，然后反方向的rule动态生成，<br/>
-IPv6情况下，两个方向的rule都需要你自己手工来配置。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">IPv6子网和NAT的关系</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>IP地址可以划分为几个段，包括网络前缀，子网标识，主机标识，这在IPv4和IPv6中没有什么不同。<br/>
-IPv4的NAT为了节约IP地址，也就是说，可供映射的IP地址pool中的地址小于或者远远小于其内部主机的数量，因此很有可能多个内部主机被映射成了同一个外部IP地址，<br/>
-这如何来区分它们，因此不得不引入诸如第四层协议，端口等信息了，也就是我们熟知的五元组信息，因此IPv4的NAT实现大多数都是基于五元组流的，这样就保证了内核保持的NAT信息项的唯一性，同时也引入了很多副作用。<br/>
-</p>
-<p><br/>
-IPv6地址持有将近128位可随意调配的位，鉴于地址空间的庞大，一般的单位都会被分配到一个拥有很大量地址的网段，<br/>
-此网段拥有足够多的地址来和内网主机进行一一映射，也就是说可用于映射的IP地址pool容量巨大无比，<br/>
-关键是这个一一映射如何来保持，既然不想再使用非IP层的信息来保持信息，那就要用纯IP层的信息了，这样对上层影响最小。<br/>
-对于IPv4，经典NAT使用了五元组来保持流标识信息，而对于IPv6，则更加绝妙，它利用(而不是使用)了checksum的算法，丝毫不管这个checksum是谁的checksum，因为它根本就不改变数据包的checksum&hellip;<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">checksum无关性和自动转换</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>这个很好解释，考虑<br/>
-a+b+c+d=X<br/>
-其中X就是checksum，我们把a，b当成源IP地址的两部分，c，d当成目的IP地址的两部分，我们作源地址转换，将a和b都改变，比如a改变成了A，<br/>
-试问将b改成多少才能保持checksum的值X不变，这其实很简单，就是一个简单的一元一次方程求解的问题。<br/>
-IPv6的建议NAT实现也是这个原理，只不过上面的一元一次方程是实数域的，而这个是计算机布尔数域。<br/>
-既然可以不触动第四层的checksum值，那么NAT对第四层协议的影响也就减小了，虽然它还是解决不了诸如ESP/AH等穿越NAT的问题。<br/>
-基于以上算法，IPv6在做NAT的时候，在给定的子网网段内，可以自动生成一个新的IP地址供映射之用，从算法本身来看，冲突的可能性非常之小致于0，<br/>
-上述的做法对于IPv4几乎是不可能的，因为IPv4地址空间太小了。<br/>
-既然IPv6的NAT机制“自动”为一个连接选择了一个IP地址，那么当返回包到来的时候，如何来把地址转换回原来的呢？<br/>
-我们知道，IPv6的NAT已经不再使用五元组来维护NAT映射信息，也不在内核维护这种信息，那么“转换回去”这件事就要完全靠算法本身了，<br/>
-恰恰就是算法本身能将转换后的地址再转回原来的，其依据就是本小节最开始处给出的一元一次方程解的唯一性，<br/>
-在IPv6的NAT实现中，算法只针对IP地址中16位的地址信息进行自动生成，而其它的则需要手工显式配置，<br/>
-由于内网IPv6地址可以使用MAC地址映射成唯一的地址，由于一元一次方程解的唯一性，那么转换后的地址也是唯一的，将这一切反过来，最后还是能映射回原始的IP地址的。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">Linux上的MAP66</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>Linux上，IPv6的NAT MAP66是一个基本遵循RFC6296建议的Linux实现，编译安装很简单，详见其README，和IPv4的iptables一样：<br/>
-1.配置正向的转换规则，将源地址fdca:ffee:babe::/64网段的地址转换为2008:db8:1::/64网段的地址<br/>
-<code>ip6tables -t mangle -A POSTROUTING -s fdca:ffee:babe::/64 -o eth2 -j MAP66--src-to 2008:db8:1::/64</code><br/>
-可以看出，没有显式指定任何具体地址，类似IPv4的MASQUERADE和IPv4的IP Pool<br/>
-2.配置反向包的转换规则，将正向包被转换过的地址再转换回去<br/>
-<code>ip6tables -t mangle -A PREROUTING -d 2008:db8:1::/64 -i eth2 -j MAP66 --dst-to fdca:ffee:babe::/64</code><br/>
-可以看出，也没有显式指定任何具体的地址，更值得一提的是，内核并不维护任何关于NAT映射的信息，因此MAP66也不再依赖ip(6)_conntrack。<br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/14/goagent/">Goagent翻墙</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-14T00:00:00+08:00" pubdate data-updated="true">2013年02月14日</time>
+<time datetime="2013-03-11T00:00:00+08:00" pubdate data-updated="true">2013年03月11日</time>
         
       </p>
     
@@ -829,37 +460,84 @@ IPv6的建议NAT实现也是这个原理，只不过上面的一元一次方程�
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">安装</h3>
+<h3 id="sec-1-1">xlicp在命令行下使用剪切板</h3>
 <div class="outline-text-3" id="text-1-1">
 
-<p>安装最好直接看官网：<br/>
-<a href="https://code.google.com/p/goagent/">https://code.google.com/p/goagent/</a><br/>
+<p>一、安装xclip<br/>
+ubuntu下的用户可以只用apt-get来安装：<br/>
 </p>
 <p><br/>
-不过为了自己方便，我也自己记录一下。<br/>
+sudo apt-get install xclip<br/>
+其他发行版的用户可以选择自己的安装方式，也可以用源码编译安装，xclip项目的主页是：<a href="http://sourceforge.net/projects/xclip/">http://sourceforge.net/projects/xclip/</a><br/>
 </p>
 <p><br/>
-在GAE注册一个appid，<a href="https://appengine.google.com/">https://appengine.google.com/</a><br/>
-</p><ol>
-<li>修改local\proxy.ini中的[gae]下的appid=你的appid<br/>
-</li>
-<li>双击server\uploader.bat(Mac/Linux上传方法请见FAQ)，上传成功后即可使用了(地址127.0.0.1:8087)<br/>
-</li>
-</ol>
+二、使用<br/>
+xclip可以将内容输出到‘X’的剪切板中，比如：<br/>
+</p>
+<p><br/>
+echo &#8220;Hello, world&#8221; | xclip<br/>
+执行这个命令后你就可以用鼠标中键来在X程序中将内容粘贴出来。但是更多的时候，我们需要不仅仅把内容输出到‘X’的剪切板中，而是希望可以在GUI程序中用ctrl + v也可以粘贴（比如，输出到gnome的剪切板中），下面这段命令就可以让你将内容输出到gnome的剪切板中：<br/>
+</p>
+<p><br/>
+echo &#8220;Hello, world&#8221; | xclip -selection clipboard<br/>
+再在一个GUI程序中按下ctrl + v，看下是不是粘贴上去了呢？顺着这个命令，我也重新写了一下ifconfig，让它在执行后输入内容到终端的同时，也将ip地址输出到剪切板中，因为通常情况下，查看ifconfig就是为了获取机器的ip地址：<br/>
+</p>
+<p><br/>
+alias ifconfig=&#8217;/sbin/ifconfig &amp;&amp; echo `/sbin/ifconfig | sed -n 2p | awk &#8220;{ print &#92;$2 }&#8221; | grep -o &#8220;[0-9]\{1,3\}&#46;[0-9]\{1,3\}&#46;[0-9]\{1,3\}&#46;[0-9]\{1,3\}&#8221;` | xclip -selection clipboard&#8217;<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
 
-<p>对于linux<br/>
-在server目录下，python uploader.zip<br/>
-</p>
-<p><br/>
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/10/zsh/">Zsh</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-10T00:00:00+08:00" pubdate data-updated="true">2013年03月10日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
 </p>
 </div>
 
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">zsh 配置</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+</div>
+
 <div id="outline-container-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1">安装python-gevent</h4>
+<h4 id="sec-1-1-1">setopt autocd</h4>
 <div class="outline-text-4" id="text-1-1-1">
 
-<p>参考：<a href="https://code.google.com/p/goagent/wiki/InstallGeventAndPyopensslOnUbuntu">https://code.google.com/p/goagent/wiki/InstallGeventAndPyopensslOnUbuntu</a><br/>
-<code>sudo apt-get install  python-gevent</code><br/>
+<p>如果你想要避免在切换目录时一直输入乏味的cd命令（比如使用/etc而不是cd /etc）你可以设置autocd选项。<br/>
 </p>
 <p><br/>
 </p></div>
@@ -867,700 +545,21 @@ IPv6的建议NAT实现也是这个原理，只不过上面的一元一次方程�
 </div>
 
 <div id="outline-container-1-1-2" class="outline-4">
-<h4 id="sec-1-1-2">安装pyopenssl</h4>
+<h4 id="sec-1-1-2">PS1</h4>
 <div class="outline-text-4" id="text-1-1-2">
 
-<p>这个一般都安装了<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">wget http://pypi.python.org/packages/source/p/pyOpenSSL/pyOpenSSL-0.13.tar.gz &amp;&amp; tar zxvf pyOpenSSL-0.13.tar.gz &amp;&amp; <span style="color: #a52a2a;">cd</span> pyOpenSSL-0.13 &amp;&amp; sudo python setup.py install
-</pre>
-
-
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">Chrome下如何使用goagent</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>Chrome可以安装switchysharp插件<br/>
-然后导入local中的SwitchyOptions.bak配置文件，之后就可以选择自动切换模式，他会根据规则自动选择是否使用代理。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">有时goagent无法使用，解决办法</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>可能是google_cn服务被屏蔽<br/>
-我们可以在proxy.ini中将profile=google_cn改成google_hk<br/>
-将[google_hk]段中的mode = http改为mode = https，重启goagent解决。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">遗留问题</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>我现在使用的是2.1.12版本，发现的问题是google analytics总是提示cookiemismatch。<br/>
-搜了半天也解决不了。<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/13/raid/">Raid介绍</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-13T00:00:00+08:00" pubdate data-updated="true">2013年02月13日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">raid介绍</a>
-<ul>
-<li><a href="#sec-1-1">关键技术</a>
-<ul>
-<li><a href="#sec-1-1-1">数据校验</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-2">可管理性</a></li>
-<li><a href="#sec-1-3">RAID等级</a>
-<ul>
-<li><a href="#sec-1-3-1">RAID0</a></li>
-<li><a href="#sec-1-3-2">RAID1</a></li>
-<li><a href="#sec-1-3-3">RAID2</a></li>
-<li><a href="#sec-1-3-4">RAID3</a></li>
-<li><a href="#sec-1-3-5">RAID4</a></li>
-<li><a href="#sec-1-3-6">RAID5</a></li>
-<li><a href="#sec-1-3-7">RAID6</a></li>
-<li><a href="#sec-1-3-8">RAID 组合等级</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-4">linux上创建raid5</a></li>
-<li><a href="#sec-1-5">资料</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/raid/">raid介绍</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-RAID 的两个关键目标是提高数据可靠性和 I/O 性能。<br/>
-通过把相同数据同时写入到多块磁盘（典型地如镜像），或者将计算的校验数据写入阵列中来获得冗余能力，当单块磁盘出现故障时可以保证不会导致数据丢失。有些 RAID 等级允许更多地 磁盘同时发生故障，比如 RAID6 ，可以是两块磁盘同时损坏。在这样的冗余机制下，可以用新磁盘替换故障磁盘， RAID 会自动根据剩余磁盘中的数据和校验数据重建丢失的数据，保证数据一致性和完整性。数据分散保存在 RAID 中的多个不同磁盘上，并发数据读写要大大优于单个磁盘，因此可以获得更高的聚合 I/O 带宽。当然，磁盘阵列会减少全体磁盘的总可用存储空间，牺牲空间换取更高的可靠性和性能。<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">关键技术</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>RAID 中主要有三个关键概念和技术：镜像（ Mirroring ）、数据条带（ Data Stripping ）和数据校验（ Data parity ）<br/>
-数据条带，将数据分片保存在多个不同的磁盘，多个数据分片共同组成一个完整数据副本，这与镜像的多个副本是不同的，它通常用于性能考虑。数据条带具有更高的并发粒度，当访问数据时，可以同时对位于不同磁盘上数据进行读写操作， 从而获得非常可观的 I/O 性能提升 。数据校验，利用冗余数据进行数据错误检测和修复，冗余数据通常采用海明码、异或操作等算法来计算获得。利用校验功能，可以很大程度上提高磁盘阵列的可靠性、鲁棒性和容错能力。不过，数据校验需要从多处读取数据并进行计算和对比，会影响系统性能。 不同等级的 RAID 采用一个或多个以上的三种技术，来获得不同的数据可靠性、可用性和 I/O 性能。<br/>
-</p>
-</div>
-
-<div id="outline-container-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1">数据校验</h4>
-<div class="outline-text-4" id="text-1-1-1">
-
-<p>采用数据校验时， RAID 要在写入数据同时进行校验计算，并将得到的校验数据存储在 RAID 成员磁盘中。校验数据可以集中保存在某个磁盘或分散存储在多个不同磁盘中，甚至校验数据也可以分块，不同 RAID 等级实现各不相同。当其中一部分数据出错时，就可以对剩余数据和校验数据进行反校验计算重建丢失的数据。校验技术相对于镜像技术的优势在于节省大量开销，但由于每次数据读写都要进行大量的校验运算，对计算机的运算速度要求很高，必须使用硬件 RAID 控制器。在数据重建恢复方面，检验技术比镜像技术复杂得多且慢得多。<br/>
-海明校验码和 异或校验是两种最为常用的 数据校验算法。海明校验码是由理查德 · 海明提出的，不仅能检测错误，还能给出错误位置并自动纠正。海明校验的基本思想是：将有效信息按照某种规律分成若干组，对每一个组作奇偶测试并安排一个校验位，从而能提供多位检错信息，以定位错误点并纠正。可见海明校验实质上是一种多重奇偶校验。异或校验通过异或逻辑运算产生，将一个有效信息与一个给定的初始值进行异或运算，会得到校验信息。如果有效信息出现错误，通过校验信息与初始值的异或运算能还原正确的有效信息。<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">可管理性</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>实际上， RAID 是一种虚拟化技术，它对多个物理磁盘驱动器虚拟成一个大容量的逻辑驱动器。对于外部主机系统来说， RAID 是一个单一的、快速可靠的大容量磁盘驱动器。这样，用户就可以在这个虚拟驱动器上来组织和存储应用系统数据。 从用户应用角度看，可使存储系统简单易用，管理也很便利。 由于 RAID 内部完成了大量的存储管理工作，管理员只需要管理单个虚拟驱动器，可以节省大量的管理工作。 RAID 可以动态增减磁盘驱动器，可自动进行数据校验和数据重建，这些都可以 大大简化管理工作。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">RAID等级</h3>
-<div class="outline-text-3" id="text-1-3">
-
-
-</div>
-
-<div id="outline-container-1-3-1" class="outline-4">
-<h4 id="sec-1-3-1">RAID0</h4>
-<div class="outline-text-4" id="text-1-3-1">
-
-<p>RAID0 是一种简单的、无数据校验的数据条带化技术。<br/>
-RAID0 的性能在所有 RAID 等级中是最高的。<br/>
-不提供数据冗余保护，一旦数据损坏，将无法恢复。 因此， RAID0 一般适用于对性能要求严格但对数据安全性和可靠性不高的应用，如视频、音频存储、临时数据缓存空间等。<br/>
-<img src="../img/raid0.png"  alt="../img/raid0.png" /><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-2" class="outline-4">
-<h4 id="sec-1-3-2">RAID1</h4>
-<div class="outline-text-4" id="text-1-3-2">
-
-<p>RAID1 称为镜像，它将数据完全一致地分别写到工作磁盘和镜像 磁盘，它的磁盘空间利用率为 50%<br/>
-RAID1 与 RAID0 刚好相反，是为了增强数据安全性使两块 磁盘数据呈现完全镜像，从而达到安全性好、技术简单、管理方便。 RAID1 拥有完全容错的能力.<br/>
-<img src="../img/raid1.png"  alt="../img/raid1.png" /><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-3" class="outline-4">
-<h4 id="sec-1-3-3">RAID2</h4>
-<div class="outline-text-4" id="text-1-3-3">
-
-<p>RAID2 称为纠错海明码磁盘阵列，其设计思想是利用海明码实现数据校验冗余。海明码是一种在原始数据中加入若干校验码来进行错误检测和纠正的编码技术，其中第 2n 位（ 1, 2, 4, 8, … ）是校验码，其他位置是数据码。因此在 RAID2 中，数据按位存储，每块磁盘存储一位数据编码，磁盘数量取决于所设定的数据存储宽度，可由用户设定。图 4 所示的为数据宽度为 4 的 RAID2 ，它需要 4 块数据磁盘和 3 块校验磁盘。如果是 64 位数据宽度，则需要 64 块 数据磁盘和 7 块校验磁盘。可见， RAID2 的数据宽度越大，存储空间利用率越高，但同时需要的磁盘数量也越多。<br/>
-海明码自身具备纠错能力，因此 RAID2 可以在数据发生错误的情况下对纠正错误，保证数据的安全性。它的数据传输性能相当高，设计复杂性要低于后面介绍的 RAID3 、 RAID4 和 RAID5 。<br/>
-但是，海明码的数据冗余开销太大，而且 RAID2 的数据输出性能受阵列中最慢磁盘驱动器的限制。<br/>
-<img src="../img/raid2.png"  alt="../img/raid2.png" /><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-4" class="outline-4">
-<h4 id="sec-1-3-4">RAID3</h4>
-<div class="outline-text-4" id="text-1-3-4">
-
-<p>使用专用校验盘的并行访问阵列，它采用一个专用的磁盘作为校验盘，其余磁盘作为数据盘，数据按位可字节的方式交叉存储到各个数据盘中。 RAID3 至少需要三块磁盘，不同磁盘上同一带区的数据作 XOR 校验，校验值写入校验盘中。 RAID3 完好时读性能与 RAID0 完全一致，并行从多个磁盘条带读取数据，性能非常高，同时还提供了数据容错能力。<br/>
-目前， RAID5 算法不断改进，在大数据量读取时能够模拟 RAID3 ，而且 RAID3 在出现坏盘时性能会大幅下降，因此常使用 RAID5 替代 RAID3 来运行具有持续性、高带宽、大量读写特征的应用。<br/>
-<img src="../img/raid3.png"  alt="../img/raid3.png" /><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-5" class="outline-4">
-<h4 id="sec-1-3-5">RAID4</h4>
-<div class="outline-text-4" id="text-1-3-5">
-
-<p>RAID4 与 RAID3 的原理大致相同，区别在于条带化的方式不同。 RAID4按照块的方式来组织数据.<br/>
-RAID4 提供了 非常好的读性能，但单一的校验盘往往成为系统性能的瓶颈。对于写操作， RAID4 只能一个磁盘一个磁盘地写，并且还要写入校验数据，因此写性能比较差。而且随着成员磁盘数量的增加，校验盘的系统瓶颈将更加突出。正是如上这些限制和不足， RAID4 在实际应用中很少见，主流存储产品也很少使用 RAID4 保护。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-6" class="outline-4">
-<h4 id="sec-1-3-6">RAID5</h4>
-<div class="outline-text-4" id="text-1-3-6">
-
-<p>RAID5 应该是目前最常见的 RAID 等级，它的原理与 RAID4 相似，区别在于校验数据分布在阵列中的所有磁盘上，而没有采用专门的校验磁盘。对于数据和校验数据，它们的写操作可以同时发生在完全不同的磁盘上。因此， RAID5 不存在 RAID4 中的并发写操作时的校验盘性能瓶颈问题。另外， RAID5 还具备很好的扩展性。当阵列磁盘 数量增加时，并行操作量的能力也随之增长，可比 RAID4 支持更多的磁盘，从而拥有更高的容量以及更高的性能。<br/>
-当一个数据盘损坏时，系统可以根据同一条带的其他数据块和对应的校验数据来重建损坏的数据。与其他 RAID 等级一样，重建数据时， RAID5 的性能会受到较大的影响。<br/>
-RAID5 兼顾存储性能、数据安全和存储成本等各方面因素，它可以理解为 RAID0 和 RAID1 的折中方案，是目前综合性能最佳的数据保护解决方案。 RAID5 基本上可以满足大部分的存储应用需求，数据中心大多采用它作为应用数据的保护方案。<br/>
-<img src="../img/raid5.png"  alt="../img/raid5.png" /><br/>
-</p>
-<p><br/>
-有人可能担心RAID5的可靠性，我试过，稳定性很好，同步完成后，拷贝数据上去，然后，随意的掉电，RAID5 组上的数据都没事。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-7" class="outline-4">
-<h4 id="sec-1-3-7">RAID6</h4>
-<div class="outline-text-4" id="text-1-3-7">
-
-<p>前面所 述的各个 RAID 等级都只能保护因单个磁盘失效而造成的数据丢失。如果两个磁盘同时发生故障，数据将无法恢复。 RAID6 （如图 8 ）引入双重校验的概念，它可以保护阵列中同时出现两个磁盘失效时，阵列仍能够继续工作，不会发生数据丢失。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-8" class="outline-4">
-<h4 id="sec-1-3-8">RAID 组合等级</h4>
-<div class="outline-text-4" id="text-1-3-8">
-
-<p>标准 RAID 等级各有优势和不足。自然地，我们想到把多个 RAID 等级组合起来，实现优势互补，弥补相互的不足，从而达到在性能、数据安全性等指标上更高的 RAID 系统。<br/>
-实际得到较为广泛应用的只有 RAID01 和 RAID10 两个等级。<br/>
-RAID01 兼备了 RAID0 和 RAID1 的优点，它先用两块磁盘建立镜像，然后再在镜像内部做条带化。 RAID01 的数据将同时写入到两个磁盘阵列中，如果其中一个阵列损坏，仍可继续工作，保证数据安全性的同时又提高了性能。 RAID01 和 RAID10 内部都含有 RAID1 模式，因此整体磁盘利用率均仅为 50% 。<br/>
-<img src="../img/raid10.png"  alt="../img/raid10.png" /><br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">linux上创建raid5</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>4个硬盘，每个硬盘都化分为一个区。<br/>
-创建raid5<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">mdadm --create /dev/md0 --level=5 --raid-devices=3 --spare-devices=1 /dev/sd[a-d]1
-</pre>
-
-创建RAID设备名为md0, 级别为RAID 5，使用3个设备建立RAID,空余一个做备用。<br/>
-可以看来做raid只需要分区，所以一个硬盘可以分为多个分区，不同分区作为不同的raid type。<br/>
-</p>
-<p><br/>
-查看raid信息<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">mdadm --detail /dev/md0
-</pre>
-
-
-513984 blocks [2/2] [UU]<br/>
-The second line gives us some more information about the device. [2/2] [UU] tells us both partitions are used.<br/>
-</p>
-<p><br/>
-让RAID开机启动.配置RIAD配置文件<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">mdadm --detail --scan &gt; /etc/mdadm.conf
-</pre>
-
-修改下，格式，去掉devices后的=。<br/>
-<code>devices /dev/sda1,/dev/sdb1,/dev/sdc1,/dev/sdd1</code><br/>
-</p>
-<p><br/>
-如果其中某个硬盘坏了会怎么样呢?系统会自动停止这块硬盘的工作,然后让后备的那块硬盘顶上去工作。我们可以实验下.<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">mdadm /dev/md0 --fail /dev/sdc1
-cat /proc/mdstat&#25110;&#32773;mdadm --detail
-</pre>
-
-
-删除一个硬盘<br/>
-<code>mdadm /dev/md0 --remove /dev/sdc1</code><br/>
-</p>
-<p><br/>
-添加一个硬盘<br/>
-<code>mdadm /dev/md0 --add /dev/sdc1</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">资料</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<p><a href="http://blog.csdn.net/liuben/article/details/4581970">http://blog.csdn.net/liuben/article/details/4581970</a><br/>
-</p>
-<p><br/>
-ubuntu使用raid的一个例子：<br/>
-<a href="http://www.dedoimedo.com/computers/linux-raid.html">http://www.dedoimedo.com/computers/linux-raid.html</a><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/13/openldap/">OpenLDAP介绍</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-13T00:00:00+08:00" pubdate data-updated="true">2013年02月13日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">OpenLDAP介绍</a>
-<ul>
-<li><a href="#sec-1-1">LDAP 入门</a></li>
-<li><a href="#sec-1-2">LDAP 目录结构</a>
-<ul>
-<li><a href="#sec-1-2-1">DN</a></li>
-<li><a href="#sec-1-2-2">组织单元</a></li>
-<li><a href="#sec-1-2-3">个别项</a></li>
-<li><a href="#sec-1-2-4">对象类objectclass</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-3">配置openLDAP</a>
-<ul>
-<li><a href="#sec-1-3-1">rootdn</a></li>
-<li><a href="#sec-1-3-2">AC</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-4">插入数据</a>
-<ul>
-<li><a href="#sec-1-4-1">LDIF 方法</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-5">参考资料</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/openldap/">OpenLDAP介绍</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">LDAP 入门</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>首字母缩略 LDAP 代表轻量级目录访问协议（Lightweight Directory Access Protocol）。<br/>
-信息被集中存储在服务器上的 LDAP 目录中。LDAP 目录是一种数据库；然而，它不是关系数据库。<br/>
-它的目录或数据库的结构与 UNIX 文件系统非常相似： <br/>
-数据按层次存储；有“根”或“基本 DN”（专有名称，Distinguished Name）；<br/>
-目录被进一步细分成组织单元（Organization Units 或 OU）；<br/>
-在这些 OU 中是包含数据的项。<br/>
-这种树-叶结构不仅使 LDAP 变得可扩展， 而且当进行简单的搜索或查询时，比传统的关系数据库更快。<br/>
-</p>
-<p><br/>
-LDAP 目录几乎可以存储所有类型的数据：电子邮件地址、DNS 信息、NIS 映射、安全性密钥、联系人信息列表和计算机名等。<br/>
-可以通过 ACL（访问控制表，Access Control List）来控制对目录的访问。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">LDAP 目录结构</h3>
-<div class="outline-text-3" id="text-1-2">
-
-
-</div>
-
-<div id="outline-container-1-2-1" class="outline-4">
-<h4 id="sec-1-2-1">DN</h4>
-<div class="outline-text-4" id="text-1-2-1">
-
-<p>LDAP 目录树的“根”或顶部是基本 DN。基本 DN 通常有两种形式：organization=（例如，o=syroidmanor.com）， 或者从组织的 DNS 域组件派生的 DN（dc=syroidmanor,dc=com）。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-2" class="outline-4">
-<h4 id="sec-1-2-2">组织单元</h4>
-<div class="outline-text-4" id="text-1-2-2">
-
-<p>在目录基本 DN 的下面是容器或组织单元（OU），它们从逻辑上对您的数据进行分隔或分组。<br/>
-</p>
-<p><br/>
-<pre class="example">dc=foobar,dc=com
-                ou=customers
-                        ou=northamerica
-                        ou=southamerica
-                        ou=asia
-                        ou=europe
-</pre>
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-3" class="outline-4">
-<h4 id="sec-1-2-3">个别项</h4>
-<div class="outline-text-4" id="text-1-2-3">
-
-<p>项只是存储属性的地方。<br/>
-属性是可用来将一种类型的信息存储在目录中的容器。<br/>
-每个属性都有一种类型和一个或多个值。<br/>
-LDAP 目录中的每个项都有唯一的 DN，每个 DN 都由两部分组成 ―“相对专有名称”（或 RDN）和对 LDAP 目录结构中存储记录的位置的引用。 几乎存储在 LDAP 目录中的所有数据都有一个唯一名称，这个名称通常存储在 cn 属性中。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-4" class="outline-4">
-<h4 id="sec-1-2-4">对象类objectclass</h4>
-<div class="outline-text-4" id="text-1-2-4">
-
-<p>对象类由 LDAP 目录使用来定义给定类型的对象可以有哪些属性。对象类还定义项必须有什么属性， 以及项可以有什么属性。所有对象类都从其父对象类继承需求，然后添加它们自己的需求。<br/>
-对象类有五个组件：OID（对象标识）、唯一名称、父对象（SUP）、任何需要的属性（MUST）和 允许的属性列表（MAY）。<br/>
-如：<br/>
-</p>
-<p><br/>
-<pre class="example">objectclass ( 2.5.6.6 NAME 'person' SUP top STRUCTURAL
-        MUST ( sn $ cn )
-        MAY ( userPassword $ telephoneNumber $ seeAlso $ description ) )
-</pre>
-
-
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">配置openLDAP</h3>
-<div class="outline-text-3" id="text-1-3">
-
-
-</div>
-
-<div id="outline-container-1-3-1" class="outline-4">
-<h4 id="sec-1-3-1">rootdn</h4>
-<div class="outline-text-4" id="text-1-3-1">
-
-<p>rootdn 项控制谁可以对目录数据库进行写操作，以及他们要这样做所必须提供的密码。<br/>
-您在 rootdn 项的 cn= 部分填充的任何项都是对数据库有完全读／写访问权的用户。<br/>
-如果您打算存储在目录中的数据只有一点点机密性，则对密码进行散列处理。可以用 slappasswd 实用程序完成它，如下所示：<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-2" class="outline-4">
-<h4 id="sec-1-3-2">AC</h4>
-<div class="outline-text-4" id="text-1-3-2">
-
-
-<p><br/>
-<pre class="example">access to dn=".*,dc=syroidmanor,dc=com" attr=userPassword
-        by dn="cn=root,dc=syroidmanor,dc=com" write
-        by self write
-        by * auth
-access to dn=".*,dc=syroidmanor,dc=com" attr=mail
-        by dn="cn=root,dc=syroidmanor,dc=com" write
-        by self write
-        by * read
-</pre>
-
-上面的配置仅允许 userPassword 属性的所有者修改项，但仅当所有者提供他或她的优先密码时才允许进行修改。 在所有其它情况下，只能出于认证目的来访问该项，而不能查看它。 第二个 access to&hellip; 项允许用户修改自己的电子邮件地址<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">插入数据</h3>
-<div class="outline-text-3" id="text-1-4">
-
-
-</div>
-
-<div id="outline-container-1-4-1" class="outline-4">
-<h4 id="sec-1-4-1">LDIF 方法</h4>
-<div class="outline-text-4" id="text-1-4-1">
-
-
-<p><br/>
-<pre class="example">dn: uid=juser,ou=people,dc=syroidmanor,dc=com
-uid: juser
-cn: Joe User
-givenname: Joe
-sn: User
-mail: juser@syroidmanor.com
-objectClass: top
-objectClass: mailRecipient
-objectClass: person
-objectClass: inetOrgPerson
-</pre>
-
-
-
-
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">参考资料</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<ol>
-<li><a href="http://www.ibm.com/developerworks/cn/education/linux/l-ldap/section2.html">构建基于 LDAP 的地址簿</a><br/>
-</li>
-</ol>
-
-</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/13/openfiler/">Openfiler 2.99创建raid</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-13T00:00:00+08:00" pubdate data-updated="true">2013年02月13日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">openfiler 2.99创建raid</a>
-<ul>
-<li><a href="#sec-1-1">创建raid5</a>
-<ul>
-<li><a href="#sec-1-1-1">设置gpt</a></li>
-<li><a href="#sec-1-1-2">分区</a></li>
-<li><a href="#sec-1-1-3">设置raid标记</a></li>
-<li><a href="#sec-1-1-4">在web上创建raid</a></li>
-<li><a href="#sec-1-1-5">扩展</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-2">如果web上无法识别raid盘</a></li>
-<li><a href="#sec-1-3">测试速度</a></li>
-<li><a href="#sec-1-4">优缺点</a></li>
-<li><a href="#sec-1-5">资料</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/openfiler/">openfiler 2.99创建raid</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-有人可能担心RAID5的可靠性，我试过，稳定性很好，同步完成后，拷贝数据上去，然后，随意的掉电，RAID5 组上的数据都没事。<br/>
-OpenFiler读写性能很好，随便调整一下就能达到RAID5 下写130MB/S和读220MB/S的成绩，这个远远超过了FREENas的成绩。<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">创建raid5</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>一个磁盘用于安装系统，其他3块作为raid5.<br/>
-进入root<br/>
-</p>
-</div>
-
-<div id="outline-container-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1">设置gpt</h4>
-<div class="outline-text-4" id="text-1-1-1">
-
-
-<p><br/>
-<pre class="src src-sh">parted /dec/sdb
-mklabel
-gpt
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-2" class="outline-4">
-<h4 id="sec-1-1-2">分区</h4>
-<div class="outline-text-4" id="text-1-1-2">
-
-<p>整个磁盘化为一个分区，<br/>
-<code>mkpart primary 0 -0</code><br/>
+<p>转义序列        打印效果<br/>
+%T      系统时间（时：分）<br/>
+%*      系统时间（时：分：秒）<br/>
+%D      系统日期（年-月-日）<br/>
+%n      你的用户名<br/>
+%B - %b 开始到结束使用粗体打印<br/>
+%U - %u 开始到结束使用下划线打印<br/>
+%d      你目前的工作目录<br/>
+%~      你目前的工作目录相对于～的相对路径<br/>
+%M      计算机的主机名<br/>
+%m      计算机的主机名（在第一个句号之前截断）<br/>
+%l      你当前的tty<br/>
 </p>
 <p><br/>
 </p></div>
@@ -1568,15 +567,19 @@ gpt
 </div>
 
 <div id="outline-container-1-1-3" class="outline-4">
-<h4 id="sec-1-1-3">设置raid标记</h4>
+<h4 id="sec-1-1-3">zsh设置为默认sh</h4>
 <div class="outline-text-4" id="text-1-1-3">
 
-<p>设置为raid分区<br/>
-<code>set 1 raid on</code><br/>
+<p>我们可以通过usermod命令来设置某一个给定用户的shell。<br/>
 </p>
 <p><br/>
-同样操作于<br/>
-<code>select /dev/sdc</code><br/>
+代码 4.1: 使用usermod命令永久地切换到zsh<br/>
+usermod -s /bin/zsh userlogin<br/>
+</p>
+<p><br/>
+或者<br/>
+（使用你的用户名替代&#8221;username&#8221;）<br/>
+$ chsh -s /bin/zsh username<br/>
 </p>
 <p><br/>
 </p></div>
@@ -1584,15 +587,51 @@ gpt
 </div>
 
 <div id="outline-container-1-1-4" class="outline-4">
-<h4 id="sec-1-1-4">在web上创建raid</h4>
+<h4 id="sec-1-1-4">其他</h4>
 <div class="outline-text-4" id="text-1-1-4">
 
-<p>Volumes &gt; Software RAID:<br/>
-Create the software RAID 5 with sdb1, sdc1 and sdd1.<br/>
+<p>setopt AUTO_CONTINUE<br/>
 </p>
 <p><br/>
-Create the vg0 volume group with /dev/md0<br/>
-Create the lv0 volume, using full space and XFS.<br/>
+为了提交工作效率，可以定义一些函数或者常用的alias<br/>
+f() {<br/>
+    echo &#8220;find . -iname &#34;<b>$1</b>&#34;&#8221;<br/>
+    find . -iname &#8221;<b>$1</b>&#8221;<br/>
+}<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+autoload copy-earlier-word<br/>
+zle -N copy-earlier-word<br/>
+bindkey &#8216;^[,&#8217; copy-earlier-word<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+setopt AUTO_PUSHD<br/>
+setopt PUSHD_IGNORE_DUPS<br/>
+</p>
+<p><br/>
+my_accounts=(<br/>
+{r00t,root}@{192.168.1.1,192.168.0.1}<br/>
+kardinal@linuxtoy.org<br/>
+123@211.148.131.7<br/>
+)<br/>
+zstyle &#8216;:completion:*:my-accounts&#8217; users-hosts $my_accounts<br/>
+</p>
+<p><br/>
+zstyle &#8216;:completion:*:scp:*&#8217; tag-order \<br/>
+   files users &#8216;hosts:-host hosts:-domain:domain hosts:-ipaddr&#8221;IP\ Address *&#8217;<br/>
+zstyle &#8216;:completion:*:scp:*&#8217; group-order \<br/>
+   files all-files users hosts-domain hosts-host hosts-ipaddr<br/>
+zstyle &#8216;:completion:*:ssh:*&#8217; tag-order \<br/>
+   users &#8216;hosts:-host hosts:-domain:domain hosts:-ipaddr&#8221;IP\ Address *&#8217;<br/>
+zstyle &#8216;:completion:*:ssh:*&#8217; group-order \<br/>
+   hosts-domain hosts-host users hosts-ipaddr<br/>
+zstyle &#8216;*&#8217; single-ignored show<br/>
+</p>
+<p><br/>
 </p>
 <p><br/>
 </p></div>
@@ -1600,43 +639,274 @@ Create the lv0 volume, using full space and XFS.<br/>
 </div>
 
 <div id="outline-container-1-1-5" class="outline-4">
-<h4 id="sec-1-1-5">扩展</h4>
+<h4 id="sec-1-1-5">hash 路径别名</h4>
 <div class="outline-text-4" id="text-1-1-5">
 
-<p>如果要再添加两块硬盘，<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">[root@localhost]# mdadm --add /dev/md0 /dev/sde1 add the two disks to /dev/md0
-[root@localhost]# mdadm --add /dev/md0 /dev/sdf1
-
-[root@localhost]# mdadm --grow /dev/md0 --raid-devices=5 set the RAID to use the two new disks
-
-In the OpenFiler WEBinterface, Wait for /dev/md0 to be Clean and Synchronized, then:
-
-[root@localhost]# pvresize /dev/md0 resize the physical volume /dev/md0
-</pre>
-
-
-In the OpenFiler WEBinterface &gt; Volumes &gt; Manage Volumes &gt; Edit properties of lv0 to use full capacity.<br/>
+<p>hash -d blog=&#8221;/home/henryyan/work/blog/henryyan.github.com&#8221;<br/>
+cd ~blog<br/>
 </p>
 <p><br/>
 </p></div>
+
 </div>
+
+<div id="outline-container-1-1-6" class="outline-4">
+<h4 id="sec-1-1-6">文件关联</h4>
+<div class="outline-text-4" id="text-1-1-6">
+
+<p>在图形化的文件管理器中，通常我们只要单击/双击某个文件，文件管理器就会调用相应的程序来打开该文件。<br/>
+其实，这样的文件关联在 Zsh 中也可以实现。具体操作步骤如下：<br/>
+添加下列内容到你的 $HOME/.zshrc 文件中：<br/>
+autoload -U zsh-mime-setup<br/>
+zsh-mime-setup<br/>
+以关联扩展名为 png 的图像文件为例，假设要通过 pho 程序来查看，那么在 $HOME/.zshrc 中可以这样定义：<br/>
+alias -s png=pho<br/>
+我们以 alias 的形式来实现文件关联，其中 png 为要关联文件的扩展名，= 右边的 pho 为关联的程序。这里的 -s 必不可少。<br/>
+要关联其他类型的文件，只需如法炮制即可。<br/>
+为了使 .zshrc 生效，需要 source 该文件。<br/>
+现在，在 Zsh 中，例如要查看 linuxtoy.png 文件，只要输入该文件名（可按 Tab 自动补完）并按回车，Zsh 便会自动调用 pho 来打开。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-7" class="outline-4">
+<h4 id="sec-1-1-7">cd扩展</h4>
+<div class="outline-text-4" id="text-1-1-7">
+
+<p>“cd ….”之类，会根据点的个数补全路径，比如 “…”补全为 “../../” ，“….”补全为 “../../..”<br/>
+</p>
+<p><br/>
+配合我修改的 tab 键：空行 tab 出 “cd ”，自己点点点后回车，O了<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">user-ret(){
+    if [[ $BUFFER = "" ]] ;then
+        BUFFER="ls"
+        zle end-of-line
+        zle accept-line
+    elif [[ $BUFFER =~ "^cd\ ...+$" ]] ;then
+        BUFFER=${${BUFFER//./..\/}/..\//}
+        zle end-of-line
+        zle accept-line
+    else
+        zle accept-line
+    fi
+}
+zle -N user-ret
+bindkey "\r" user-ret
+</pre>
+
+</p></div>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/06/ulimit/">Ulimit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-06T00:00:00+08:00" pubdate data-updated="true">2013年03月06日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">解决too many open file的有关问题</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>ulimit是bash的内建命令，并不是一个程序。<br/>
+<code>ulimit -a</code> 查看所有设置<br/>
+</p>
+<p><br/>
+通过ulimit -n 命令可以查看linux系统里打开文件描述符的最大值，一般缺省值是1024，对一台繁忙的服务器来说，这个值偏小，所以有必要重新设置linux系统里打开文件描述符的最大值。<br/>
+</p>
+<p><br/>
+如果单个进程打开的文件句柄数量超过了系统定义的值，就会提到“too many files open”的错误提示。如何知道当前进程打开了多少个文件句柄呢？下面一段小脚本可以帮你查看：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-sh">lsof -n |awk &#8216;{print $<span style="color: #ff1493;">2</span>}&#8217;|sort|uniq -c |sort -nr|more
+</pre>
+
+其中第一行是打开的文件句柄数量，第二行是进程号。<br/>
+</p>
+<p><br/>
+Linux有硬性限制和软性限制。可以通过ulimit来设定这两个参数<br/>
+<code>ulimit -HSn 4096</code><br/>
+H指定了硬性大小，S指定了软性大小，n表示设定单个进程最大的打开文件句柄数量.<br/>
+</p>
+<p><br/>
+</p></div>
 
 </div>
 
 <div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">如果web上无法识别raid盘</h3>
+<h3 id="sec-1-2">limits.conf</h3>
 <div class="outline-text-3" id="text-1-2">
 
-<p>首先需要把/dev/md0  mklabel为gpt<br/>
-然后分区，mkpart primary ext2 <br/>
-设置lvm flag<br/>
-<code>set 1 LVM on</code><br/>
+<p>此修改只是临时有效，要想长期有效需要修改：/etc/security/limits.conf<br/>
+在文件末尾加上：<br/>
 </p>
 <p><br/>
-手动添加卷组：<br/>
-<code>vgcreate VG1 /dev/md0</code><br/>
+<pre class="example">* soft nofile 65536
+* hard nofile 65536
+</pre>
+
+
+此文件还有其他的相关设置：<br/>
+以下是文件描述：<br/>
+</p>
+<p><br/>
+<pre class="example">#Each line describes a limit for a user in the form:
+#
+#&lt;domain&gt;  &lt;type&gt;  &lt;item&gt;  &lt;value&gt;
+#
+#Where:
+#&lt;domain&gt; can be:
+#        - an user name
+#        - a group name, with @group syntax
+#        - the wildcard *, for default entry
+#        - the wildcard %, can be also used with %group syntax,
+#                 for maxlogin limit
+#
+#&lt;type&gt; can have the two values:
+#        - "soft" for enforcing the soft limits
+#        - "hard" for enforcing hard limits
+#
+#&lt;item&gt; can be one of the following:
+#        - core - limits the core file size (KB)
+#        - data - max data size (KB)
+#        - fsize - maximum filesize (KB)
+#        - memlock - max locked-in-memory address space (KB)
+#        - nofile - max number of open files
+#        - rss - max resident set size (KB)
+#        - stack - max stack size (KB)
+#        - cpu - max CPU time (MIN)
+#        - nproc - max number of processes
+#        - as - address space limit
+#        - maxlogins - max number of logins for this user
+#        - maxsyslogins - max number of logins on the system
+#        - priority - the priority to run user process with
+#        - locks - max number of file locks the user can hold
+#        - sigpending - max number of pending signals
+#        - msgqueue - max memory used by POSIX message queues (bytes)
+#        - nice - max nice priority allowed to raise to
+#        - rtprio - max realtime priority
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">ubuntu还需要修改pam</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>对于ubuntu还需要修改pam.d配置，才能生效<br/>
+</p>
+<p><br/>
+<pre class="example">1. sudo vi /etc/pam.d/common-session
+2. Add session required pam_limits.so to the end of the file.
+3. Reboot the OS.
+</pre>
+
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/06/difference-svn-and-cvs/">Svn与cvs的区别</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-06T00:00:00+08:00" pubdate data-updated="true">2013年03月06日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">版本编号方面</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>在SVN中，新版本的版本号不是针对某个特定文件的，而是针对整个库而言的。<br/>
+而cvs是对文件的版本编号。<br/>
+svn的版本类似是对整个库的快照。<br/>
+SVN的全局性版本编号为SVN带来了诸多的优势：如对目录或文件执行拷贝，无论涉及多少文件，SVN不需要对单个文件依次执行拷贝命令，仅仅需要建立一个指向相应的全局版本号的一个指针即可。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">目录的版本控制</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>CVS只能对文件进行版本控制，不能对目录进行版本控制。<br/>
+SVN将目录作为一类特殊的文件来处理。当目录中的子目录/文件被删除、重命名、或新的子目录/文件被创建时，目 录的内容将发生改变。因此，SVN象记录普通文件的修改历史一样记录对目录的修改历史，当发生文件/目录的移动、重命名或拷贝操作时，SVN能够准确记录 操作前后的历史联系。同样，像对文件的不同历史版本进行比较一样，SVN支持对目录的不同历史版本的比较，清晰展现目录的变化历史。<br/>
 </p>
 <p><br/>
 </p></div>
@@ -1644,10 +914,11 @@ In the OpenFiler WEBinterface &gt; Volumes &gt; Manage Volumes &gt; Edit propert
 </div>
 
 <div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">测试速度</h3>
+<h3 id="sec-1-3">原子性提交</h3>
 <div class="outline-text-3" id="text-1-3">
 
-<p><code>dd if=/dev/zero of=tmpfile bs=1M count=10000</code><br/>
+<p>SVN提交文件，只有当全部文件修改都成功入库，该提交才变得有效。一旦中断，SVN将会自动执行“回滚”（rollback）操作。SVN 这种机制保证所有的修改要么全部入库生效，要么一个也不入库。由于SVN的原子性提交特性和全局版本编号方式，当提交成功完成时，一个唯一的、新的全局版 本编号产生，而提交时用户提供的日志信息与该新的版本编号关联，只进行一次存储（区别于CVS的按文件重复存储）。<br/>
+而CVS则采用线性、串行的批量提交，即依次地，一个接一个地执行提交，每成功提交一个文件，该文件的一个新的版本即被记录到版本库中。但当任 何原因造成批量操作的中断时，版本库往往处于一个不一致的状态。另外，CVS即使在批量提交不发生中断时也会造成不一致：假设用户A启动一个需要较长时间 才能完成的批量提交；与此同时，用户B执行cvsupdate操作。此时，用户B很有可能得到一个不一致的更新，即用户B通过“更新”操作，得到用户A的 部分修改文件。<br/>
 </p>
 <p><br/>
 </p></div>
@@ -1655,63 +926,139 @@ In the OpenFiler WEBinterface &gt; Volumes &gt; Manage Volumes &gt; Edit propert
 </div>
 
 <div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">优缺点</h3>
+<h3 id="sec-1-4">差异化的二进制文件处理</h3>
 <div class="outline-text-3" id="text-1-4">
 
-<p>优点：<br/>
-</p>
-<p><br/>
-1、兼容性很好，几乎可以识别所有的常见硬件，哪怕识别不了也可以装个REDHAT的驱动，REDHAT的驱动几乎是每个厂商都会提供的，上面那台HP SERVER RAID卡就是装了READHAT的驱动搞定的；<br/>
-</p>
-<p><br/>
-2、性能强大，支持网卡捆绑，上门的PC-SERVER通过网络访问，可以实现RAID5的245MB/S的读写速度，和本地盘没啥区别，要不是受制于HP PCSERVER网卡数量不够的限制，网络服务应该还能实现更高的速度，本地测试RAID5超过400MB/S的读写速度；<br/>
-</p>
-<p><br/>
-3、支持卷管理功能，支持在线扩展功能，支持按用户空间限制配置；<br/>
-</p>
-<p><br/>
-4、内部带OPENLDAP,用户的认证通过OPENLDAP认证，安全性很高；<br/>
-</p>
-<p><br/>
-5、支持WEB管理和系统监控，管理方便。<br/>
-</p>
-<p><br/>
-缺点：<br/>
-</p>
-<p><br/>
-1、页面管理功能要是没用过肯定一头雾水，监控管理功能很一般，只能算有吧；<br/>
-</p>
-<p><br/>
-2、用户认证使用OPENLDAP，配置麻烦，我折腾了一个小时才搞定；<br/>
-</p>
-<p><br/>
-3、不支持BT电驴什么的，虽然可以安装但是无法和WEB页面集成，感觉还是很不爽<br/>
-</p>
-<p><br/>
-4、不知道为何精简了RPM命令和yum命令，要在上面装点东西很麻烦，要先装RPM才能进行下面的工作。<br/>
-应该是改为了conary。<br/>
-</p>
-<p><br/>
+<p>SVN每次提交后版本库中只存储相对于先前版本的差异，从而可以节省大量的存储空间。更为重要的是，当客户端需要获取新的版本 时，SVN只传输版本的差异，从而大大减少对网络带宽的消耗。<br/>
 </p></div>
+</div>
+</div>
+</div>
+  
+  
 
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/02/grub-output-to-serial/">Grub重定向到串口</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-02T00:00:00+08:00" pubdate data-updated="true">2013年03月02日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
 </div>
 
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">资料</h3>
-<div class="outline-text-3" id="text-1-5">
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">** grub输出到串口</h3>
+<div class="outline-text-3" id="text-1-1">
 
-<ol>
-<li>LDAP设置<br/>
-   <a href="http://www.njeit.cn/show.aspx?id=831&amp;cid=65">http://www.njeit.cn/show.aspx?id=831&amp;cid=65</a><br/>
+<p>将GRUB输出重定向到串口(Edit /boot/grub/grub.conf)<br/>
+</p>
+<p><br/>
+<pre class="example">serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1
+terminal --timeout=5 console serial
+</pre>
+
+
+grub引导过程中, 会将输出同时发送到终端屏幕和串口. <br/>
+grub引导过程中将在终端和连接到串口的超级终端上提示Press any key to continue, <br/>
+每秒钟提示一次, 共5次, 可修改menu.lst文件terminal行中的&ndash;timeout=10改变提示次数, <br/>
+在这一段时间内, 可以在终端的键盘, 或者连接到串口的超级终端中按任意键进入grub选择菜单. <br/>
+如果5秒内没有在终端和连接串口的超级终端上按任意键, 则grub的选择菜单将出现在console上, <br/>
+如果希望默认情况下, grub选择菜单出现在串口上, 则可修改grub.conf将<br/>
+console serial修改为serial console.<br/>
+</p>
+<p><br/>
+将kernel输出信息输出到串口(编辑 /boot/grub/grub.conf 有的为menu.lst)<br/>
+增加kernel引导参数如下:<br/>
+</p>
+<p><br/>
+<pre class="example">kernel  /boot/vmlinuz-2.6.32-29 root=/dev/hda1 ro console=ttyS0,115200n8 console=tty0
+</pre>
+
+
+grub2的例子<br/>
+修改文件/etc/default/grub<br/>
+</p>
+<p><br/>
+<pre class="example">#显示启动菜单
+#GRUB_HIDDEN_TIMEOUT=0
+修改相应的变量如下：
+GRUB_CMDLINE_LINUX="console=ttyS0,115200"
+GRUB_TERMINAL=serial
+GRUB_SERIAL_COMMAND="serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
+</pre>
+
+
+</p><ol>
+<li>运行命令， 更新grub<br/>
+   <code>sudo update-grub</code><br/>
 
 <p><br/>
 </p></li>
-<li>创建iscsi <br/>
-   <a href="http://wenku.baidu.com/view/b51fdeedf8c75fbfc77db202.html">http://wenku.baidu.com/view/b51fdeedf8c75fbfc77db202.html</a><br/>
+<li>在/etc/init/下，创建文件ttyS0.conf：<br/>
 </li>
 </ol>
 
-</div>
+
+<p><br/>
+<pre class="example"># ttyS0 - getty
+start on stopped rc RUNLEVEL=[23]
+stop on runlevel [!23]
+
+respawn
+exec /sbin/getty -L 115200 ttyS0 vt100
+</pre>
+
+
+</p><ol>
+<li>查看/etc/securetty中，含有ttyS0否。没有则加上。<br/>
+</li>
+<li>BIOS开启串口<br/>
+</li>
+<li>另一台机器，联上串口线，开启teraterm,设置115200 8n1<br/>
+</li>
+<li>重启机器, 看到teraterm输出Linux的启动信息。<br/>
+</li>
+</ol>
+
+
+<p><br/>
+通过比较生成的grub.cfg<br/>
+发现多了一个<br/>
+</p>
+<p><br/>
+<pre class="example">terminal_output serial
+terminal_input serial
+</pre>
+
+</p>
+<p> <br/>
+</p></div>
 </div>
 </div>
 </div>
@@ -1740,7 +1087,7 @@ In the OpenFiler WEBinterface &gt; Volumes &gt; Manage Volumes &gt; Edit propert
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (2)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (2)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/service'>service (2)</a></li><li><a href='/blog/categories/shell'>shell (2)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (6)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (3)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (3)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (11)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -1776,23 +1123,23 @@ dpc=1"></iframe>
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
-        <a href="/blog/2013/02/27/netcat/">nc使用</a>
+        <a href="/blog/2013/03/19/emacs-desktop/">emacs的desktop保存</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/20/dnsserver/">搭建dns服务器</a>
+        <a href="/blog/2013/03/17/expect/">expect自动ssh登录</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/19/ssh-tunnel/">ssh隧道技术</a>
+        <a href="/blog/2013/03/12/nfs-server/">NFS server</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/17/ipv6-nat-map66/">IPv6 NAT MAP66</a>
+        <a href="/blog/2013/03/11/xclip/">xlicp在命令行下使用剪切板</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/02/14/goagent/">goagent翻墙</a>
+        <a href="/blog/2013/03/10/zsh/">zsh</a>
       </li>
     
   </ul>
@@ -1812,7 +1159,7 @@ dpc=1"></iframe>
 <p>
   Copyright &copy; 2013 - emmoblin -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-  <br><script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
+  <br> <script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
 </p>
 
 </footer>
