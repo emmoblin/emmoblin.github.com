@@ -4,7 +4,7 @@
   <title><![CDATA[Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-03-24T21:03:31+08:00</updated>
+  <updated>2013-08-07T10:25:41+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -12,6 +12,1601 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[bond的几种mode]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/08/05/bond-mode/"/>
+    <updated>2013-08-05T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/08/05/bond-mode</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">bond的几种mode</a>
+<ul>
+<li><a href="#sec-1-1">Bonding的模式一共有7种</a></li>
+<li><a href="#sec-1-2">bonding配置参数</a></li>
+<li><a href="#sec-1-3">ROUNDROBIN</a></li>
+<li><a href="#sec-1-4">网卡的容错模式ACTIVEBACKUP</a></li>
+<li><a href="#sec-1-5">网卡虚拟化方式（mode = BOND_MODE_ALB）</a></li>
+<li><a href="#sec-1-6">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/08/05/bond-mode/">bond的几种mode</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Bonding的模式一共有7种</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>BOND_MODE_ROUNDROBIN       0   （balance-rr模式）网卡的负载均衡模式<br/>
+BOND_MODE_ACTIVEBACKUP     1   （active-backup模式）网卡的容错模式<br/>
+BOND_MODE_XOR              2   （balance-xor模式）需要交换机支持<br/>
+BOND_MODE_BROADCAST        3    （broadcast模式）<br/>
+BOND_MODE_8023AD           4   （IEEE 802.3ad动态链路聚合模式）需要交换机支持<br/>
+BOND_MODE_TLB              5   自适应传输负载均衡模式<br/>
+BOND_MODE_ALB              6   网卡虚拟化方式<br/>
+</p>
+<p><br/>
+bonding模块的所有工作模式可以分为两类：多主型工作模式和主备型工作模式，balance-rr 和broadcast属于多主型工作模式而active-backup属于主备型工作模式。（balance-xor、自适应传输负载均衡模式（balance-tlb）和自适应负载均衡模式（balance-alb）也属于多主型工作模式，IEEE 802.3ad动态链路聚合模式（802.3ad）属于主备型工作模式<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">bonding配置参数</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>在内核文档中，列举了许多bonding驱动的参数，然后本文不是文档的翻译，因此不再翻译文档和介绍和主题无关的参数，仅对比较重要的参数进行介绍，并且这些介绍也不是翻译，而是一些建议或者心得。<br/>
+</p>
+<p><br/>
+ad_select： 802.3ad相关。如果不明白这个，那不要紧，抛开Linux的bonding驱动，直接去看802.3ad的规范就可以了。列举这个选项说明linux bonding驱动完全支持了动态端口聚合协议。<br/>
+</p>
+<p><br/>
+arp_interval和arp_ip_target： 以一个固定的间隔向某些固定的地址发送arp，以监控链路。有些配置下，需要使用arp来监控链路，因为这是一种三层的链路监控 ，使用网卡状态或者链路层pdu监控只能监控到双绞线两端的接口 的健康情况，而监控不到到下一条路由器或者目的主机之间的全部链路的健康状况。<br/>
+</p>
+<p><br/>
+primary： 表示优先权，顺序排列，当出现某种选择事件时，按照从前到后的顺序选择网口，比如802.3ad协议中的选择行为。<br/>
+</p>
+<p><br/>
+fail_over_mac： 对于热备模式是否使用同一个mac地址，如果不使用一个mac的话，就要完全依赖免费arp机制更新其它机器的arp缓存了。比如，两个有网卡，网卡1和网卡2处于热备模式，网卡1的mac是mac1，网卡2的mac是mac2，网卡1一直是master，但是网卡1突然down掉了，此时需要网卡2接替，然而网卡2的mac地址与之前的网卡1不同，别的主机回复数据包的时候还是使用网卡1的mac地址来回复的，由于mac1已经不在网络上了，这就会导致数据包将不会被任何网卡接收。因此网卡2接替了master的角色之后，最好有一个回调事件，处理这个事件的时候，进行一次免费的arp广播，广播自己更换了mac地址。<br/>
+</p>
+<p><br/>
+lacp_rate： 发送802.3ad的LACPDU，以便对端设备自动获取链路聚合的信息。<br/>
+</p>
+<p><br/>
+max_bonds： 初始时创建bond设备接口的数量，默认值是1。但是这个参数并不影响可以创建的最大的bond设备数量。<br/>
+</p>
+<p><br/>
+use_carrier： 使用MII的ioctl还是使用驱动获取保持的状态，如果是前者的话需要自己调用mii的接口进行硬件检测，而后者则是驱动自动进行硬件检测(使用watchdog或者定时器)，bonding驱动只是获取结果，然而这依赖网卡驱动必须支持状态检测，如果不支持的话，网卡的状态将一直是on。<br/>
+</p>
+<p><br/>
+mode： 这个参数最重要，配置以什么模式运行，这个参数在bond设备up状态下是不能更改的，必须先down设备(使用ifconfig bondX down)才可以配置，主要的有以下几个：<br/>
+1.balance-rr or 0： 轮转方式的负载均衡模式，流量轮流在各个bondX的真实设备之间分发。注意，一定要用状态检测机制，否则如果一个设备down掉以后，由于没有状态检测，该设备将一直是up状态，仍然接受发送任务，这将会出现丢包。<br/>
+2.active-backup or 1： 热备模式。在比较高的版本中，免费arp会在切换时自动发送，避免一些故障，比如fail_over_mac参数描述的故障。<br/>
+3.balance-xor or 2： 我不知道既然bonding有了xmit_hash_policy这个参数，为何还要将之单独设置成一种模式，在这个模式中，流量也是分发的，和轮转负载不同的是，它使用源/目的mac地址为自变量通过xor|mod函数计算出到底将数据包分发到哪一个口。<br/>
+4.broadcast or 3： 向所有的口广播数据，这个模式很XX，但是容错性很强大。<br/>
+5.802.3ad or 4： 这个就不多说了，就是以802.3ad的方式运行。<br/>
+&hellip;<br/>
+</p>
+<p><br/>
+xmit_hash_policy： <br/>
+这个参数的重要性我认为仅次于mode参数，mode参数定义了分发模式 ，而这个参数定义了分发策略 ，文档上说这个参数用于mode2和mode4，我觉得还可以定义更为复杂的策略呢。<br/>
+1.layer2： 使用二层帧头作为计算分发出口的参数，这导致通过同一个网关的数据流将完全从一个端口发送，为了更加细化分发策略，必须使用一些三层信息，然而却增加了计算开销，天啊，一切都要权衡！ <br/>
+</p>
+<p><br/>
+2.layer2+3： 在1的基础上增加了三层的ip报头信息，计算量增加了，然而负载却更加均衡了，一个个主机到主机的数据流形成并且同一个流被分发到同一个端口，根据这个思想，如果要使负载更加均衡，我们在继续增加代价的前提下可以拿到4层的信息。<br/>
+</p>
+<p><br/>
+3.layer3+4： 这个还用多说吗？可以形成一个个端口到端口的流，负载更加均衡。然而且慢！ 事情还没有结束，虽然策略上我们不想将同一个tcp流的传输处理并行化以避免re-order或者re-transmit，因为tcp本身就是一个串行协议，比如Intel的8257X系列网卡芯片都在尽量减少将一个tcp流的包分发到不同的cpu，同样，端口聚合的环境下，同一个tcp流也应该使用本policy使用同一个端口发送，但是不要忘记，tcp要经过ip，而ip是可能要分段的，分了段的ip数据报中直到其被重组(到达对端或者到达一个使用nat的设备)都再也不能将之划为某个tcp流了。ip是一个完全无连接的协议，它只关心按照本地的mtu进行分段而不管别的，这就导致很多时候我们使用layer3+4策略不会得到完全满意的结果。可是事情又不是那么严重，因为ip只是依照本地的mtu进行分段，而tcp是端到端的，它可以使用诸如mss以及mtu发现之类的机制配合滑动窗口机制最大限度减少ip分段，因此layer3+4策略，很OK！<br/>
+</p>
+<p><br/>
+miimon和arp： 使用miimon仅能检测链路层的状态，也就是链路层的端到端连接(即交换机某个口和与之直连的本地网卡口)，然而交换机的上行口如果down掉了还是无法检测到，因此必然需要网络层的状态检测，最简单也是最直接的方式就是arp了，可以直接arp网关，如果定时器到期网关还没有回复arp reply，则认为链路不通了。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">ROUNDROBIN</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>配置文件<br/>
+/etc/modprobe.conf<br/>
+</p>
+<p><br/>
+alias bond0bonding<br/>
+optionsbond0  mode=0 arp_interval=500arp_ip_target=172.16.64.86<br/>
+</p>
+<p><br/>
+也可以加载模块的时候直接指定mode<br/>
+modprobe bonding -o bond0 mode=0<br/>
+modprobe bonding -o bond1 mode=1 <br/>
+</p>
+<p><br/>
+启动bond<br/>
+ifenslave bond0 eth0 eth1<br/>
+</p>
+<p><br/>
+这种模式下bonding模块会将虚接口和所有的slave接口的MAC地址设置为一致。通过定时器，每个slave接口不断发送ARP包来不断更换交换机端口与MAC的对应关系。<br/>
+</p>
+<p><br/>
+这样使得每个网卡都在进行工作。这个ARP的发送规则是：<br/>
+</p>
+<p> <br/>
+每arp_interval（MS）间隔向arp_ip_target发送arp请求。也可以向多个arp_ip_target发送arp请求。<br/>
+</p>
+<p> <br/>
+观察交换机端口上所学习到的MAC地址，发现MAC会在两个端口上反复切换。<br/>
+</p>
+<p> <br/>
+在BOND_MODE_ROUNDROBIN模式下，bonding对于发送和接收数据的处理逻辑是不一致的，对于数据的接收，bonding基本不做任何处理，纯粹依靠交换机端口与MAC的变化来实现交替接收数据。发送的话，交换机会根据数据的源MAC来学习端口和MAC之间的关系，所以bonding做到的就是选择不一样的网卡发送。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">网卡的容错模式ACTIVEBACKUP</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>容错模式的配置方法和负载均衡模式基本差不多，只不过修改一下/etc/modprobe.conf即可。<br/>
+</p>
+<p> <br/>
+alias bond0 bonding<br/>
+</p>
+<p> <br/>
+options bond0  mode=1 miimon=100<br/>
+</p>
+<p><br/>
+bond_mii_monitor函数其本质的原理就是检测网卡的链路状态，bonding定义网卡有4个链路状态<br/>
+</p>
+<p><br/>
+BOND_LINK_UP：        正常状态（处于该状态的网卡是是潜在的发送数据包的候选者）<br/>
+</p>
+<p><br/>
+BOND_LINK_FAIL：      网卡出现故障，向状态BOND_LINK_DOWN 切换中<br/>
+</p>
+<p><br/>
+BOND_LINK_DOWN：      失效状态<br/>
+</p>
+<p><br/>
+BOND_LINK_BACK：        网卡恢复，向状态BOND_LINK_UP切换中<br/>
+</p>
+<p><br/>
+bond_mii_monitor函数就是依次检查网卡的链路状态是否处于这些状态，然后通过标记do_failover变量来说明当前是否需要切换slave网卡。<br/>
+</p>
+<p><br/>
+在BOND_MODE_ACTIVEBACKUP模式下，两块网卡其实有一块是不工作的，被设置为IFF_NOARP的状态。同时，bond虚设备，还有slave设备的MAC地址均一致，所以这张网卡不会被外界察觉存在。交换机也不存在想该端口发包的情况。当bond的mii检测发现当前的active设备失效了之后，会切换到这个备份设备上。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">网卡虚拟化方式（mode = BOND_MODE_ALB）</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>许多磁盘阵列设备采用了网卡虚拟化方式进行多网卡应用。<br/>
+那balance-alb 来说，就是通过arp 协商决定的。bonding驱动截获本机发送的ARP应答，并把源硬件地址改写为bond中某个slave的唯一硬件地址，从而使得不同的对端使用不同的硬件地址进行通信。这样就实现了网络负载均衡。当其中的一个slave 失败，就会由其他的slave来接管，从而提高了网卡的容错能力。<br/>
+</p>
+<p><br/>
+能够实现这种处理方法的原因就是bonding修改了ARP应答的源地址导致，使得外界并不感知服务器存在多网卡的状态，在网络上确定了IP和MAC的唯一对应关系，保证了上层业务传输的逻辑一致性。同时内部的处理又交给不同的网卡，实现了负载均衡。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">参考</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<ol>
+<li>$KERNEL-ROOT/Documentation/networking/bonding.txt<br/>
+</li>
+<li><a href="http://blog.csdn.net/dog250/article/details/6376698">http://blog.csdn.net/dog250/article/details/6376698</a><br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[tmux]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/07/25/tmux/"/>
+    <updated>2013-07-25T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/07/25/tmux</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">tmux终端复用软件</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>tmux是一个优秀的终端复用软件，类似GNU Screen，但来自于OpenBSD，采用BSD授权。<br/>
+使用它最直观的好处就是，通过一个终端登录远程主机并运行tmux后，<br/>
+在其中可以开启多个控制台而无需再使用更多的SSH会话来连接这台远程主机；其功能远不止于此。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">CS模式，掉线不退出</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>tmux使用C/S模型构建，主要包括以下单元模块：<br/>
+</p>
+<p><br/>
+一个tmux命令执行后启动一个tmux服务<br/>
+一个tmux服务可以拥有多个session，一个session可以看作是tmux管理下的伪终端的一个集合<br/>
+一个session可能会有多个window与之关联，每个window都是一个伪终端，会占据整个屏幕<br/>
+一个window可以被分割成多个pane<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">tmux快捷键</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>tmux在会话中使用大量的快捷键来控制多个窗口、多个会话等。<br/>
+</p>
+<p><br/>
+Ctrl+b  #激活控制台；此时以下按键生效   <br/>
+系统操作   <br/>
+</p>
+<p><br/>
+<pre class="src src-sh">?   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21015;&#20986;&#25152;&#26377;&#24555;&#25463;&#38190;&#65307;&#25353;q&#36820;&#22238;   </span>
+d   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#33073;&#31163;&#24403;&#21069;&#20250;&#35805;&#65307;&#36825;&#26679;&#21487;&#20197;&#26242;&#26102;&#36820;&#22238;Shell&#30028;&#38754;&#65292;&#36755;&#20837;tmux attach&#33021;&#22815;&#37325;&#26032;&#36827;&#20837;&#20043;&#21069;&#30340;&#20250;&#35805;   </span>
+D   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36873;&#25321;&#35201;&#33073;&#31163;&#30340;&#20250;&#35805;&#65307;&#22312;&#21516;&#26102;&#24320;&#21551;&#20102;&#22810;&#20010;&#20250;&#35805;&#26102;&#20351;&#29992;   </span>
+Ctrl+z  <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#25346;&#36215;&#24403;&#21069;&#20250;&#35805;   </span>
+r   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#24378;&#21046;&#37325;&#32472;&#26410;&#33073;&#31163;&#30340;&#20250;&#35805;   </span>
+s   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36873;&#25321;&#24182;&#20999;&#25442;&#20250;&#35805;&#65307;&#22312;&#21516;&#26102;&#24320;&#21551;&#20102;&#22810;&#20010;&#20250;&#35805;&#26102;&#20351;&#29992;   </span>
+:   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36827;&#20837;&#21629;&#20196;&#34892;&#27169;&#24335;&#65307;&#27492;&#26102;&#21487;&#20197;&#36755;&#20837;&#25903;&#25345;&#30340;&#21629;&#20196;&#65292;&#20363;&#22914;kill-server&#21487;&#20197;&#20851;&#38381;&#26381;&#21153;&#22120;   </span>
+[   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36827;&#20837;&#22797;&#21046;&#27169;&#24335;&#65307;&#27492;&#26102;&#30340;&#25805;&#20316;&#19982;vi/emacs&#30456;&#21516;&#65292;&#25353;q/Esc&#36864;&#20986;   </span>
+&#65341;  copy
+~   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21015;&#20986;&#25552;&#31034;&#20449;&#24687;&#32531;&#23384;&#65307;&#20854;&#20013;&#21253;&#21547;&#20102;&#20043;&#21069;tmux&#36820;&#22238;&#30340;&#21508;&#31181;&#25552;&#31034;&#20449;&#24687;   </span>
+</pre>
+
+窗口操作   <br/>
+</p>
+<p><br/>
+<pre class="src src-sh">c   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21019;&#24314;&#26032;&#31383;&#21475;   </span>
+&amp;   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20851;&#38381;&#24403;&#21069;&#31383;&#21475;   </span>
+&#25968;&#23383;&#38190; <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20999;&#25442;&#33267;&#25351;&#23450;&#31383;&#21475;   </span>
+p   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20999;&#25442;&#33267;&#19978;&#19968;&#31383;&#21475;   </span>
+n   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20999;&#25442;&#33267;&#19979;&#19968;&#31383;&#21475;   </span>
+l   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#21069;&#21518;&#20004;&#20010;&#31383;&#21475;&#38388;&#20114;&#30456;&#20999;&#25442;   </span>
+w   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36890;&#36807;&#31383;&#21475;&#21015;&#34920;&#20999;&#25442;&#31383;&#21475;   </span>
+,   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#37325;&#21629;&#21517;&#24403;&#21069;&#31383;&#21475;&#65307;&#36825;&#26679;&#20415;&#20110;&#35782;&#21035;   </span>
+<span style="color: #a52a2a;">.</span>   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20462;&#25913;&#24403;&#21069;&#31383;&#21475;&#32534;&#21495;&#65307;&#30456;&#24403;&#20110;&#31383;&#21475;&#37325;&#26032;&#25490;&#24207;   </span>
+f   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#25152;&#26377;&#31383;&#21475;&#20013;&#26597;&#25214;&#25351;&#23450;&#25991;&#26412;   </span>
+</pre>
+
+面板操作   <br/>
+</p>
+<p><br/>
+<pre class="src src-sh">&#8221;   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#23558;&#24403;&#21069;&#38754;&#26495;&#24179;&#20998;&#20026;&#19978;&#19979;&#20004;&#22359;   </span>
+%   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#23558;&#24403;&#21069;&#38754;&#26495;&#24179;&#20998;&#20026;&#24038;&#21491;&#20004;&#22359;   </span>
+x   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20851;&#38381;&#24403;&#21069;&#38754;&#26495;   </span>
+!   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#23558;&#24403;&#21069;&#38754;&#26495;&#32622;&#20110;&#26032;&#31383;&#21475;&#65307;&#21363;&#26032;&#24314;&#19968;&#20010;&#31383;&#21475;&#65292;&#20854;&#20013;&#20165;&#21253;&#21547;&#24403;&#21069;&#38754;&#26495;   </span>
+Ctrl+&#26041;&#21521;&#38190;    <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20197;1&#20010;&#21333;&#20803;&#26684;&#20026;&#21333;&#20301;&#31227;&#21160;&#36793;&#32536;&#20197;&#35843;&#25972;&#24403;&#21069;&#38754;&#26495;&#22823;&#23567;   </span>
+Alt+&#26041;&#21521;&#38190; <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20197;5&#20010;&#21333;&#20803;&#26684;&#20026;&#21333;&#20301;&#31227;&#21160;&#36793;&#32536;&#20197;&#35843;&#25972;&#24403;&#21069;&#38754;&#26495;&#22823;&#23567;   </span>
+Space   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#39044;&#32622;&#30340;&#38754;&#26495;&#24067;&#23616;&#20013;&#24490;&#29615;&#20999;&#25442;&#65307;&#20381;&#27425;&#21253;&#25324;even-horizontal&#12289;even-vertical&#12289;main-horizontal&#12289;main-vertical&#12289;tiled   </span>
+q   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#26174;&#31034;&#38754;&#26495;&#32534;&#21495;   </span>
+o   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#24403;&#21069;&#31383;&#21475;&#20013;&#36873;&#25321;&#19979;&#19968;&#38754;&#26495;   </span>
+&#26041;&#21521;&#38190; <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#31227;&#21160;&#20809;&#26631;&#20197;&#36873;&#25321;&#38754;&#26495;   </span>
+{   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21521;&#21069;&#32622;&#25442;&#24403;&#21069;&#38754;&#26495;   </span>
+}   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21521;&#21518;&#32622;&#25442;&#24403;&#21069;&#38754;&#26495;   </span>
+Alt+o   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36870;&#26102;&#38024;&#26059;&#36716;&#24403;&#21069;&#31383;&#21475;&#30340;&#38754;&#26495;   </span>
+Ctrl+o  <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#39034;&#26102;&#38024;&#26059;&#36716;&#24403;&#21069;&#31383;&#21475;&#30340;&#38754;&#26495;  </span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">配置文件</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>tmux配置文件在~/.tmux.conf和/etc/tmux.conf中，配置文件中可以修改默认绑定的快捷键<br/>
+</p>
+<p><br/>
+配置文件示例：<br/>
+</p>
+<p><br/>
+set-option -g base-index 1                        #窗口的初始序号；默认为0，这里设置为1   <br/>
+set-option -g display-time 5000                   #提示信息的持续时间；设置足够的时间以避免看不清提示，单位为毫秒   <br/>
+set-option -g repeat-time 1000                    #控制台激活后的持续时间；设置合适的时间以避免每次操作都要先激活控制台，单位为毫秒   <br/>
+set-option -g status-keys vi                      #操作状态栏时的默认键盘布局；可以设置为vi或emacs   <br/>
+set-option -g status-right &#8220;#(date +%H:%M&#8217; &#8216;)&#8221;    #状态栏右方的内容；这里的设置将得到类似23:59的显示   <br/>
+set-option -g status-right-length 10              #状态栏右方的内容长度；建议把更多的空间留给状态栏左方（用于列出当前窗口）   <br/>
+set-option -g status-utf8 on                      #开启状态栏的UTF-8支持   <br/>
+</p>
+<p>  <br/>
+set-window-option -g mode-keys vi    #复制模式中的默认键盘布局；可以设置为vi或emacs   <br/>
+set-window-option -g utf8 on         #开启窗口的UTF-8支持   <br/>
+</p>
+<p>  <br/>
+set-option -g prefix C-a   <br/>
+unbind-key C-b   <br/>
+bind-key C-a send-prefix   <br/>
+</p>
+<p>  <br/>
+bind-key z kill-session                     #按z结束当前会话；相当于进入命令行模式后输入kill-session   <br/>
+bind-key h select-layout even-horizontal    #按h将当前面板布局切换为even-horizontal；相当于进入命令行模式后输入select-layout even-horizontal   <br/>
+bind-key v select-layout even-vertical      #按v将当前面板布局切换为even-vertical；相当于进入命令行模式后输入select-layout even-vertical   <br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[virsh使用]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/06/16/virsh-note/"/>
+    <updated>2013-06-16T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/06/16/virsh-note</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">virsh链接域</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>qemu:///session                      (local access to per-user instance)<br/>
+qemu+unix:///session                 (local access to per-user instance)<br/>
+qemu:///system                       (local access to system instance)<br/>
+qemu+unix:///system                  (local access to system instance)<br/>
+qemu://example.com/system            (remote access, TLS/x509)<br/>
+qemu+tcp://example.com/system        (remote access, SASl/Kerberos)<br/>
+qemu+ssh://root@example.com/system   (remote access, SSH tunnelled)<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">虚拟机管理</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>list &ndash;all 查看所有虚拟机<br/>
+</p>
+<p><br/>
+virsh shutdown &lt;domin&gt; 关闭虚拟机domin，如果不设置domin则关闭所有的虚拟机<br/>
+</p>
+<p><br/>
+virsh destory &lt;domin&gt; 强制关闭虚拟机<br/>
+</p>
+<p><br/>
+virsh start &lt;domin&gt;  启动虚拟机<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">直接操作domain</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>edit domain-id  编辑XML配置文件，等效于：<br/>
+</p>
+<p><br/>
+            virsh dumpxml domain &gt; domain.xml<br/>
+</p>
+<p><br/>
+            edit domain.xml<br/>
+</p>
+<p><br/>
+            virsh define domain.xml<br/>
+</p>
+<p><br/>
+managedsave domain-id  保存当前运行的虚拟机的状态，当虚拟机再次启动的时候会恢复到之前保存的状态<br/>
+</p>
+<p><br/>
+migrate optional &ndash;live &ndash;suspend domain-id desturi migrateuri 迁移虚拟机到其他机器 &ndash;live表示动态迁移，&ndash;suspend表示迁移到目的地时虚拟机处于paused状态，desturi是迁移到目的地主机的URI，migrateuri是迁移机器的URI。<br/>
+</p>
+<p><br/>
+save domain-id state-file 保存一个正在运行的虚拟机的状态到一个文件中，以便以后恢复到此状态，一旦保存后虚拟机将不会再运行，占有的资源也会释放，virsh restore可以恢复到此前的状态。eg:save 12 /tmp/test<br/>
+</p>
+<p><br/>
+restore state-file 恢复到之前保存的一个状态.eg:restore /tmp/test<br/>
+</p>
+<p><br/>
+setmem domain-id kilobytes 改变当前虚拟机分配的内存，立即生效，单位KB<br/>
+</p>
+<p><br/>
+setmaxmem domain-id kilobytes  设置一个虚拟机可分配的最大内存，它不改变当前使用的内存<br/>
+</p>
+<p><br/>
+setvcpus domain-id count  改变当前虚拟机的vcpu个数<br/>
+</p>
+<p><br/>
+resume domain-id 从挂起状态恢复一个虚拟机<br/>
+</p>
+<p><br/>
+vcpuinfo domain-id 显示一些虚拟机的vcpu信息，包括几个vcpu，运行时间，和那个物理cpu亲和<br/>
+</p>
+<p><br/>
+vcpupin domain-id vcpu cpulist  把vcpu绑定到物理cpu，vcpu的数量必须提供，cpulist是一个以逗号分割的物理cpu列表<br/>
+</p>
+<p><br/>
+vncdisplay domain-id  显示vnc监听的地址和端口<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">快照命令</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+snapshots可以保存一个domain的disk memory device在某个时间点的状态以便将来会使用到，保存的文件名称必须是唯一的<br/>
+</p>
+<p><br/>
+snapshot-create domain xmlfile 给domain创建一个snapshot，详细内容保存在xmlfile中<br/>
+</p>
+<p><br/>
+snapshot-current domain 显示一个domain的当前的snapshot<br/>
+</p>
+<p><br/>
+snapshot-list domain  显示一个domain的所有的snapshot<br/>
+</p>
+<p><br/>
+snapshot-revert domain snapshot 恢复一个domian到以前的snapshot<br/>
+</p>
+<p><br/>
+snapshot-delete domain snapshot &ndash;children 删除一个domain的snapshot<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">调试</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>所有的日志以及虚拟机启动的命令都在libvirt日志目录中。<br/>
+cat /var/log/libvirt/libvirtd.log <br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[网卡offload]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/06/11/nic-offload/"/>
+    <updated>2013-06-11T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/06/11/nic-offload</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">网卡offload</a>
+<ul>
+<li><a href="#sec-1-1">网卡卸载</a></li>
+<li><a href="#sec-1-2">TSO</a></li>
+<li><a href="#sec-1-3">GSO</a></li>
+<li><a href="#sec-1-4">LRO</a></li>
+<li><a href="#sec-1-5">GRO</a></li>
+<li><a href="#sec-1-6">RSS</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/06/11/nic-offload/">网卡offload</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">网卡卸载</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>offload特性都是为了提升网络收/发性能。TSO、UFO和GSO是对应网络发送，在接收方向上对应的是LRO、GRO。<br/>
+通过ethtool -k 可以从查看<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">$ sudo ethtool -k eth0
+Offload parameters for eth0:
+rx-checksumming: on
+tx-checksumming: on
+scatter-gather: on
+tcp-segmentation-offload: on
+udp-fragmentation-offload: off
+generic-segmentation-offload: on
+generic-receive-offload: on
+large-receive-offload: off
+</pre>
+
+
+关闭TSO<br/>
+ethtool -K eth0 tso off<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">TSO</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>TSO(TCP Segmentation Offload)，是一种利用网卡对TCP数据包分片，减轻CPU负荷的一种技术，<br/>
+有时也被叫做 LSO (Large segment offload) ，TSO是针对TCP的，UFO是针对UDP的。<br/>
+如果硬件支持 TSO功能，同时也需要硬件支持的TCP校验计算和分散/聚集 (Scatter Gather) 功能。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">GSO</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>GSO(Generic Segmentation Offload)，它比TSO更通用，基本思想就是尽可能的推迟数据分片直至发送到网卡驱动之前，<br/>
+此时会检查网卡是否支持分片功能（如TSO、UFO）,如果支持直接发送到网卡，如果不支持就进行分片后再发往网卡。<br/>
+这样大数据包只需走一次协议栈，而不是被分割成几个数据包分别走，这就提高了效率。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">LRO</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>LRO(Large Receive Offload)，通过将接收到的多个TCP数据聚合成一个大的数据包，然后传递给网络协议栈处理，<br/>
+以减少上层协议栈处理开销，提高系统接收TCP数据包的能力。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">GRO</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>GRO(Generic Receive Offload)，基本思想跟LRO类似，克服了LRO的一些缺点，更通用。<br/>
+后续的驱动都使用GRO的接口，而不是LRO。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">RSS</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>RSS(Receive Side Scaling)，是一项网卡的新特性，俗称多队列。具备多个RSS队列的网卡，<br/>
+可以将不同的网络流分成不同的队列，再分别将这些队列分配到多个CPU核心上进行处理，从而将负荷分散，充分利用多核处理器的能力。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[提升软件开发者生产力的10个提示]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/06/08/10/"/>
+    <updated>2013-06-08T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/06/08/10</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">提升软件开发者生产力的10个提示</a>
+<ul>
+<li><a href="#sec-1-1">提升软件开发者生产力的10个提示</a></li>
+<li><a href="#sec-1-2">永远、永远、永远不要把阅读邮件当做早上的第一件事</a></li>
+<li><a href="#sec-1-3">如果可以，尽量避免开会</a></li>
+<li><a href="#sec-1-4">消除干扰</a></li>
+<li><a href="#sec-1-5">前一晚准备一个待办事项的列表</a></li>
+<li><a href="#sec-1-6">先做重要的事务</a></li>
+<li><a href="#sec-1-7">批处理不仅用在数据库上</a></li>
+<li><a href="#sec-1-8">自动化处理，就像没有明天</a></li>
+<li><a href="#sec-1-9">把所有东西记录下来</a></li>
+<li><a href="#sec-1-10">撬动“流逝” —— “在区域中”工作</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/06/08/10/">提升软件开发者生产力的10个提示</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">提升软件开发者生产力的10个提示</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>在参加了一些以生产力和时间管理为主题的研讨会并阅读了一些关于这个话题的图书以后，我了解了一些深奥的概念并且对我曾经的工作方法产生了一些深刻的领悟。运用这个新的知识，我完全重新设计了我的工作流框架，而这极大地推动了我的生产力。<br/>
+我想与你分享一些最重要的技巧，它们可以帮助你推动你的生产力，提升你的总产量，而且可能最重要的，使你空闲出时间从事其它的活动。<br/>
+注意下面的技巧可以用在个人和专业两个方面，本质上这些原则是一样的。<br/>
+所以，我们开始吧……<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">永远、永远、永远不要把阅读邮件当做早上的第一件事</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>如果有一件事要排除在本文之外，那么就是这件事。重申一遍，永远不要把阅读邮件当做早上的第一件事。如果你这样做了，你会自动进入一种反应和被动的模式，而不是我们想要的、积极而富有创造性的模式<br/>
+</p>
+<p><br/>
+只在一天中预定的时间查看和回复邮件。这些时间应该在午饭之前，我们假设大概12:00-13:00，之后16:00左右再来一次。在这些时段，你的活力等级总会降低，所以你不会失去任何具有创造性的活力。不用担心，那些“紧急”E-mail，并不是那么紧急。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">如果可以，尽量避免开会</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>在企业环境中，会议是生产率的头号杀手。我这样说，你明白，我明白，每个人都明白（但也许不会承认）。<br/>
+“会议是一种令人沉溺的、高度自我放纵的活动，企业和其他大规模组织习惯性的参与其中，仅仅因为他们真正的振奋自己。”——Dave Barry<br/>
+确实，这是对其的概括。最有趣的是，会议同时扼杀了许多人的生产率。令人惊叹。所以，如果不是参加绝对重要的会议，就忽略它。比如说你手头有很多工作（这可能是真的）并且计划会后与同事见面来了解一些重要的事情。<br/>
+如果开个会真的很重要（这是很罕见的事情），那么记住这些：<br/>
+下午晚些时候再开会，那是你的生产率总是很低。<br/>
+总要有一个关于讨论话题的议程，不要忽略这一点。<br/>
+设定一个严格的结束时间，到时间就结束会议。<br/>
+在得出一系列清晰的、可操作的步骤之前，不要离开会议室。<br/>
+</p>
+<p> <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">消除干扰</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>这很艰巨。信息时代的世界充满了干扰，它们来自各种可能的渠道，阻止你完成事务。我会将干扰分为两大类：我们自己产生的干扰和别人产生的干扰。<br/>
+先来看我们自己产生的干扰。这想起来看似有些古怪，但事实是，我们成功的让自己不能保持高产，即使我们这样做是无意识的。有很多例子：把我们的E-mail和社交媒体账户，设置成当有“重要”的事情发生时就“通知”我们；像疯子一样在不同的事务之间切换；在Hacker News或者Reddit上设置一个快捷“关注”等等。<br/>
+问题是，你应该以这样的方式配置你的工作环境——当你着手于一项工作时，没有什么能让你分心。首先，关闭你的手机、Facebook更新等等上面的消息提醒。下一步，关闭你的E-mail软件，如果你决定开着它，确保没有打开自动发送/收取选项。之后，消除任何可以访问那些不高产站点的渠道，包括你经常泡在上面的DZone、Hacker News等等。注意，我并没有说“不要用”。我说的是“消除访问渠道”。我们这里都是极客，所以我相信你们能够找到一个技术上的办法来搞定这件事。你可以使用一个低级的方法——编辑你机器上的Host文件来让facebook.com指向127.0.0.1，或者使用一个插件暂时限制对这些站点的访问。我个人使用 Blocksite plugin。通过这样的配置，你将能达到这样一种的状态——消除大多数你带给自己的干扰。<br/>
+我们来看看由别人产生的干扰。你可能会争辩，说前文中的一些干扰是别人产生的；但是事实是，你自己产生的，因为没人强迫你浏览Twitter或者Facebook。在这里，我要说的是“强加于别人”的干扰。例如，多少次这样的案例发生在你身上？你收到一份你老板的E-mail，之后他打电话问你是否收到了他的邮件。这是在说生产率。或者这样的情况：你的同事在你调试代码的时候戳了戳你，并问你一些琐碎的东西怎么在Java中实现，而你想到的第一种回答是：“Google一下，混蛋！”<br/>
+事实上，那些干扰躲避起来有点麻烦，因为很可能过分并逾越人们认可的界限。建议如下：使用耳机（尽管我发现有时这样也没用）；把来电放入语音信箱，之后再接听；在你的电脑上挂一张纸，写着“请勿打扰，编程中”等。你必须判断在你当下的工作中哪些是适合的，并依照执行。目的是能够形成一个不会被打扰的工作流程。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">前一晚准备一个待办事项的列表</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>前一晚，你应该列一个明确的事务列表，它在第二天能够实现是很重要的。我说的不是有很多项目的大表，这永远不管用。而是精确的指出2-3个重要的任务，它们一旦完成，你的项目将有重要进展。比如像这样问：“如果我今天只完成了这两个任务，我会感到我的一天很高产吗？”如果是的，把它们记下来。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">先做重要的事务</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>正如前文提到的，E-mail从不该是首先处理的。那么，应该是什么呢？列表中最重要的事务！你已经找到了一个最关键性的事务，那么你就坐下来搞定它，而不考虑任何其他的事情。理论上，你应该在“一坐”中完成它。休息片刻，之后处理你列表上第二重要的事务。我会在后面的部分谈谈如何为了优化结果而配置工作和休息。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">批处理不仅用在数据库上</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>我确信你们中的大多数很熟悉查询批处理。简单来说，你“批量处理”许多相似的DB查询，而只向数据库发送一个请求，这实现了更佳的性能。进行最好的优化。你猜怎么着，你可以在你的事务上使用类似的原则！通过这种方法，你能够将活动经费和从特定事务中产生的各种日常开销最小化。事务批处理的一个好例子，就是查看邮件（想到办法了吗？）、电话和几乎任何枯燥重复的工作。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">自动化处理，就像没有明天</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>另一个可以加到你的“生产率工具箱”中的东西，就是自动化的概念。作为程序员，我们就生活在一个相当自动化的环境中，但是我还是看到了许多“小插曲”——人们决定人工处理一些枯燥、平凡的事务，而这些事务可以轻易的被自动化处理。瞧，人类衰退了，比机器更不可靠了，当手头的事务无趣而又微不足道的时候就更加衰退了。让尽可能多的事务自动化处理。例如：实现一个只需单击一下的完整应用；只用一个脚本就能部署到生产服务器等等。说真的，不要为了那些机器能够处理的更快的事情，而损失精力和体力，没有你参与更可靠。<br/>
+为了结果最大化，调整“工作”和“娱乐”<br/>
+好，现在是时候说说怎样真正的配置一个工作框架了。我的建议是，分配特定的时间段给“工作”，并分配特定的时间段给“休息”，或者更好的“娱乐”。<br/>
+例如，你会花费连续的45分钟，专注于处理特定的事务；之后紧跟着休息15分钟，在这段时间里你可以上网、查看你的社交媒体信息更新、阅读最新的Java Code Geeks文章等等。确保在休息期间把你的目光从屏幕上移开，并真正的做一些身体的轻微活动。说真的，“久坐会害死你”（sitting can kill you），站起来走一走。<br/>
+概念上是这样的，撇开其他的东西，在自律并痛苦的经过了时间更长的“工作”时段之后，“娱乐”时段将扮演一个自我奖励的角色。我们的思维是难以理解的东西，但我可以向你保证，设定一个像这样的奖励机制，将帮助你在完成更多事情的同时，享受一些快乐时光。<br/>
+有数不清的计时应用，来从技术的角度达成这一机制，并且你也可以用Pomodoro technique进行实验。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">把所有东西记录下来</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>这里我想说的，是养成把所有东西记录下来的习惯。不管是你的一个新主意、一个你打算用来解决你手头的问题的新方法，或者是你明天要付的一个账单。你必须确保你的大脑容量不会被“记忆东西”消耗掉，而是专注于你正尝试达成的特定目标。<br/>
+把你的大脑想象成一个电脑的CPU。你分配给他的“事情”，就像把许多进程加载到后台。这最终会导致挂起并无法正常工作。记录下东西的过程，会降低你大脑的负载，并让它表现的更理想。<br/>
+列一些分开的列表，并把你的思想分类。这些列表可以包括“潜在项目”、“要买的东西”、“开发”等等。因此，过后你可以很快的浏览他们。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-10" class="outline-3">
+<h3 id="sec-1-10">撬动“流逝” —— “在区域中”工作</h3>
+<div class="outline-text-3" id="text-1-10">
+
+<p>这是圣杯。这是我们想通过适当的设计我们的工作框架来尝试实现的。这是所有上述的提示想要让你实现的。我确信你已经经历过“流逝”的状态和“在区域中”的状态，因为它广为程序员所熟知。它就是，当你大脑完全专注，聚焦于特定的事务或者程序，而你基本上失去了对时间的感知的那个时间段。你写代码、写代码、写代码，其他什么都不存在。外部的刺激甚至不会在你的大脑中留下痕迹，只有你和你最喜欢的IDE。我敢打赌，在我们编程工作的所有进展中，80%出现在“流逝”的状态中。<br/>
+Heck, 我在写这篇文章的时候，达到了“在区域中”的状态！<br/>
+这里的底线是，你需要把自己摆在这样一个位置，你可以轻易地进入＂流逝＂的状态，并尽可能长时间的留在那里。这是我们的大脑进入工作状态的模式，并且这会使得你的生产率暴涨。我喜欢＂在区域中＂，并且我确信你也喜欢，那么为什么不给我们自己一个体验更多的机会呢？<br/>
+因此，你会拥有它。关于你花费时间的一些建议。请在短时间段内进行尝试（比如一到两周），之后在讨论中告诉我进行得怎么样。你甚至可以发给我一封E-mail，我将会很高兴收到你的消息!<br/>
+并且像以往一样，分享是关怀。如果你发现这些建议有帮助，和同事分享一下，让我们把我们的工作环境变更优越。<br/>
+</p>
+<p><br/>
+引用：<a href="http://www.linuxeden.com/html/news/20130608/140066.html">http://www.linuxeden.com/html/news/20130608/140066.html</a><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[mysql命令行]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/04/04/mysql-cmd/"/>
+    <updated>2013-04-04T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/04/04/mysql-cmd</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">mysql命令行</a>
+<ul>
+<li><a href="#sec-1-1">mysql</a>
+<ul>
+<li><a href="#sec-1-1-1">命令行登录MySQL数据库服务器</a></li>
+<li><a href="#sec-1-1-2">数据库操作SQL语句</a></li>
+<li><a href="#sec-1-1-3">表操作SQL语句（登录之后必须用以上的USE命令选择一个数据库，再进行表操作）</a></li>
+<li><a href="#sec-1-1-4">数据库权限操作SQL语句</a></li>
+<li><a href="#sec-1-1-5">mysqldump备份数据库</a></li>
+<li><a href="#sec-1-1-6">mysql配置文件</a></li>
+<li><a href="#sec-1-1-7">mysql_install_db</a></li>
+<li><a href="#sec-1-1-8">设置密码</a></li>
+<li><a href="#sec-1-1-9">MySQL 远程连接配置</a>
+<ul>
+<li><a href="#sec-1-1-9-1">方法一：改表法</a></li>
+<li><a href="#sec-1-1-9-2">方法二：授权法 (推荐使用)</a></li>
+<li><a href="#sec-1-1-9-3">实际测试</a></li>
+<li><a href="#sec-1-1-9-4">参考</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/04/04/mysql-cmd/">mysql命令行</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">mysql</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p><br/>
+<pre class="src src-sh">yum install mysql mysql-server
+service mysqld start
+</pre>
+
+
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">命令行登录MySQL数据库服务器</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>1、登录使用默认3306端口的MySQL<br/>
+<code>mysql -u root -p</code><br/>
+</p>
+<p><br/>
+2、通过TCP连接管理不同端口的多个MySQL（注意：MySQL4.1以上版本才有此项功能）<br/>
+<code>mysql -u root -p --protocol=tcp --host=localhost --port=3307</code><br/>
+</p>
+<p><br/>
+3、通过socket套接字管理不同端口的多个MySQL<br/>
+<code>mysql -u root -p --socket=/tmp/mysql3307.sock</code><br/>
+</p>
+<p><br/>
+4、通过端口和IP管理不同端口的多个MySQL<br/>
+<code>mysql -u root -p -P 3306 -h 127.0.0.1</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">数据库操作SQL语句</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>小写也可以<br/>
+</p>
+<p><br/>
+1、显示服务器上当前存在什么数据库<br/>
+<code>SHOW DATABASES;</code><br/>
+</p>
+<p><br/>
+2、创建名称为rewin的数据库<br/>
+<code>CREATE DATABASE rewin;</code><br/>
+</p>
+<p><br/>
+3、删除名称为rewin的数据库<br/>
+<code>DROP DATABASE rewin;</code><br/>
+</p>
+<p><br/>
+4、选择rewin数据库<br/>
+<code>USE rewin;</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">表操作SQL语句（登录之后必须用以上的USE命令选择一个数据库，再进行表操作）</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>1、显示当前数据库中存在什么表<br/>
+<code>SHOW TABLES;</code><br/>
+</p>
+<p><br/>
+2、创建数据库表zhangyan：在mysql&gt;后粘贴以下SQL语句，存储引擎为MYISAM，字段id为主键、唯一索引。<br/>
+</p>
+<p><br/>
+<pre class="example">CREATE TABLE `zhangyan` (
+`id` INT( 5 ) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`username` VARCHAR( 20 ) NOT NULL ,
+`password` CHAR( 32 ) NOT NULL ,
+`time` DATETIME NOT NULL ,
+`number` FLOAT( 10 ) NOT NULL ,
+`content` TEXT NOT NULL ,
+PRIMARY KEY ( `id` ) 
+) ENGINE = MYISAM ;
+</pre>
+
+
+3、查看zhangyan表结构<br/>
+<code>DESCRIBE zhangyan;</code><br/>
+</p>
+<p><br/>
+4、从表中检索信息<br/>
+4.1、从zhangyan表中检索所有记录<br/>
+<code>SELECT * FROM zhangyan;</code><br/>
+</p>
+<p><br/>
+4.2、从zhangyan表中检索特定的行：字段username等于abc，字段number等于1，按字段id降序排列<br/>
+</p>
+<p><br/>
+<pre class="example">SELECT * FROM zhangyan WHERE username = 'abc' AND number='1' ORDER BY id DESC;
+</pre>
+
+
+4.3、从zhangyan表中检索指定的字段：username和password<br/>
+<code>SELECT username, password FROM zhangyan;</code><br/>
+</p>
+<p><br/>
+4.4、从zhangyan表中检索出唯一的不重复记录：<br/>
+<code>SELECT DISTINCT username FROM zhangyan;</code><br/>
+</p>
+<p><br/>
+5、插入信息到zhangyan表<br/>
+</p>
+<p><br/>
+<pre class="example">INSERT INTO zhangyan (id, username, password, time, number, content) VALUES ('', 'abc', '123456', '2007-08-06 14:32:12', '23.41', 'hello world');
+</pre>
+
+
+6、更新zhangyan表中的指定信息<br/>
+<code>UPDATE zhangyan SET content = 'hello china' WHERE username = 'abc';</code><br/>
+</p>
+<p><br/>
+7、删除zhangyan表中的指定信息<br/>
+<code>DELETE FROM zhangyan WHERE id = 1;</code><br/>
+</p>
+<p><br/>
+8、清空zhangyan表<br/>
+<code>DELETE FROM zhangyan;</code><br/>
+</p>
+<p><br/>
+9、删除zhangyan表<br/>
+<code>DROP TABLE zhangyan;</code><br/>
+</p>
+<p><br/>
+10、更改表结构，将zhangyan表username字段的字段类型改为CHAR(25)<br/>
+<code>ALTER TABLE zhangyan CHANGE username username CHAR(25);</code><br/>
+</p>
+<p><br/>
+11、将当前目录下的mysql.sql导入数据库<br/>
+<code>SOURCE ./mysql.sql;</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4">数据库权限操作SQL语句</h4>
+<div class="outline-text-4" id="text-1-1-4">
+
+<p>1、创建一个具有root权限，可从任何IP登录的用户sina，密码为zhangyan<br/>
+</p>
+<p><br/>
+<pre class="example">GRANT ALL PRIVILEGES ON *.* TO 'sina'@'%' IDENTIFIED BY 'zhangyan' WITH GRANT OPTION;
+FLUSH   PRIVILEGES;
+</pre>
+
+
+2、创建一个具有“数据操作”、“结构操作”权限，只能从192.168.1.***登录的用户sina，密码为zhangyan<br/>
+</p>
+<p><br/>
+<pre class="example">GRANT SELECT , INSERT , UPDATE , DELETE , FILE , CREATE , DROP , INDEX , ALTER , CREATE TEMPORARY TABLES , CREATE VIEW , SHOW VIEW , CREATE ROUTINE, ALTER ROUTINE, EXECUTE ON *.* TO 'sina'@'192.168.1.%' IDENTIFIED BY 'zhangyan';
+</pre>
+
+
+3、创建一个只拥有“数据操作”权限，只能从192.168.1.24登录，只能操作rewin数据库的zhangyan表的用户sina，密码为zhangyan<br/>
+</p>
+<p><br/>
+<pre class="example">GRANT SELECT , INSERT , UPDATE , DELETE ON  rewin.zhangyan TO 'sina'@'192.168.1.24' IDENTIFIED BY 'zhangyan';
+</pre>
+
+
+4、创建一个拥有“数据操作”、“结构操作”权限，可从任何IP登录，只能操作rewin数据库的用户sina，密码为zhangyan<br/>
+</p>
+<p><br/>
+<pre class="example">GRANT SELECT , INSERT , UPDATE , DELETE , CREATE , DROP , INDEX , ALTER , CREATE TEMPORARY TABLES , CREATE VIEW , SHOW VIEW , CREATE ROUTINE, ALTER ROUTINE, EXECUTE ON rewin.* TO 'sina'@'%' IDENTIFIED BY 'zhangyan';
+</pre>
+
+
+5、删除用户<br/>
+<code>DROP USER 'sina'@'%';</code><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+PS：如果想了解更多的MySQL操作资料，请参考<a href="http://dev.mysql.com/doc/refman/5.1/zh/">MySQL官方的中文参考手册</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-5" class="outline-4">
+<h4 id="sec-1-1-5">mysqldump备份数据库</h4>
+<div class="outline-text-4" id="text-1-1-5">
+
+<p><code>mysqldump -u root -p bugs | gzip &gt; bugzilla_20121206.sql.gz</code><br/>
+但是这个发现在小内存机子上把内存占满了。<br/>
+需要添加&ndash;opt参数<br/>
+mysqldump &ndash;opt <br/>
+这样就会使用一些默认选项，可以正常导出了。<br/>
+</p>
+<p><br/>
+导入数据库<br/>
+创建新的数据库用于导入备份的数据库，命令如下：<br/>
+<code>mysql –u root –p</code><br/>
+输入密码后进入mysql操作界面<br/>
+输入：<br/>
+<code>create database bugzilla_new</code><br/>
+使用如下命令导入备份的Bugzilla 4.0.1的mysql数据库，从新命名数据库名<br/>
+<code>gunzip &lt; bugzilla_20121206.sql.gz | mysql –u root –p bugzilla_new</code><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-6" class="outline-4">
+<h4 id="sec-1-1-6">mysql配置文件</h4>
+<div class="outline-text-4" id="text-1-1-6">
+
+<p>一般/etc/my.ini<br/>
+</p>
+<p><br/>
+而一般参考配置在：<br/>
+<i>usr/share/mysql</i><br/>
+config.huge.ini    config.medium.ini  config.small.ini<br/>
+不同的流量的网站和不同配制的服务器环境，当然需要有不同的配制文件了。<br/>
+一般的情况下，my-medium.cnf这个配制文件就能满足我们的大多需要。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-7" class="outline-4">
+<h4 id="sec-1-1-7">mysql_install_db</h4>
+<div class="outline-text-4" id="text-1-1-7">
+
+<p>创造MySQL授权表，否则数据库也是启动不了。<br/>
+mysql_install_db，这个命令的用途就是做这个的。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-8" class="outline-4">
+<h4 id="sec-1-1-8">设置密码</h4>
+<div class="outline-text-4" id="text-1-1-8">
+
+<p><code>mysqladmin -u root password 123456</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-9" class="outline-4">
+<h4 id="sec-1-1-9">MySQL 远程连接配置</h4>
+<div class="outline-text-4" id="text-1-1-9">
+
+
+</div>
+
+<div id="outline-container-1-1-9-1" class="outline-5">
+<h5 id="sec-1-1-9-1">方法一：改表法</h5>
+<div class="outline-text-5" id="text-1-1-9-1">
+
+<p>默认mysql帐号不允许从远程登陆，只允许localhost访问。登入mysql后，更改 &#8220;mysql&#8221; 数据库 里的 &#8220;user&#8221;（远程数据库的名称） 表里的 &#8220;host&#8221; 项，把&#8221;localhost&#8221;改称&#8221;%&#8221; 。这样你的mysql就可以远程操作了。<br/>
+update user set host = &#8216;%&#8217; where user = &#8216;root&#8217;;<br/>
+注意：这样方法只是把本机localhost访问改为了&#8221;%&#8221;所有地址IP都可以访问mysql服务器，这样很不安全。默认localhost访问的时候有所有操作权限。所以不安全！推荐用第二个方法。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-9-2" class="outline-5">
+<h5 id="sec-1-1-9-2">方法二：授权法 (推荐使用)</h5>
+<div class="outline-text-5" id="text-1-1-9-2">
+
+<p>(1)<br/>
+</p>
+<p><br/>
+<pre class="example">grant select,insert,update,delete on *.* to root@"%" Identified by "password";
+</pre>
+
+允许地址IP上root用户，密码dboomysql来连接mysql的所有数据库，只付给select,insert,update,delete权限。 这样比较安全。<br/>
+</p>
+<p><br/>
+(2)<br/>
+</p>
+<p><br/>
+<pre class="example">grant select,insert,update,delete on *.* to root@"192.168.1.1" Identified by "password";
+</pre>
+
+只允许地址IP（192.168.1.1）上root用户访问更安全了。<br/>
+</p>
+<p><br/>
+(3)<br/>
+</p>
+<p><br/>
+<pre class="example">grant all on *.* to root@"192.168.1.1" Identified by "password"
+</pre>
+
+
+允许地址192.168.1.1上用root用户，密码password来连接mysql的所有数据库，付给所有权限。不太安全。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'your paaaword';
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-9-3" class="outline-5">
+<h5 id="sec-1-1-9-3">实际测试</h5>
+<div class="outline-text-5" id="text-1-1-9-3">
+
+<p>使用第一种方法没成功，没有找到user数据库，而且也没有host项。<br/>
+使用<br/>
+</p>
+<p><br/>
+<pre class="example">GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'your paaaword';
+</pre>
+
+成功。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-9-4" class="outline-5">
+<h5 id="sec-1-1-9-4">参考</h5>
+<div class="outline-text-5" id="text-1-1-9-4">
+
+<p><a href="http://database.51cto.com/art/201006/204537.htm">http://database.51cto.com/art/201006/204537.htm</a><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[distcc和dmucs分布式编译环境的负载均衡]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/03/27/distcc-dmucs/"/>
+    <updated>2013-03-27T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/03/27/distcc-dmucs</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">distcc和dmucs分布式编译环境的负载均衡</a>
+<ul>
+<li><a href="#sec-1-1">使用distcc分布式编译的特点与潜在问题</a></li>
+<li><a href="#sec-1-2">一种实现负载均衡的解决方案：使用 DMUCS</a></li>
+<li><a href="#sec-1-3">DMUCS 以下四个部分程序组成。</a>
+<ul>
+<li><a href="#sec-1-3-1">dmucs 主服务程序</a></li>
+<li><a href="#sec-1-3-2">Loadavg 监控程序</a></li>
+<li><a href="#sec-1-3-3">gethost 编译命令</a></li>
+<li><a href="#sec-1-3-4">Monitor 管理程序（非必须）</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">distcc</a>
+<ul>
+<li><a href="#sec-1-4-1">distcc</a></li>
+<li><a href="#sec-1-4-2">distccd</a></li>
+<li><a href="#sec-1-4-3">distccmon-text</a></li>
+<li><a href="#sec-1-4-4">distccmon-gnome</a></li>
+<li><a href="#sec-1-4-5">Distcc配置</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">dmucs配置</a></li>
+<li><a href="#sec-1-6">从官网的说明</a>
+<ul>
+<li><a href="#sec-1-6-1">pump mode</a></li>
+<li><a href="#sec-1-6-2">编译器如果是绝对路径</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-7">联合使用ccache和distcc</a></li>
+<li><a href="#sec-1-8">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/03/27/distcc-dmucs/">distcc和dmucs分布式编译环境的负载均衡</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">使用distcc分布式编译的特点与潜在问题</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>  作为经典的分布式编译工具，distcc 在日常工作中常为我们使用来解决大型项目在单一工作站上编译较慢的问题。<br/>
+其主要用于对 C, Object C 以及 C++ 代码进行并行编译，将可以并行的编译任务分布于编译集群中的各个工作站，有效利用各机器资源，达到整体编译性能的成倍提升。<br/>
+  在类 Unix 系统上，distcc 使用 sendfile 系统调用在不同工作节点之间传送文件，尽管这种网络文件传输会占用一定的时间，他们对工作机的 CPU 资源占用却很小，<br/>
+而且这种分发任务的方式能够简化构建环境的配置，distcc 在这方面同早期的一些基于共享文件系统的分布编译环境 (dmake, pvmmake 等等 ) 相比几乎是 0 配置。<br/>
+  distcc 对各个编译节点的本地系统库及头文件基本没有要求，即使在不同的节点上这些组件的版本不同也不会影响到最终编译结果的正确性，<br/>
+实际情况是 distcc 会在本地 (client机) 完成存在版本依赖的编译任务。<br/>
+  这个在本地做过预处理的 ASCII 源文件及其他命令行选项即可唯一确定一个目标文件，而与此任务在哪台机器上运行无关，通过分发这种任务到各个节点，即可消除对头文件的依赖。<br/>
+同理 distcc 通过在任务的分发节点做链接来消除对库文件的依赖。<br/>
+  然而，distcc 的缺点在于其负载均衡算法过于简单，distcc 的代理进程对各个工作机当前的负荷没有感知，分发预处理文件的唯一依据是主机出现在DISTCC_HOST环境变量中的次序，<br/>
+主机名越靠前，就会得到更多的编译任务，然而当编译场中某些机器性能过差，整体编译性能会显著下降，当阻塞 Make 运行的编译任务运行在这些机器上的时候，这种性能变化尤为明显。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">一种实现负载均衡的解决方案：使用 DMUCS</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>毫无疑问，在上述编译集群中，有必要采用负载均衡来使编译系能得到最大的优化。这就需要在编译集群中增加监控各工作机工作量的监控程序，动态检测和平衡编译机的负载。<br/>
+一个有效的方案是使用 DMUCS（Distributed Multi-User Compilation System）应用。DMUCS 是一个实现于 distcc 之上的动态平衡和任务分布程序。它可以：<br/>
+</p>
+<p><br/>
+　　支持多用户同时编译，扩展性好，可以很好处理新增的负载。<br/>
+　　支持多种操作系统所组成的编译集群。<br/>
+　　可以使用具有多处理器（多核）编译主机的所有处理资源。<br/>
+　　可以充分使用具有不同处理速度的编译主机，使整体编译性能达到最优。<br/>
+　　可以保证参与编译的主机不会由于编译任务而产生超负载的情况。<br/>
+　　考虑到了编译主机上由非编译任务所引起的负载情况。<br/>
+　　支持从编译集群中动态的增加或者移除编译主机。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">DMUCS 以下四个部分程序组成。</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">dmucs 主服务程序</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>DMUCS 解决方案的核心服务程序。每个编译集群仅运行一个 dmucs 主服务程序，其运行于哪一台主机上没有限制。<br/>
+该程序从一个配置文件读出编译场里处理器数目和每个可能主机的“潜能”。<br/>
+然后从网络接收每个编译主机的平均负载信息，编译任务数量和监控程序得到的编译请求信息。<br/>
+dmucs 管理一个编译场里主机的数据库，并调度主机去编译任务，当有编译请求时给出可用的最快的主机。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">Loadavg 监控程序</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p>编译场的每个参与编译的主机上均需要启动这个程序。loadavg 定期发送编译主机的平均负载到 dmucs 服务器。<br/>
+这样当某个主机的平均负载太高时，dmucs 服务器会将不会优先给该主机分配编译任务。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3">gethost 编译命令</h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+<p>gethost 是具体进行编译的命令，其运行于distcc之上。<br/>
+该命令从运行dmucs主服务程序的主机获取编译集群中的机器信息来获得放进 DISTCC_HOSTS 环境变量里的主机，然后调用所分配的编译机进行编译。<br/>
+在编译结束后，gethost 释放所分配的主机到 dmucs 主服务器。用户使用“make CXX=gethost distcc”来启动编译。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4">Monitor 管理程序（非必须）</h4>
+<div class="outline-text-4" id="text-1-3-4">
+
+<p>编译集群的管理员可以使用这个程序监控编译场的繁忙情况。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">distcc</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>distcc 会安装如下可执行文件：<br/>
+</p>
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">distcc</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<p>整个编译任务通常由一台机器发起，在 distcc 编译环境下，这台机器被称为 client，client 必须使用 distcc 来替代原有的 GNU 编译器命令，<br/>
+由于 distcc 的后台编辑程序仍然是 GNU 编译器，distcc 与 gcc, g++, cc, c++ 等程序的编译参数兼容。<br/>
+distcc 必须与 Make 命令的 -j 参数协同使用，client 机通过指定此参数来定义并发编译的任务数。在默认情况下，一台编译机的 distcc 允许的并发任务的数量是 CPU 数量 +2。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2">distccd</h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+<p>distccd 是运行在编译场内各个节点上的 distcc 代理程序，distccd 的常用参数如下：<br/>
+　　-j: 指定可以在本节点上运行的最大任务数；<br/>
+　　-N: 如果编译节点上运行有其他重要任务，可以通过指定 -N 参数来调整编译进程的运行优先级；<br/>
+　　-a: 指定 distccd 可以接受来自哪些节点的连接请求，-a 参数的值可以是一个网段，也可以是所有编辑节点主机名 (IP 地址 ) 的列表。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-3" class="outline-4">
+<h4 id="sec-1-4-3">distccmon-text</h4>
+<div class="outline-text-4" id="text-1-4-3">
+
+<p>可以通过运行 distccmon-text 来通过一个字符界面监控整个编译任务，此命令唯一的参数是监控任务的刷新间隔 ( 秒 )。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-4" class="outline-4">
+<h4 id="sec-1-4-4">distccmon-gnome</h4>
+<div class="outline-text-4" id="text-1-4-4">
+
+<p>一个图形化的监控前端，下图是此程序的一个运行实例。其中，任务进度指示条颜色的意义分别为：<br/>
+绿色：compiling；紫色：preprocessing；蓝色：receiving；橙色：connecting；白色：idle;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-5" class="outline-4">
+<h4 id="sec-1-4-5">Distcc配置</h4>
+<div class="outline-text-4" id="text-1-4-5">
+
+<p>Distcc client 通过配置环境变量 DISTCC_HOSTS 来指定编译场中的各个节点，具体命令如：<br/>
+export　DISTCC_HOSTS=&#8221;192.168.1.1,　192.168.1.2&#8221;<br/>
+</p>
+<p><br/>
+还有配置文件/etc/default/distcc<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">dmucs配置</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>在/etc/init.d/distcc中添加<br/>
+ps aux | sed &#8216;/grep/d&#8217; | grep -q loadavg || loadavg -s A-desktop &amp;<br/>
+DEAMON_ARGS=&#8221;-j4 &ndash;pid-file&hellip;&hellip;&#8221;<br/>
+</p>
+<p><br/>
+loadavg -s 是为了向主机A-desktop发送编译负载信息。<br/>
+最后在DEAMON_ARGS参数中加入-jN,N表示当前机器上将运行几个编译进程。<br/>
+</p>
+<p><br/>
+配置dmucs<br/>
+sudo vi /etc/default/dmucs<br/>
+SERVER=yes<br/>
+dmucs 是用于接收loadavg发送过来的编译负载信息，以及编译数据，用于在server端建立一个TCP的监听端口。<br/>
+默认监听端口为9714，client端loadavg会与server端的dumucs建立TCP连接，发送和接收数据<br/>
+可以用lsof | grep 9714 查看dmucs，当然先要启动dmucs。<br/>
+最后再server上启动dmucs，和 distcc 守护进程<br/>
+sudo /etc/init.d/dmucs start<br/>
+sudo /etc/init.d/distcc start<br/>
+在distcc中运行loadavg的意思是，server也参与编译工作。自己做自己的client。<br/>
+</p>
+<p><br/>
+client端设置，以B为例，C以此类推<br/>
+设置/etc/default/distcc<br/>
+sudo vi /etc/default/distcc<br/>
+STARTDISTCC=&#8221;true&#8221;<br/>
+ALLOWEDNETS=&#8221;127.0.0.1 192.168.0.1/16&#8221;<br/>
+LISTENER=&#8221;192.168.0.2&#8221;<br/>
+其他参数不变。<br/>
+一般来说，LISTENER设置为本机Ip就可以了。<br/>
+</p>
+<p><br/>
+所以我们可以用如下命令代替，它可以自动搜索到本机ip，所以即使client重启ip变了，也不用担心<br/>
+LISTENER=`ifconfig | grep &#8216;192.168&#8217; | cut -d: -f2 | awk &#8216;{ print $1}&#8217; | head -n1`<br/>
+</p>
+<p><br/>
+启动distcc 守护进程，client端不用启动dmucs，<br/>
+sudo /etc/init.d/distcc start<br/>
+</p>
+<p><br/>
+最后在client端设置编译参数：<br/>
+sudo vi ~/.bashrc<br/>
+加入：<br/>
+export ARCH=arm<br/>
+export CROSS_COMPILE=&#8221;gethost &ndash;server A-desktop distcc arm-XXX-eabi-&#8221;<br/>
+以同样的方式配置C完成以后就可以开始编译了，<br/>
+</p>
+<p><br/>
+选取一个linux kernel编译<br/>
+make arm_defconfig<br/>
+make -j20<br/>
+console 会显示distcc的编译相关信息，<br/>
+同时可以在当前编译的机器上，另外开一个console上输入distccmon-text来查看distcc分派编译包的信息<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">从官网的说明</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>60-second instructions<br/>
+</p>
+<p><br/>
+</p><ol>
+<li>For each machine, download distcc, unpack, and do<br/>
+   ./configure &amp;&amp; make &amp;&amp; sudo make install<br/>
+</li>
+<li>On each of the servers, run distccd &ndash;daemon, with &ndash;allow options to restrict access.<br/>
+</li>
+<li>Put the names of the servers in your environment:<br/>
+   export DISTCC_POTENTIAL_HOSTS=&#8217;localhost red green blue&#8217;<br/>
+</li>
+<li>Build!<br/>
+   cd ~/work/myproject; pump make -j8 CC=distcc<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1">pump mode</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<p>注意dictcc3版本以后添加了pump模式。<br/>
+In &#8220;pump&#8221; mode, distcc sends source file with their included header files to the compilation servers, which now carry out both preprocessing and compilation. As a result, distcc-pump can distribute files up to 10 times faster to compilation servers than distcc.<br/>
+</p>
+<p><br/>
+distcc-pump is easily deployed through a wrapper script around an existing build command, such as &#8216;make&#8217;. Pump mode uses the system header files from the compilation servers, so it works best if all of your compilation servers are configured identically, or if you use cross-compilers that come with their own system header files.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2">编译器如果是绝对路径</h4>
+<div class="outline-text-4" id="text-1-6-2">
+
+<p>If the compiler name is an absolute path, it is passed verbatim to the server and the compiler is run from that directory. For example:<br/>
+distcc /usr/local/bin/gcc-3.1415 -c hello.c<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">联合使用ccache和distcc</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>网上说：<br/>
+联合使用distcc和ccache的效果就和仅使用 distcc一样。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">参考</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p><a href="http://distcc.samba.org/">http://distcc.samba.org/</a><br/>
+<a href="http://dmucs.sourceforge.net/">http://dmucs.sourceforge.net/</a><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[emacs的desktop保存]]></title>
@@ -248,6 +1843,9 @@ dlp.server.world:/home /home                         nfs     defaults  0 0
 1、mount的时候加上 -s 参数，作为“软”挂载<br/>
 2、umount -f /xxxxx/xxxx 用这个命令来取消挂载。<br/>
 如果出现device busy的错误，说明还有进程在使用该挂载点，要把进程停了，才能umount<br/>
+</p>
+<p><br/>
+通过试验发现，这几个方法都不管用。依然一断网就会挂住。<br/>
 </p></div>
 </div>
 </div>
@@ -1531,1813 +3129,6 @@ IPv6的建议NAT实现也是这个原理，只不过上面的一元一次方程�
 2.配置反向包的转换规则，将正向包被转换过的地址再转换回去<br/>
 <code>ip6tables -t mangle -A PREROUTING -d 2008:db8:1::/64 -i eth2 -j MAP66 --dst-to fdca:ffee:babe::/64</code><br/>
 可以看出，也没有显式指定任何具体的地址，更值得一提的是，内核并不维护任何关于NAT映射的信息，因此MAP66也不再依赖ip(6)_conntrack。<br/>
-</p></div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[goagent翻墙]]></title>
-    <link href="http://emmoblin.github.com/blog/2013/02/14/goagent/"/>
-    <updated>2013-02-14T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2013/02/14/goagent</id>
-    <content type="html"><![CDATA[<div><div><p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">安装</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>安装最好直接看官网：<br/>
-<a href="https://code.google.com/p/goagent/">https://code.google.com/p/goagent/</a><br/>
-</p>
-<p><br/>
-不过为了自己方便，我也自己记录一下。<br/>
-</p>
-<p><br/>
-在GAE注册一个appid，<a href="https://appengine.google.com/">https://appengine.google.com/</a><br/>
-</p><ol>
-<li>修改local\proxy.ini中的[gae]下的appid=你的appid<br/>
-</li>
-<li>双击server\uploader.bat(Mac/Linux上传方法请见FAQ)，上传成功后即可使用了(地址127.0.0.1:8087)<br/>
-</li>
-</ol>
-
-<p>对于linux<br/>
-在server目录下，python uploader.zip<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1">安装python-gevent</h4>
-<div class="outline-text-4" id="text-1-1-1">
-
-<p>参考：<a href="https://code.google.com/p/goagent/wiki/InstallGeventAndPyopensslOnUbuntu">https://code.google.com/p/goagent/wiki/InstallGeventAndPyopensslOnUbuntu</a><br/>
-<code>sudo apt-get install  python-gevent</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-2" class="outline-4">
-<h4 id="sec-1-1-2">安装pyopenssl</h4>
-<div class="outline-text-4" id="text-1-1-2">
-
-<p>这个一般都安装了<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">wget http://pypi.python.org/packages/source/p/pyOpenSSL/pyOpenSSL-0.13.tar.gz &amp;&amp; tar zxvf pyOpenSSL-0.13.tar.gz &amp;&amp; <span style="color: #a52a2a;">cd</span> pyOpenSSL-0.13 &amp;&amp; sudo python setup.py install
-</pre>
-
-
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">Chrome下如何使用goagent</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>Chrome可以安装switchysharp插件<br/>
-然后导入local中的SwitchyOptions.bak配置文件，之后就可以选择自动切换模式，他会根据规则自动选择是否使用代理。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">有时goagent无法使用，解决办法</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>可能是google_cn服务被屏蔽<br/>
-我们可以在proxy.ini中将profile=google_cn改成google_hk<br/>
-将[google_hk]段中的mode = http改为mode = https，重启goagent解决。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">遗留问题</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>我现在使用的是2.1.12版本，发现的问题是google analytics总是提示cookiemismatch。<br/>
-搜了半天也解决不了。<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[raid介绍]]></title>
-    <link href="http://emmoblin.github.com/blog/2013/02/13/raid/"/>
-    <updated>2013-02-13T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2013/02/13/raid</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">raid介绍</a>
-<ul>
-<li><a href="#sec-1-1">关键技术</a>
-<ul>
-<li><a href="#sec-1-1-1">数据校验</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-2">可管理性</a></li>
-<li><a href="#sec-1-3">RAID等级</a>
-<ul>
-<li><a href="#sec-1-3-1">RAID0</a></li>
-<li><a href="#sec-1-3-2">RAID1</a></li>
-<li><a href="#sec-1-3-3">RAID2</a></li>
-<li><a href="#sec-1-3-4">RAID3</a></li>
-<li><a href="#sec-1-3-5">RAID4</a></li>
-<li><a href="#sec-1-3-6">RAID5</a></li>
-<li><a href="#sec-1-3-7">RAID6</a></li>
-<li><a href="#sec-1-3-8">RAID 组合等级</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-4">linux上创建raid5</a></li>
-<li><a href="#sec-1-5">资料</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/raid/">raid介绍</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-RAID 的两个关键目标是提高数据可靠性和 I/O 性能。<br/>
-通过把相同数据同时写入到多块磁盘（典型地如镜像），或者将计算的校验数据写入阵列中来获得冗余能力，当单块磁盘出现故障时可以保证不会导致数据丢失。有些 RAID 等级允许更多地 磁盘同时发生故障，比如 RAID6 ，可以是两块磁盘同时损坏。在这样的冗余机制下，可以用新磁盘替换故障磁盘， RAID 会自动根据剩余磁盘中的数据和校验数据重建丢失的数据，保证数据一致性和完整性。数据分散保存在 RAID 中的多个不同磁盘上，并发数据读写要大大优于单个磁盘，因此可以获得更高的聚合 I/O 带宽。当然，磁盘阵列会减少全体磁盘的总可用存储空间，牺牲空间换取更高的可靠性和性能。<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">关键技术</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>RAID 中主要有三个关键概念和技术：镜像（ Mirroring ）、数据条带（ Data Stripping ）和数据校验（ Data parity ）<br/>
-数据条带，将数据分片保存在多个不同的磁盘，多个数据分片共同组成一个完整数据副本，这与镜像的多个副本是不同的，它通常用于性能考虑。数据条带具有更高的并发粒度，当访问数据时，可以同时对位于不同磁盘上数据进行读写操作， 从而获得非常可观的 I/O 性能提升 。数据校验，利用冗余数据进行数据错误检测和修复，冗余数据通常采用海明码、异或操作等算法来计算获得。利用校验功能，可以很大程度上提高磁盘阵列的可靠性、鲁棒性和容错能力。不过，数据校验需要从多处读取数据并进行计算和对比，会影响系统性能。 不同等级的 RAID 采用一个或多个以上的三种技术，来获得不同的数据可靠性、可用性和 I/O 性能。<br/>
-</p>
-</div>
-
-<div id="outline-container-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1">数据校验</h4>
-<div class="outline-text-4" id="text-1-1-1">
-
-<p>采用数据校验时， RAID 要在写入数据同时进行校验计算，并将得到的校验数据存储在 RAID 成员磁盘中。校验数据可以集中保存在某个磁盘或分散存储在多个不同磁盘中，甚至校验数据也可以分块，不同 RAID 等级实现各不相同。当其中一部分数据出错时，就可以对剩余数据和校验数据进行反校验计算重建丢失的数据。校验技术相对于镜像技术的优势在于节省大量开销，但由于每次数据读写都要进行大量的校验运算，对计算机的运算速度要求很高，必须使用硬件 RAID 控制器。在数据重建恢复方面，检验技术比镜像技术复杂得多且慢得多。<br/>
-海明校验码和 异或校验是两种最为常用的 数据校验算法。海明校验码是由理查德 · 海明提出的，不仅能检测错误，还能给出错误位置并自动纠正。海明校验的基本思想是：将有效信息按照某种规律分成若干组，对每一个组作奇偶测试并安排一个校验位，从而能提供多位检错信息，以定位错误点并纠正。可见海明校验实质上是一种多重奇偶校验。异或校验通过异或逻辑运算产生，将一个有效信息与一个给定的初始值进行异或运算，会得到校验信息。如果有效信息出现错误，通过校验信息与初始值的异或运算能还原正确的有效信息。<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">可管理性</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>实际上， RAID 是一种虚拟化技术，它对多个物理磁盘驱动器虚拟成一个大容量的逻辑驱动器。对于外部主机系统来说， RAID 是一个单一的、快速可靠的大容量磁盘驱动器。这样，用户就可以在这个虚拟驱动器上来组织和存储应用系统数据。 从用户应用角度看，可使存储系统简单易用，管理也很便利。 由于 RAID 内部完成了大量的存储管理工作，管理员只需要管理单个虚拟驱动器，可以节省大量的管理工作。 RAID 可以动态增减磁盘驱动器，可自动进行数据校验和数据重建，这些都可以 大大简化管理工作。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">RAID等级</h3>
-<div class="outline-text-3" id="text-1-3">
-
-
-</div>
-
-<div id="outline-container-1-3-1" class="outline-4">
-<h4 id="sec-1-3-1">RAID0</h4>
-<div class="outline-text-4" id="text-1-3-1">
-
-<p>RAID0 是一种简单的、无数据校验的数据条带化技术。<br/>
-RAID0 的性能在所有 RAID 等级中是最高的。<br/>
-不提供数据冗余保护，一旦数据损坏，将无法恢复。 因此， RAID0 一般适用于对性能要求严格但对数据安全性和可靠性不高的应用，如视频、音频存储、临时数据缓存空间等。<br/>
-<img src="../img/raid0.png"  alt="../img/raid0.png" /><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-2" class="outline-4">
-<h4 id="sec-1-3-2">RAID1</h4>
-<div class="outline-text-4" id="text-1-3-2">
-
-<p>RAID1 称为镜像，它将数据完全一致地分别写到工作磁盘和镜像 磁盘，它的磁盘空间利用率为 50%<br/>
-RAID1 与 RAID0 刚好相反，是为了增强数据安全性使两块 磁盘数据呈现完全镜像，从而达到安全性好、技术简单、管理方便。 RAID1 拥有完全容错的能力.<br/>
-<img src="../img/raid1.png"  alt="../img/raid1.png" /><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-3" class="outline-4">
-<h4 id="sec-1-3-3">RAID2</h4>
-<div class="outline-text-4" id="text-1-3-3">
-
-<p>RAID2 称为纠错海明码磁盘阵列，其设计思想是利用海明码实现数据校验冗余。海明码是一种在原始数据中加入若干校验码来进行错误检测和纠正的编码技术，其中第 2n 位（ 1, 2, 4, 8, … ）是校验码，其他位置是数据码。因此在 RAID2 中，数据按位存储，每块磁盘存储一位数据编码，磁盘数量取决于所设定的数据存储宽度，可由用户设定。图 4 所示的为数据宽度为 4 的 RAID2 ，它需要 4 块数据磁盘和 3 块校验磁盘。如果是 64 位数据宽度，则需要 64 块 数据磁盘和 7 块校验磁盘。可见， RAID2 的数据宽度越大，存储空间利用率越高，但同时需要的磁盘数量也越多。<br/>
-海明码自身具备纠错能力，因此 RAID2 可以在数据发生错误的情况下对纠正错误，保证数据的安全性。它的数据传输性能相当高，设计复杂性要低于后面介绍的 RAID3 、 RAID4 和 RAID5 。<br/>
-但是，海明码的数据冗余开销太大，而且 RAID2 的数据输出性能受阵列中最慢磁盘驱动器的限制。<br/>
-<img src="../img/raid2.png"  alt="../img/raid2.png" /><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-4" class="outline-4">
-<h4 id="sec-1-3-4">RAID3</h4>
-<div class="outline-text-4" id="text-1-3-4">
-
-<p>使用专用校验盘的并行访问阵列，它采用一个专用的磁盘作为校验盘，其余磁盘作为数据盘，数据按位可字节的方式交叉存储到各个数据盘中。 RAID3 至少需要三块磁盘，不同磁盘上同一带区的数据作 XOR 校验，校验值写入校验盘中。 RAID3 完好时读性能与 RAID0 完全一致，并行从多个磁盘条带读取数据，性能非常高，同时还提供了数据容错能力。<br/>
-目前， RAID5 算法不断改进，在大数据量读取时能够模拟 RAID3 ，而且 RAID3 在出现坏盘时性能会大幅下降，因此常使用 RAID5 替代 RAID3 来运行具有持续性、高带宽、大量读写特征的应用。<br/>
-<img src="../img/raid3.png"  alt="../img/raid3.png" /><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-5" class="outline-4">
-<h4 id="sec-1-3-5">RAID4</h4>
-<div class="outline-text-4" id="text-1-3-5">
-
-<p>RAID4 与 RAID3 的原理大致相同，区别在于条带化的方式不同。 RAID4按照块的方式来组织数据.<br/>
-RAID4 提供了 非常好的读性能，但单一的校验盘往往成为系统性能的瓶颈。对于写操作， RAID4 只能一个磁盘一个磁盘地写，并且还要写入校验数据，因此写性能比较差。而且随着成员磁盘数量的增加，校验盘的系统瓶颈将更加突出。正是如上这些限制和不足， RAID4 在实际应用中很少见，主流存储产品也很少使用 RAID4 保护。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-6" class="outline-4">
-<h4 id="sec-1-3-6">RAID5</h4>
-<div class="outline-text-4" id="text-1-3-6">
-
-<p>RAID5 应该是目前最常见的 RAID 等级，它的原理与 RAID4 相似，区别在于校验数据分布在阵列中的所有磁盘上，而没有采用专门的校验磁盘。对于数据和校验数据，它们的写操作可以同时发生在完全不同的磁盘上。因此， RAID5 不存在 RAID4 中的并发写操作时的校验盘性能瓶颈问题。另外， RAID5 还具备很好的扩展性。当阵列磁盘 数量增加时，并行操作量的能力也随之增长，可比 RAID4 支持更多的磁盘，从而拥有更高的容量以及更高的性能。<br/>
-当一个数据盘损坏时，系统可以根据同一条带的其他数据块和对应的校验数据来重建损坏的数据。与其他 RAID 等级一样，重建数据时， RAID5 的性能会受到较大的影响。<br/>
-RAID5 兼顾存储性能、数据安全和存储成本等各方面因素，它可以理解为 RAID0 和 RAID1 的折中方案，是目前综合性能最佳的数据保护解决方案。 RAID5 基本上可以满足大部分的存储应用需求，数据中心大多采用它作为应用数据的保护方案。<br/>
-<img src="../img/raid5.png"  alt="../img/raid5.png" /><br/>
-</p>
-<p><br/>
-有人可能担心RAID5的可靠性，我试过，稳定性很好，同步完成后，拷贝数据上去，然后，随意的掉电，RAID5 组上的数据都没事。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-7" class="outline-4">
-<h4 id="sec-1-3-7">RAID6</h4>
-<div class="outline-text-4" id="text-1-3-7">
-
-<p>前面所 述的各个 RAID 等级都只能保护因单个磁盘失效而造成的数据丢失。如果两个磁盘同时发生故障，数据将无法恢复。 RAID6 （如图 8 ）引入双重校验的概念，它可以保护阵列中同时出现两个磁盘失效时，阵列仍能够继续工作，不会发生数据丢失。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-8" class="outline-4">
-<h4 id="sec-1-3-8">RAID 组合等级</h4>
-<div class="outline-text-4" id="text-1-3-8">
-
-<p>标准 RAID 等级各有优势和不足。自然地，我们想到把多个 RAID 等级组合起来，实现优势互补，弥补相互的不足，从而达到在性能、数据安全性等指标上更高的 RAID 系统。<br/>
-实际得到较为广泛应用的只有 RAID01 和 RAID10 两个等级。<br/>
-RAID01 兼备了 RAID0 和 RAID1 的优点，它先用两块磁盘建立镜像，然后再在镜像内部做条带化。 RAID01 的数据将同时写入到两个磁盘阵列中，如果其中一个阵列损坏，仍可继续工作，保证数据安全性的同时又提高了性能。 RAID01 和 RAID10 内部都含有 RAID1 模式，因此整体磁盘利用率均仅为 50% 。<br/>
-<img src="../img/raid10.png"  alt="../img/raid10.png" /><br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">linux上创建raid5</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>4个硬盘，每个硬盘都化分为一个区。<br/>
-创建raid5<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">mdadm --create /dev/md0 --level=5 --raid-devices=3 --spare-devices=1 /dev/sd[a-d]1
-</pre>
-
-创建RAID设备名为md0, 级别为RAID 5，使用3个设备建立RAID,空余一个做备用。<br/>
-可以看来做raid只需要分区，所以一个硬盘可以分为多个分区，不同分区作为不同的raid type。<br/>
-</p>
-<p><br/>
-查看raid信息<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">mdadm --detail /dev/md0
-</pre>
-
-
-513984 blocks [2/2] [UU]<br/>
-The second line gives us some more information about the device. [2/2] [UU] tells us both partitions are used.<br/>
-</p>
-<p><br/>
-让RAID开机启动.配置RIAD配置文件<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">mdadm --detail --scan &gt; /etc/mdadm.conf
-</pre>
-
-修改下，格式，去掉devices后的=。<br/>
-<code>devices /dev/sda1,/dev/sdb1,/dev/sdc1,/dev/sdd1</code><br/>
-</p>
-<p><br/>
-如果其中某个硬盘坏了会怎么样呢?系统会自动停止这块硬盘的工作,然后让后备的那块硬盘顶上去工作。我们可以实验下.<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">mdadm /dev/md0 --fail /dev/sdc1
-cat /proc/mdstat&#25110;&#32773;mdadm --detail
-</pre>
-
-
-删除一个硬盘<br/>
-<code>mdadm /dev/md0 --remove /dev/sdc1</code><br/>
-</p>
-<p><br/>
-添加一个硬盘<br/>
-<code>mdadm /dev/md0 --add /dev/sdc1</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">资料</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<p><a href="http://blog.csdn.net/liuben/article/details/4581970">http://blog.csdn.net/liuben/article/details/4581970</a><br/>
-</p>
-<p><br/>
-ubuntu使用raid的一个例子：<br/>
-<a href="http://www.dedoimedo.com/computers/linux-raid.html">http://www.dedoimedo.com/computers/linux-raid.html</a><br/>
-</p></div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[OpenLDAP介绍]]></title>
-    <link href="http://emmoblin.github.com/blog/2013/02/13/openldap/"/>
-    <updated>2013-02-13T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2013/02/13/openldap</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">OpenLDAP介绍</a>
-<ul>
-<li><a href="#sec-1-1">LDAP 入门</a></li>
-<li><a href="#sec-1-2">LDAP 目录结构</a>
-<ul>
-<li><a href="#sec-1-2-1">DN</a></li>
-<li><a href="#sec-1-2-2">组织单元</a></li>
-<li><a href="#sec-1-2-3">个别项</a></li>
-<li><a href="#sec-1-2-4">对象类objectclass</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-3">配置openLDAP</a>
-<ul>
-<li><a href="#sec-1-3-1">rootdn</a></li>
-<li><a href="#sec-1-3-2">AC</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-4">插入数据</a>
-<ul>
-<li><a href="#sec-1-4-1">LDIF 方法</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-5">参考资料</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/openldap/">OpenLDAP介绍</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">LDAP 入门</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>首字母缩略 LDAP 代表轻量级目录访问协议（Lightweight Directory Access Protocol）。<br/>
-信息被集中存储在服务器上的 LDAP 目录中。LDAP 目录是一种数据库；然而，它不是关系数据库。<br/>
-它的目录或数据库的结构与 UNIX 文件系统非常相似： <br/>
-数据按层次存储；有“根”或“基本 DN”（专有名称，Distinguished Name）；<br/>
-目录被进一步细分成组织单元（Organization Units 或 OU）；<br/>
-在这些 OU 中是包含数据的项。<br/>
-这种树-叶结构不仅使 LDAP 变得可扩展， 而且当进行简单的搜索或查询时，比传统的关系数据库更快。<br/>
-</p>
-<p><br/>
-LDAP 目录几乎可以存储所有类型的数据：电子邮件地址、DNS 信息、NIS 映射、安全性密钥、联系人信息列表和计算机名等。<br/>
-可以通过 ACL（访问控制表，Access Control List）来控制对目录的访问。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">LDAP 目录结构</h3>
-<div class="outline-text-3" id="text-1-2">
-
-
-</div>
-
-<div id="outline-container-1-2-1" class="outline-4">
-<h4 id="sec-1-2-1">DN</h4>
-<div class="outline-text-4" id="text-1-2-1">
-
-<p>LDAP 目录树的“根”或顶部是基本 DN。基本 DN 通常有两种形式：organization=（例如，o=syroidmanor.com）， 或者从组织的 DNS 域组件派生的 DN（dc=syroidmanor,dc=com）。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-2" class="outline-4">
-<h4 id="sec-1-2-2">组织单元</h4>
-<div class="outline-text-4" id="text-1-2-2">
-
-<p>在目录基本 DN 的下面是容器或组织单元（OU），它们从逻辑上对您的数据进行分隔或分组。<br/>
-</p>
-<p><br/>
-<pre class="example">dc=foobar,dc=com
-                ou=customers
-                        ou=northamerica
-                        ou=southamerica
-                        ou=asia
-                        ou=europe
-</pre>
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-3" class="outline-4">
-<h4 id="sec-1-2-3">个别项</h4>
-<div class="outline-text-4" id="text-1-2-3">
-
-<p>项只是存储属性的地方。<br/>
-属性是可用来将一种类型的信息存储在目录中的容器。<br/>
-每个属性都有一种类型和一个或多个值。<br/>
-LDAP 目录中的每个项都有唯一的 DN，每个 DN 都由两部分组成 ―“相对专有名称”（或 RDN）和对 LDAP 目录结构中存储记录的位置的引用。 几乎存储在 LDAP 目录中的所有数据都有一个唯一名称，这个名称通常存储在 cn 属性中。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-4" class="outline-4">
-<h4 id="sec-1-2-4">对象类objectclass</h4>
-<div class="outline-text-4" id="text-1-2-4">
-
-<p>对象类由 LDAP 目录使用来定义给定类型的对象可以有哪些属性。对象类还定义项必须有什么属性， 以及项可以有什么属性。所有对象类都从其父对象类继承需求，然后添加它们自己的需求。<br/>
-对象类有五个组件：OID（对象标识）、唯一名称、父对象（SUP）、任何需要的属性（MUST）和 允许的属性列表（MAY）。<br/>
-如：<br/>
-</p>
-<p><br/>
-<pre class="example">objectclass ( 2.5.6.6 NAME 'person' SUP top STRUCTURAL
-        MUST ( sn $ cn )
-        MAY ( userPassword $ telephoneNumber $ seeAlso $ description ) )
-</pre>
-
-
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">配置openLDAP</h3>
-<div class="outline-text-3" id="text-1-3">
-
-
-</div>
-
-<div id="outline-container-1-3-1" class="outline-4">
-<h4 id="sec-1-3-1">rootdn</h4>
-<div class="outline-text-4" id="text-1-3-1">
-
-<p>rootdn 项控制谁可以对目录数据库进行写操作，以及他们要这样做所必须提供的密码。<br/>
-您在 rootdn 项的 cn= 部分填充的任何项都是对数据库有完全读／写访问权的用户。<br/>
-如果您打算存储在目录中的数据只有一点点机密性，则对密码进行散列处理。可以用 slappasswd 实用程序完成它，如下所示：<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3-2" class="outline-4">
-<h4 id="sec-1-3-2">AC</h4>
-<div class="outline-text-4" id="text-1-3-2">
-
-
-<p><br/>
-<pre class="example">access to dn=".*,dc=syroidmanor,dc=com" attr=userPassword
-        by dn="cn=root,dc=syroidmanor,dc=com" write
-        by self write
-        by * auth
-access to dn=".*,dc=syroidmanor,dc=com" attr=mail
-        by dn="cn=root,dc=syroidmanor,dc=com" write
-        by self write
-        by * read
-</pre>
-
-上面的配置仅允许 userPassword 属性的所有者修改项，但仅当所有者提供他或她的优先密码时才允许进行修改。 在所有其它情况下，只能出于认证目的来访问该项，而不能查看它。 第二个 access to&hellip; 项允许用户修改自己的电子邮件地址<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">插入数据</h3>
-<div class="outline-text-3" id="text-1-4">
-
-
-</div>
-
-<div id="outline-container-1-4-1" class="outline-4">
-<h4 id="sec-1-4-1">LDIF 方法</h4>
-<div class="outline-text-4" id="text-1-4-1">
-
-
-<p><br/>
-<pre class="example">dn: uid=juser,ou=people,dc=syroidmanor,dc=com
-uid: juser
-cn: Joe User
-givenname: Joe
-sn: User
-mail: juser@syroidmanor.com
-objectClass: top
-objectClass: mailRecipient
-objectClass: person
-objectClass: inetOrgPerson
-</pre>
-
-
-
-
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">参考资料</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<ol>
-<li><a href="http://www.ibm.com/developerworks/cn/education/linux/l-ldap/section2.html">构建基于 LDAP 的地址簿</a><br/>
-</li>
-</ol>
-
-</div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[openfiler 2.99创建raid]]></title>
-    <link href="http://emmoblin.github.com/blog/2013/02/13/openfiler/"/>
-    <updated>2013-02-13T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2013/02/13/openfiler</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">openfiler 2.99创建raid</a>
-<ul>
-<li><a href="#sec-1-1">创建raid5</a>
-<ul>
-<li><a href="#sec-1-1-1">设置gpt</a></li>
-<li><a href="#sec-1-1-2">分区</a></li>
-<li><a href="#sec-1-1-3">设置raid标记</a></li>
-<li><a href="#sec-1-1-4">在web上创建raid</a></li>
-<li><a href="#sec-1-1-5">扩展</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-2">如果web上无法识别raid盘</a></li>
-<li><a href="#sec-1-3">测试速度</a></li>
-<li><a href="#sec-1-4">优缺点</a></li>
-<li><a href="#sec-1-5">资料</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/openfiler/">openfiler 2.99创建raid</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-有人可能担心RAID5的可靠性，我试过，稳定性很好，同步完成后，拷贝数据上去，然后，随意的掉电，RAID5 组上的数据都没事。<br/>
-OpenFiler读写性能很好，随便调整一下就能达到RAID5 下写130MB/S和读220MB/S的成绩，这个远远超过了FREENas的成绩。<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">创建raid5</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>一个磁盘用于安装系统，其他3块作为raid5.<br/>
-进入root<br/>
-</p>
-</div>
-
-<div id="outline-container-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1">设置gpt</h4>
-<div class="outline-text-4" id="text-1-1-1">
-
-
-<p><br/>
-<pre class="src src-sh">parted /dec/sdb
-mklabel
-gpt
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-2" class="outline-4">
-<h4 id="sec-1-1-2">分区</h4>
-<div class="outline-text-4" id="text-1-1-2">
-
-<p>整个磁盘化为一个分区，<br/>
-<code>mkpart primary 0 -0</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-3" class="outline-4">
-<h4 id="sec-1-1-3">设置raid标记</h4>
-<div class="outline-text-4" id="text-1-1-3">
-
-<p>设置为raid分区<br/>
-<code>set 1 raid on</code><br/>
-</p>
-<p><br/>
-同样操作于<br/>
-<code>select /dev/sdc</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-4" class="outline-4">
-<h4 id="sec-1-1-4">在web上创建raid</h4>
-<div class="outline-text-4" id="text-1-1-4">
-
-<p>Volumes &gt; Software RAID:<br/>
-Create the software RAID 5 with sdb1, sdc1 and sdd1.<br/>
-</p>
-<p><br/>
-Create the vg0 volume group with /dev/md0<br/>
-Create the lv0 volume, using full space and XFS.<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-5" class="outline-4">
-<h4 id="sec-1-1-5">扩展</h4>
-<div class="outline-text-4" id="text-1-1-5">
-
-<p>如果要再添加两块硬盘，<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">[root@localhost]# mdadm --add /dev/md0 /dev/sde1 add the two disks to /dev/md0
-[root@localhost]# mdadm --add /dev/md0 /dev/sdf1
-
-[root@localhost]# mdadm --grow /dev/md0 --raid-devices=5 set the RAID to use the two new disks
-
-In the OpenFiler WEBinterface, Wait for /dev/md0 to be Clean and Synchronized, then:
-
-[root@localhost]# pvresize /dev/md0 resize the physical volume /dev/md0
-</pre>
-
-
-In the OpenFiler WEBinterface &gt; Volumes &gt; Manage Volumes &gt; Edit properties of lv0 to use full capacity.<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">如果web上无法识别raid盘</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>首先需要把/dev/md0  mklabel为gpt<br/>
-然后分区，mkpart primary ext2 <br/>
-设置lvm flag<br/>
-<code>set 1 LVM on</code><br/>
-</p>
-<p><br/>
-手动添加卷组：<br/>
-<code>vgcreate VG1 /dev/md0</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">测试速度</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p><code>dd if=/dev/zero of=tmpfile bs=1M count=10000</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">优缺点</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>优点：<br/>
-</p>
-<p><br/>
-1、兼容性很好，几乎可以识别所有的常见硬件，哪怕识别不了也可以装个REDHAT的驱动，REDHAT的驱动几乎是每个厂商都会提供的，上面那台HP SERVER RAID卡就是装了READHAT的驱动搞定的；<br/>
-</p>
-<p><br/>
-2、性能强大，支持网卡捆绑，上门的PC-SERVER通过网络访问，可以实现RAID5的245MB/S的读写速度，和本地盘没啥区别，要不是受制于HP PCSERVER网卡数量不够的限制，网络服务应该还能实现更高的速度，本地测试RAID5超过400MB/S的读写速度；<br/>
-</p>
-<p><br/>
-3、支持卷管理功能，支持在线扩展功能，支持按用户空间限制配置；<br/>
-</p>
-<p><br/>
-4、内部带OPENLDAP,用户的认证通过OPENLDAP认证，安全性很高；<br/>
-</p>
-<p><br/>
-5、支持WEB管理和系统监控，管理方便。<br/>
-</p>
-<p><br/>
-缺点：<br/>
-</p>
-<p><br/>
-1、页面管理功能要是没用过肯定一头雾水，监控管理功能很一般，只能算有吧；<br/>
-</p>
-<p><br/>
-2、用户认证使用OPENLDAP，配置麻烦，我折腾了一个小时才搞定；<br/>
-</p>
-<p><br/>
-3、不支持BT电驴什么的，虽然可以安装但是无法和WEB页面集成，感觉还是很不爽<br/>
-</p>
-<p><br/>
-4、不知道为何精简了RPM命令和yum命令，要在上面装点东西很麻烦，要先装RPM才能进行下面的工作。<br/>
-应该是改为了conary。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">资料</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<ol>
-<li>LDAP设置<br/>
-   <a href="http://www.njeit.cn/show.aspx?id=831&amp;cid=65">http://www.njeit.cn/show.aspx?id=831&amp;cid=65</a><br/>
-
-<p><br/>
-</p></li>
-<li>创建iscsi <br/>
-   <a href="http://wenku.baidu.com/view/b51fdeedf8c75fbfc77db202.html">http://wenku.baidu.com/view/b51fdeedf8c75fbfc77db202.html</a><br/>
-</li>
-</ol>
-
-</div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[octopress安装和定制]]></title>
-    <link href="http://emmoblin.github.com/blog/2013/02/13/octopress-install/"/>
-    <updated>2013-02-13T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2013/02/13/octopress-install</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">octopress安装和定制</a>
-<ul>
-<li><a href="#sec-1-1">ruby安装</a>
-<ul>
-<li><a href="#sec-1-1-1">touble shot：</a>
-<ul>
-<li><a href="#sec-1-1-1-1">在zsh中，启动rbenv init -会提示错误</a></li>
-<li><a href="#sec-1-1-1-2">安装ruby rehash</a></li>
-<li><a href="#sec-1-1-1-3">openssl</a></li>
-</ul></li>
-</ul>
-</li>
-<li><a href="#sec-1-2">安装octopress</a></li>
-<li><a href="#sec-1-3">Deploying to Github Pages</a>
-<ul>
-<li><a href="#sec-1-3-1">gh-pages</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-4">重新安装octopress</a></li>
-<li><a href="#sec-1-5">安装主题</a></li>
-<li><a href="#sec-1-6">配置</a></li>
-<li><a href="#sec-1-7">个性化定制</a>
-<ul>
-<li><a href="#sec-1-7-1">邮箱地址图片化</a></li>
-<li><a href="#sec-1-7-2">about分页</a></li>
-<li><a href="#sec-1-7-3">添加友情链接</a></li>
-<li><a href="#sec-1-7-4">侧边栏添加Disqus评论</a></li>
-<li><a href="#sec-1-7-5">增加一键分享</a></li>
-<li><a href="#sec-1-7-6">参考资料</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-8">使用了org-jekyll.el</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/octopress-install/">octopress安装和定制</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">ruby安装</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>参考：<a href="http://octopress.org/docs/setup/">http://octopress.org/docs/setup/</a><br/>
-一个是rvm，rbenv<br/>
-rvm是出现最早功能最强大，但是有点复杂。<br/>
-rbenv是37sigle功能推出的，比较受欢迎。<br/>
-</p>
-<p><br/>
-rvm安装：<br/>
-<code>curl -L https://get.rvm.io | bash -s stable --ruby</code><br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; . "$HOME/.rvm/scripts/rvm" # Load RVM function'</span> &gt;&gt; ~/.bash_profile
-<span style="color: #a52a2a;">source</span> ~/.bash_profile
-
-<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If using Zsh do this instead</span>
-<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'[[ -s $HOME/.rvm/scripts/rvm ]] &amp;&amp; source $HOME/.rvm/scripts/rvm'</span> &gt;&gt; ~/.zshrc
-<span style="color: #a52a2a;">source</span> ~/.zshrc
-</pre>
-
-
-rbenv安装：<br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #a52a2a;">cd</span>
-git clone git://github.com/sstephenson/rbenv.git .rbenv
-<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'export PATH="$HOME/.rbenv/bin:$PATH"'</span> &gt;&gt; ~/.bash_profile
-<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'eval "$(</span><span style="color: #ff00ff;">rbenv</span><span style="color: #00bfff;"> init -)"'</span> &gt;&gt; ~/.bash_profile
-git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
-<span style="color: #a52a2a;">source</span> ~/.bash_profile
-</pre>
-
-
-</p>
-</div>
-
-<div id="outline-container-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1">touble shot：</h4>
-<div class="outline-text-4" id="text-1-1-1">
-
-
-</div>
-
-<div id="outline-container-1-1-1-1" class="outline-5">
-<h5 id="sec-1-1-1-1">在zsh中，启动rbenv init -会提示错误</h5>
-<div class="outline-text-5" id="text-1-1-1-1">
-
-<p><code>$HOME/.rbenv/libexec/../completions/rbenv.bash:14: command not found: complete</code><br/>
-修改为：<br/>
-</p>
-<p><br/>
-<pre class="src src-bash">eval <span style="color: #00bfff;">"$(rbenv init - zsh)"</span>
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-1-2" class="outline-5">
-<h5 id="sec-1-1-1-2">安装ruby rehash</h5>
-<div class="outline-text-5" id="text-1-1-1-2">
-
-
-<p><br/>
-<pre class="src src-bash">rbenv install 1.9.3-p0
-rbenv global 1.9.3-p0
-rbenv rehash
-</pre>
-
-
-关于为什么要做rehash，解释如下：<br/>
-新装的gem（以前重没装过）一定要rehash在.rbenv/shims下生成可执行程序，像zsh要自动补全还需要 hash -r ．不过因为　rbenv init -　里会调用rbenv rehash，所有新开个窗口是不需要的．我的用法是bundler管理gemset，在~/.bundle/config里设置BUNDLE_PATH为vendor/bundle , 配合shell的一个小函数为常用命令添加alias，在发现Gemset的时候自动加上bundle exec ( rbenv.zsh )．通过bundler安装bundle exec执行是不需要rehash的。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-1-3" class="outline-5">
-<h5 id="sec-1-1-1-3">openssl</h5>
-<div class="outline-text-5" id="text-1-1-1-3">
-
-<p>启动时提示：<br/>
-<code>require’: cannot load such file – openssl (LoadError)</code><br/>
-解决办法：<br/>
-apt-get install libssl-dev<br/>
-重新安装ruby<br/>
-<code>rbenv install 1.9.3-p0</code><br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">安装octopress</h3>
-<div class="outline-text-3" id="text-1-2">
-
-
-<p><br/>
-<pre class="src src-sh">git clone git://github.com/imathis/octopress.git octopress
-<span style="color: #a52a2a;">cd</span> octopress    <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If you use RVM, You'll be asked if you trust the .rvmrc file (say yes).</span>
-ruby --version  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Should report Ruby 1.9.3</span>
-</pre>
-
-
-遇到的问题，安装后我clone了octopress然后执行gem但缺少zlib库。<br/>
-解决办法：<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">sudo apt-get install zlib1g-dev
-rvm reinstall 1.9.3 <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#37325;&#26032;&#23433;&#35013;ruby</span>
-</pre>
-
-
-安装依赖：<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">gem install bundler
-rbenv rehash    <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If you use rbenv, rehash to be able to run the bundle command</span>
-bundle install
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">Deploying to Github Pages</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>参考：<a href="http://octopress.org/docs/deploying/github/">http://octopress.org/docs/deploying/github/</a><br/>
-</p>
-<p><br/>
-<code>rake setup_github_pages</code><br/>
-他会做几件事：<br/>
-</p><ol>
-<li>询问你的github url<br/>
-</li>
-<li>把当前origin rename为imathis/octopress<br/>
-</li>
-<li>把你的github pages作为default origin remote<br/>
-</li>
-<li>从当前master分支转为source分支<br/>
-</li>
-<li>把master分支设置为_deploy目录，用于发布页面<br/>
-</li>
-</ol>
-
-
-<p><br/>
-然后运行<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">rake generate
-rake deploy
-</pre>
-
-这会生成website在_deploy目录，然后提交到github。<br/>
-</p>
-<p><br/>
-然后提交source分支<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">git add .
-git commit -m <span style="color: #00bfff;">'your message'</span>
-git push origin source
-</pre>
-
-
-</p>
-</div>
-
-<div id="outline-container-1-3-1" class="outline-4">
-<h4 id="sec-1-3-1">gh-pages</h4>
-<div class="outline-text-4" id="text-1-3-1">
-
-<p>还可以通过project pages页面来部署，这样你的页面的访问地址为：<br/>
-<code>http://username.github.com/project</code><br/>
-适用于多个工程的情况，每个工程一个站点。<br/>
-实际上显示时，github会搜索你工程下的gh-pages分支，作为显示。<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">重新安装octopress</h3>
-<div class="outline-text-3" id="text-1-4">
-
-
-<p><br/>
-</p>
-<p><br/>
-<pre class="src src-sh">git clone -b source git@github.com:username/username.github.com.git octopress <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#19979;&#36733;source&#29256;&#26412;&#65288;&#29992;&#20110;&#32534;&#36753;&#65289;</span>
-<span style="color: #a52a2a;">cd</span> octopress
-git clone git@github.com:username/username.github.com.git _deploy <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#19979;&#36733;_deploy&#29256;&#26412;&#65288;&#29992;&#20110;&#21457;&#24067;&#65289;</span>
-bundle install
-</pre>
-
-
-我是升级的octopress，所以我还是需要重复之前的安装过程，需要安装ruby，gem，bunlder等。<br/>
-然后执行<br/>
-<code>rake setup_github_pages</code><br/>
-</p>
-<p><br/>
-rake install[theme]<br/>
-安装一个主题，把github上的source中_post目录cp过来，以及修改的插件等手工合并进来，然后使用git push -f 强行push的。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">安装主题</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<p>下载后放到.themes目录下，然后执行对应主题的安装，如：<br/>
-rake install[&#8216;bootstrap&#8217;]<br/>
-rake generate<br/>
-</p>
-<p><br/>
-rake install\[&#8216;blanket&#8217;\]<br/>
-有一点不好的是，code区显示不完全。还是有点缺憾。<br/>
-</p>
-<p><br/>
-我目前使用的是：<br/>
-bootstrap-theme虽然使用了bootstrap，基石很强大，但调整的不好。<br/>
-文章和文章之间没有隔离，不方便区分。<br/>
-还有就是字体使用的是固定px，13px行间距是18px，为什么不用em呢？<br/>
-我尝试修改sass中的basefont为1em，但整体显示就乱了，有的code无法显示，所以干脆先这么用这吧。<br/>
-</p>
-<p><br/>
-<a href="http://octopressthemes.com/themes/">主题下载页</a><br/>
-<a href="https://github.com/bkutil/bootstrap-theme">https://github.com/bkutil/bootstrap-theme</a><br/>
-<a href="http://www.cnblogs.com/hangxin1940/archive/2012/03/19/2806438.html">重新安装octopress</a><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">配置</h3>
-<div class="outline-text-3" id="text-1-6">
-
-<p>date_format: &#8220;%Y年%m月%d日&#8221;<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7" class="outline-3">
-<h3 id="sec-1-7">个性化定制</h3>
-<div class="outline-text-3" id="text-1-7">
-
-
-</div>
-
-<div id="outline-container-1-7-1" class="outline-4">
-<h4 id="sec-1-7-1">邮箱地址图片化</h4>
-<div class="outline-text-4" id="text-1-7-1">
-
-<p>很多博主都将邮箱地址转化成图片，目的是为了防止垃圾邮件，我也赶了一下时髦。<br/>
-</p>
-<p><br/>
-邮箱地址生成图片的网址是：<br/>
-</p>
-<p><br/>
-<a href="http://services.nexodyne.com/email/index.php">http://services.nexodyne.com/email/index.php</a><br/>
-<a href="http://pic.sdodo.com/tool/mailpic/">http://pic.sdodo.com/tool/mailpic/</a><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7-2" class="outline-4">
-<h4 id="sec-1-7-2">about分页</h4>
-<div class="outline-text-4" id="text-1-7-2">
-
-<p>在source下新建about目录，并在里面添加index.markdown文件。<br/>
-编辑导航条source/_includes/custom/navigation.html<br/>
-注意:index.markdown文件需要加上头，否则会找不到。<br/>
-</p>
-<p><br/>
-在侧边栏中a天际about me<br/>
-在custom/asides/about.html中添加About Me信息<br/>
-</p>
-<p><br/>
-<pre class="src src-html">&lt;<span style="color: #a020f0;">section</span>&gt;
-  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">About Me</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
-  &lt;<span style="color: #a020f0;">p</span>&gt;&lt;<span style="color: #a020f0;">img</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"/images/about.jpg"</span>&gt;&lt;/<span style="color: #a020f0;">p</span>&gt;
-  &lt;<span style="color: #a020f0;">p</span>&gt;some thing&lt;/<span style="color: #a020f0;">p</span>&gt;
-  &lt;<span style="color: #a020f0;">p</span>&gt;&lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"mailto:emmoblin@gmail.com"</span>&gt;&lt;<span style="color: #a020f0;">img</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"/images/my_email.png"</span> <span style="color: #ff1493;">alt</span>=<span style="color: #00bfff;">"emmoblin@gmail.com"</span>&gt;&lt;/<span style="color: #a020f0;">a</span>&gt;&lt;/<span style="color: #a020f0;">p</span>&gt;
-&lt;/<span style="color: #a020f0;">section</span>&gt;
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7-3" class="outline-4">
-<h4 id="sec-1-7-3">添加友情链接</h4>
-<div class="outline-text-4" id="text-1-7-3">
-
-<p>在custom/asides/blog_link.html中添加友情链接<br/>
-</p>
-<p><br/>
-<pre class="src src-html">  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">&#22823;&#29275;&#21338;&#23458;</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
-  &lt;<span style="color: #a020f0;">ul</span>&gt;
-    &lt;<span style="color: #a020f0;">li</span>&gt;
-      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://coolshell.cn/"</span>&gt;&#37239;&#22771;CoolShell&lt;/<span style="color: #a020f0;">a</span>&gt;
-    &lt;/<span style="color: #a020f0;">li</span>&gt;
-    &lt;<span style="color: #a020f0;">li</span>&gt;
-      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://mindhacks.cn/"</span>&gt;&#21016;&#26410;&#40527;MIND HACKS&lt;/<span style="color: #a020f0;">a</span>&gt;
-    &lt;/<span style="color: #a020f0;">li</span>&gt;
-    &lt;<span style="color: #a020f0;">li</span>&gt;
-      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://blog.codingnow.com/"</span>&gt;&#20113;&#39118;&lt;/<span style="color: #a020f0;">a</span>&gt;
-    &lt;/<span style="color: #a020f0;">li</span>&gt;
-    &lt;<span style="color: #a020f0;">li</span>&gt;
-      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://www.cnblogs.com/Solstice/"</span>&gt;&#38472;&#30805;&lt;/<span style="color: #a020f0;">a</span>&gt;
-    &lt;/<span style="color: #a020f0;">li</span>&gt;
-  &lt;/<span style="color: #a020f0;">ul</span>&gt;
-&lt;/<span style="color: #a020f0;">section</span>&gt;
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7-4" class="outline-4">
-<h4 id="sec-1-7-4">侧边栏添加Disqus评论</h4>
-<div class="outline-text-4" id="text-1-7-4">
-
-<p>在custom/asides/recent_comment.html中添加Disqus评论<br/>
-</p>
-<p><br/>
-<pre class="src src-html">&lt;<span style="color: #a020f0;">section</span>&gt;
-  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">&#36817;&#26399;&#35780;&#35770;</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
-&lt;<span style="color: #a020f0;">script</span> <span style="color: #ff1493;">type</span>=<span style="color: #00bfff;">"text/javascript"</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"http://emmoblin.disqus.com/combination_widget.js?num_items=5&amp;hide_mods=0&amp;color=blue&amp;default_tab=recent&amp;excerpt_length=200"</span>&gt;&lt;/<span style="color: #a020f0;">script</span>&gt;&lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://disqus.com/"</span>&gt;Powered by Disqus&lt;/<span style="color: #a020f0;">a</span>&gt;
-&lt;/<span style="color: #a020f0;">section</span>&gt;
-</pre>
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7-5" class="outline-4">
-<h4 id="sec-1-7-5">增加一键分享</h4>
-<div class="outline-text-4" id="text-1-7-5">
-
-<p>我目前使用的是bshare。<br/>
-</p>
-<p><br/>
-在_config.yml中增加bshare: true。 在“source_includes\post”下的sharing.html中增加如下代码.<br/>
-上述的代码由bshare产生，可以自己选择所需的外观。 这样，在每一篇文章的最下方会出现一个分享的小工具。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7-6" class="outline-4">
-<h4 id="sec-1-7-6">参考资料</h4>
-<div class="outline-text-4" id="text-1-7-6">
-
-<p><a href="http://octopress.org/docs/theme/template/">定制修改页面</a><br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-8" class="outline-3">
-<h3 id="sec-1-8">使用了org-jekyll.el</h3>
-<div class="outline-text-3" id="text-1-8">
-
-<p>我是使用org-mode来管理笔记的，使用了org-jekyll插件来把org笔记转化为jekyll的格式。<br/>
-首先通过C-c C-e 把整个project进行export，生成cache。<br/>
-之后org-jekyll-export-blog，根据cache的内容生成对应的octopress文件。<br/>
-org-jekyll是根据～/.org_timestamp/的cache生成的。所以先要export project，之后再用org-jekyll。<br/>
-</p>
-<p><br/>
-org-jekyll-export-current-entry 使用时光标所在entry进行导出。<br/>
-</p>
-<p><br/>
-所有source/_posts目录下的html都可以重新生成，注意有的时候格式不对，比如title中不能包含中文，<br/>
-会导致rake genernate错误。<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[LVM介绍]]></title>
-    <link href="http://emmoblin.github.com/blog/2013/02/13/lvm/"/>
-    <updated>2013-02-13T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2013/02/13/lvm</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">LVM介绍</a>
-<ul>
-<li><a href="#sec-1-1">LVM基本术语</a></li>
-<li><a href="#sec-1-2">创建和管理lvm</a>
-<ul>
-<li><a href="#sec-1-2-1">分区</a></li>
-<li><a href="#sec-1-2-2">创建物理卷</a></li>
-<li><a href="#sec-1-2-3">创建卷组</a></li>
-<li><a href="#sec-1-2-4">激活卷组</a></li>
-<li><a href="#sec-1-2-5">添加新的物理卷到卷组中</a></li>
-<li><a href="#sec-1-2-6">查看物理卷信息</a></li>
-<li><a href="#sec-1-2-7">从卷组中删除一个物理卷</a></li>
-<li><a href="#sec-1-2-8">创建逻辑卷</a></li>
-<li><a href="#sec-1-2-9">创建文件系统</a></li>
-<li><a href="#sec-1-2-10">删除一个逻辑卷</a></li>
-<li><a href="#sec-1-2-11">扩展逻辑卷大小</a></li>
-<li><a href="#sec-1-2-12">减少逻辑卷大小</a></li>
-<li><a href="#sec-1-2-13">灵活</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-3">snapshot</a></li>
-<li><a href="#sec-1-4">lvm常用管理工具：</a></li>
-<li><a href="#sec-1-5">参考</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/lvm/">LVM介绍</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-LVM是建立在硬盘和分区之上的一个逻辑层，来提高磁盘分区管理的灵活性。通过LVM系统管理员可以轻松管理磁盘分区，如：将若干个磁盘分区连接为一个整块的卷组（volumegroup），形成一个存储池。管理员可以在卷组上随意创建逻辑卷组（logicalvolumes），并进一步在逻辑卷组上创建文件系统。管理员通过LVM可以方便的调整存储卷组的大小，并且可以对磁盘存储按照组的方式进行命名、管理和分配。<br/>
-而且当系统添加了新的磁盘，通过LVM管理员就不必将磁盘的文件移动到新的磁盘上以充分利用新的存储空间，而是直接扩展文件系统跨越磁盘即可。<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">LVM基本术语</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>物理存储介质（The physical media）<br/>
-这里指系统的存储设备：硬盘，如：/dev/hda1、/dev/sda等等，是存储系统最低层的存储单元。 <br/>
-</p>
-<p><br/>
-物理卷PV（physical volume）<br/>
-物理卷就是指硬盘分区或从逻辑上与磁盘分区具有同样功能的设备(如RAID)，是LVM的基本存储逻辑块，但和基本的物理存储介质（如分区、磁盘等）比较，却包含有与LVM相关的管理参数。 <br/>
-</p>
-<p><br/>
-卷组VG（Volume Group）<br/>
-LVM卷组类似于非LVM系统中的物理硬盘，其由物理卷组成。可以在卷组上创建一个或多个“LVM分区”（逻辑卷），LVM卷组由一个或多个物理卷组成。 <br/>
-</p>
-<p><br/>
-逻辑卷LV（logical volume）<br/>
-LVM的逻辑卷类似于非LVM系统中的硬盘分区，在逻辑卷之上可以建立文件系统(比如/home或者/usr等)。 <br/>
-</p>
-<p><br/>
-PE（physical extent）<br/>
-每一个物理卷被划分为称为PE(Physical Extents)的基本单元，具有唯一编号的PE是可以被LVM寻址的最小单元。PE的大小是可配置的，默认为4MB。 <br/>
-</p>
-<p><br/>
-LE（logical extent）<br/>
-逻辑卷也被划分为被称为LE(Logical Extents) 的可被寻址的基本单位。在同一个卷组中，LE的大小和PE是相同的，并且一一对应。<br/>
-</p>
-<p><br/>
-<img src="../img/lvm_vg.jpg"  alt="../img/lvm_vg.jpg" /><br/>
-</p>
-<p><br/>
-VGDA（卷组描述符区域）<br/>
-和非 LVM 系统将包含分区信息的元数据保存在位于分区起始位置的分区表中一样，逻辑卷以及卷组相关的元数据被保存在位于物理卷起始处的 VGDA 中。VGDA 包括以下内容：PV 描述符、VG 描述符、LV 描述符、和一些 PE 描述符。系统启动 LVM 时激活 VG，并将 VGDA 加载至内存，来识别 LV 的实际物理存储位置。当系统进行 I/O 操作时，就会根据 VGDA 建立的映射机制来访问实际的物理位置。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">创建和管理lvm</h3>
-<div class="outline-text-3" id="text-1-2">
-
-
-</div>
-
-<div id="outline-container-1-2-1" class="outline-4">
-<h4 id="sec-1-2-1">分区</h4>
-<div class="outline-text-4" id="text-1-2-1">
-
-<p>使用分区工具（如：fdisk等）创建LVM分区，方法和创建其他一般分区的方式是一样的，区别仅仅是LVM的分区类型为8e。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-2" class="outline-4">
-<h4 id="sec-1-2-2">创建物理卷</h4>
-<div class="outline-text-4" id="text-1-2-2">
-
-<p>创建物理卷的命令为pvcreate，利用该命令将希望添加到卷组的所有分区或者磁盘创建为物理卷。<br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">pvcreate /dev/hda5</span>
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-3" class="outline-4">
-<h4 id="sec-1-2-3">创建卷组</h4>
-<div class="outline-text-4" id="text-1-2-3">
-
-<p>创建卷组的命令为vgcreate，将使用pvcreate建立的物理卷创建为一个完整的卷组：<br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgcreate web_document /dev/hda5 /dev/hdb</span>
-</pre>
-
-vgcreate在创建卷组 web_document 以外，还设置使用大小为4 MB的PE（默认为4MB），这表示卷组上创建的所有逻辑卷都以 4 MB 为增量单位来进行扩充或缩减。由于内核原因，PE大小决定了逻辑卷的最大大小，4 MB 的PE决定了单个逻辑卷最大容量为 256 GB，若希望使用大于256G的逻辑卷则创建卷组时指定更大的PE。PE大小范围为8 KB 到 512 MB，并且必须总是 2 的倍数（使用-s指定）<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-4" class="outline-4">
-<h4 id="sec-1-2-4">激活卷组</h4>
-<div class="outline-text-4" id="text-1-2-4">
-
-
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgchange -ay web_document</span>
-</pre>
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-5" class="outline-4">
-<h4 id="sec-1-2-5">添加新的物理卷到卷组中</h4>
-<div class="outline-text-4" id="text-1-2-5">
-
-<p>当系统安装了新的磁盘并创建了新的物理卷，而要将其添加到已有卷组时，就需要使用vgextend命令：<br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgextend web_document /dev/hdc1</span>
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-6" class="outline-4">
-<h4 id="sec-1-2-6">查看物理卷信息</h4>
-<div class="outline-text-4" id="text-1-2-6">
-
-
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">pvdisplay /dev/hda1</span>
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-7" class="outline-4">
-<h4 id="sec-1-2-7">从卷组中删除一个物理卷</h4>
-<div class="outline-text-4" id="text-1-2-7">
-
-<p>要从一个卷组中删除一个物理卷，首先要确认要删除的物理卷没有被任何逻辑卷正在使用.<br/>
-如果某个物理卷正在被逻辑卷所使用，就需要将该物理卷的数据备份到其他地方，然后再删除。<br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgreduce web_document /dev/hda1</span>
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-8" class="outline-4">
-<h4 id="sec-1-2-8">创建逻辑卷</h4>
-<div class="outline-text-4" id="text-1-2-8">
-
-
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvcreate -L1500 &#8211;n www1 web_document</span>
-</pre>
-
-该命令就在卷组web_document上创建名字为www1，大小为1500M的逻辑卷，并且设备入口为/dev/web_document/www1<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-9" class="outline-4">
-<h4 id="sec-1-2-9">创建文件系统</h4>
-<div class="outline-text-4" id="text-1-2-9">
-
-<p>推荐使用reiserfs文件系统，来替代ext2和ext3<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-10" class="outline-4">
-<h4 id="sec-1-2-10">删除一个逻辑卷</h4>
-<div class="outline-text-4" id="text-1-2-10">
-
-<p>删除逻辑卷以前首先需要将其卸载，然后删除：<br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">umount /dev/web_document/www1</span>
-<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvremove /dev/web_document/www1</span>
-</pre>
-
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-11" class="outline-4">
-<h4 id="sec-1-2-11">扩展逻辑卷大小</h4>
-<div class="outline-text-4" id="text-1-2-11">
-
-<p>LVM提供了方便调整逻辑卷大小的能力，扩大为12G<br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvextend -L12G /dev/web_document/www1</span>
-&#22686;&#21152;1G
-<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvextend -L+1G /dev/web_document/www1</span>
-</pre>
-
-
-增加了逻辑卷的容量以后，就需要修改文件系统大小以实现利用扩充的空间。笔者推荐使用reiserfs文件系统来替代ext2或者ext3。因此这里仅仅讨论reiserfs的情况。Reiserfs文件工具提供了文件系统大小调整工具：resize_reiserfs。对于希望调整被加载的文件系统大小：<br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">resize_reiserfs -f /dev/web_document/www1</span>
-</pre>
-
-
-对于使用ext2或ext3文件系统的用户可以考虑使用工具<br/>
-ext2resize。<br/>
-<a href="http://sourceforge.net/projects/ext2resize">http://sourceforge.net/projects/ext2resize</a><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-12" class="outline-4">
-<h4 id="sec-1-2-12">减少逻辑卷大小</h4>
-<div class="outline-text-4" id="text-1-2-12">
-
-<p>使用lvreduce即可实现对逻辑卷的容量，同样需要首先将文件系统卸载：<br/>
-要先减少文件系统，然后再减少逻辑卷<br/>
-</p>
-<p><br/>
-<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">umount /data/wwwroot</span>
-<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">resize_reiserfs -s-2G /dev/web_document/www1</span>
-<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvreduce -L-2G /dev/web_document/www1</span>
-<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">mount -treiserfs /dev/web_document/www1 /data/wwwroot</span>
-</pre>
-
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-13" class="outline-4">
-<h4 id="sec-1-2-13">灵活</h4>
-<div class="outline-text-4" id="text-1-2-13">
-
-<p>逻辑卷可以再组合成pv，和vg，再次进行lvm。<br/>
-而且一个卷组可以跨多个磁盘。<br/>
-如果想自己做实验可以自己创建空洞文件进行lvm练习。<br/>
-</p>
-<p><br/>
-<pre class="src src-sh">dd <span style="color: #ff1493;">if</span>=/dev/zore <span style="color: #ff1493;">of</span>=./loop1.img <span style="color: #ff1493;">bs</span>=1G <span style="color: #ff1493;">count</span>=0 <span style="color: #ff1493;">seek</span>=100
-</pre>
-
-这就创建了一个100G的稀疏文件，文件大小是100G，但占用的空间是0.<br/>
-然后使用losetup进行加载。就可以当/dev/loop0 磁盘使用了。<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">snapshot</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>lvm可以创建镜像，创建时选择创建允许多大的空间用于记录变化。<br/>
-创建镜像后实际上就是和原始lv独立，但如果原始lv删掉了，则所有的snap也就丢失了。<br/>
-snap和原始lv都可以后续修改，而且snap可以和原始lv进行合并，使原始lv变为snap当前的样子。<br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">lvm常用管理工具：</h3>
-<div class="outline-text-3" id="text-1-4">
-
-
-<p><br/>
-</p><table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-<caption></caption>
-<colgroup><col class="left" /><col class="left" /><col class="left" /><col class="left" />
-</colgroup>
-<tbody>
-<tr><td class="left">功能</td><td class="left">物理卷</td><td class="left">卷组</td><td class="left">逻辑卷</td></tr>
-<tr><td class="left">扫描</td><td class="left">pvscan</td><td class="left">vgscan</td><td class="left">lvscan</td></tr>
-<tr><td class="left">查看</td><td class="left">pvdisplay</td><td class="left">vgdisplay</td><td class="left">lvdisplay</td></tr>
-<tr><td class="left">新建</td><td class="left">pvcreat</td><td class="left">vgcreat</td><td class="left">lvcreat</td></tr>
-<tr><td class="left">卸载</td><td class="left">pvremove</td><td class="left">vgremove</td><td class="left">lvremove</td></tr>
-<tr><td class="left">增大</td><td class="left">无</td><td class="left">vgextend</td><td class="left">lvextend</td></tr>
-<tr><td class="left">减小</td><td class="left">无</td><td class="left">vgreduce</td><td class="left">lvreduce</td></tr>
-</tbody>
-</table>
-
-
-<p><br/>
-lvs<br/>
-pvs<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">参考</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<p><a href="http://blog.csdn.net/steelren/article/details/1931363">http://blog.csdn.net/steelren/article/details/1931363</a><br/>
-</p>
-<p><br/>
-LVM-HOWTO<br/>
-<a href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a><br/>
-</p>
-<p><br/>
-一些操作例子<br/>
-<a href="http://sapling.me/unixlinux/lvm_howto.html">http://sapling.me/unixlinux/lvm\_howto.html</a><br/>
-</p></div>
-</div>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[先衰竭训练法]]></title>
-    <link href="http://emmoblin.github.com/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/"/>
-    <updated>2013-02-12T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2013/02/12/xian-shuai-jie-xun-lian-fa</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">先衰竭训练法</a>
-<ul>
-<li><a href="#sec-1-1">先衰竭训练法</a></li>
-<li><a href="#sec-1-2">胸大肌的先衰竭训练法</a></li>
-<li><a href="#sec-1-3">三角肌的先衰竭训练法：</a></li>
-<li><a href="#sec-1-4">肱三头肌的先衰竭训练法</a></li>
-<li><a href="#sec-1-5">竖脊肌（后腰）的先衰竭训练法</a></li>
-<li><a href="#sec-1-6">大腿的先衰竭训练法</a></li>
-<li><a href="#sec-1-7">背阔肌的先衰竭训练法</a></li>
-<li><a href="#sec-1-8">总结</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">先衰竭训练法</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>先衰竭法是目前增大肌肉围径的有效方法。<br/>
-其做法是要想发展那块肌肉，先选择只发展这块肌肉的局部肌肉练习来训练，做8-10次直到疲劳，使其衰竭，然后在3-5秒之内跑向另一器械，做一个以发展这块肌肉为主的综合肌肉群练习，用70％的重量做到极限，这样交替训练4组左右，肌肉会感受到极大的刺激。据研究，这样能有效地刺激肌肉生长，促进其发育。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">胸大肌的先衰竭训练法</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>发达胸大肌的局部有效练习：仰卧飞鸟；<br/>
-发达胸大肌综合肌群的练习：卧推（包括宽握、中握、窄握），它除了发展胸大肌外，还能发展肱三头肌、三角肌前部和前锯肌。<br/>
-</p>
-<p>  <br/>
-先用只能举8-10次的重量做仰卧飞鸟练习，直到起不来，<br/>
-紧接着跑到卧推架前用事先准备好的60-70％重量做卧推，尽力举次数，直到起不来算一组，<br/>
-共做4组左右，累计总运动量为8组约50次左右。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">三角肌的先衰竭训练法：</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>发达三角肌的局部肌肉练习：哑铃前平举 主要发展三角肌前束；哑铃侧平举主要发展三角肌中束；俯身后斜举主要发展三角肌后束。<br/>
-发达三角肌的综合练习：颈后宽推，这个练习既能发展三角肌，还能发展肱三头肌，对胸大肌、前锯肌也有影响。<br/>
-</p>
-<p>  <br/>
-为发达三角肌将这两个有效练习有机地结合在一起训练，其效果会更好。<br/>
-每组动作：是先用只能平举8-10次的重量做哑铃来练习。直到起不来，紧接着跑到放置在另一侧的杠铃前，用做（70％），直到一个起不来算一大组，共做4大组。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">肱三头肌的先衰竭训练法</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>发达肱三头肌的局部肌肉练习：各种臂屈伸，如颈后臂屈伸、弓身臂屈伸等<br/>
-发达肱三头肌的综合练习：是窄卧推<br/>
-</p>
-<p> <br/>
-先做颈后臂屈伸6-10次直到疲劳，然后迅速跑向深蹲架前拿起架上事先放好的杠铃（杠铃重量为自己最高重量的60-70％），<br/>
-连续举直到起不来，这样两种练习算一大组，共做4大组，肱三头肌就会很胀，刺激很深。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">竖脊肌（后腰）的先衰竭训练法</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<p>发达后腰竖脊肌的局部肌肉练习：负重山羊挺身<br/>
-发达后腰竖脊肌的综合练习：弓身、屈腿硬拉等。<br/>
-</p>
-<p><br/>
-<img src="../img/shanyangtingshen.gif"  alt="../img/shanyangtingshen.gif" /><br/>
-先在山羊上做负重挺身6-10次直到挺不起为止，紧接着跑向深蹲架前肩负杠铃做弓身练习（或做硬拉），直到疲劳。将这两个练习组合在一起训练4组，背肌就能得到很好的刺激。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">大腿的先衰竭训练法</h3>
-<div class="outline-text-3" id="text-1-6">
-
-<p>发达股四头肌的局部肌肉练习：负重腿屈伸<br/>
-发达腿部肌肉的综合肌群练习：深蹲，<br/>
-<img src="../img/qutui.gif"  alt="../img/qutui.gif" /><br/>
-</p>
-<p><br/>
-尽力做8次左右负重腿屈伸，紧接着做也尽力做6-8次深蹲，这样交叉轮换做8组（4大组）约50次，股四头肌就会因刺激较深而发胀。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7" class="outline-3">
-<h3 id="sec-1-7">背阔肌的先衰竭训练法</h3>
-<div class="outline-text-3" id="text-1-7">
-
-<p>发达背阔肌的局部肌肉练习：宽握颈后引体向上<br/>
-发达背阔肌的综合练习：坐姿划船<br/>
-</p>
-<p> <br/>
-先宽握颈后引体向上10-15次直到拉不起为止，紧接着跑向做坐姿划船练习，直到疲劳。将这两个练习组合在一起训练4组，背阔肌就能得到很好的刺激。 <br/>
-</p>
-<p> <br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-8" class="outline-3">
-<h3 id="sec-1-8">总结</h3>
-<div class="outline-text-3" id="text-1-8">
-
-<p>先衰竭原理之所以先进，从理论上讲它符合极限负荷后的超量恢复的原则。<br/>
-这是因为肌体精疲力竭地负荷之后，首先功能能力大大减退，紧接着在恢复防疲肌体由适应一提高，超过它原有的水平。<br/>
 </p></div>
 </div>
 </div>

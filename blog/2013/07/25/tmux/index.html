@@ -1,0 +1,446 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>tmux - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2013/07/25/tmux">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">Tmux</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-25T00:00:00+08:00" pubdate data-updated="true">2013年07月25日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">tmux终端复用软件</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>tmux是一个优秀的终端复用软件，类似GNU Screen，但来自于OpenBSD，采用BSD授权。<br/>
+使用它最直观的好处就是，通过一个终端登录远程主机并运行tmux后，<br/>
+在其中可以开启多个控制台而无需再使用更多的SSH会话来连接这台远程主机；其功能远不止于此。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">CS模式，掉线不退出</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>tmux使用C/S模型构建，主要包括以下单元模块：<br/>
+</p>
+<p><br/>
+一个tmux命令执行后启动一个tmux服务<br/>
+一个tmux服务可以拥有多个session，一个session可以看作是tmux管理下的伪终端的一个集合<br/>
+一个session可能会有多个window与之关联，每个window都是一个伪终端，会占据整个屏幕<br/>
+一个window可以被分割成多个pane<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">tmux快捷键</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>tmux在会话中使用大量的快捷键来控制多个窗口、多个会话等。<br/>
+</p>
+<p><br/>
+Ctrl+b  #激活控制台；此时以下按键生效   <br/>
+系统操作   <br/>
+</p>
+<p><br/>
+<pre class="src src-sh">?   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21015;&#20986;&#25152;&#26377;&#24555;&#25463;&#38190;&#65307;&#25353;q&#36820;&#22238;   </span>
+d   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#33073;&#31163;&#24403;&#21069;&#20250;&#35805;&#65307;&#36825;&#26679;&#21487;&#20197;&#26242;&#26102;&#36820;&#22238;Shell&#30028;&#38754;&#65292;&#36755;&#20837;tmux attach&#33021;&#22815;&#37325;&#26032;&#36827;&#20837;&#20043;&#21069;&#30340;&#20250;&#35805;   </span>
+D   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36873;&#25321;&#35201;&#33073;&#31163;&#30340;&#20250;&#35805;&#65307;&#22312;&#21516;&#26102;&#24320;&#21551;&#20102;&#22810;&#20010;&#20250;&#35805;&#26102;&#20351;&#29992;   </span>
+Ctrl+z  <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#25346;&#36215;&#24403;&#21069;&#20250;&#35805;   </span>
+r   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#24378;&#21046;&#37325;&#32472;&#26410;&#33073;&#31163;&#30340;&#20250;&#35805;   </span>
+s   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36873;&#25321;&#24182;&#20999;&#25442;&#20250;&#35805;&#65307;&#22312;&#21516;&#26102;&#24320;&#21551;&#20102;&#22810;&#20010;&#20250;&#35805;&#26102;&#20351;&#29992;   </span>
+:   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36827;&#20837;&#21629;&#20196;&#34892;&#27169;&#24335;&#65307;&#27492;&#26102;&#21487;&#20197;&#36755;&#20837;&#25903;&#25345;&#30340;&#21629;&#20196;&#65292;&#20363;&#22914;kill-server&#21487;&#20197;&#20851;&#38381;&#26381;&#21153;&#22120;   </span>
+[   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36827;&#20837;&#22797;&#21046;&#27169;&#24335;&#65307;&#27492;&#26102;&#30340;&#25805;&#20316;&#19982;vi/emacs&#30456;&#21516;&#65292;&#25353;q/Esc&#36864;&#20986;   </span>
+&#65341;  copy
+~   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21015;&#20986;&#25552;&#31034;&#20449;&#24687;&#32531;&#23384;&#65307;&#20854;&#20013;&#21253;&#21547;&#20102;&#20043;&#21069;tmux&#36820;&#22238;&#30340;&#21508;&#31181;&#25552;&#31034;&#20449;&#24687;   </span>
+</pre>
+
+窗口操作   <br/>
+</p>
+<p><br/>
+<pre class="src src-sh">c   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21019;&#24314;&#26032;&#31383;&#21475;   </span>
+&amp;   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20851;&#38381;&#24403;&#21069;&#31383;&#21475;   </span>
+&#25968;&#23383;&#38190; <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20999;&#25442;&#33267;&#25351;&#23450;&#31383;&#21475;   </span>
+p   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20999;&#25442;&#33267;&#19978;&#19968;&#31383;&#21475;   </span>
+n   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20999;&#25442;&#33267;&#19979;&#19968;&#31383;&#21475;   </span>
+l   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#21069;&#21518;&#20004;&#20010;&#31383;&#21475;&#38388;&#20114;&#30456;&#20999;&#25442;   </span>
+w   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36890;&#36807;&#31383;&#21475;&#21015;&#34920;&#20999;&#25442;&#31383;&#21475;   </span>
+,   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#37325;&#21629;&#21517;&#24403;&#21069;&#31383;&#21475;&#65307;&#36825;&#26679;&#20415;&#20110;&#35782;&#21035;   </span>
+<span style="color: #a52a2a;">.</span>   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20462;&#25913;&#24403;&#21069;&#31383;&#21475;&#32534;&#21495;&#65307;&#30456;&#24403;&#20110;&#31383;&#21475;&#37325;&#26032;&#25490;&#24207;   </span>
+f   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#25152;&#26377;&#31383;&#21475;&#20013;&#26597;&#25214;&#25351;&#23450;&#25991;&#26412;   </span>
+</pre>
+
+面板操作   <br/>
+</p>
+<p><br/>
+<pre class="src src-sh">&#8221;   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#23558;&#24403;&#21069;&#38754;&#26495;&#24179;&#20998;&#20026;&#19978;&#19979;&#20004;&#22359;   </span>
+%   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#23558;&#24403;&#21069;&#38754;&#26495;&#24179;&#20998;&#20026;&#24038;&#21491;&#20004;&#22359;   </span>
+x   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20851;&#38381;&#24403;&#21069;&#38754;&#26495;   </span>
+!   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#23558;&#24403;&#21069;&#38754;&#26495;&#32622;&#20110;&#26032;&#31383;&#21475;&#65307;&#21363;&#26032;&#24314;&#19968;&#20010;&#31383;&#21475;&#65292;&#20854;&#20013;&#20165;&#21253;&#21547;&#24403;&#21069;&#38754;&#26495;   </span>
+Ctrl+&#26041;&#21521;&#38190;    <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20197;1&#20010;&#21333;&#20803;&#26684;&#20026;&#21333;&#20301;&#31227;&#21160;&#36793;&#32536;&#20197;&#35843;&#25972;&#24403;&#21069;&#38754;&#26495;&#22823;&#23567;   </span>
+Alt+&#26041;&#21521;&#38190; <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20197;5&#20010;&#21333;&#20803;&#26684;&#20026;&#21333;&#20301;&#31227;&#21160;&#36793;&#32536;&#20197;&#35843;&#25972;&#24403;&#21069;&#38754;&#26495;&#22823;&#23567;   </span>
+Space   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#39044;&#32622;&#30340;&#38754;&#26495;&#24067;&#23616;&#20013;&#24490;&#29615;&#20999;&#25442;&#65307;&#20381;&#27425;&#21253;&#25324;even-horizontal&#12289;even-vertical&#12289;main-horizontal&#12289;main-vertical&#12289;tiled   </span>
+q   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#26174;&#31034;&#38754;&#26495;&#32534;&#21495;   </span>
+o   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#24403;&#21069;&#31383;&#21475;&#20013;&#36873;&#25321;&#19979;&#19968;&#38754;&#26495;   </span>
+&#26041;&#21521;&#38190; <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#31227;&#21160;&#20809;&#26631;&#20197;&#36873;&#25321;&#38754;&#26495;   </span>
+{   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21521;&#21069;&#32622;&#25442;&#24403;&#21069;&#38754;&#26495;   </span>
+}   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21521;&#21518;&#32622;&#25442;&#24403;&#21069;&#38754;&#26495;   </span>
+Alt+o   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36870;&#26102;&#38024;&#26059;&#36716;&#24403;&#21069;&#31383;&#21475;&#30340;&#38754;&#26495;   </span>
+Ctrl+o  <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#39034;&#26102;&#38024;&#26059;&#36716;&#24403;&#21069;&#31383;&#21475;&#30340;&#38754;&#26495;  </span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">配置文件</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>tmux配置文件在~/.tmux.conf和/etc/tmux.conf中，配置文件中可以修改默认绑定的快捷键<br/>
+</p>
+<p><br/>
+配置文件示例：<br/>
+</p>
+<p><br/>
+set-option -g base-index 1                        #窗口的初始序号；默认为0，这里设置为1   <br/>
+set-option -g display-time 5000                   #提示信息的持续时间；设置足够的时间以避免看不清提示，单位为毫秒   <br/>
+set-option -g repeat-time 1000                    #控制台激活后的持续时间；设置合适的时间以避免每次操作都要先激活控制台，单位为毫秒   <br/>
+set-option -g status-keys vi                      #操作状态栏时的默认键盘布局；可以设置为vi或emacs   <br/>
+set-option -g status-right &#8220;#(date +%H:%M&#8217; &#8216;)&#8221;    #状态栏右方的内容；这里的设置将得到类似23:59的显示   <br/>
+set-option -g status-right-length 10              #状态栏右方的内容长度；建议把更多的空间留给状态栏左方（用于列出当前窗口）   <br/>
+set-option -g status-utf8 on                      #开启状态栏的UTF-8支持   <br/>
+</p>
+<p>  <br/>
+set-window-option -g mode-keys vi    #复制模式中的默认键盘布局；可以设置为vi或emacs   <br/>
+set-window-option -g utf8 on         #开启窗口的UTF-8支持   <br/>
+</p>
+<p>  <br/>
+set-option -g prefix C-a   <br/>
+unbind-key C-b   <br/>
+bind-key C-a send-prefix   <br/>
+</p>
+<p>  <br/>
+bind-key z kill-session                     #按z结束当前会话；相当于进入命令行模式后输入kill-session   <br/>
+bind-key h select-layout even-horizontal    #按h将当前面板布局切换为even-horizontal；相当于进入命令行模式后输入select-layout even-horizontal   <br/>
+bind-key v select-layout even-vertical      #按v将当前面板布局切换为even-vertical；相当于进入命令行模式后输入select-layout even-vertical   <br/>
+</p></div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-25T00:00:00+08:00" pubdate data-updated="true">2013年07月25日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/tools/'>tools</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2013/06/16/virsh-note/" title="Previous Post:
+        virsh使用">&laquo; virsh使用</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2013/08/05/bond-mode/"
+        title="Next Post: bond的几种mode">bond的几种mode
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><img src="/images/my_avatar.jpg"></p>
+  <p>网络工程师，喜欢折腾linux，emacs。</p>
+  <p>坚持理想，相信一定会实现。</p>
+  <p><a href="mailto:emmoblin@gmail.com"><img src="/images/my_email.png" alt="emmoblin@gmail.com"></a></p>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/efficiency'>efficiency (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/libvirt'>libvirt (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/network'>network (2)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (4)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (13)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/05/bond-mode/">bond的几种mode</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/25/tmux/">tmux</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/16/virsh-note/">virsh使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/11/nic-offload/">网卡offload</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/08/10/">提升软件开发者生产力的10个提示</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+  <br> <script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2013/07/25/tmux/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2013/07/25/tmux/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

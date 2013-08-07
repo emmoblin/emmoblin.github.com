@@ -1,0 +1,683 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>distcc和dmucs分布式编译环境的负载均衡 - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2013/03/27/distcc-dmucs">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">Distcc和dmucs分布式编译环境的负载均衡</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-27T00:00:00+08:00" pubdate data-updated="true">2013年03月27日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">distcc和dmucs分布式编译环境的负载均衡</a>
+<ul>
+<li><a href="#sec-1-1">使用distcc分布式编译的特点与潜在问题</a></li>
+<li><a href="#sec-1-2">一种实现负载均衡的解决方案：使用 DMUCS</a></li>
+<li><a href="#sec-1-3">DMUCS 以下四个部分程序组成。</a>
+<ul>
+<li><a href="#sec-1-3-1">dmucs 主服务程序</a></li>
+<li><a href="#sec-1-3-2">Loadavg 监控程序</a></li>
+<li><a href="#sec-1-3-3">gethost 编译命令</a></li>
+<li><a href="#sec-1-3-4">Monitor 管理程序（非必须）</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">distcc</a>
+<ul>
+<li><a href="#sec-1-4-1">distcc</a></li>
+<li><a href="#sec-1-4-2">distccd</a></li>
+<li><a href="#sec-1-4-3">distccmon-text</a></li>
+<li><a href="#sec-1-4-4">distccmon-gnome</a></li>
+<li><a href="#sec-1-4-5">Distcc配置</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">dmucs配置</a></li>
+<li><a href="#sec-1-6">从官网的说明</a>
+<ul>
+<li><a href="#sec-1-6-1">pump mode</a></li>
+<li><a href="#sec-1-6-2">编译器如果是绝对路径</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-7">联合使用ccache和distcc</a></li>
+<li><a href="#sec-1-8">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/03/27/distcc-dmucs/">distcc和dmucs分布式编译环境的负载均衡</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">使用distcc分布式编译的特点与潜在问题</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>  作为经典的分布式编译工具，distcc 在日常工作中常为我们使用来解决大型项目在单一工作站上编译较慢的问题。<br/>
+其主要用于对 C, Object C 以及 C++ 代码进行并行编译，将可以并行的编译任务分布于编译集群中的各个工作站，有效利用各机器资源，达到整体编译性能的成倍提升。<br/>
+  在类 Unix 系统上，distcc 使用 sendfile 系统调用在不同工作节点之间传送文件，尽管这种网络文件传输会占用一定的时间，他们对工作机的 CPU 资源占用却很小，<br/>
+而且这种分发任务的方式能够简化构建环境的配置，distcc 在这方面同早期的一些基于共享文件系统的分布编译环境 (dmake, pvmmake 等等 ) 相比几乎是 0 配置。<br/>
+  distcc 对各个编译节点的本地系统库及头文件基本没有要求，即使在不同的节点上这些组件的版本不同也不会影响到最终编译结果的正确性，<br/>
+实际情况是 distcc 会在本地 (client机) 完成存在版本依赖的编译任务。<br/>
+  这个在本地做过预处理的 ASCII 源文件及其他命令行选项即可唯一确定一个目标文件，而与此任务在哪台机器上运行无关，通过分发这种任务到各个节点，即可消除对头文件的依赖。<br/>
+同理 distcc 通过在任务的分发节点做链接来消除对库文件的依赖。<br/>
+  然而，distcc 的缺点在于其负载均衡算法过于简单，distcc 的代理进程对各个工作机当前的负荷没有感知，分发预处理文件的唯一依据是主机出现在DISTCC_HOST环境变量中的次序，<br/>
+主机名越靠前，就会得到更多的编译任务，然而当编译场中某些机器性能过差，整体编译性能会显著下降，当阻塞 Make 运行的编译任务运行在这些机器上的时候，这种性能变化尤为明显。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">一种实现负载均衡的解决方案：使用 DMUCS</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>毫无疑问，在上述编译集群中，有必要采用负载均衡来使编译系能得到最大的优化。这就需要在编译集群中增加监控各工作机工作量的监控程序，动态检测和平衡编译机的负载。<br/>
+一个有效的方案是使用 DMUCS（Distributed Multi-User Compilation System）应用。DMUCS 是一个实现于 distcc 之上的动态平衡和任务分布程序。它可以：<br/>
+</p>
+<p><br/>
+　　支持多用户同时编译，扩展性好，可以很好处理新增的负载。<br/>
+　　支持多种操作系统所组成的编译集群。<br/>
+　　可以使用具有多处理器（多核）编译主机的所有处理资源。<br/>
+　　可以充分使用具有不同处理速度的编译主机，使整体编译性能达到最优。<br/>
+　　可以保证参与编译的主机不会由于编译任务而产生超负载的情况。<br/>
+　　考虑到了编译主机上由非编译任务所引起的负载情况。<br/>
+　　支持从编译集群中动态的增加或者移除编译主机。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">DMUCS 以下四个部分程序组成。</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">dmucs 主服务程序</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>DMUCS 解决方案的核心服务程序。每个编译集群仅运行一个 dmucs 主服务程序，其运行于哪一台主机上没有限制。<br/>
+该程序从一个配置文件读出编译场里处理器数目和每个可能主机的“潜能”。<br/>
+然后从网络接收每个编译主机的平均负载信息，编译任务数量和监控程序得到的编译请求信息。<br/>
+dmucs 管理一个编译场里主机的数据库，并调度主机去编译任务，当有编译请求时给出可用的最快的主机。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">Loadavg 监控程序</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p>编译场的每个参与编译的主机上均需要启动这个程序。loadavg 定期发送编译主机的平均负载到 dmucs 服务器。<br/>
+这样当某个主机的平均负载太高时，dmucs 服务器会将不会优先给该主机分配编译任务。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3">gethost 编译命令</h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+<p>gethost 是具体进行编译的命令，其运行于distcc之上。<br/>
+该命令从运行dmucs主服务程序的主机获取编译集群中的机器信息来获得放进 DISTCC_HOSTS 环境变量里的主机，然后调用所分配的编译机进行编译。<br/>
+在编译结束后，gethost 释放所分配的主机到 dmucs 主服务器。用户使用“make CXX=gethost distcc”来启动编译。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4">Monitor 管理程序（非必须）</h4>
+<div class="outline-text-4" id="text-1-3-4">
+
+<p>编译集群的管理员可以使用这个程序监控编译场的繁忙情况。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">distcc</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>distcc 会安装如下可执行文件：<br/>
+</p>
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">distcc</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<p>整个编译任务通常由一台机器发起，在 distcc 编译环境下，这台机器被称为 client，client 必须使用 distcc 来替代原有的 GNU 编译器命令，<br/>
+由于 distcc 的后台编辑程序仍然是 GNU 编译器，distcc 与 gcc, g++, cc, c++ 等程序的编译参数兼容。<br/>
+distcc 必须与 Make 命令的 -j 参数协同使用，client 机通过指定此参数来定义并发编译的任务数。在默认情况下，一台编译机的 distcc 允许的并发任务的数量是 CPU 数量 +2。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2">distccd</h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+<p>distccd 是运行在编译场内各个节点上的 distcc 代理程序，distccd 的常用参数如下：<br/>
+　　-j: 指定可以在本节点上运行的最大任务数；<br/>
+　　-N: 如果编译节点上运行有其他重要任务，可以通过指定 -N 参数来调整编译进程的运行优先级；<br/>
+　　-a: 指定 distccd 可以接受来自哪些节点的连接请求，-a 参数的值可以是一个网段，也可以是所有编辑节点主机名 (IP 地址 ) 的列表。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-3" class="outline-4">
+<h4 id="sec-1-4-3">distccmon-text</h4>
+<div class="outline-text-4" id="text-1-4-3">
+
+<p>可以通过运行 distccmon-text 来通过一个字符界面监控整个编译任务，此命令唯一的参数是监控任务的刷新间隔 ( 秒 )。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-4" class="outline-4">
+<h4 id="sec-1-4-4">distccmon-gnome</h4>
+<div class="outline-text-4" id="text-1-4-4">
+
+<p>一个图形化的监控前端，下图是此程序的一个运行实例。其中，任务进度指示条颜色的意义分别为：<br/>
+绿色：compiling；紫色：preprocessing；蓝色：receiving；橙色：connecting；白色：idle;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-5" class="outline-4">
+<h4 id="sec-1-4-5">Distcc配置</h4>
+<div class="outline-text-4" id="text-1-4-5">
+
+<p>Distcc client 通过配置环境变量 DISTCC_HOSTS 来指定编译场中的各个节点，具体命令如：<br/>
+export　DISTCC_HOSTS=&#8221;192.168.1.1,　192.168.1.2&#8221;<br/>
+</p>
+<p><br/>
+还有配置文件/etc/default/distcc<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">dmucs配置</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>在/etc/init.d/distcc中添加<br/>
+ps aux | sed &#8216;/grep/d&#8217; | grep -q loadavg || loadavg -s A-desktop &amp;<br/>
+DEAMON_ARGS=&#8221;-j4 &ndash;pid-file&hellip;&hellip;&#8221;<br/>
+</p>
+<p><br/>
+loadavg -s 是为了向主机A-desktop发送编译负载信息。<br/>
+最后在DEAMON_ARGS参数中加入-jN,N表示当前机器上将运行几个编译进程。<br/>
+</p>
+<p><br/>
+配置dmucs<br/>
+sudo vi /etc/default/dmucs<br/>
+SERVER=yes<br/>
+dmucs 是用于接收loadavg发送过来的编译负载信息，以及编译数据，用于在server端建立一个TCP的监听端口。<br/>
+默认监听端口为9714，client端loadavg会与server端的dumucs建立TCP连接，发送和接收数据<br/>
+可以用lsof | grep 9714 查看dmucs，当然先要启动dmucs。<br/>
+最后再server上启动dmucs，和 distcc 守护进程<br/>
+sudo /etc/init.d/dmucs start<br/>
+sudo /etc/init.d/distcc start<br/>
+在distcc中运行loadavg的意思是，server也参与编译工作。自己做自己的client。<br/>
+</p>
+<p><br/>
+client端设置，以B为例，C以此类推<br/>
+设置/etc/default/distcc<br/>
+sudo vi /etc/default/distcc<br/>
+STARTDISTCC=&#8221;true&#8221;<br/>
+ALLOWEDNETS=&#8221;127.0.0.1 192.168.0.1/16&#8221;<br/>
+LISTENER=&#8221;192.168.0.2&#8221;<br/>
+其他参数不变。<br/>
+一般来说，LISTENER设置为本机Ip就可以了。<br/>
+</p>
+<p><br/>
+所以我们可以用如下命令代替，它可以自动搜索到本机ip，所以即使client重启ip变了，也不用担心<br/>
+LISTENER=`ifconfig | grep &#8216;192.168&#8217; | cut -d: -f2 | awk &#8216;{ print $1}&#8217; | head -n1`<br/>
+</p>
+<p><br/>
+启动distcc 守护进程，client端不用启动dmucs，<br/>
+sudo /etc/init.d/distcc start<br/>
+</p>
+<p><br/>
+最后在client端设置编译参数：<br/>
+sudo vi ~/.bashrc<br/>
+加入：<br/>
+export ARCH=arm<br/>
+export CROSS_COMPILE=&#8221;gethost &ndash;server A-desktop distcc arm-XXX-eabi-&#8221;<br/>
+以同样的方式配置C完成以后就可以开始编译了，<br/>
+</p>
+<p><br/>
+选取一个linux kernel编译<br/>
+make arm_defconfig<br/>
+make -j20<br/>
+console 会显示distcc的编译相关信息，<br/>
+同时可以在当前编译的机器上，另外开一个console上输入distccmon-text来查看distcc分派编译包的信息<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">从官网的说明</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>60-second instructions<br/>
+</p>
+<p><br/>
+</p><ol>
+<li>For each machine, download distcc, unpack, and do<br/>
+   ./configure &amp;&amp; make &amp;&amp; sudo make install<br/>
+</li>
+<li>On each of the servers, run distccd &ndash;daemon, with &ndash;allow options to restrict access.<br/>
+</li>
+<li>Put the names of the servers in your environment:<br/>
+   export DISTCC_POTENTIAL_HOSTS=&#8217;localhost red green blue&#8217;<br/>
+</li>
+<li>Build!<br/>
+   cd ~/work/myproject; pump make -j8 CC=distcc<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1">pump mode</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<p>注意dictcc3版本以后添加了pump模式。<br/>
+In &#8220;pump&#8221; mode, distcc sends source file with their included header files to the compilation servers, which now carry out both preprocessing and compilation. As a result, distcc-pump can distribute files up to 10 times faster to compilation servers than distcc.<br/>
+</p>
+<p><br/>
+distcc-pump is easily deployed through a wrapper script around an existing build command, such as &#8216;make&#8217;. Pump mode uses the system header files from the compilation servers, so it works best if all of your compilation servers are configured identically, or if you use cross-compilers that come with their own system header files.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2">编译器如果是绝对路径</h4>
+<div class="outline-text-4" id="text-1-6-2">
+
+<p>If the compiler name is an absolute path, it is passed verbatim to the server and the compiler is run from that directory. For example:<br/>
+distcc /usr/local/bin/gcc-3.1415 -c hello.c<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">联合使用ccache和distcc</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>网上说：<br/>
+联合使用distcc和ccache的效果就和仅使用 distcc一样。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">参考</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p><a href="http://distcc.samba.org/">http://distcc.samba.org/</a><br/>
+<a href="http://dmucs.sourceforge.net/">http://dmucs.sourceforge.net/</a><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-27T00:00:00+08:00" pubdate data-updated="true">2013年03月27日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/tools/'>tools</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2013/03/19/emacs-desktop/" title="Previous Post:
+        emacs的desktop保存">&laquo; emacs的desktop保存</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2013/04/04/mysql-cmd/"
+        title="Next Post: mysql命令行">mysql命令行
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><img src="/images/my_avatar.jpg"></p>
+  <p>网络工程师，喜欢折腾linux，emacs。</p>
+  <p>坚持理想，相信一定会实现。</p>
+  <p><a href="mailto:emmoblin@gmail.com"><img src="/images/my_email.png" alt="emmoblin@gmail.com"></a></p>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/efficiency'>efficiency (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/libvirt'>libvirt (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/network'>network (2)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (4)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (13)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/05/bond-mode/">bond的几种mode</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/25/tmux/">tmux</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/16/virsh-note/">virsh使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/11/nic-offload/">网卡offload</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/08/10/">提升软件开发者生产力的10个提示</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+  <br> <script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2013/03/27/distcc-dmucs/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2013/03/27/distcc-dmucs/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

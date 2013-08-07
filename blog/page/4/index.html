@@ -109,6 +109,1702 @@
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2013/02/13/octopress-install/">Octopress安装和定制</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-13T00:00:00+08:00" pubdate data-updated="true">2013年02月13日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">octopress安装和定制</a>
+<ul>
+<li><a href="#sec-1-1">ruby安装</a>
+<ul>
+<li><a href="#sec-1-1-1">touble shot：</a>
+<ul>
+<li><a href="#sec-1-1-1-1">在zsh中，启动rbenv init -会提示错误</a></li>
+<li><a href="#sec-1-1-1-2">安装ruby rehash</a></li>
+<li><a href="#sec-1-1-1-3">openssl</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">安装octopress</a></li>
+<li><a href="#sec-1-3">Deploying to Github Pages</a>
+<ul>
+<li><a href="#sec-1-3-1">gh-pages</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">重新安装octopress</a></li>
+<li><a href="#sec-1-5">安装主题</a></li>
+<li><a href="#sec-1-6">配置</a></li>
+<li><a href="#sec-1-7">个性化定制</a>
+<ul>
+<li><a href="#sec-1-7-1">邮箱地址图片化</a></li>
+<li><a href="#sec-1-7-2">about分页</a></li>
+<li><a href="#sec-1-7-3">添加友情链接</a></li>
+<li><a href="#sec-1-7-4">侧边栏添加Disqus评论</a></li>
+<li><a href="#sec-1-7-5">增加一键分享</a></li>
+<li><a href="#sec-1-7-6">参考资料</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-8">使用了org-jekyll.el</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/octopress-install/">octopress安装和定制</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">ruby安装</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>参考：<a href="http://octopress.org/docs/setup/">http://octopress.org/docs/setup/</a><br/>
+一个是rvm，rbenv<br/>
+rvm是出现最早功能最强大，但是有点复杂。<br/>
+rbenv是37sigle功能推出的，比较受欢迎。<br/>
+</p>
+<p><br/>
+rvm安装：<br/>
+<code>curl -L https://get.rvm.io | bash -s stable --ruby</code><br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; . "$HOME/.rvm/scripts/rvm" # Load RVM function'</span> &gt;&gt; ~/.bash_profile
+<span style="color: #a52a2a;">source</span> ~/.bash_profile
+
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If using Zsh do this instead</span>
+<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'[[ -s $HOME/.rvm/scripts/rvm ]] &amp;&amp; source $HOME/.rvm/scripts/rvm'</span> &gt;&gt; ~/.zshrc
+<span style="color: #a52a2a;">source</span> ~/.zshrc
+</pre>
+
+
+rbenv安装：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #a52a2a;">cd</span>
+git clone git://github.com/sstephenson/rbenv.git .rbenv
+<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'export PATH="$HOME/.rbenv/bin:$PATH"'</span> &gt;&gt; ~/.bash_profile
+<span style="color: #a52a2a;">echo</span> <span style="color: #00bfff;">'eval "$(</span><span style="color: #ff00ff;">rbenv</span><span style="color: #00bfff;"> init -)"'</span> &gt;&gt; ~/.bash_profile
+git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+<span style="color: #a52a2a;">source</span> ~/.bash_profile
+</pre>
+
+
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">touble shot：</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+</div>
+
+<div id="outline-container-1-1-1-1" class="outline-5">
+<h5 id="sec-1-1-1-1">在zsh中，启动rbenv init -会提示错误</h5>
+<div class="outline-text-5" id="text-1-1-1-1">
+
+<p><code>$HOME/.rbenv/libexec/../completions/rbenv.bash:14: command not found: complete</code><br/>
+修改为：<br/>
+</p>
+<p><br/>
+<pre class="src src-bash">eval <span style="color: #00bfff;">"$(rbenv init - zsh)"</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-1-2" class="outline-5">
+<h5 id="sec-1-1-1-2">安装ruby rehash</h5>
+<div class="outline-text-5" id="text-1-1-1-2">
+
+
+<p><br/>
+<pre class="src src-bash">rbenv install 1.9.3-p0
+rbenv global 1.9.3-p0
+rbenv rehash
+</pre>
+
+
+关于为什么要做rehash，解释如下：<br/>
+新装的gem（以前重没装过）一定要rehash在.rbenv/shims下生成可执行程序，像zsh要自动补全还需要 hash -r ．不过因为　rbenv init -　里会调用rbenv rehash，所有新开个窗口是不需要的．我的用法是bundler管理gemset，在~/.bundle/config里设置BUNDLE_PATH为vendor/bundle , 配合shell的一个小函数为常用命令添加alias，在发现Gemset的时候自动加上bundle exec ( rbenv.zsh )．通过bundler安装bundle exec执行是不需要rehash的。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-1-3" class="outline-5">
+<h5 id="sec-1-1-1-3">openssl</h5>
+<div class="outline-text-5" id="text-1-1-1-3">
+
+<p>启动时提示：<br/>
+<code>require’: cannot load such file – openssl (LoadError)</code><br/>
+解决办法：<br/>
+apt-get install libssl-dev<br/>
+重新安装ruby<br/>
+<code>rbenv install 1.9.3-p0</code><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">安装octopress</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p><br/>
+<pre class="src src-sh">git clone git://github.com/imathis/octopress.git octopress
+<span style="color: #a52a2a;">cd</span> octopress    <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If you use RVM, You'll be asked if you trust the .rvmrc file (say yes).</span>
+ruby --version  <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">Should report Ruby 1.9.3</span>
+</pre>
+
+
+遇到的问题，安装后我clone了octopress然后执行gem但缺少zlib库。<br/>
+解决办法：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">sudo apt-get install zlib1g-dev
+rvm reinstall 1.9.3 <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#37325;&#26032;&#23433;&#35013;ruby</span>
+</pre>
+
+
+安装依赖：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">gem install bundler
+rbenv rehash    <span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">If you use rbenv, rehash to be able to run the bundle command</span>
+bundle install
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Deploying to Github Pages</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>参考：<a href="http://octopress.org/docs/deploying/github/">http://octopress.org/docs/deploying/github/</a><br/>
+</p>
+<p><br/>
+<code>rake setup_github_pages</code><br/>
+他会做几件事：<br/>
+</p><ol>
+<li>询问你的github url<br/>
+</li>
+<li>把当前origin rename为imathis/octopress<br/>
+</li>
+<li>把你的github pages作为default origin remote<br/>
+</li>
+<li>从当前master分支转为source分支<br/>
+</li>
+<li>把master分支设置为_deploy目录，用于发布页面<br/>
+</li>
+</ol>
+
+
+<p><br/>
+然后运行<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">rake generate
+rake deploy
+</pre>
+
+这会生成website在_deploy目录，然后提交到github。<br/>
+</p>
+<p><br/>
+然后提交source分支<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">git add .
+git commit -m <span style="color: #00bfff;">'your message'</span>
+git push origin source
+</pre>
+
+
+</p>
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">gh-pages</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>还可以通过project pages页面来部署，这样你的页面的访问地址为：<br/>
+<code>http://username.github.com/project</code><br/>
+适用于多个工程的情况，每个工程一个站点。<br/>
+实际上显示时，github会搜索你工程下的gh-pages分支，作为显示。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">重新安装octopress</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-sh">git clone -b source git@github.com:username/username.github.com.git octopress <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#19979;&#36733;source&#29256;&#26412;&#65288;&#29992;&#20110;&#32534;&#36753;&#65289;</span>
+<span style="color: #a52a2a;">cd</span> octopress
+git clone git@github.com:username/username.github.com.git _deploy <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#19979;&#36733;_deploy&#29256;&#26412;&#65288;&#29992;&#20110;&#21457;&#24067;&#65289;</span>
+bundle install
+</pre>
+
+
+我是升级的octopress，所以我还是需要重复之前的安装过程，需要安装ruby，gem，bunlder等。<br/>
+然后执行<br/>
+<code>rake setup_github_pages</code><br/>
+</p>
+<p><br/>
+rake install[theme]<br/>
+安装一个主题，把github上的source中_post目录cp过来，以及修改的插件等手工合并进来，然后使用git push -f 强行push的。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">安装主题</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>下载后放到.themes目录下，然后执行对应主题的安装，如：<br/>
+rake install[&#8216;bootstrap&#8217;]<br/>
+rake generate<br/>
+</p>
+<p><br/>
+rake install\[&#8216;blanket&#8217;\]<br/>
+有一点不好的是，code区显示不完全。还是有点缺憾。<br/>
+</p>
+<p><br/>
+我目前使用的是：<br/>
+bootstrap-theme虽然使用了bootstrap，基石很强大，但调整的不好。<br/>
+文章和文章之间没有隔离，不方便区分。<br/>
+还有就是字体使用的是固定px，13px行间距是18px，为什么不用em呢？<br/>
+我尝试修改sass中的basefont为1em，但整体显示就乱了，有的code无法显示，所以干脆先这么用这吧。<br/>
+</p>
+<p><br/>
+<a href="http://octopressthemes.com/themes/">主题下载页</a><br/>
+<a href="https://github.com/bkutil/bootstrap-theme">https://github.com/bkutil/bootstrap-theme</a><br/>
+<a href="http://www.cnblogs.com/hangxin1940/archive/2012/03/19/2806438.html">重新安装octopress</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">配置</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>date_format: &#8220;%Y年%m月%d日&#8221;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">个性化定制</h3>
+<div class="outline-text-3" id="text-1-7">
+
+
+</div>
+
+<div id="outline-container-1-7-1" class="outline-4">
+<h4 id="sec-1-7-1">邮箱地址图片化</h4>
+<div class="outline-text-4" id="text-1-7-1">
+
+<p>很多博主都将邮箱地址转化成图片，目的是为了防止垃圾邮件，我也赶了一下时髦。<br/>
+</p>
+<p><br/>
+邮箱地址生成图片的网址是：<br/>
+</p>
+<p><br/>
+<a href="http://services.nexodyne.com/email/index.php">http://services.nexodyne.com/email/index.php</a><br/>
+<a href="http://pic.sdodo.com/tool/mailpic/">http://pic.sdodo.com/tool/mailpic/</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-2" class="outline-4">
+<h4 id="sec-1-7-2">about分页</h4>
+<div class="outline-text-4" id="text-1-7-2">
+
+<p>在source下新建about目录，并在里面添加index.markdown文件。<br/>
+编辑导航条source/_includes/custom/navigation.html<br/>
+注意:index.markdown文件需要加上头，否则会找不到。<br/>
+</p>
+<p><br/>
+在侧边栏中a天际about me<br/>
+在custom/asides/about.html中添加About Me信息<br/>
+</p>
+<p><br/>
+<pre class="src src-html">&lt;<span style="color: #a020f0;">section</span>&gt;
+  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">About Me</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
+  &lt;<span style="color: #a020f0;">p</span>&gt;&lt;<span style="color: #a020f0;">img</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"/images/about.jpg"</span>&gt;&lt;/<span style="color: #a020f0;">p</span>&gt;
+  &lt;<span style="color: #a020f0;">p</span>&gt;some thing&lt;/<span style="color: #a020f0;">p</span>&gt;
+  &lt;<span style="color: #a020f0;">p</span>&gt;&lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"mailto:emmoblin@gmail.com"</span>&gt;&lt;<span style="color: #a020f0;">img</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"/images/my_email.png"</span> <span style="color: #ff1493;">alt</span>=<span style="color: #00bfff;">"emmoblin@gmail.com"</span>&gt;&lt;/<span style="color: #a020f0;">a</span>&gt;&lt;/<span style="color: #a020f0;">p</span>&gt;
+&lt;/<span style="color: #a020f0;">section</span>&gt;
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-3" class="outline-4">
+<h4 id="sec-1-7-3">添加友情链接</h4>
+<div class="outline-text-4" id="text-1-7-3">
+
+<p>在custom/asides/blog_link.html中添加友情链接<br/>
+</p>
+<p><br/>
+<pre class="src src-html">  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">&#22823;&#29275;&#21338;&#23458;</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
+  &lt;<span style="color: #a020f0;">ul</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://coolshell.cn/"</span>&gt;&#37239;&#22771;CoolShell&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://mindhacks.cn/"</span>&gt;&#21016;&#26410;&#40527;MIND HACKS&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://blog.codingnow.com/"</span>&gt;&#20113;&#39118;&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+    &lt;<span style="color: #a020f0;">li</span>&gt;
+      &lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://www.cnblogs.com/Solstice/"</span>&gt;&#38472;&#30805;&lt;/<span style="color: #a020f0;">a</span>&gt;
+    &lt;/<span style="color: #a020f0;">li</span>&gt;
+  &lt;/<span style="color: #a020f0;">ul</span>&gt;
+&lt;/<span style="color: #a020f0;">section</span>&gt;
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-4" class="outline-4">
+<h4 id="sec-1-7-4">侧边栏添加Disqus评论</h4>
+<div class="outline-text-4" id="text-1-7-4">
+
+<p>在custom/asides/recent_comment.html中添加Disqus评论<br/>
+</p>
+<p><br/>
+<pre class="src src-html">&lt;<span style="color: #a020f0;">section</span>&gt;
+  &lt;<span style="color: #a020f0;">h1</span>&gt;<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">&#36817;&#26399;&#35780;&#35770;</span>&lt;/<span style="color: #a020f0;">h1</span>&gt;
+&lt;<span style="color: #a020f0;">script</span> <span style="color: #ff1493;">type</span>=<span style="color: #00bfff;">"text/javascript"</span> <span style="color: #ff1493;">src</span>=<span style="color: #00bfff;">"http://emmoblin.disqus.com/combination_widget.js?num_items=5&amp;hide_mods=0&amp;color=blue&amp;default_tab=recent&amp;excerpt_length=200"</span>&gt;&lt;/<span style="color: #a020f0;">script</span>&gt;&lt;<span style="color: #a020f0;">a</span> <span style="color: #ff1493;">href</span>=<span style="color: #00bfff;">"http://disqus.com/"</span>&gt;Powered by Disqus&lt;/<span style="color: #a020f0;">a</span>&gt;
+&lt;/<span style="color: #a020f0;">section</span>&gt;
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-5" class="outline-4">
+<h4 id="sec-1-7-5">增加一键分享</h4>
+<div class="outline-text-4" id="text-1-7-5">
+
+<p>我目前使用的是bshare。<br/>
+</p>
+<p><br/>
+在_config.yml中增加bshare: true。 在“source_includes\post”下的sharing.html中增加如下代码.<br/>
+上述的代码由bshare产生，可以自己选择所需的外观。 这样，在每一篇文章的最下方会出现一个分享的小工具。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7-6" class="outline-4">
+<h4 id="sec-1-7-6">参考资料</h4>
+<div class="outline-text-4" id="text-1-7-6">
+
+<p><a href="http://octopress.org/docs/theme/template/">定制修改页面</a><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">使用了org-jekyll.el</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>我是使用org-mode来管理笔记的，使用了org-jekyll插件来把org笔记转化为jekyll的格式。<br/>
+首先通过C-c C-e 把整个project进行export，生成cache。<br/>
+之后org-jekyll-export-blog，根据cache的内容生成对应的octopress文件。<br/>
+org-jekyll是根据～/.org_timestamp/的cache生成的。所以先要export project，之后再用org-jekyll。<br/>
+</p>
+<p><br/>
+org-jekyll-export-current-entry 使用时光标所在entry进行导出。<br/>
+</p>
+<p><br/>
+所有source/_posts目录下的html都可以重新生成，注意有的时候格式不对，比如title中不能包含中文，<br/>
+会导致rake genernate错误。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/13/lvm/">LVM介绍</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-13T00:00:00+08:00" pubdate data-updated="true">2013年02月13日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">LVM介绍</a>
+<ul>
+<li><a href="#sec-1-1">LVM基本术语</a></li>
+<li><a href="#sec-1-2">创建和管理lvm</a>
+<ul>
+<li><a href="#sec-1-2-1">分区</a></li>
+<li><a href="#sec-1-2-2">创建物理卷</a></li>
+<li><a href="#sec-1-2-3">创建卷组</a></li>
+<li><a href="#sec-1-2-4">激活卷组</a></li>
+<li><a href="#sec-1-2-5">添加新的物理卷到卷组中</a></li>
+<li><a href="#sec-1-2-6">查看物理卷信息</a></li>
+<li><a href="#sec-1-2-7">从卷组中删除一个物理卷</a></li>
+<li><a href="#sec-1-2-8">创建逻辑卷</a></li>
+<li><a href="#sec-1-2-9">创建文件系统</a></li>
+<li><a href="#sec-1-2-10">删除一个逻辑卷</a></li>
+<li><a href="#sec-1-2-11">扩展逻辑卷大小</a></li>
+<li><a href="#sec-1-2-12">减少逻辑卷大小</a></li>
+<li><a href="#sec-1-2-13">灵活</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">snapshot</a></li>
+<li><a href="#sec-1-4">lvm常用管理工具：</a></li>
+<li><a href="#sec-1-5">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/13/lvm/">LVM介绍</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+LVM是建立在硬盘和分区之上的一个逻辑层，来提高磁盘分区管理的灵活性。通过LVM系统管理员可以轻松管理磁盘分区，如：将若干个磁盘分区连接为一个整块的卷组（volumegroup），形成一个存储池。管理员可以在卷组上随意创建逻辑卷组（logicalvolumes），并进一步在逻辑卷组上创建文件系统。管理员通过LVM可以方便的调整存储卷组的大小，并且可以对磁盘存储按照组的方式进行命名、管理和分配。<br/>
+而且当系统添加了新的磁盘，通过LVM管理员就不必将磁盘的文件移动到新的磁盘上以充分利用新的存储空间，而是直接扩展文件系统跨越磁盘即可。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">LVM基本术语</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>物理存储介质（The physical media）<br/>
+这里指系统的存储设备：硬盘，如：/dev/hda1、/dev/sda等等，是存储系统最低层的存储单元。 <br/>
+</p>
+<p><br/>
+物理卷PV（physical volume）<br/>
+物理卷就是指硬盘分区或从逻辑上与磁盘分区具有同样功能的设备(如RAID)，是LVM的基本存储逻辑块，但和基本的物理存储介质（如分区、磁盘等）比较，却包含有与LVM相关的管理参数。 <br/>
+</p>
+<p><br/>
+卷组VG（Volume Group）<br/>
+LVM卷组类似于非LVM系统中的物理硬盘，其由物理卷组成。可以在卷组上创建一个或多个“LVM分区”（逻辑卷），LVM卷组由一个或多个物理卷组成。 <br/>
+</p>
+<p><br/>
+逻辑卷LV（logical volume）<br/>
+LVM的逻辑卷类似于非LVM系统中的硬盘分区，在逻辑卷之上可以建立文件系统(比如/home或者/usr等)。 <br/>
+</p>
+<p><br/>
+PE（physical extent）<br/>
+每一个物理卷被划分为称为PE(Physical Extents)的基本单元，具有唯一编号的PE是可以被LVM寻址的最小单元。PE的大小是可配置的，默认为4MB。 <br/>
+</p>
+<p><br/>
+LE（logical extent）<br/>
+逻辑卷也被划分为被称为LE(Logical Extents) 的可被寻址的基本单位。在同一个卷组中，LE的大小和PE是相同的，并且一一对应。<br/>
+</p>
+<p><br/>
+<img src="../img/lvm_vg.jpg"  alt="../img/lvm_vg.jpg" /><br/>
+</p>
+<p><br/>
+VGDA（卷组描述符区域）<br/>
+和非 LVM 系统将包含分区信息的元数据保存在位于分区起始位置的分区表中一样，逻辑卷以及卷组相关的元数据被保存在位于物理卷起始处的 VGDA 中。VGDA 包括以下内容：PV 描述符、VG 描述符、LV 描述符、和一些 PE 描述符。系统启动 LVM 时激活 VG，并将 VGDA 加载至内存，来识别 LV 的实际物理存储位置。当系统进行 I/O 操作时，就会根据 VGDA 建立的映射机制来访问实际的物理位置。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">创建和管理lvm</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">分区</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p>使用分区工具（如：fdisk等）创建LVM分区，方法和创建其他一般分区的方式是一样的，区别仅仅是LVM的分区类型为8e。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">创建物理卷</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>创建物理卷的命令为pvcreate，利用该命令将希望添加到卷组的所有分区或者磁盘创建为物理卷。<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">pvcreate /dev/hda5</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">创建卷组</h4>
+<div class="outline-text-4" id="text-1-2-3">
+
+<p>创建卷组的命令为vgcreate，将使用pvcreate建立的物理卷创建为一个完整的卷组：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgcreate web_document /dev/hda5 /dev/hdb</span>
+</pre>
+
+vgcreate在创建卷组 web_document 以外，还设置使用大小为4 MB的PE（默认为4MB），这表示卷组上创建的所有逻辑卷都以 4 MB 为增量单位来进行扩充或缩减。由于内核原因，PE大小决定了逻辑卷的最大大小，4 MB 的PE决定了单个逻辑卷最大容量为 256 GB，若希望使用大于256G的逻辑卷则创建卷组时指定更大的PE。PE大小范围为8 KB 到 512 MB，并且必须总是 2 的倍数（使用-s指定）<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-4" class="outline-4">
+<h4 id="sec-1-2-4">激活卷组</h4>
+<div class="outline-text-4" id="text-1-2-4">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgchange -ay web_document</span>
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-5" class="outline-4">
+<h4 id="sec-1-2-5">添加新的物理卷到卷组中</h4>
+<div class="outline-text-4" id="text-1-2-5">
+
+<p>当系统安装了新的磁盘并创建了新的物理卷，而要将其添加到已有卷组时，就需要使用vgextend命令：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgextend web_document /dev/hdc1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-6" class="outline-4">
+<h4 id="sec-1-2-6">查看物理卷信息</h4>
+<div class="outline-text-4" id="text-1-2-6">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">pvdisplay /dev/hda1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-7" class="outline-4">
+<h4 id="sec-1-2-7">从卷组中删除一个物理卷</h4>
+<div class="outline-text-4" id="text-1-2-7">
+
+<p>要从一个卷组中删除一个物理卷，首先要确认要删除的物理卷没有被任何逻辑卷正在使用.<br/>
+如果某个物理卷正在被逻辑卷所使用，就需要将该物理卷的数据备份到其他地方，然后再删除。<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">vgreduce web_document /dev/hda1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-8" class="outline-4">
+<h4 id="sec-1-2-8">创建逻辑卷</h4>
+<div class="outline-text-4" id="text-1-2-8">
+
+
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvcreate -L1500 &#8211;n www1 web_document</span>
+</pre>
+
+该命令就在卷组web_document上创建名字为www1，大小为1500M的逻辑卷，并且设备入口为/dev/web_document/www1<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-9" class="outline-4">
+<h4 id="sec-1-2-9">创建文件系统</h4>
+<div class="outline-text-4" id="text-1-2-9">
+
+<p>推荐使用reiserfs文件系统，来替代ext2和ext3<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-10" class="outline-4">
+<h4 id="sec-1-2-10">删除一个逻辑卷</h4>
+<div class="outline-text-4" id="text-1-2-10">
+
+<p>删除逻辑卷以前首先需要将其卸载，然后删除：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">umount /dev/web_document/www1</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvremove /dev/web_document/www1</span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-11" class="outline-4">
+<h4 id="sec-1-2-11">扩展逻辑卷大小</h4>
+<div class="outline-text-4" id="text-1-2-11">
+
+<p>LVM提供了方便调整逻辑卷大小的能力，扩大为12G<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvextend -L12G /dev/web_document/www1</span>
+&#22686;&#21152;1G
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvextend -L+1G /dev/web_document/www1</span>
+</pre>
+
+
+增加了逻辑卷的容量以后，就需要修改文件系统大小以实现利用扩充的空间。笔者推荐使用reiserfs文件系统来替代ext2或者ext3。因此这里仅仅讨论reiserfs的情况。Reiserfs文件工具提供了文件系统大小调整工具：resize_reiserfs。对于希望调整被加载的文件系统大小：<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">resize_reiserfs -f /dev/web_document/www1</span>
+</pre>
+
+
+对于使用ext2或ext3文件系统的用户可以考虑使用工具<br/>
+ext2resize。<br/>
+<a href="http://sourceforge.net/projects/ext2resize">http://sourceforge.net/projects/ext2resize</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-12" class="outline-4">
+<h4 id="sec-1-2-12">减少逻辑卷大小</h4>
+<div class="outline-text-4" id="text-1-2-12">
+
+<p>使用lvreduce即可实现对逻辑卷的容量，同样需要首先将文件系统卸载：<br/>
+要先减少文件系统，然后再减少逻辑卷<br/>
+</p>
+<p><br/>
+<pre class="src src-sh"><span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">umount /data/wwwroot</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">resize_reiserfs -s-2G /dev/web_document/www1</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">lvreduce -L-2G /dev/web_document/www1</span>
+<span style="color: #8c8c8c; font-style: italic;"># </span><span style="color: #8c8c8c; font-style: italic;">mount -treiserfs /dev/web_document/www1 /data/wwwroot</span>
+</pre>
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-13" class="outline-4">
+<h4 id="sec-1-2-13">灵活</h4>
+<div class="outline-text-4" id="text-1-2-13">
+
+<p>逻辑卷可以再组合成pv，和vg，再次进行lvm。<br/>
+而且一个卷组可以跨多个磁盘。<br/>
+如果想自己做实验可以自己创建空洞文件进行lvm练习。<br/>
+</p>
+<p><br/>
+<pre class="src src-sh">dd <span style="color: #ff1493;">if</span>=/dev/zore <span style="color: #ff1493;">of</span>=./loop1.img <span style="color: #ff1493;">bs</span>=1G <span style="color: #ff1493;">count</span>=0 <span style="color: #ff1493;">seek</span>=100
+</pre>
+
+这就创建了一个100G的稀疏文件，文件大小是100G，但占用的空间是0.<br/>
+然后使用losetup进行加载。就可以当/dev/loop0 磁盘使用了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">snapshot</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>lvm可以创建镜像，创建时选择创建允许多大的空间用于记录变化。<br/>
+创建镜像后实际上就是和原始lv独立，但如果原始lv删掉了，则所有的snap也就丢失了。<br/>
+snap和原始lv都可以后续修改，而且snap可以和原始lv进行合并，使原始lv变为snap当前的样子。<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">lvm常用管理工具：</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+</p><table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<tbody>
+<tr><td class="left">功能</td><td class="left">物理卷</td><td class="left">卷组</td><td class="left">逻辑卷</td></tr>
+<tr><td class="left">扫描</td><td class="left">pvscan</td><td class="left">vgscan</td><td class="left">lvscan</td></tr>
+<tr><td class="left">查看</td><td class="left">pvdisplay</td><td class="left">vgdisplay</td><td class="left">lvdisplay</td></tr>
+<tr><td class="left">新建</td><td class="left">pvcreat</td><td class="left">vgcreat</td><td class="left">lvcreat</td></tr>
+<tr><td class="left">卸载</td><td class="left">pvremove</td><td class="left">vgremove</td><td class="left">lvremove</td></tr>
+<tr><td class="left">增大</td><td class="left">无</td><td class="left">vgextend</td><td class="left">lvextend</td></tr>
+<tr><td class="left">减小</td><td class="left">无</td><td class="left">vgreduce</td><td class="left">lvreduce</td></tr>
+</tbody>
+</table>
+
+
+<p><br/>
+lvs<br/>
+pvs<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">参考</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p><a href="http://blog.csdn.net/steelren/article/details/1931363">http://blog.csdn.net/steelren/article/details/1931363</a><br/>
+</p>
+<p><br/>
+LVM-HOWTO<br/>
+<a href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a><br/>
+</p>
+<p><br/>
+一些操作例子<br/>
+<a href="http://sapling.me/unixlinux/lvm_howto.html">http://sapling.me/unixlinux/lvm\_howto.html</a><br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-12T00:00:00+08:00" pubdate data-updated="true">2013年02月12日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">先衰竭训练法</a>
+<ul>
+<li><a href="#sec-1-1">先衰竭训练法</a></li>
+<li><a href="#sec-1-2">胸大肌的先衰竭训练法</a></li>
+<li><a href="#sec-1-3">三角肌的先衰竭训练法：</a></li>
+<li><a href="#sec-1-4">肱三头肌的先衰竭训练法</a></li>
+<li><a href="#sec-1-5">竖脊肌（后腰）的先衰竭训练法</a></li>
+<li><a href="#sec-1-6">大腿的先衰竭训练法</a></li>
+<li><a href="#sec-1-7">背阔肌的先衰竭训练法</a></li>
+<li><a href="#sec-1-8">总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/02/12/xian-shuai-jie-xun-lian-fa/">先衰竭训练法</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">先衰竭训练法</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>先衰竭法是目前增大肌肉围径的有效方法。<br/>
+其做法是要想发展那块肌肉，先选择只发展这块肌肉的局部肌肉练习来训练，做8-10次直到疲劳，使其衰竭，然后在3-5秒之内跑向另一器械，做一个以发展这块肌肉为主的综合肌肉群练习，用70％的重量做到极限，这样交替训练4组左右，肌肉会感受到极大的刺激。据研究，这样能有效地刺激肌肉生长，促进其发育。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">胸大肌的先衰竭训练法</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>发达胸大肌的局部有效练习：仰卧飞鸟；<br/>
+发达胸大肌综合肌群的练习：卧推（包括宽握、中握、窄握），它除了发展胸大肌外，还能发展肱三头肌、三角肌前部和前锯肌。<br/>
+</p>
+<p>  <br/>
+先用只能举8-10次的重量做仰卧飞鸟练习，直到起不来，<br/>
+紧接着跑到卧推架前用事先准备好的60-70％重量做卧推，尽力举次数，直到起不来算一组，<br/>
+共做4组左右，累计总运动量为8组约50次左右。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">三角肌的先衰竭训练法：</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>发达三角肌的局部肌肉练习：哑铃前平举 主要发展三角肌前束；哑铃侧平举主要发展三角肌中束；俯身后斜举主要发展三角肌后束。<br/>
+发达三角肌的综合练习：颈后宽推，这个练习既能发展三角肌，还能发展肱三头肌，对胸大肌、前锯肌也有影响。<br/>
+</p>
+<p>  <br/>
+为发达三角肌将这两个有效练习有机地结合在一起训练，其效果会更好。<br/>
+每组动作：是先用只能平举8-10次的重量做哑铃来练习。直到起不来，紧接着跑到放置在另一侧的杠铃前，用做（70％），直到一个起不来算一大组，共做4大组。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">肱三头肌的先衰竭训练法</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>发达肱三头肌的局部肌肉练习：各种臂屈伸，如颈后臂屈伸、弓身臂屈伸等<br/>
+发达肱三头肌的综合练习：是窄卧推<br/>
+</p>
+<p> <br/>
+先做颈后臂屈伸6-10次直到疲劳，然后迅速跑向深蹲架前拿起架上事先放好的杠铃（杠铃重量为自己最高重量的60-70％），<br/>
+连续举直到起不来，这样两种练习算一大组，共做4大组，肱三头肌就会很胀，刺激很深。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">竖脊肌（后腰）的先衰竭训练法</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>发达后腰竖脊肌的局部肌肉练习：负重山羊挺身<br/>
+发达后腰竖脊肌的综合练习：弓身、屈腿硬拉等。<br/>
+</p>
+<p><br/>
+<img src="../img/shanyangtingshen.gif"  alt="../img/shanyangtingshen.gif" /><br/>
+先在山羊上做负重挺身6-10次直到挺不起为止，紧接着跑向深蹲架前肩负杠铃做弓身练习（或做硬拉），直到疲劳。将这两个练习组合在一起训练4组，背肌就能得到很好的刺激。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">大腿的先衰竭训练法</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>发达股四头肌的局部肌肉练习：负重腿屈伸<br/>
+发达腿部肌肉的综合肌群练习：深蹲，<br/>
+<img src="../img/qutui.gif"  alt="../img/qutui.gif" /><br/>
+</p>
+<p><br/>
+尽力做8次左右负重腿屈伸，紧接着做也尽力做6-8次深蹲，这样交叉轮换做8组（4大组）约50次，股四头肌就会因刺激较深而发胀。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">背阔肌的先衰竭训练法</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>发达背阔肌的局部肌肉练习：宽握颈后引体向上<br/>
+发达背阔肌的综合练习：坐姿划船<br/>
+</p>
+<p> <br/>
+先宽握颈后引体向上10-15次直到拉不起为止，紧接着跑向做坐姿划船练习，直到疲劳。将这两个练习组合在一起训练4组，背阔肌就能得到很好的刺激。 <br/>
+</p>
+<p> <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">总结</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>先衰竭原理之所以先进，从理论上讲它符合极限负荷后的超量恢复的原则。<br/>
+这是因为肌体精疲力竭地负荷之后，首先功能能力大大减退，紧接着在恢复防疲肌体由适应一提高，超过它原有的水平。<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/06/linux-g-dial/">Linux_3g拨号</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-06T00:00:00+08:00" pubdate data-updated="true">2013年01月06日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">linux下3g网卡拨号</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>需要安装的软件usb_modeswitch,wvdial<br/>
+usb_modeswitch用于将usb3g转换为usb modem模式，这样才能拨号。最好到官网下载最新代码，包含的3g网卡类型会更全。最主要的就是usb_modeswitch_data。<br/>
+<a href="http://www.draisberghof.de/usb_modeswitch/#download">http://www.draisberghof.de/usb\_modeswitch/#download</a><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">安装usb_modeswitch_data</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>进入目录，执行<br/>
+sudo make install<br/>
+会安装对应的udev文件到/lib/udev/rules.d目录。<br/>
+</p>
+<p><br/>
+不过我发现自动转换没有效果，暂时先不查了。<br/>
+直接使用命令行转：<br/>
+usb_modeswitch -c /etc/usb_modeswitch.conf<br/>
+如果转换成功会出现/dev/ttyUSB0-3，dmesg也会有输出信息。<br/>
+</p>
+<p><br/>
+usb_modeswitch.conf<br/>
+</p>
+<p><br/>
+<pre class="example">######################################################## 
+# ZTE A371B
+#
+# Contributor: Wang Lei
+
+DefaultVendor= 0x19d2
+DefaultProduct=0x0169
+
+TargetVendor=  0x19d2
+TargetProduct= 0x0170
+
+MessageContent="5553424312345678000000000000061b000000020000000000000000000000"
+NeedResponse=1
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">wvdial</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>这个难了，wvdial负责发送AT命令给usb modem，进行拨号。但不同的3g卡发送的指令也不一样。<br/>
+我是在xp上安装了usb抓包软件，把xp上官方的3g拨号过程进行了抓包分析，提取出如下序列：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">[Dialer Defaults]
+Init1 = AT
+Init2 = AT+CIMI
+Init3 = AT+CMEE=1
+Init4 = ATE0
+Init5 = AT+CFUN=1
+Init6 = AT+CLCK="SC",2
+Init7 = AT+cgdcont=1,"ip","CMNET"
+Modem Type = USB Modem
+Baud = 460800
+New PPPD = yes
+Modem = /dev/ttyUSB0
+ISDN = 0
+Phone = *98*1#
+Password = any
+Username = any
+Stupid Mode = 1
+</pre>
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">遇到的问题</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>我的x230上无线鼠标的usb接收器貌似总是捣乱，拔了接收器，换了个usb口插3g，就可以ok了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/06/linux-3g-dial/">Linux_3g拨号</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-06T00:00:00+08:00" pubdate data-updated="true">2013年01月06日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">linux下3g网卡拨号</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>需要安装的软件usb_modeswitch,wvdial<br/>
+usb_modeswitch用于将usb3g转换为usb modem模式，这样才能拨号。最好到官网下载最新代码，包含的3g网卡类型会更全。最主要的就是usb_modeswitch_data。<br/>
+<a href="http://www.draisberghof.de/usb_modeswitch/#download">http://www.draisberghof.de/usb\_modeswitch/#download</a><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">安装usb_modeswitch_data</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>进入目录，执行<br/>
+sudo make install<br/>
+会安装对应的udev文件到/lib/udev/rules.d目录。<br/>
+</p>
+<p><br/>
+不过我发现自动转换没有效果，暂时先不查了。<br/>
+直接使用命令行转：<br/>
+usb_modeswitch -c /etc/usb_modeswitch.conf<br/>
+如果转换成功会出现/dev/ttyUSB0-3，dmesg也会有输出信息。<br/>
+</p>
+<p><br/>
+usb_modeswitch.conf<br/>
+</p>
+<p><br/>
+<pre class="example">######################################################## 
+# ZTE A371B
+#
+# Contributor: Wang Lei
+
+DefaultVendor= 0x19d2
+DefaultProduct=0x0169
+
+TargetVendor=  0x19d2
+TargetProduct= 0x0170
+
+MessageContent="5553424312345678000000000000061b000000020000000000000000000000"
+NeedResponse=1
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">wvdial</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>这个难了，wvdial负责发送AT命令给usb modem，进行拨号。但不同的3g卡发送的指令也不一样。<br/>
+我是在xp上安装了usb抓包软件，把xp上官方的3g拨号过程进行了抓包分析，提取出如下序列：<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">[Dialer Defaults]
+Init1 = AT
+Init2 = AT+CIMI
+Init3 = AT+CMEE=1
+Init4 = ATE0
+Init5 = AT+CFUN=1
+Init6 = AT+CLCK="SC",2
+Init7 = AT+cgdcont=1,"ip","CMNET"
+Modem Type = USB Modem
+Baud = 460800
+New PPPD = yes
+Modem = /dev/ttyUSB0
+ISDN = 0
+Phone = *98*1#
+Password = any
+Username = any
+Stupid Mode = 1
+</pre>
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">遇到的问题</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>我的x230上无线鼠标的usb接收器貌似总是捣乱，拔了接收器，换了个usb口插3g，就可以ok了。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/01/fstab-recover/">Fstab恢复</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-01T00:00:00+08:00" pubdate data-updated="true">2013年01月01日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">fstab恢复</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>不小心配置fstab结果参数写错了，导致重启后无法挂载，系统进不去。<br/>
+从grub进入recover模式，选择进入root。<br/>
+但此时根文件系统挂载的是只读的，所以无法修改fstab。<br/>
+重新挂载为rw就ok了，非常关键。<br/>
+mount -n -o remount,rw /<br/>
+之后就可以修改了fstab了。<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/18/git-server/">Git服务器开源软件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-18T00:00:00+08:00" pubdate data-updated="true">2012年12月18日</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">git服务器开源软件</a>
+<ul>
+<li><a href="#sec-1-1">在服务器上部署git</a>
+<ul>
+<li><a href="#sec-1-1-1">通过git账户访问</a></li>
+<li><a href="#sec-1-1-2">gitweb</a></li>
+<li><a href="#sec-1-1-3">repo</a></li>
+<li><a href="#sec-1-1-4">代码抽取</a></li>
+<li><a href="#sec-1-1-5">分支合并</a></li>
+<li><a href="#sec-1-1-6">git submodule</a></li>
+<li><a href="#sec-1-1-7">gitk</a></li>
+<li><a href="#sec-1-1-8">git log &ndash;graph</a></li>
+<li><a href="#sec-1-1-9">git help workflows</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">GITolite</a></li>
+<li><a href="#sec-1-3">gerrit</a></li>
+<li><a href="#sec-1-4">Jenkins</a></li>
+<li><a href="#sec-1-5">git权限控制理解</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/12/18/git-server/">git服务器开源软件</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">在服务器上部署git</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>git clone &ndash;bare my_project my_project.git<br/>
+其实 clone 操作基本上相当于 git init 加 git fetch。<br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">通过git账户访问</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>第二个办法是在主机上建立一个 git 账户，让每个需要写权限的人发送一个 SSH 公钥，然后将其加入 git 账户的~/.ssh/authorized_keys 文件。这样一来，所有人都将通过 git 账户访问主机。这丝毫不会影响提交的数据 — 访问主机用的身份不会影响提交对象的提交者信息。<br/>
+</p>
+<p><br/>
+$ sudo adduser git<br/>
+$ su git<br/>
+$ cd<br/>
+$ mkdir .ssh<br/>
+</p>
+<p><br/>
+只要把它们逐个追加到 authorized_keys 文件尾部即可：<br/>
+</p>
+<p><br/>
+$ cat <i>tmp/id_rsa.john.pub &gt;&gt; ~</i>.ssh/authorized_keys<br/>
+$ cat <i>tmp/id_rsa.josie.pub &gt;&gt; ~</i>.ssh/authorized_keys<br/>
+$ cat <i>tmp/id_rsa.jessica.pub &gt;&gt; ~</i>.ssh/authorized_keys<br/>
+现在可以用 &ndash;bare 选项运行 git init 来建立一个裸仓库，这会初始化一个不包含工作目录的仓库。<br/>
+</p>
+<p><br/>
+$ cd /opt/git<br/>
+$ mkdir project.git<br/>
+$ cd project.git<br/>
+$ git &ndash;bare init<br/>
+这时，Join，Josie 或者 Jessica 就可以把它加为远程仓库，推送一个分支，从而把第一个版本的项目文件上传到仓库里了。值得注意的是，每次添加一个新项目都需要通过 shell 登入主机并创建一个裸仓库目录。<br/>
+$ cd myproject<br/>
+$ git init<br/>
+$ git add .<br/>
+$ git commit -m &#8216;initial commit&#8217;<br/>
+$ git remote add origin git@gitserver:/opt/git/project.git<br/>
+$ git push origin master<br/>
+作为一个额外的防范措施，你可以用 Git 自带的 git-shell 工具限制 git 用户的活动范围。只要把它设为git 用户登入的 shell，那么该用户就无法使用普通的 bash 或者 csh 什么的 shell 程序。编辑 /etc/passwd 文件：<br/>
+</p>
+<p><br/>
+在其他人机子上可以直接clone<br/>
+git clone git@gitserver:/opt/git/project.git<br/>
+</p>
+<p><br/>
+$ sudo vim /etc/passwd<br/>
+在文件末尾，你应该能找到类似这样的行：<br/>
+</p>
+<p><br/>
+git:x:1000:1000::/home/git:/bin/sh<br/>
+把 bin/sh 改为 /usr/bin/git-shell （或者用 which git-shell 查看它的实际安装路径）。该行修改后的样子如下：<br/>
+</p>
+<p><br/>
+git:x:1000:1000::/home/git:/usr/bin/git-shell<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">gitweb</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>git自带的cgi脚本<br/>
+git instaweb &ndash;httpd=lighttpd<br/>
+</p>
+<p> <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">repo</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>git仓库太大会导致git操作很慢，那么分成多个子项目，用repo来管理。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4">代码抽取</h4>
+<div class="outline-text-4" id="text-1-1-4">
+
+<p>git cherry-pick &lt;commit&gt;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-5" class="outline-4">
+<h4 id="sec-1-1-5">分支合并</h4>
+<div class="outline-text-4" id="text-1-1-5">
+
+<p>git merge<br/>
+git rebase &lt;upstream&gt; [&lt;branch&gt;]<br/>
+rebase 可以让你看起来是基于最新的代码实现的改动。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-6" class="outline-4">
+<h4 id="sec-1-1-6">git submodule</h4>
+<div class="outline-text-4" id="text-1-1-6">
+
+<p>子模块允许你将一个git仓库当作另一个git仓库的子目录。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-7" class="outline-4">
+<h4 id="sec-1-1-7">gitk</h4>
+<div class="outline-text-4" id="text-1-1-7">
+
+<p>安装apt-get install gitk<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-8" class="outline-4">
+<h4 id="sec-1-1-8">git log &ndash;graph</h4>
+<div class="outline-text-4" id="text-1-1-8">
+
+<p>可以添加到git的配置文件中<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-9" class="outline-4">
+<h4 id="sec-1-1-9">git help workflows</h4>
+<div class="outline-text-4" id="text-1-1-9">
+
+<p>查看推荐的工作流<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">GITolite</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>Gitolite 是一款 Perl 语言开发的 Git 服务管理工具，通过公钥对用户进行认证，并能够通过配置文件对写操作进行基于分支和路径的的精细授权。GITolite 采用的是SSH协议，并需要使用公钥 验证。也就是说 GITolite会根据管理员预先定义好的设置，根据客户的SSH，对于来自不同客户端的请求进行权限控制，只读，或者读写，甚至于精确到某个文件夹，某个文件的权限。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">gerrit</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>前面我们说到了对Gitolite是对于开发人员的一种授权，但一旦保证了授权，就能够保证版本库的稳定吗？如果获得授权的人乱搞代码，或者改错代码，那版本库照样会出现不稳定的情况的。就像前面在敏捷系列里面说到的一样，在代码改动之后，要引入code review (代码审阅，说code review 比较顺口，还是用code review吧)。在Clearcase条件下，code review是需要把别人的代码整进去版本库之后，再由code reviewer拿下来看的。于是在Google Android项目的开发过程当中，Google为GIT带来了又一个伟大的工具-Gerrit，也有人叫Gerrit2，因为现在用的Gerrit跟Google刚开始整的时候有很大的不同，我们暂且叫它Gerrit就可以。<br/>
+Gerrit有两个很牛的功能，第一是权限管理，它提供了一个跟GITolite一样的功能，管理用户的读写权限。但它比GITolite好用，对权限的控制都在它提供的网页系统里面完成，不用push啥的！第二是Gerrit为GIT带来强制性的code review，除非你某某是管理员。任何的代码改动都需要有人approve之后，这个代码改动才有可能进入公共代码库，如果没有经过approve或者被人reject了，即使你已经push了五百年，这代码依旧进不了公共版本库。而且 相比起裸奔时代的code review，Gerrit提供一个在线review 的系统，所有的操作都在它提供的系统上面点点点就能搞定的。<br/>
+首先我们来看看权限控制，Gerrit有10种不同的权限，其中有读写权限，code review的权限等等。每个权限的设置包括两部分：权限本身，以及权限授予的组。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">Jenkins</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>如果用了Gerrit，那么每一个代码改动都要经过code review approve 并且要验证。code review还好说，可验证就麻烦了。如果每个改动都要人手拿到本地，至少去确保能编译通过吧，那谁都会疯了的！！！话说IT人的精品特质之一就是懒，所以有繁琐的地方<br/>
+ 往往都会产生自动化 （这貌似也是工业能够向前发展，甚至于社会能够向前发展的一个因素哦，要发扬发扬）。Jenkins就应运而生了。<br/>
+Jenkins， 曾用名Hudson，是基于Java开发的持续集成的工具。它能够自动监控到公共代码库的版本变更，并且执行我们预先定义好的动作。在动作完成之后，把动作执行的结果回传给有关部门！比如我们可以让Jenkins监听Gerrit上面的代码变更情况，看有没有人提出code review的请求。如果监听到请求，那么Jenkins就偷偷向Gerrit要那个人改了的代码，试着做一些编译以及单元测试。如果这人很牛叉，测试通过。那么Jenkins会告诉Gerrit ：“喂，这条友很牛哦，我向毛主席保证，TA的代码改动没有问题”，这时Gerrit就跑过去将这个review item的 verify设置为+1，如果不通过，那就铁面无私地给一个 verify-1.<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">git权限控制理解</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>从技术上讲，git可能永远也做不到类似svn的路径授权(读权限)<br/>
+如果允许按照路径授权，则各个克隆的关系不再是平等的，有的内容多有的内容少，分布式的理念被破坏。<br/>
+git的授权模型只能实现非零即一的方式，要不拥有全部写权限，要不没有写权限。<br/>
+要么拥有全部库的读权限，o要么禁用。<br/>
+</p>
+<p><br/>
+看来git的保密性确实不好，要不一视同仁，大家都有全部代码，要不把代码分成多个库。<br/>
+这样看来在公司内部使用git确实不太方便了。公司最基本的要求就是代码的保护。<br/>
+</p>
+<p><br/>
+Git对于写操作可以精细到目录和分支级别（使用Gitolite作为服务器）， 但作为分布式版本库控制系统，在设计上只能实现版本库量子化的读授权。 即某用户对整个版本库要么都能读，要么对整个版本库都不能读。<br/>
+</p>
+<p><br/>
+那么如何控制Git版本库的读授权呢？实际上Git可以通过子模组来实现细粒度的读授权。 即在项目需要精细授权的场合，将版本库拆分为多个Git版本库进行单独授权， 再使用子模组将多个版本库整合为一个。这个操作并不复杂，而且有助于实现项目的模块化。<br/>
+</p></div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2012/12/05/shell-snippet-collect/">Shell代码片段收集</a></h1>
     
     
@@ -392,1215 +2088,6 @@ auto_echo <span style="color: #00bfff;">"Are you sure to begin[y/n]:"</span>
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/17/opensources-firewall/">开源防火墙</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-17T00:00:00+08:00" pubdate data-updated="true">2012年11月17日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div><div><p><br/>
-要说免费使用的防火墙那多了，但都不开源，而我更喜欢开源的，能学到东西。<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">可下到源代码</h3>
-<div class="outline-text-3" id="text-1-1">
-
-
-</div>
-
-<div id="outline-container-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1">IPCop</h4>
-<div class="outline-text-4" id="text-1-1-1">
-
-<p><a href="http://sourceforge.net/projects/ipcop/develop">http://sourceforge.net/projects/ipcop/develop</a><br/>
-可以下载源代码。<br/>
-<code>svn co https://ipcop.svn.sourceforge.net/svnroot/ipcop ipcop</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-1-2" class="outline-4">
-<h4 id="sec-1-1-2">EFW</h4>
-<div class="outline-text-4" id="text-1-1-2">
-
-<p><a href="http://www.endian.com/">http://www.endian.com/</a><br/>
-这个比较大，600M源码包，非常全。<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">Vyatta</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>基于debian<br/>
-<a href="http://www.vyatta.org/downloads">http://www.vyatta.org/downloads</a><br/>
-目前这个是我发现的有专门针对虚拟化平台优化的版本。<br/>
-<a href="http://www.vyatta.org/getting-started/how-to-install">http://www.vyatta.org/getting-started/how-to-install</a><br/>
-</p>
-<p><br/>
-Installing Vyatta Core in a Virtualized Environment<br/>
-If you’re deploying Vyatta Core on a hypervisor such as VMWare ESX/ESXi or Citrix XenServer, <br/>
-you’ll want to use the Vyatta virtualization ISO (virt-ISO).<br/>
-Similar to the LiveCD ISO, the virt-ISO provides a bootable ISO,<br/>
-except it also includes virtual machine tools and other optimizations<br/>
-to deliver the best possible experience for users running Vyatta on a virtual machine. <br/>
-</p>
-<p><br/>
-Using the vSphere Client, create a new VM<br/>
-</p><ul>
-<li>Configuration: Custom<br/>
-</li>
-<li>Name: &#8220;vyatta&#8221;<br/>
-</li>
-<li>Datastore: default<br/>
-</li>
-<li>Virtual Machine Version: 7<br/>
-</li>
-<li>Guest OS: Linux/Other 2.6x Linux<br/>
-</li>
-<li>CPU: &#8220;1&#8221;<br/>
-</li>
-<li>Memory: &#8220;512&#8221;<br/>
-</li>
-<li>Network: &#8220;2&#8221; / vmxnet3<br/>
-</li>
-<li>SCSI Controller: default<br/>
-</li>
-<li>Select a Disk: default<br/>
-</li>
-<li>Create a Disk: &#8220;4&#8221;GB (thin provisioning and independent / persistent mode)<br/>
-</li>
-<li>Advanced Options: Enable &#8220;Support VMI Paravirtualization&#8221;<br/>
-</li>
-</ul>
-
-
-<p>        <br/>
-使用了<br/>
-open-vm-tools<br/>
-ec2-api-tools 是不是可以通过api来管理此虚拟机，或者获得性能等。ec2-api是什么东东？<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-2-1" class="outline-4">
-<h4 id="sec-1-2-1">获取源代码</h4>
-<div class="outline-text-4" id="text-1-2-1">
-
-<p><a href="http://www.vyatta.org/downloads/source-code">http://www.vyatta.org/downloads/source-code</a><br/>
-</p>
-<p><br/>
-git clone <a href="http://git.vyatta.com/build-iso.git">http://git.vyatta.com/build-iso.git</a><br/>
-cd build-iso<br/>
-注意要先调整到一个分支或者tag<br/>
-build-iso$ git branch &ndash;track &lt;branch&gt; origin/&lt;branch&gt;<br/>
-build-iso$ git checkout &lt;branch&gt;<br/>
-或者<br/>
-git checkout tagv1<br/>
-</p>
-<p><br/>
-获取子模块的代码<br/>
-git submodule init<br/>
-git submodule update pkgs/SUBMODULE<br/>
-</p>
-<p><br/>
-克隆所有模块<br/>
-git submodule update<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-2" class="outline-4">
-<h4 id="sec-1-2-2">install</h4>
-<div class="outline-text-4" id="text-1-2-2">
-
-<p>启动虚拟机,用缺省的用户名/密码 vyatta/vyatta登陆系统<br/>
-install image 基于image安装，推荐,可以切换image<br/>
-install system 基于disk安装，传统硬盘安装方式<br/>
-</p>
-<p><br/>
-There are two types of installations that can be performed on a persistent device: <br/>
-• Image-based install. The simplest, most flexible, and most powerful way to <br/>
-install a Vyatta system is using a binary system image. With this method, you can <br/>
-install multiple versions of the Vyatta system as images and switch between the <br/>
-images simply and easily. You install the image from a LiveCD then you reboot <br/>
-your system and it runs the image. <br/>
-• Disk-based install. A disk-based install also installs from a LiveCD onto a <br/>
-persistent device such as a hard disk partition. However, unlike an image-based <br/>
-install, a disk-based install uses a traditional layout of files on the disk. <br/>
-Additional system images may be added at a later time to a system created using <br/>
-a disk-based install. <br/>
-</p>
-<p><br/>
-nstall-image (is what I would suggest btw) is using squashfs and is capable of booting/running multiple images of versions<br/>
-</p>
-<p><br/>
-真让我好找，找了一天，终于找到安装脚本了，在pkgs/vyatta-cfg-system<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-3" class="outline-4">
-<h4 id="sec-1-2-3">debian install</h4>
-<div class="outline-text-4" id="text-1-2-3">
-
-<p>这个貌似比较重要，vyatta之所以看不太明白，应该是对d-i不了解。<br/>
-看看internal<br/>
-<a href="http://d-i.alioth.debian.org/doc/internals/">http://d-i.alioth.debian.org/doc/internals/</a><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-4" class="outline-4">
-<h4 id="sec-1-2-4">配置ip</h4>
-<div class="outline-text-4" id="text-1-2-4">
-
-<p>vyatta@vyatta:~$ configure<br/>
-vyatta@vyatta# set interfaces ethernet eth0 address 192.168.1.81/24<br/>
-vyatta@vyatta# commit<br/>
-vyatta@vyatta# exit<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-5" class="outline-4">
-<h4 id="sec-1-2-5">启动webui</h4>
-<div class="outline-text-4" id="text-1-2-5">
-
-<p>vyatta@R1# set service https<br/>
-不过需要商业版才能使用webui<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2-6" class="outline-4">
-<h4 id="sec-1-2-6">linux-image</h4>
-<div class="outline-text-4" id="text-1-2-6">
-
-<p>vyatta的内核配置<br/>
-/home/liwei/work/src_analysis/tag_vyatta_src/pkgs/linux-image/debian/arch/i386/config.586-vyatta-virt<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/16/shell-skill/">Shell命令技巧收集</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-16T00:00:00+08:00" pubdate data-updated="true">2012年11月16日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div><div><p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">资料，有空在整理</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>隆重推荐，one line command<br/>
-<a href="http://www.catonmat.net/">http://www.catonmat.net/</a><br/>
-</p>
-<p><br/>
-<a href="http://os.51cto.com/art/201008/222287.htm">http://os.51cto.com/art/201008/222287.htm</a><br/>
-<a href="http://os.51cto.com/art/201008/222743.htm">http://os.51cto.com/art/201008/222743.htm</a><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">添加上一个命令的最后一个参数</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>Alt .<br/>
-反复按会继续向上搜索<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">字符串比较，注意要用引号</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>字符串比较说明<br/>
-大多数时候，虽然可以不使用括起字符串和字符串变量的双引号，但这并不是好主意。为什么呢？因为如果环境变量中恰巧有一个空格或制表键，bash 将无法分辨，从而无法正常工作。这里有一个错误的比较示例：<br/>
- if [ $myvar = &#8220;foo bar oni&#8221; ]<br/>
-then <br/>
-     echo &#8220;yes&#8221;<br/>
-fi<br/>
-</p>
-<p><br/>
-在上例中，如果 myvar 等于 &#8220;foo&#8221;，则代码将按预想工作，不进行打印。但是，如果 myvar 等于 &#8220;foo bar oni&#8221;，则代码将因以下错误失败：<br/>
- [: too many arguments<br/>
-</p>
-<p><br/>
-在这种情况下，&#8221;$myvar&#8221;（等于 &#8220;foo bar oni&#8221;）中的空格迷惑了 bash。bash 扩展 &#8220;$myvar&#8221; 之后，代码如下：<br/>
- [ foo bar oni = &#8220;foo bar oni&#8221; ]<br/>
-</p>
-<p><br/>
-因为环境变量没放在双引号中，所以 bash 认为方括号中的自变量过多。可以用双引号将字符串自变量括起来消除该问题。请记住，如果养成将所有字符串自变量用双引号括起的习惯，将除去很多类似的编程错误。&#8221;foo bar oni&#8221; 比较 应该写成：<br/>
-if [ &#8220;$myvar&#8221; = &#8220;foo bar oni&#8221; ]<br/>
-then <br/>
-     echo &#8220;yes&#8221;<br/>
-fi<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">算术表达式 $(( ))</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p> $ myvar=&#8221;56&#8221;<br/>
- $ echo $(( $myvar + 12 ))<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">名字空间，全局性</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<p>在 bash 中，每当在函数内部创建环境变量，就将其添加到 全局名称空间。这意味着，该变量将重写函数之外的全局变量，并在函数退出之后继续存在<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">捕获脚本的输出 2&gt;&amp;1 | tee T型管道</h3>
-<div class="outline-text-3" id="text-1-6">
-
-<p>当显示正在生成的输出时，捕获每个脚本的输出 <br/>
-如果脚本不能自动地将输出发送到文件的话，可以利用 Bash shell 的一些函数来捕获所执行脚本的输出，如：<br/>
-./test-bucket-1  -s  2&gt;&amp;1  | tee test-bucket-1.out<br/>
-</p>
-<p><br/>
-让我们来分析上面的命令：<br/>
-&#8220;2&gt;&amp;1&#8221; 命令：<br/>
-使用 &#8220;2&gt;&amp;1&#8221; 将标准错误重定向到标准输出。字符串 &#8220;2&gt;&amp;1&#8221; 表明任何错误都应送到标准输出，即 UNIX/Linux 下 2 的文件标识代表标准错误，而 1 的文件标识代表标准输出。如果不用此字符串，那么所捕捉到的仅仅是正确的信息，错误信息会被忽略。<br/>
-管道 &#8220;|&#8221; 和 &#8220;tee&#8221; 命令：<br/>
-UNIX/Linux 进程和简单的管道概念很相似。既然这样，可以做一个管道将期望脚本的输出作为管道的输入。下一个要决定的是如何处理管道所输出的内容。在这种情况下，我们会将它捕获到输出文件中，在此示例中将之称为 &#8220;test-bucket-1.out&#8221;。<br/>
-但是，除了要捕获到输出结果外，我们还想监视脚本运行时产生的输出。为达到此目的，我们连接允许两件事同时进行的 &#8220;tee&#8221; （T- 形管道）：将输出结果放在文件中同时将输出结果显示在屏幕上。 其管道类似于：<br/>
-process &ndash;&gt; T &mdash;&gt; output file<br/>
-             V<br/>
-           screen<br/>
-</p>
-<p><br/>
-如果 只 想捕获输出结果而不想在屏幕上看到输出结果，那可以忽略多余的管道： ./test-bucket-1 -s 2&gt;&amp;1 &gt; test-bucket-1.out<br/>
-假若这样，相类似的管道如下：<br/>
-process &ndash;&gt; output file<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7" class="outline-3">
-<h3 id="sec-1-7">产生随机数</h3>
-<div class="outline-text-3" id="text-1-7">
-
-<p>dd if=/dev/urandom count=1 2&gt; /dev/null | cksum | cut -f1 -d&#8221; &#8221; <br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-8" class="outline-3">
-<h3 id="sec-1-8">取得一些文件名称中的一部分名称</h3>
-<div class="outline-text-3" id="text-1-8">
-
-<p>interfaces=`ls session_* | sed &#8216;s/^session_//g&#8217; | sed &#8216;s//.log$//g&#8217;`<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-9" class="outline-3">
-<h3 id="sec-1-9">如何用bash从文件中读一行</h3>
-<div class="outline-text-3" id="text-1-9">
-
-<p>while read line<br/>
-  do<br/>
-  echo $line<br/>
-done &lt; &#8220;$filename&#8221;<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-10" class="outline-3">
-<h3 id="sec-1-10">如何用bash发现某些文件中是否没有包含string</h3>
-<div class="outline-text-3" id="text-1-10">
-
-
-<p><br/>
-jsps=`find . -name &#8220;*.jsp&#8221;`<br/>
-</p>
-<p><br/>
-for jsp in $jsps; do<br/>
-    havegb=`grep gb2312 $jsp`<br/>
-        [ ! -n &#8220;$havegb&#8221; ] &amp;&amp; echo $jsp<br/>
-done<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-11" class="outline-3">
-<h3 id="sec-1-11">cd 替换技巧</h3>
-<div class="outline-text-3" id="text-1-11">
-
-<p>cd dir1/abc<br/>
-使用cd old new实现替换<br/>
-如：<br/>
-cd dir1 dir2<br/>
-等效于<br/>
-cd dir2/abc<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-12" class="outline-3">
-<h3 id="sec-1-12">上一条命令替换</h3>
-<div class="outline-text-3" id="text-1-12">
-
-<p>^foo^bar<br/>
-将上一条命令中的foo替换为bar，然后执行<br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/15/centos-kdump/">Centos Kdump</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-15T00:00:00+08:00" pubdate data-updated="true">2012年11月15日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">centos kdump</a>
-<ul>
-<li><a href="#sec-1-1">介绍</a></li>
-<li><a href="#sec-1-2">安装</a></li>
-<li><a href="#sec-1-3">添加内核启动参数</a></li>
-<li><a href="#sec-1-4">配置文件</a></li>
-<li><a href="#sec-1-5">测试</a></li>
-<li><a href="#sec-1-6">用crash 工具分析vmcore 文件</a></li>
-<li><a href="#sec-1-7">参考</a></li>
-<li><a href="#sec-1-8">遗留问题</a></li>
-<li><a href="#sec-1-9">systemtap</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/11/15/centos-kdump/">centos kdump</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">介绍</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>通过kexec和kdump当内核crash的时候可以显示堆栈信息。方便调试。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">安装</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>sudo yum install kexec-tools<br/>
-sudo yum install kernel-debug kernel-debug-devel<br/>
-yum install crash gdb<br/>
-</p>
-<p><br/>
-为了让内核都统一，不妨内核也升级一下<br/>
-yum install kernel kernel-devel<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">添加内核启动参数</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>crashkernel=128M@16M<br/>
-在/etc/grub.cfg中添加，表示启动的时候从16M的位置开始，预留128M内存用于crashkernel <br/>
-注意centos6.2我发现可能已经默认支持了kdump，只是没有启动而已，grub.cfg中已经添加了crashkernel=auto<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">配置文件</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>/etc/kdump.conf<br/>
-配置coredump的位置，默认是 /var/crash<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">测试</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<p>reboot后<br/>
-这会创建/boot/initrd-kdump.img用于capture coredump，这非常重要，否则kdump就会启动失败。<br/>
-该文件就是kdump加载的内核的 initrd文件，收集dump信息的工作就是在该initrd的启动环境下进行的。<br/>
-查看/etc/init.d/kdump脚本的代码，你可看到其中会调用mkdumprd命令创建用于dump的initrd文件。<br/>
-</p>
-<p><br/>
-service kdump status<br/>
-</p>
-<p><br/>
-触发crash<br/>
-echo 1 &gt; /proc/sys/kernel/sysrq<br/>
-echo &#8220;c&#8221; &gt; /proc/sysrq-trigger<br/>
-</p>
-<p><br/>
-等待时间比较长，大概5分钟，系统又重新进入了桌面。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">用crash 工具分析vmcore 文件</h3>
-<div class="outline-text-3" id="text-1-6">
-
-
-<p><br/>
-用crash 命令分析vmcore 的命令行格式如下所示. <br/>
-用crash打开vmcore后，主要是用dmesg及 bt 命令打印出问题的执行路径的call trace, <br/>
-用dis 反汇编出代码，最终确认call trace对应的C源码中的位置，再进行逻辑分析.<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-7" class="outline-3">
-<h3 id="sec-1-7">参考</h3>
-<div class="outline-text-3" id="text-1-7">
-
-<p><a href="http://www.linuxidc.com/Linux/2011-03/33548.htm">http://www.linuxidc.com/Linux/2011-03/33548.htm</a><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-8" class="outline-3">
-<h3 id="sec-1-8">遗留问题</h3>
-<div class="outline-text-3" id="text-1-8">
-
-<p>用crash需要vmlinux，到哪里获得？<br/>
-可能需要安装kernel-debuginfo<br/>
-但标准库里可能没有，需要另外添加。<br/>
-<a href="http://www.dedoimedo.com/computers/centos-debug.html">http://www.dedoimedo.com/computers/centos-debug.html</a><br/>
-</p>
-<p><br/>
-<a href="http://wiki.centos.org/AdditionalResources/Repositories">http://wiki.centos.org/AdditionalResources/Repositories</a><br/>
-已经说得很清楚了，需要额外添加debuginfo的库<br/>
-不过看到centos6.2中自带了<br/>
- /etc/yum.repos.d/CentOS-Debuginfo.repo<br/>
-<b>注意把其中的enabled改为1</b>,然后就可以安装了<br/>
-kernel-debuginfo 将近300M<br/>
-</p>
-<p><br/>
-先不下了，速度太慢了，10k。<br/>
-</p>
-<p><br/>
-还有个问题，就算能看vmcore了，那模块coredump也能看吗？<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-9" class="outline-3">
-<h3 id="sec-1-9">systemtap</h3>
-<div class="outline-text-3" id="text-1-9">
-
-<p>有空再研究一下kprobe和systemtap<br/>
-<a href="http://hi.baidu.com/donglix/item/13052275911e7a5f0c0a07f8">http://hi.baidu.com/donglix/item/13052275911e7a5f0c0a07f8</a><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/02/gcov/">Gcov</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-02T00:00:00+08:00" pubdate data-updated="true">2012年11月02日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">gcov</a>
-<ul>
-<li><a href="#sec-1-1">分支覆盖的作用</a></li>
-<li><a href="#sec-1-2">参考</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/11/02/gcov/">gcov</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">分支覆盖的作用</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>所有单元测试跑完后，统计分支覆盖率，统计测试的是否全面。一个程序如果每个分支都执行过了，也不能保证程序就是正确的。<br/>
-毕竟还有很多逻辑错误，但至少能从某种程度上显示出，这些代码测试的是否完善，不完善就还需要补充测试用例。<br/>
-可以显示出每行被执行了多少次，哪行没有被执行。<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">参考</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p><a href="http://www.taobaotest.com/blogs/qa?bid=8451">GCOV 实现原理</a><br/>
-&lt;深入浅出Linux平台代码覆盖率测试.pdf&gt;<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/02/cutter/">C单元测试框架:cutter</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-02T00:00:00+08:00" pubdate data-updated="true">2012年11月02日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div><div><p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">特性</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>c的单元测试见的多了，cutter有什么看家本领吗？<br/>
-</p><ol>
-<li>框平台性好<br/>
-   这个貌似意义不大，单元测试框架一般本身都很小巧，移植难度很小。<br/>
-
-<p><br/>
-</p></li>
-<li>自动探测用例<br/>
-   这个功能不错，只要开头是test_ 开头的函数，自动认为是testcase。<br/>
-   其实他是把testcase编译成了库，然后进行符号查找。<br/>
-
-<p><br/>
-</p></li>
-<li>显示友好<br/>
-   尽量精确的提出错误在哪里，有个expect和real，貌似还可以diff。<br/>
-
-<p><br/>
-</p></li>
-<li>支持数据驱动测试<br/>
-   这个功能还有点不明白，貌似应该是测试前准备数据集的功能，不知道是否是mock功能。<br/>
-
-<p><br/>
-</p></li>
-<li>支持代码的分支覆盖率攻击。<br/>
-
-<p><br/>
-</p></li>
-<li>针对ubuntu特别优化。<br/>
-</li>
-</ol>
-
-
-<p><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">后续待添加功能</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>从他的TODO中可以看到一些，不过我最期望的是：<br/>
-</p><ol>
-<li>测试用例的search<br/>
-</li>
-<li>内存泄漏测试，最好集成memwatch的功能。mem_limit很好。<br/>
-</li>
-<li>是否有mock功能？<br/>
-</li>
-</ol>
-
-
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">主页</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p><a href="http://sourceforge.net/projects/cutter/">http://sourceforge.net/projects/cutter/</a><br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/30/memwatch-/">Memwatch</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-30T00:00:00+08:00" pubdate data-updated="true">2012年10月30日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">memwatch</a>
-<ul>
-<li><a href="#sec-1-1">Memwatch简介</a></li>
-<li><a href="#sec-1-2">MemWatch的内存处理</a></li>
-<li><a href="#sec-1-3">初始化和结束处理</a></li>
-<li><a href="#sec-1-4">MemWatch的I/O 操作</a></li>
-<li><a href="#sec-1-5">使用</a>
-<ul>
-<li><a href="#sec-1-5-1">使用MemWatch提供的功能</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-6">Memwatch使用注意</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/30/memwatch-/">memwatch</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">Memwatch简介</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>在三种检测工具当中，设置最简单的算是memwatch，和dmalloc一样，<br/>
-它能检测未释放的内存、同一段内存被释放多次、位址存取错误及不当使用未分配之内存区域。<br/>
-请往<br/>
-<a href="http://www.linkdata.se/sourcecode.html">http://www.linkdata.se/sourcecode.html</a><br/>
-下载最新版本的Memwatch。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">MemWatch的内存处理</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>MemWatch将所有分配的内存用0xFE填充，所以，如果你看到错误的数据是用0xFE填充的，那就是你没有初始化数据。<br/>
-例外是calloc()，它会直接把分配的内存用0填充。<br/>
-</p>
-<p><br/>
-MemWatch将所有已释放的内存用0xFD填充(zapped with 0xFD).<br/>
-如果你发现你使用的数据是用0xFD填充的，那你就使用的是已释放的内存。<br/>
-在这种情况，注意MemWatch会立即把一个&#8221;释放了的块信息&#8221; 填在释放了的数据前。<br/>
-这个块包括关于内存在哪儿释放的信息，以可读的文本形式存放，格式 为&#8221;FBI&lt;counter&gt;filename(line)&#8221;。<br/>
-如:&#8221;FBI&lt;267&gt;test.c(12)&#8221;.使用FBI会降 低free()的速度，所以默认是关闭的。使用mwFreeBufferInfo(1)开启。<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">初始化和结束处理</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>一般来说，在程序中使用MemWatch的功能，可以手动添加mwInit()进行初始化，并用对应的mwTerm ()进行结束处理。<br/>
-一般不需要手动添加，memwatch会在第一个malloc的时候自动初始化，并在atexit中添加mwTerm。<br/>
-</p>
-<p><br/>
-如果自动初始化不合适或者程序比较特殊，请显式调用mwInit()和mwTerm().<br/>
-比如，有的时候明明程序没有问题，而memwatch显示内存泄漏，这时就需要手动调用初始化和结束。<br/>
-</p>
-<p><br/>
-涉及的函数主要有：<br/>
-mwInit()    mwTerm()    mwAbort()<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">MemWatch的I/O 操作</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p>对于一般的操作，MemWatch创建memwatch.log文件。有时，该文件不能被创建;<br/>
-MemWatch会试图创建memwatNN.log文件，NN在01~99之间。<br/>
-</p>
-<p><br/>
-如果你不能使用日志，或者不想使用，也没有问题。<br/>
-只要使用类型为&#8221;void func(int c)&#8221;的参数调用mwSetOutFunc()，然后所有的输出都会按字节定向到该函数.<br/>
-</p>
-<p><br/>
-当ASSERT或者VERIFY失败时，MemWatch也有Abort/Retry/Ignore处理机制。<br/>
-默认的处理机制没有I/O操作，但是会自动中断程序。<br/>
-你可以使用任何其他Abort/Retry/Ignore的处理机制,只要以参数&#8221;void func(int c)&#8221;调用mwSetAriFunc()。<br/>
-</p>
-<p><br/>
-涉及的函数主要有：<br/>
-mwTrace()           mwPuts()        mwSetOutFunc()  mwSetAriFunc()<br/>
-mwSetAriAction()    mwAriHandler()  mwBreakOut()<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-5" class="outline-3">
-<h3 id="sec-1-5">使用</h3>
-<div class="outline-text-3" id="text-1-5">
-
-<p>在要使用MemWatch的.c文件中包含头文件&#8221;memwatch.h&#8221;<br/>
-</p>
-<p><br/>
-使用GCC编译（注意：不是链接）自己的程序时，加入-DMEMWATCH -DMW_STDIO<br/>
-如：gcc -DMEMWATCH -DMW_STDIO –o test.o –c  test1.c memwatch.c<br/>
-</p>
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-5-1" class="outline-4">
-<h4 id="sec-1-5-1">使用MemWatch提供的功能</h4>
-<div class="outline-text-4" id="text-1-5-1">
-
-<ol>
-<li>mwTRACE，mwASSERT，mwVERIFY和mwPuts<br/>
-</li>
-<li>ARI机制即程序设置的“Abort, Retry, Ignore选择陷阱<br/>
-</li>
-<li>mwSetOutFunc<br/>
-   将输出转向调用者给出的函数(参数即函数地址)。参数为NULL，表示把输出写入日志文件memwatch.log.<br/>
-</li>
-<li>mwIsReadAddr<br/>
-   检查内存是否有读取的权限<br/>
-</li>
-<li>mwIsSafeAddr<br/>
-   检查内存是否有读、写的权限<br/>
-</li>
-<li>mwStatistics<br/>
-   设置状态搜集器的行为。对应的参数采用宏定义。<br/>
-
-<p><br/>
-   #define MW_STAT_GLOBAL  0       <i>* 仅搜集全局状态信息 *</i><br/>
-   #define MW_STAT_MODULE  1       <i>* 搜集模块级的状态信息 *</i><br/>
-   #define MW_STAT_LINE    2       <i>* 搜集代码行级的状态信息 *</i><br/>
-   #define MW_STAT_DEFAULT 0       <i>* 默认状态设置 *</i><br/>
-</p></li>
-</ol>
-
-
-<p><br/>
-</p></div>
-</div>
-
-</div>
-
-<div id="outline-container-1-6" class="outline-3">
-<h3 id="sec-1-6">Memwatch使用注意</h3>
-<div class="outline-text-3" id="text-1-6">
-
-<p>Memwatch 的优点是无需特別配置，不需安装便能使用，但缺点是它会拖慢程序的运行速度，尤其是释放内存时它会作大量检查。<br/>
-但它比mtrace和dmalloc多了 一项功能，就是能模拟系统内存不足的情況，<br/>
-使用者只需用mwLimit(long num_of_byte)函数来限制程式的heap memory大小(以byte单位)。<br/>
-</p>
-<p><br/>
-最详细的使用说明(包括优点缺点，运行原理等)已在README中列出，本人强烈建议各位读者参考该文件。<br/>
-</p>
-<p><br/>
-</p>
-<p><br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/29/cunit/">CUnit</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-29T00:00:00+08:00" pubdate data-updated="true">2012年10月29日</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">CUnit</a>
-<ul>
-<li><a href="#sec-1-1">CUnit交叉编译</a></li>
-<li><a href="#sec-1-2">使用bootstrap而不是configure</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2012/10/29/cunit/">CUnit</a></h2>
-<div class="outline-text-2" id="text-1">
-
-
-<p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">CUnit交叉编译</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>我更换到ubuntu12.04上编译CUnit已经编译不过去了，错误原因是：<br/>
-libtool : X&ndash;tag=CC: command not found 编译报错<br/>
-原因据说是因为在项目目录下生成的libtool脚本中定义了$ECHO变量，但是在脚本文件ltmain.sh中，使用的却是$echo(生成的libtool版本太旧)<br/>
-可通过以下方法解决：<br/>
-</p>
-<p> <br/>
-</p><ol>
-<li>直接复制系统自带的libtool到项目目录，应该在/usr/bin目录下，覆盖代码文件目录下的libtool，再执行make<br/>
-</li>
-</ol>
-
-<p>（没装就apt-get install libtool 或者 yum install libtool 安装一下吧）<br/>
-但是这有个问题，不能用于交叉编译，系统的libtool会使用系统的ld等，而应该使用交叉工具连的ld。<br/>
-</p>
-<p> <br/>
-</p><ol>
-<li>修改aclocal.m4文件，将上面的LIBTOOL=&#8217;$(SHELL) $(top_builddir)/libtool&#8217;改成<br/>
-</li>
-</ol>
-
-<p>LIBTOOL=&#8217;$(SHELL)  /usr/bin/libtool&#8217;后重新执行./configure<br/>
-</p>
-<p> <br/>
-</p><ol>
-<li>将源码目录下libtool脚本中所有的$ECHO替换成$echo. 或者将脚本文件ltmain.sh里的$echo替换成$ECHO，<br/>
-</li>
-</ol>
-
-<p>都一样，重新执行./configure<br/>
-</p>
-<p><br/>
-另一种解决方案<br/>
-export echo=echo  回车后 make 正常<br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">使用bootstrap而不是configure</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>没有了上边的libtool的问题，直接修改bootstrap，添加CC就ok了。<br/>
-CC=/workspace26/i386-env/cross-tools/bin/i686-unknown-linux-gnu-gcc<br/>
-或者采用&ndash;host的形式：<br/>
-PATH=/workspace26/i386-env/cross-tools/bin/:$PATH LD_LIBRARY_PATH=/workspace26/env-x86-lib <br/>
-./configure &ndash;host=i686-unknown-linux-gnu &ndash;enable-shared=no &ndash;disable-dependency-tracking<br/>
-</p></div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <ul class="pager">
     
     <li class="previous"><a href="/blog/page/5/">&larr; Older</a></li>
@@ -1622,7 +2109,7 @@ PATH=/workspace26/i386-env/cross-tools/bin/:$PATH LD_LIBRARY_PATH=/workspace26/e
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (3)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (11)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/efficiency'>efficiency (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/libvirt'>libvirt (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/network'>network (2)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (4)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (13)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -1658,23 +2145,23 @@ dpc=1"></iframe>
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
-        <a href="/blog/2013/03/19/emacs-desktop/">emacs的desktop保存</a>
+        <a href="/blog/2013/08/05/bond-mode/">bond的几种mode</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/17/expect/">expect自动ssh登录</a>
+        <a href="/blog/2013/07/25/tmux/">tmux</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/12/nfs-server/">NFS server</a>
+        <a href="/blog/2013/06/16/virsh-note/">virsh使用</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/11/xclip/">xlicp在命令行下使用剪切板</a>
+        <a href="/blog/2013/06/11/nic-offload/">网卡offload</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/10/zsh/">zsh</a>
+        <a href="/blog/2013/06/08/10/">提升软件开发者生产力的10个提示</a>
       </li>
     
   </ul>

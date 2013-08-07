@@ -4,7 +4,7 @@
   <title><![CDATA[Category: tools | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/tools/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-03-24T21:03:31+08:00</updated>
+  <updated>2013-08-07T10:25:41+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -12,6 +12,528 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[tmux]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/07/25/tmux/"/>
+    <updated>2013-07-25T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/07/25/tmux</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">tmux终端复用软件</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>tmux是一个优秀的终端复用软件，类似GNU Screen，但来自于OpenBSD，采用BSD授权。<br/>
+使用它最直观的好处就是，通过一个终端登录远程主机并运行tmux后，<br/>
+在其中可以开启多个控制台而无需再使用更多的SSH会话来连接这台远程主机；其功能远不止于此。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">CS模式，掉线不退出</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>tmux使用C/S模型构建，主要包括以下单元模块：<br/>
+</p>
+<p><br/>
+一个tmux命令执行后启动一个tmux服务<br/>
+一个tmux服务可以拥有多个session，一个session可以看作是tmux管理下的伪终端的一个集合<br/>
+一个session可能会有多个window与之关联，每个window都是一个伪终端，会占据整个屏幕<br/>
+一个window可以被分割成多个pane<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">tmux快捷键</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>tmux在会话中使用大量的快捷键来控制多个窗口、多个会话等。<br/>
+</p>
+<p><br/>
+Ctrl+b  #激活控制台；此时以下按键生效   <br/>
+系统操作   <br/>
+</p>
+<p><br/>
+<pre class="src src-sh">?   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21015;&#20986;&#25152;&#26377;&#24555;&#25463;&#38190;&#65307;&#25353;q&#36820;&#22238;   </span>
+d   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#33073;&#31163;&#24403;&#21069;&#20250;&#35805;&#65307;&#36825;&#26679;&#21487;&#20197;&#26242;&#26102;&#36820;&#22238;Shell&#30028;&#38754;&#65292;&#36755;&#20837;tmux attach&#33021;&#22815;&#37325;&#26032;&#36827;&#20837;&#20043;&#21069;&#30340;&#20250;&#35805;   </span>
+D   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36873;&#25321;&#35201;&#33073;&#31163;&#30340;&#20250;&#35805;&#65307;&#22312;&#21516;&#26102;&#24320;&#21551;&#20102;&#22810;&#20010;&#20250;&#35805;&#26102;&#20351;&#29992;   </span>
+Ctrl+z  <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#25346;&#36215;&#24403;&#21069;&#20250;&#35805;   </span>
+r   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#24378;&#21046;&#37325;&#32472;&#26410;&#33073;&#31163;&#30340;&#20250;&#35805;   </span>
+s   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36873;&#25321;&#24182;&#20999;&#25442;&#20250;&#35805;&#65307;&#22312;&#21516;&#26102;&#24320;&#21551;&#20102;&#22810;&#20010;&#20250;&#35805;&#26102;&#20351;&#29992;   </span>
+:   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36827;&#20837;&#21629;&#20196;&#34892;&#27169;&#24335;&#65307;&#27492;&#26102;&#21487;&#20197;&#36755;&#20837;&#25903;&#25345;&#30340;&#21629;&#20196;&#65292;&#20363;&#22914;kill-server&#21487;&#20197;&#20851;&#38381;&#26381;&#21153;&#22120;   </span>
+[   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36827;&#20837;&#22797;&#21046;&#27169;&#24335;&#65307;&#27492;&#26102;&#30340;&#25805;&#20316;&#19982;vi/emacs&#30456;&#21516;&#65292;&#25353;q/Esc&#36864;&#20986;   </span>
+&#65341;  copy
+~   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21015;&#20986;&#25552;&#31034;&#20449;&#24687;&#32531;&#23384;&#65307;&#20854;&#20013;&#21253;&#21547;&#20102;&#20043;&#21069;tmux&#36820;&#22238;&#30340;&#21508;&#31181;&#25552;&#31034;&#20449;&#24687;   </span>
+</pre>
+
+窗口操作   <br/>
+</p>
+<p><br/>
+<pre class="src src-sh">c   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21019;&#24314;&#26032;&#31383;&#21475;   </span>
+&amp;   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20851;&#38381;&#24403;&#21069;&#31383;&#21475;   </span>
+&#25968;&#23383;&#38190; <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20999;&#25442;&#33267;&#25351;&#23450;&#31383;&#21475;   </span>
+p   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20999;&#25442;&#33267;&#19978;&#19968;&#31383;&#21475;   </span>
+n   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20999;&#25442;&#33267;&#19979;&#19968;&#31383;&#21475;   </span>
+l   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#21069;&#21518;&#20004;&#20010;&#31383;&#21475;&#38388;&#20114;&#30456;&#20999;&#25442;   </span>
+w   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36890;&#36807;&#31383;&#21475;&#21015;&#34920;&#20999;&#25442;&#31383;&#21475;   </span>
+,   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#37325;&#21629;&#21517;&#24403;&#21069;&#31383;&#21475;&#65307;&#36825;&#26679;&#20415;&#20110;&#35782;&#21035;   </span>
+<span style="color: #a52a2a;">.</span>   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20462;&#25913;&#24403;&#21069;&#31383;&#21475;&#32534;&#21495;&#65307;&#30456;&#24403;&#20110;&#31383;&#21475;&#37325;&#26032;&#25490;&#24207;   </span>
+f   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#25152;&#26377;&#31383;&#21475;&#20013;&#26597;&#25214;&#25351;&#23450;&#25991;&#26412;   </span>
+</pre>
+
+面板操作   <br/>
+</p>
+<p><br/>
+<pre class="src src-sh">&#8221;   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#23558;&#24403;&#21069;&#38754;&#26495;&#24179;&#20998;&#20026;&#19978;&#19979;&#20004;&#22359;   </span>
+%   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#23558;&#24403;&#21069;&#38754;&#26495;&#24179;&#20998;&#20026;&#24038;&#21491;&#20004;&#22359;   </span>
+x   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20851;&#38381;&#24403;&#21069;&#38754;&#26495;   </span>
+!   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#23558;&#24403;&#21069;&#38754;&#26495;&#32622;&#20110;&#26032;&#31383;&#21475;&#65307;&#21363;&#26032;&#24314;&#19968;&#20010;&#31383;&#21475;&#65292;&#20854;&#20013;&#20165;&#21253;&#21547;&#24403;&#21069;&#38754;&#26495;   </span>
+Ctrl+&#26041;&#21521;&#38190;    <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20197;1&#20010;&#21333;&#20803;&#26684;&#20026;&#21333;&#20301;&#31227;&#21160;&#36793;&#32536;&#20197;&#35843;&#25972;&#24403;&#21069;&#38754;&#26495;&#22823;&#23567;   </span>
+Alt+&#26041;&#21521;&#38190; <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#20197;5&#20010;&#21333;&#20803;&#26684;&#20026;&#21333;&#20301;&#31227;&#21160;&#36793;&#32536;&#20197;&#35843;&#25972;&#24403;&#21069;&#38754;&#26495;&#22823;&#23567;   </span>
+Space   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#39044;&#32622;&#30340;&#38754;&#26495;&#24067;&#23616;&#20013;&#24490;&#29615;&#20999;&#25442;&#65307;&#20381;&#27425;&#21253;&#25324;even-horizontal&#12289;even-vertical&#12289;main-horizontal&#12289;main-vertical&#12289;tiled   </span>
+q   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#26174;&#31034;&#38754;&#26495;&#32534;&#21495;   </span>
+o   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#22312;&#24403;&#21069;&#31383;&#21475;&#20013;&#36873;&#25321;&#19979;&#19968;&#38754;&#26495;   </span>
+&#26041;&#21521;&#38190; <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#31227;&#21160;&#20809;&#26631;&#20197;&#36873;&#25321;&#38754;&#26495;   </span>
+{   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21521;&#21069;&#32622;&#25442;&#24403;&#21069;&#38754;&#26495;   </span>
+}   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#21521;&#21518;&#32622;&#25442;&#24403;&#21069;&#38754;&#26495;   </span>
+Alt+o   <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#36870;&#26102;&#38024;&#26059;&#36716;&#24403;&#21069;&#31383;&#21475;&#30340;&#38754;&#26495;   </span>
+Ctrl+o  <span style="color: #8c8c8c; font-style: italic;">#</span><span style="color: #8c8c8c; font-style: italic;">&#39034;&#26102;&#38024;&#26059;&#36716;&#24403;&#21069;&#31383;&#21475;&#30340;&#38754;&#26495;  </span>
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">配置文件</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>tmux配置文件在~/.tmux.conf和/etc/tmux.conf中，配置文件中可以修改默认绑定的快捷键<br/>
+</p>
+<p><br/>
+配置文件示例：<br/>
+</p>
+<p><br/>
+set-option -g base-index 1                        #窗口的初始序号；默认为0，这里设置为1   <br/>
+set-option -g display-time 5000                   #提示信息的持续时间；设置足够的时间以避免看不清提示，单位为毫秒   <br/>
+set-option -g repeat-time 1000                    #控制台激活后的持续时间；设置合适的时间以避免每次操作都要先激活控制台，单位为毫秒   <br/>
+set-option -g status-keys vi                      #操作状态栏时的默认键盘布局；可以设置为vi或emacs   <br/>
+set-option -g status-right "#(date +%H:%M' ')"    #状态栏右方的内容；这里的设置将得到类似23:59的显示   <br/>
+set-option -g status-right-length 10              #状态栏右方的内容长度；建议把更多的空间留给状态栏左方（用于列出当前窗口）   <br/>
+set-option -g status-utf8 on                      #开启状态栏的UTF-8支持   <br/>
+</p>
+<p>  <br/>
+set-window-option -g mode-keys vi    #复制模式中的默认键盘布局；可以设置为vi或emacs   <br/>
+set-window-option -g utf8 on         #开启窗口的UTF-8支持   <br/>
+</p>
+<p>  <br/>
+set-option -g prefix C-a   <br/>
+unbind-key C-b   <br/>
+bind-key C-a send-prefix   <br/>
+</p>
+<p>  <br/>
+bind-key z kill-session                     #按z结束当前会话；相当于进入命令行模式后输入kill-session   <br/>
+bind-key h select-layout even-horizontal    #按h将当前面板布局切换为even-horizontal；相当于进入命令行模式后输入select-layout even-horizontal   <br/>
+bind-key v select-layout even-vertical      #按v将当前面板布局切换为even-vertical；相当于进入命令行模式后输入select-layout even-vertical   <br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[distcc和dmucs分布式编译环境的负载均衡]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/03/27/distcc-dmucs/"/>
+    <updated>2013-03-27T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/03/27/distcc-dmucs</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">distcc和dmucs分布式编译环境的负载均衡</a>
+<ul>
+<li><a href="#sec-1-1">使用distcc分布式编译的特点与潜在问题</a></li>
+<li><a href="#sec-1-2">一种实现负载均衡的解决方案：使用 DMUCS</a></li>
+<li><a href="#sec-1-3">DMUCS 以下四个部分程序组成。</a>
+<ul>
+<li><a href="#sec-1-3-1">dmucs 主服务程序</a></li>
+<li><a href="#sec-1-3-2">Loadavg 监控程序</a></li>
+<li><a href="#sec-1-3-3">gethost 编译命令</a></li>
+<li><a href="#sec-1-3-4">Monitor 管理程序（非必须）</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">distcc</a>
+<ul>
+<li><a href="#sec-1-4-1">distcc</a></li>
+<li><a href="#sec-1-4-2">distccd</a></li>
+<li><a href="#sec-1-4-3">distccmon-text</a></li>
+<li><a href="#sec-1-4-4">distccmon-gnome</a></li>
+<li><a href="#sec-1-4-5">Distcc配置</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">dmucs配置</a></li>
+<li><a href="#sec-1-6">从官网的说明</a>
+<ul>
+<li><a href="#sec-1-6-1">pump mode</a></li>
+<li><a href="#sec-1-6-2">编译器如果是绝对路径</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-7">联合使用ccache和distcc</a></li>
+<li><a href="#sec-1-8">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.comblog/categories/tools/atom.xml">distcc和dmucs分布式编译环境的负载均衡</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">使用distcc分布式编译的特点与潜在问题</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>  作为经典的分布式编译工具，distcc 在日常工作中常为我们使用来解决大型项目在单一工作站上编译较慢的问题。<br/>
+其主要用于对 C, Object C 以及 C++ 代码进行并行编译，将可以并行的编译任务分布于编译集群中的各个工作站，有效利用各机器资源，达到整体编译性能的成倍提升。<br/>
+  在类 Unix 系统上，distcc 使用 sendfile 系统调用在不同工作节点之间传送文件，尽管这种网络文件传输会占用一定的时间，他们对工作机的 CPU 资源占用却很小，<br/>
+而且这种分发任务的方式能够简化构建环境的配置，distcc 在这方面同早期的一些基于共享文件系统的分布编译环境 (dmake, pvmmake 等等 ) 相比几乎是 0 配置。<br/>
+  distcc 对各个编译节点的本地系统库及头文件基本没有要求，即使在不同的节点上这些组件的版本不同也不会影响到最终编译结果的正确性，<br/>
+实际情况是 distcc 会在本地 (client机) 完成存在版本依赖的编译任务。<br/>
+  这个在本地做过预处理的 ASCII 源文件及其他命令行选项即可唯一确定一个目标文件，而与此任务在哪台机器上运行无关，通过分发这种任务到各个节点，即可消除对头文件的依赖。<br/>
+同理 distcc 通过在任务的分发节点做链接来消除对库文件的依赖。<br/>
+  然而，distcc 的缺点在于其负载均衡算法过于简单，distcc 的代理进程对各个工作机当前的负荷没有感知，分发预处理文件的唯一依据是主机出现在DISTCC_HOST环境变量中的次序，<br/>
+主机名越靠前，就会得到更多的编译任务，然而当编译场中某些机器性能过差，整体编译性能会显著下降，当阻塞 Make 运行的编译任务运行在这些机器上的时候，这种性能变化尤为明显。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">一种实现负载均衡的解决方案：使用 DMUCS</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>毫无疑问，在上述编译集群中，有必要采用负载均衡来使编译系能得到最大的优化。这就需要在编译集群中增加监控各工作机工作量的监控程序，动态检测和平衡编译机的负载。<br/>
+一个有效的方案是使用 DMUCS（Distributed Multi-User Compilation System）应用。DMUCS 是一个实现于 distcc 之上的动态平衡和任务分布程序。它可以：<br/>
+</p>
+<p><br/>
+　　支持多用户同时编译，扩展性好，可以很好处理新增的负载。<br/>
+　　支持多种操作系统所组成的编译集群。<br/>
+　　可以使用具有多处理器（多核）编译主机的所有处理资源。<br/>
+　　可以充分使用具有不同处理速度的编译主机，使整体编译性能达到最优。<br/>
+　　可以保证参与编译的主机不会由于编译任务而产生超负载的情况。<br/>
+　　考虑到了编译主机上由非编译任务所引起的负载情况。<br/>
+　　支持从编译集群中动态的增加或者移除编译主机。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">DMUCS 以下四个部分程序组成。</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">dmucs 主服务程序</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>DMUCS 解决方案的核心服务程序。每个编译集群仅运行一个 dmucs 主服务程序，其运行于哪一台主机上没有限制。<br/>
+该程序从一个配置文件读出编译场里处理器数目和每个可能主机的“潜能”。<br/>
+然后从网络接收每个编译主机的平均负载信息，编译任务数量和监控程序得到的编译请求信息。<br/>
+dmucs 管理一个编译场里主机的数据库，并调度主机去编译任务，当有编译请求时给出可用的最快的主机。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">Loadavg 监控程序</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p>编译场的每个参与编译的主机上均需要启动这个程序。loadavg 定期发送编译主机的平均负载到 dmucs 服务器。<br/>
+这样当某个主机的平均负载太高时，dmucs 服务器会将不会优先给该主机分配编译任务。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3">gethost 编译命令</h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+<p>gethost 是具体进行编译的命令，其运行于distcc之上。<br/>
+该命令从运行dmucs主服务程序的主机获取编译集群中的机器信息来获得放进 DISTCC_HOSTS 环境变量里的主机，然后调用所分配的编译机进行编译。<br/>
+在编译结束后，gethost 释放所分配的主机到 dmucs 主服务器。用户使用“make CXX=gethost distcc”来启动编译。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4">Monitor 管理程序（非必须）</h4>
+<div class="outline-text-4" id="text-1-3-4">
+
+<p>编译集群的管理员可以使用这个程序监控编译场的繁忙情况。<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">distcc</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>distcc 会安装如下可执行文件：<br/>
+</p>
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">distcc</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<p>整个编译任务通常由一台机器发起，在 distcc 编译环境下，这台机器被称为 client，client 必须使用 distcc 来替代原有的 GNU 编译器命令，<br/>
+由于 distcc 的后台编辑程序仍然是 GNU 编译器，distcc 与 gcc, g++, cc, c++ 等程序的编译参数兼容。<br/>
+distcc 必须与 Make 命令的 -j 参数协同使用，client 机通过指定此参数来定义并发编译的任务数。在默认情况下，一台编译机的 distcc 允许的并发任务的数量是 CPU 数量 +2。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2">distccd</h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+<p>distccd 是运行在编译场内各个节点上的 distcc 代理程序，distccd 的常用参数如下：<br/>
+　　-j: 指定可以在本节点上运行的最大任务数；<br/>
+　　-N: 如果编译节点上运行有其他重要任务，可以通过指定 -N 参数来调整编译进程的运行优先级；<br/>
+　　-a: 指定 distccd 可以接受来自哪些节点的连接请求，-a 参数的值可以是一个网段，也可以是所有编辑节点主机名 (IP 地址 ) 的列表。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-3" class="outline-4">
+<h4 id="sec-1-4-3">distccmon-text</h4>
+<div class="outline-text-4" id="text-1-4-3">
+
+<p>可以通过运行 distccmon-text 来通过一个字符界面监控整个编译任务，此命令唯一的参数是监控任务的刷新间隔 ( 秒 )。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-4" class="outline-4">
+<h4 id="sec-1-4-4">distccmon-gnome</h4>
+<div class="outline-text-4" id="text-1-4-4">
+
+<p>一个图形化的监控前端，下图是此程序的一个运行实例。其中，任务进度指示条颜色的意义分别为：<br/>
+绿色：compiling；紫色：preprocessing；蓝色：receiving；橙色：connecting；白色：idle;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-5" class="outline-4">
+<h4 id="sec-1-4-5">Distcc配置</h4>
+<div class="outline-text-4" id="text-1-4-5">
+
+<p>Distcc client 通过配置环境变量 DISTCC_HOSTS 来指定编译场中的各个节点，具体命令如：<br/>
+export　DISTCC_HOSTS="192.168.1.1,　192.168.1.2"<br/>
+</p>
+<p><br/>
+还有配置文件/etc/default/distcc<br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">dmucs配置</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>在/etc/init.d/distcc中添加<br/>
+ps aux | sed '/grep/d' | grep -q loadavg || loadavg -s A-desktop &amp;<br/>
+DEAMON_ARGS="-j4 &ndash;pid-file&hellip;&hellip;"<br/>
+</p>
+<p><br/>
+loadavg -s 是为了向主机A-desktop发送编译负载信息。<br/>
+最后在DEAMON_ARGS参数中加入-jN,N表示当前机器上将运行几个编译进程。<br/>
+</p>
+<p><br/>
+配置dmucs<br/>
+sudo vi /etc/default/dmucs<br/>
+SERVER=yes<br/>
+dmucs 是用于接收loadavg发送过来的编译负载信息，以及编译数据，用于在server端建立一个TCP的监听端口。<br/>
+默认监听端口为9714，client端loadavg会与server端的dumucs建立TCP连接，发送和接收数据<br/>
+可以用lsof | grep 9714 查看dmucs，当然先要启动dmucs。<br/>
+最后再server上启动dmucs，和 distcc 守护进程<br/>
+sudo /etc/init.d/dmucs start<br/>
+sudo /etc/init.d/distcc start<br/>
+在distcc中运行loadavg的意思是，server也参与编译工作。自己做自己的client。<br/>
+</p>
+<p><br/>
+client端设置，以B为例，C以此类推<br/>
+设置/etc/default/distcc<br/>
+sudo vi /etc/default/distcc<br/>
+STARTDISTCC="true"<br/>
+ALLOWEDNETS="127.0.0.1 192.168.0.1/16"<br/>
+LISTENER="192.168.0.2"<br/>
+其他参数不变。<br/>
+一般来说，LISTENER设置为本机Ip就可以了。<br/>
+</p>
+<p><br/>
+所以我们可以用如下命令代替，它可以自动搜索到本机ip，所以即使client重启ip变了，也不用担心<br/>
+LISTENER=`ifconfig | grep '192.168' | cut -d: -f2 | awk '{ print $1}' | head -n1`<br/>
+</p>
+<p><br/>
+启动distcc 守护进程，client端不用启动dmucs，<br/>
+sudo /etc/init.d/distcc start<br/>
+</p>
+<p><br/>
+最后在client端设置编译参数：<br/>
+sudo vi ~/.bashrc<br/>
+加入：<br/>
+export ARCH=arm<br/>
+export CROSS_COMPILE="gethost &ndash;server A-desktop distcc arm-XXX-eabi-"<br/>
+以同样的方式配置C完成以后就可以开始编译了，<br/>
+</p>
+<p><br/>
+选取一个linux kernel编译<br/>
+make arm_defconfig<br/>
+make -j20<br/>
+console 会显示distcc的编译相关信息，<br/>
+同时可以在当前编译的机器上，另外开一个console上输入distccmon-text来查看distcc分派编译包的信息<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">从官网的说明</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>60-second instructions<br/>
+</p>
+<p><br/>
+</p><ol>
+<li>For each machine, download distcc, unpack, and do<br/>
+   ./configure &amp;&amp; make &amp;&amp; sudo make install<br/>
+</li>
+<li>On each of the servers, run distccd &ndash;daemon, with &ndash;allow options to restrict access.<br/>
+</li>
+<li>Put the names of the servers in your environment:<br/>
+   export DISTCC_POTENTIAL_HOSTS='localhost red green blue'<br/>
+</li>
+<li>Build!<br/>
+   cd ~/work/myproject; pump make -j8 CC=distcc<br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p>
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1">pump mode</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<p>注意dictcc3版本以后添加了pump模式。<br/>
+In "pump" mode, distcc sends source file with their included header files to the compilation servers, which now carry out both preprocessing and compilation. As a result, distcc-pump can distribute files up to 10 times faster to compilation servers than distcc.<br/>
+</p>
+<p><br/>
+distcc-pump is easily deployed through a wrapper script around an existing build command, such as 'make'. Pump mode uses the system header files from the compilation servers, so it works best if all of your compilation servers are configured identically, or if you use cross-compilers that come with their own system header files.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2">编译器如果是绝对路径</h4>
+<div class="outline-text-4" id="text-1-6-2">
+
+<p>If the compiler name is an absolute path, it is passed verbatim to the server and the compiler is run from that directory. For example:<br/>
+distcc /usr/local/bin/gcc-3.1415 -c hello.c<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">联合使用ccache和distcc</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>网上说：<br/>
+联合使用distcc和ccache的效果就和仅使用 distcc一样。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">参考</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p><a href="http://distcc.samba.org/">http://distcc.samba.org/</a><br/>
+<a href="http://dmucs.sourceforge.net/">http://dmucs.sourceforge.net/</a><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[expect自动ssh登录]]></title>
@@ -279,184 +801,6 @@ bindkey "\r" user-ret
 
 </p></div>
 </div>
-</div>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[grub重定向到串口]]></title>
-    <link href="http://emmoblin.github.com/blog/2013/03/02/grub-output-to-serial/"/>
-    <updated>2013-03-02T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2013/03/02/grub-output-to-serial</id>
-    <content type="html"><![CDATA[<div><div><p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">** grub输出到串口</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>将GRUB输出重定向到串口(Edit /boot/grub/grub.conf)<br/>
-</p>
-<p><br/>
-<pre class="example">serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1
-terminal --timeout=5 console serial
-</pre>
-
-
-grub引导过程中, 会将输出同时发送到终端屏幕和串口. <br/>
-grub引导过程中将在终端和连接到串口的超级终端上提示Press any key to continue, <br/>
-每秒钟提示一次, 共5次, 可修改menu.lst文件terminal行中的&ndash;timeout=10改变提示次数, <br/>
-在这一段时间内, 可以在终端的键盘, 或者连接到串口的超级终端中按任意键进入grub选择菜单. <br/>
-如果5秒内没有在终端和连接串口的超级终端上按任意键, 则grub的选择菜单将出现在console上, <br/>
-如果希望默认情况下, grub选择菜单出现在串口上, 则可修改grub.conf将<br/>
-console serial修改为serial console.<br/>
-</p>
-<p><br/>
-将kernel输出信息输出到串口(编辑 /boot/grub/grub.conf 有的为menu.lst)<br/>
-增加kernel引导参数如下:<br/>
-</p>
-<p><br/>
-<pre class="example">kernel  /boot/vmlinuz-2.6.32-29 root=/dev/hda1 ro console=ttyS0,115200n8 console=tty0
-</pre>
-
-
-grub2的例子<br/>
-修改文件/etc/default/grub<br/>
-</p>
-<p><br/>
-<pre class="example">#显示启动菜单
-#GRUB_HIDDEN_TIMEOUT=0
-修改相应的变量如下：
-GRUB_CMDLINE_LINUX="console=ttyS0,115200"
-GRUB_TERMINAL=serial
-GRUB_SERIAL_COMMAND="serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
-</pre>
-
-
-</p><ol>
-<li>运行命令， 更新grub<br/>
-   <code>sudo update-grub</code><br/>
-
-<p><br/>
-</p></li>
-<li>在/etc/init/下，创建文件ttyS0.conf：<br/>
-</li>
-</ol>
-
-
-<p><br/>
-<pre class="example"># ttyS0 - getty
-start on stopped rc RUNLEVEL=[23]
-stop on runlevel [!23]
-
-respawn
-exec /sbin/getty -L 115200 ttyS0 vt100
-</pre>
-
-
-</p><ol>
-<li>查看/etc/securetty中，含有ttyS0否。没有则加上。<br/>
-</li>
-<li>BIOS开启串口<br/>
-</li>
-<li>另一台机器，联上串口线，开启teraterm,设置115200 8n1<br/>
-</li>
-<li>重启机器, 看到teraterm输出Linux的启动信息。<br/>
-</li>
-</ol>
-
-
-<p><br/>
-通过比较生成的grub.cfg<br/>
-发现多了一个<br/>
-</p>
-<p><br/>
-<pre class="example">terminal_output serial
-terminal_input serial
-</pre>
-
-</p>
-<p> <br/>
-</p></div>
-</div>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[nc使用]]></title>
-    <link href="http://emmoblin.github.com/blog/2013/02/27/netcat/"/>
-    <updated>2013-02-27T00:00:00+08:00</updated>
-    <id>http://emmoblin.github.com/blog/2013/02/27/netcat</id>
-    <content type="html"><![CDATA[<div><div><p><br/>
-</p>
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">基本使用</h3>
-<div class="outline-text-3" id="text-1-1">
-
-<p>本地监听<br/>
-<code>nc -l 3333</code><br/>
-远端访问<br/>
-<code>nc 192.168.0.1 3333</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">传送文件</h3>
-<div class="outline-text-3" id="text-1-2">
-
-<p>发送端<br/>
-<code>cat backup.iso | nc -l 3333</code><br/>
-接收端<br/>
-<code>nc 192.168.0.1 3333 &gt; backup.iso</code><br/>
-</p>
-<p><br/>
-显示传送进度，可以使用管道监控,pv命令<br/>
-以上命令修改为：<br/>
-<code>cat backup.iso | pv -b | nc -l 3333</code><br/>
-<code>nc 192.168.0.1 3333 | pv -b &gt; backup.iso</code><br/>
-</p>
-<p><br/>
-本地打包文件，传送到远端<br/>
-<code>tar -czf - /etc/ | nc -l 3333</code><br/>
-接收端<br/>
-<code>nc 192.168.0.1 3333 | pv -b &gt; mybackup.tar.gz</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-3" class="outline-3">
-<h3 id="sec-1-3">端口扫描</h3>
-<div class="outline-text-3" id="text-1-3">
-
-<p>扫描端口，并返回相关信息<br/>
-<code>nc -z 192.168.0.1 80-90</code><br/>
-</p>
-<p><br/>
-</p></div>
-
-</div>
-
-<div id="outline-container-1-4" class="outline-3">
-<h3 id="sec-1-4">资料</h3>
-<div class="outline-text-3" id="text-1-4">
-
-<p><a href="http://www.sans.org/security-resources/sec560/netcat_cheat_sheet_v1.pdf">http://www.sans.org/security-resources/sec560/netcat\_cheat\_sheet\_v1.pdf</a><br/>
-<a href="http://www.g-loaded.eu/2006/11/06/netcat-a-couple-of-useful-examples/">http://www.g-loaded.eu/2006/11/06/netcat-a-couple-of-useful-examples/</a><br/>
-</p>
-<p><br/>
-</p></div>
 </div>
 </div>
 

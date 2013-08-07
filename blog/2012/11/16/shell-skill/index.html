@@ -248,8 +248,42 @@ process &ndash;&gt; output file<br/>
 </div>
 
 <div id="outline-container-1-7" class="outline-3">
-<h3 id="sec-1-7">产生随机数</h3>
+<h3 id="sec-1-7">sudo 输出重定向</h3>
 <div class="outline-text-3" id="text-1-7">
+
+
+<p><br/>
+当我们使用sudo 进行输出重定向的时候，命令的第二部分无法获得授权<br/>
+</p>
+<p><br/>
+sudo command &gt; outputfile<br/>
+</p>
+<p><br/>
+&lt;&gt;—-root——&lt;&gt;—user—&lt;&gt;<br/>
+</p>
+<p><br/>
+解决方法：<br/>
+</p>
+<p><br/>
+使用’sudo tee’代替”&gt;”;<br/>
+</p>
+<p><br/>
+使用”sudo tee -a”代替”&gt;&gt;”;<br/>
+</p>
+<p><br/>
+sudo command | sudo tee outputfile<br/>
+</p>
+<p><br/>
+&lt;&gt;—–root—–&lt;&gt;——-root——&lt;&gt;<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">产生随机数</h3>
+<div class="outline-text-3" id="text-1-8">
 
 <p>dd if=/dev/urandom count=1 2&gt; /dev/null | cksum | cut -f1 -d&#8221; &#8221; <br/>
 </p>
@@ -258,9 +292,9 @@ process &ndash;&gt; output file<br/>
 
 </div>
 
-<div id="outline-container-1-8" class="outline-3">
-<h3 id="sec-1-8">取得一些文件名称中的一部分名称</h3>
-<div class="outline-text-3" id="text-1-8">
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">取得一些文件名称中的一部分名称</h3>
+<div class="outline-text-3" id="text-1-9">
 
 <p>interfaces=`ls session_* | sed &#8216;s/^session_//g&#8217; | sed &#8216;s//.log$//g&#8217;`<br/>
 </p>
@@ -269,9 +303,9 @@ process &ndash;&gt; output file<br/>
 
 </div>
 
-<div id="outline-container-1-9" class="outline-3">
-<h3 id="sec-1-9">如何用bash从文件中读一行</h3>
-<div class="outline-text-3" id="text-1-9">
+<div id="outline-container-1-10" class="outline-3">
+<h3 id="sec-1-10">如何用bash从文件中读一行</h3>
+<div class="outline-text-3" id="text-1-10">
 
 <p>while read line<br/>
   do<br/>
@@ -283,9 +317,9 @@ done &lt; &#8220;$filename&#8221;<br/>
 
 </div>
 
-<div id="outline-container-1-10" class="outline-3">
-<h3 id="sec-1-10">如何用bash发现某些文件中是否没有包含string</h3>
-<div class="outline-text-3" id="text-1-10">
+<div id="outline-container-1-11" class="outline-3">
+<h3 id="sec-1-11">如何用bash发现某些文件中是否没有包含string</h3>
+<div class="outline-text-3" id="text-1-11">
 
 
 <p><br/>
@@ -302,9 +336,9 @@ done<br/>
 
 </div>
 
-<div id="outline-container-1-11" class="outline-3">
-<h3 id="sec-1-11">cd 替换技巧</h3>
-<div class="outline-text-3" id="text-1-11">
+<div id="outline-container-1-12" class="outline-3">
+<h3 id="sec-1-12">cd 替换技巧</h3>
+<div class="outline-text-3" id="text-1-12">
 
 <p>cd dir1/abc<br/>
 使用cd old new实现替换<br/>
@@ -318,9 +352,9 @@ cd dir2/abc<br/>
 
 </div>
 
-<div id="outline-container-1-12" class="outline-3">
-<h3 id="sec-1-12">上一条命令替换</h3>
-<div class="outline-text-3" id="text-1-12">
+<div id="outline-container-1-13" class="outline-3">
+<h3 id="sec-1-13">上一条命令替换</h3>
+<div class="outline-text-3" id="text-1-13">
 
 <p>^foo^bar<br/>
 将上一条命令中的foo替换为bar，然后执行<br/>
@@ -404,7 +438,7 @@ cd dir2/abc<br/>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (3)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (11)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/efficiency'>efficiency (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/libvirt'>libvirt (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/network'>network (2)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (4)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (13)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -440,23 +474,23 @@ dpc=1"></iframe>
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
-        <a href="/blog/2013/03/19/emacs-desktop/">emacs的desktop保存</a>
+        <a href="/blog/2013/08/05/bond-mode/">bond的几种mode</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/17/expect/">expect自动ssh登录</a>
+        <a href="/blog/2013/07/25/tmux/">tmux</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/12/nfs-server/">NFS server</a>
+        <a href="/blog/2013/06/16/virsh-note/">virsh使用</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/11/xclip/">xlicp在命令行下使用剪切板</a>
+        <a href="/blog/2013/06/11/nic-offload/">网卡offload</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/10/zsh/">zsh</a>
+        <a href="/blog/2013/06/08/10/">提升软件开发者生产力的10个提示</a>
       </li>
     
   </ul>

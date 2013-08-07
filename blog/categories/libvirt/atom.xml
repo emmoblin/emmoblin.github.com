@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: libvirt | Emmoblin Blog]]></title>
+  <link href="http://emmoblin.github.com/blog/categories/libvirt/atom.xml" rel="self"/>
+  <link href="http://emmoblin.github.com/"/>
+  <updated>2013-08-07T10:25:41+08:00</updated>
+  <id>http://emmoblin.github.com/</id>
+  <author>
+    <name><![CDATA[emmoblin]]></name>
+    <email><![CDATA[emmoblin@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[virsh使用]]></title>
+    <link href="http://emmoblin.github.com/blog/2013/06/16/virsh-note/"/>
+    <updated>2013-06-16T00:00:00+08:00</updated>
+    <id>http://emmoblin.github.com/blog/2013/06/16/virsh-note</id>
+    <content type="html"><![CDATA[<div><div><p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">virsh链接域</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>qemu:///session                      (local access to per-user instance)<br/>
+qemu+unix:///session                 (local access to per-user instance)<br/>
+qemu:///system                       (local access to system instance)<br/>
+qemu+unix:///system                  (local access to system instance)<br/>
+qemu://example.com/system            (remote access, TLS/x509)<br/>
+qemu+tcp://example.com/system        (remote access, SASl/Kerberos)<br/>
+qemu+ssh://root@example.com/system   (remote access, SSH tunnelled)<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">虚拟机管理</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>list &ndash;all 查看所有虚拟机<br/>
+</p>
+<p><br/>
+virsh shutdown &lt;domin&gt; 关闭虚拟机domin，如果不设置domin则关闭所有的虚拟机<br/>
+</p>
+<p><br/>
+virsh destory &lt;domin&gt; 强制关闭虚拟机<br/>
+</p>
+<p><br/>
+virsh start &lt;domin&gt;  启动虚拟机<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">直接操作domain</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>edit domain-id  编辑XML配置文件，等效于：<br/>
+</p>
+<p><br/>
+            virsh dumpxml domain &gt; domain.xml<br/>
+</p>
+<p><br/>
+            edit domain.xml<br/>
+</p>
+<p><br/>
+            virsh define domain.xml<br/>
+</p>
+<p><br/>
+managedsave domain-id  保存当前运行的虚拟机的状态，当虚拟机再次启动的时候会恢复到之前保存的状态<br/>
+</p>
+<p><br/>
+migrate optional &ndash;live &ndash;suspend domain-id desturi migrateuri 迁移虚拟机到其他机器 &ndash;live表示动态迁移，&ndash;suspend表示迁移到目的地时虚拟机处于paused状态，desturi是迁移到目的地主机的URI，migrateuri是迁移机器的URI。<br/>
+</p>
+<p><br/>
+save domain-id state-file 保存一个正在运行的虚拟机的状态到一个文件中，以便以后恢复到此状态，一旦保存后虚拟机将不会再运行，占有的资源也会释放，virsh restore可以恢复到此前的状态。eg:save 12 /tmp/test<br/>
+</p>
+<p><br/>
+restore state-file 恢复到之前保存的一个状态.eg:restore /tmp/test<br/>
+</p>
+<p><br/>
+setmem domain-id kilobytes 改变当前虚拟机分配的内存，立即生效，单位KB<br/>
+</p>
+<p><br/>
+setmaxmem domain-id kilobytes  设置一个虚拟机可分配的最大内存，它不改变当前使用的内存<br/>
+</p>
+<p><br/>
+setvcpus domain-id count  改变当前虚拟机的vcpu个数<br/>
+</p>
+<p><br/>
+resume domain-id 从挂起状态恢复一个虚拟机<br/>
+</p>
+<p><br/>
+vcpuinfo domain-id 显示一些虚拟机的vcpu信息，包括几个vcpu，运行时间，和那个物理cpu亲和<br/>
+</p>
+<p><br/>
+vcpupin domain-id vcpu cpulist  把vcpu绑定到物理cpu，vcpu的数量必须提供，cpulist是一个以逗号分割的物理cpu列表<br/>
+</p>
+<p><br/>
+vncdisplay domain-id  显示vnc监听的地址和端口<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">快照命令</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p><br/>
+snapshots可以保存一个domain的disk memory device在某个时间点的状态以便将来会使用到，保存的文件名称必须是唯一的<br/>
+</p>
+<p><br/>
+snapshot-create domain xmlfile 给domain创建一个snapshot，详细内容保存在xmlfile中<br/>
+</p>
+<p><br/>
+snapshot-current domain 显示一个domain的当前的snapshot<br/>
+</p>
+<p><br/>
+snapshot-list domain  显示一个domain的所有的snapshot<br/>
+</p>
+<p><br/>
+snapshot-revert domain snapshot 恢复一个domian到以前的snapshot<br/>
+</p>
+<p><br/>
+snapshot-delete domain snapshot &ndash;children 删除一个domain的snapshot<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">调试</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>所有的日志以及虚拟机启动的命令都在libvirt日志目录中。<br/>
+cat /var/log/libvirt/libvirtd.log <br/>
+</p></div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

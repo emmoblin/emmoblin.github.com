@@ -1,0 +1,527 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>bond的几种mode - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2013/08/05/bond-mode">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">Bond的几种mode</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-05T00:00:00+08:00" pubdate data-updated="true">2013年08月05日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">bond的几种mode</a>
+<ul>
+<li><a href="#sec-1-1">Bonding的模式一共有7种</a></li>
+<li><a href="#sec-1-2">bonding配置参数</a></li>
+<li><a href="#sec-1-3">ROUNDROBIN</a></li>
+<li><a href="#sec-1-4">网卡的容错模式ACTIVEBACKUP</a></li>
+<li><a href="#sec-1-5">网卡虚拟化方式（mode = BOND_MODE_ALB）</a></li>
+<li><a href="#sec-1-6">参考</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/08/05/bond-mode/">bond的几种mode</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Bonding的模式一共有7种</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>BOND_MODE_ROUNDROBIN       0   （balance-rr模式）网卡的负载均衡模式<br/>
+BOND_MODE_ACTIVEBACKUP     1   （active-backup模式）网卡的容错模式<br/>
+BOND_MODE_XOR              2   （balance-xor模式）需要交换机支持<br/>
+BOND_MODE_BROADCAST        3    （broadcast模式）<br/>
+BOND_MODE_8023AD           4   （IEEE 802.3ad动态链路聚合模式）需要交换机支持<br/>
+BOND_MODE_TLB              5   自适应传输负载均衡模式<br/>
+BOND_MODE_ALB              6   网卡虚拟化方式<br/>
+</p>
+<p><br/>
+bonding模块的所有工作模式可以分为两类：多主型工作模式和主备型工作模式，balance-rr 和broadcast属于多主型工作模式而active-backup属于主备型工作模式。（balance-xor、自适应传输负载均衡模式（balance-tlb）和自适应负载均衡模式（balance-alb）也属于多主型工作模式，IEEE 802.3ad动态链路聚合模式（802.3ad）属于主备型工作模式<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">bonding配置参数</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>在内核文档中，列举了许多bonding驱动的参数，然后本文不是文档的翻译，因此不再翻译文档和介绍和主题无关的参数，仅对比较重要的参数进行介绍，并且这些介绍也不是翻译，而是一些建议或者心得。<br/>
+</p>
+<p><br/>
+ad_select： 802.3ad相关。如果不明白这个，那不要紧，抛开Linux的bonding驱动，直接去看802.3ad的规范就可以了。列举这个选项说明linux bonding驱动完全支持了动态端口聚合协议。<br/>
+</p>
+<p><br/>
+arp_interval和arp_ip_target： 以一个固定的间隔向某些固定的地址发送arp，以监控链路。有些配置下，需要使用arp来监控链路，因为这是一种三层的链路监控 ，使用网卡状态或者链路层pdu监控只能监控到双绞线两端的接口 的健康情况，而监控不到到下一条路由器或者目的主机之间的全部链路的健康状况。<br/>
+</p>
+<p><br/>
+primary： 表示优先权，顺序排列，当出现某种选择事件时，按照从前到后的顺序选择网口，比如802.3ad协议中的选择行为。<br/>
+</p>
+<p><br/>
+fail_over_mac： 对于热备模式是否使用同一个mac地址，如果不使用一个mac的话，就要完全依赖免费arp机制更新其它机器的arp缓存了。比如，两个有网卡，网卡1和网卡2处于热备模式，网卡1的mac是mac1，网卡2的mac是mac2，网卡1一直是master，但是网卡1突然down掉了，此时需要网卡2接替，然而网卡2的mac地址与之前的网卡1不同，别的主机回复数据包的时候还是使用网卡1的mac地址来回复的，由于mac1已经不在网络上了，这就会导致数据包将不会被任何网卡接收。因此网卡2接替了master的角色之后，最好有一个回调事件，处理这个事件的时候，进行一次免费的arp广播，广播自己更换了mac地址。<br/>
+</p>
+<p><br/>
+lacp_rate： 发送802.3ad的LACPDU，以便对端设备自动获取链路聚合的信息。<br/>
+</p>
+<p><br/>
+max_bonds： 初始时创建bond设备接口的数量，默认值是1。但是这个参数并不影响可以创建的最大的bond设备数量。<br/>
+</p>
+<p><br/>
+use_carrier： 使用MII的ioctl还是使用驱动获取保持的状态，如果是前者的话需要自己调用mii的接口进行硬件检测，而后者则是驱动自动进行硬件检测(使用watchdog或者定时器)，bonding驱动只是获取结果，然而这依赖网卡驱动必须支持状态检测，如果不支持的话，网卡的状态将一直是on。<br/>
+</p>
+<p><br/>
+mode： 这个参数最重要，配置以什么模式运行，这个参数在bond设备up状态下是不能更改的，必须先down设备(使用ifconfig bondX down)才可以配置，主要的有以下几个：<br/>
+1.balance-rr or 0： 轮转方式的负载均衡模式，流量轮流在各个bondX的真实设备之间分发。注意，一定要用状态检测机制，否则如果一个设备down掉以后，由于没有状态检测，该设备将一直是up状态，仍然接受发送任务，这将会出现丢包。<br/>
+2.active-backup or 1： 热备模式。在比较高的版本中，免费arp会在切换时自动发送，避免一些故障，比如fail_over_mac参数描述的故障。<br/>
+3.balance-xor or 2： 我不知道既然bonding有了xmit_hash_policy这个参数，为何还要将之单独设置成一种模式，在这个模式中，流量也是分发的，和轮转负载不同的是，它使用源/目的mac地址为自变量通过xor|mod函数计算出到底将数据包分发到哪一个口。<br/>
+4.broadcast or 3： 向所有的口广播数据，这个模式很XX，但是容错性很强大。<br/>
+5.802.3ad or 4： 这个就不多说了，就是以802.3ad的方式运行。<br/>
+&hellip;<br/>
+</p>
+<p><br/>
+xmit_hash_policy： <br/>
+这个参数的重要性我认为仅次于mode参数，mode参数定义了分发模式 ，而这个参数定义了分发策略 ，文档上说这个参数用于mode2和mode4，我觉得还可以定义更为复杂的策略呢。<br/>
+1.layer2： 使用二层帧头作为计算分发出口的参数，这导致通过同一个网关的数据流将完全从一个端口发送，为了更加细化分发策略，必须使用一些三层信息，然而却增加了计算开销，天啊，一切都要权衡！ <br/>
+</p>
+<p><br/>
+2.layer2+3： 在1的基础上增加了三层的ip报头信息，计算量增加了，然而负载却更加均衡了，一个个主机到主机的数据流形成并且同一个流被分发到同一个端口，根据这个思想，如果要使负载更加均衡，我们在继续增加代价的前提下可以拿到4层的信息。<br/>
+</p>
+<p><br/>
+3.layer3+4： 这个还用多说吗？可以形成一个个端口到端口的流，负载更加均衡。然而且慢！ 事情还没有结束，虽然策略上我们不想将同一个tcp流的传输处理并行化以避免re-order或者re-transmit，因为tcp本身就是一个串行协议，比如Intel的8257X系列网卡芯片都在尽量减少将一个tcp流的包分发到不同的cpu，同样，端口聚合的环境下，同一个tcp流也应该使用本policy使用同一个端口发送，但是不要忘记，tcp要经过ip，而ip是可能要分段的，分了段的ip数据报中直到其被重组(到达对端或者到达一个使用nat的设备)都再也不能将之划为某个tcp流了。ip是一个完全无连接的协议，它只关心按照本地的mtu进行分段而不管别的，这就导致很多时候我们使用layer3+4策略不会得到完全满意的结果。可是事情又不是那么严重，因为ip只是依照本地的mtu进行分段，而tcp是端到端的，它可以使用诸如mss以及mtu发现之类的机制配合滑动窗口机制最大限度减少ip分段，因此layer3+4策略，很OK！<br/>
+</p>
+<p><br/>
+miimon和arp： 使用miimon仅能检测链路层的状态，也就是链路层的端到端连接(即交换机某个口和与之直连的本地网卡口)，然而交换机的上行口如果down掉了还是无法检测到，因此必然需要网络层的状态检测，最简单也是最直接的方式就是arp了，可以直接arp网关，如果定时器到期网关还没有回复arp reply，则认为链路不通了。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">ROUNDROBIN</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>配置文件<br/>
+/etc/modprobe.conf<br/>
+</p>
+<p><br/>
+alias bond0bonding<br/>
+optionsbond0  mode=0 arp_interval=500arp_ip_target=172.16.64.86<br/>
+</p>
+<p><br/>
+也可以加载模块的时候直接指定mode<br/>
+modprobe bonding -o bond0 mode=0<br/>
+modprobe bonding -o bond1 mode=1 <br/>
+</p>
+<p><br/>
+启动bond<br/>
+ifenslave bond0 eth0 eth1<br/>
+</p>
+<p><br/>
+这种模式下bonding模块会将虚接口和所有的slave接口的MAC地址设置为一致。通过定时器，每个slave接口不断发送ARP包来不断更换交换机端口与MAC的对应关系。<br/>
+</p>
+<p><br/>
+这样使得每个网卡都在进行工作。这个ARP的发送规则是：<br/>
+</p>
+<p> <br/>
+每arp_interval（MS）间隔向arp_ip_target发送arp请求。也可以向多个arp_ip_target发送arp请求。<br/>
+</p>
+<p> <br/>
+观察交换机端口上所学习到的MAC地址，发现MAC会在两个端口上反复切换。<br/>
+</p>
+<p> <br/>
+在BOND_MODE_ROUNDROBIN模式下，bonding对于发送和接收数据的处理逻辑是不一致的，对于数据的接收，bonding基本不做任何处理，纯粹依靠交换机端口与MAC的变化来实现交替接收数据。发送的话，交换机会根据数据的源MAC来学习端口和MAC之间的关系，所以bonding做到的就是选择不一样的网卡发送。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">网卡的容错模式ACTIVEBACKUP</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>容错模式的配置方法和负载均衡模式基本差不多，只不过修改一下/etc/modprobe.conf即可。<br/>
+</p>
+<p> <br/>
+alias bond0 bonding<br/>
+</p>
+<p> <br/>
+options bond0  mode=1 miimon=100<br/>
+</p>
+<p><br/>
+bond_mii_monitor函数其本质的原理就是检测网卡的链路状态，bonding定义网卡有4个链路状态<br/>
+</p>
+<p><br/>
+BOND_LINK_UP：        正常状态（处于该状态的网卡是是潜在的发送数据包的候选者）<br/>
+</p>
+<p><br/>
+BOND_LINK_FAIL：      网卡出现故障，向状态BOND_LINK_DOWN 切换中<br/>
+</p>
+<p><br/>
+BOND_LINK_DOWN：      失效状态<br/>
+</p>
+<p><br/>
+BOND_LINK_BACK：        网卡恢复，向状态BOND_LINK_UP切换中<br/>
+</p>
+<p><br/>
+bond_mii_monitor函数就是依次检查网卡的链路状态是否处于这些状态，然后通过标记do_failover变量来说明当前是否需要切换slave网卡。<br/>
+</p>
+<p><br/>
+在BOND_MODE_ACTIVEBACKUP模式下，两块网卡其实有一块是不工作的，被设置为IFF_NOARP的状态。同时，bond虚设备，还有slave设备的MAC地址均一致，所以这张网卡不会被外界察觉存在。交换机也不存在想该端口发包的情况。当bond的mii检测发现当前的active设备失效了之后，会切换到这个备份设备上。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">网卡虚拟化方式（mode = BOND_MODE_ALB）</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>许多磁盘阵列设备采用了网卡虚拟化方式进行多网卡应用。<br/>
+那balance-alb 来说，就是通过arp 协商决定的。bonding驱动截获本机发送的ARP应答，并把源硬件地址改写为bond中某个slave的唯一硬件地址，从而使得不同的对端使用不同的硬件地址进行通信。这样就实现了网络负载均衡。当其中的一个slave 失败，就会由其他的slave来接管，从而提高了网卡的容错能力。<br/>
+</p>
+<p><br/>
+能够实现这种处理方法的原因就是bonding修改了ARP应答的源地址导致，使得外界并不感知服务器存在多网卡的状态，在网络上确定了IP和MAC的唯一对应关系，保证了上层业务传输的逻辑一致性。同时内部的处理又交给不同的网卡，实现了负载均衡。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">参考</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<ol>
+<li>$KERNEL-ROOT/Documentation/networking/bonding.txt<br/>
+</li>
+<li><a href="http://blog.csdn.net/dog250/article/details/6376698">http://blog.csdn.net/dog250/article/details/6376698</a><br/>
+</li>
+</ol>
+
+
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-05T00:00:00+08:00" pubdate data-updated="true">2013年08月05日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/network/'>network</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2013/07/25/tmux/" title="Previous Post:
+        tmux">&laquo; tmux</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><img src="/images/my_avatar.jpg"></p>
+  <p>网络工程师，喜欢折腾linux，emacs。</p>
+  <p>坚持理想，相信一定会实现。</p>
+  <p><a href="mailto:emmoblin@gmail.com"><img src="/images/my_email.png" alt="emmoblin@gmail.com"></a></p>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/efficiency'>efficiency (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/libvirt'>libvirt (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/network'>network (2)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (4)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (13)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/05/bond-mode/">bond的几种mode</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/25/tmux/">tmux</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/16/virsh-note/">virsh使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/11/nic-offload/">网卡offload</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/08/10/">提升软件开发者生产力的10个提示</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+  <br> <script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2013/08/05/bond-mode/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2013/08/05/bond-mode/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

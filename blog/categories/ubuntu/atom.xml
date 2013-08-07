@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ubuntu | Emmoblin Blog]]></title>
   <link href="http://emmoblin.github.com/blog/categories/ubuntu/atom.xml" rel="self"/>
   <link href="http://emmoblin.github.com/"/>
-  <updated>2013-03-24T21:03:31+08:00</updated>
+  <updated>2013-08-07T10:25:41+08:00</updated>
   <id>http://emmoblin.github.com/</id>
   <author>
     <name><![CDATA[emmoblin]]></name>
@@ -302,6 +302,7 @@ ubuntu one没有历史版本功能<br/>
 <li><a href="#sec-1-8">使用本地App连接远程服务器</a></li>
 <li><a href="#sec-1-9">减少延迟</a></li>
 <li><a href="#sec-1-10">ssh-agent</a></li>
+<li><a href="#sec-1-11">保持链接不断</a></li>
 </ul>
 </li>
 </ul>
@@ -493,6 +494,25 @@ service sshd restart<br/>
 <p>如果你的密码加了密码，每次使用密钥都需要输入密码，则这时ssh-agent就起到作用了。<br/>
 启动ssh-agent后，通过ssh-add ~/.ssh/id_rsa <br/>
 把自己的私钥添加到agent后，以后再使用次密钥就不需要输入密码了。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-11" class="outline-3">
+<h3 id="sec-1-11">保持链接不断</h3>
+<div class="outline-text-3" id="text-1-11">
+
+<p>有的时候中间有防火墙，防火墙的session很短时间就会超时，导致ssh登录中断。需要在客户端这边配置。<br/>
+</p>
+<p><br/>
+只需要在sshd的配置文件上（/etc/ssh/sshd_config）加上两个选项就<br/>
+行：ClientAliveInterval 10和ClientAliveCountMax 100000000。其中<br/>
+ClientAliveInterval是保活数据包发送的时间间隔，这个数字可以自己选定，单<br/>
+位是 秒；ClientAliveCountMax是保活数据包发送的次数上限，这里的设置应该是<br/>
+无敌的。<br/>
+TCPKeepAlive yes<br/>
 </p>
 <p><br/>
 </p></div>

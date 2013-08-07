@@ -1,0 +1,706 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>mysql命令行 - Emmoblin Blog</title>
+  <meta name="author" content="emmoblin">
+
+  
+  <meta name="description" content="">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://emmoblin.github.com/blog/2013/04/04/mysql-cmd">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Emmoblin Blog" type="application/atom+xml">
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34538597-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Emmoblin Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:emmoblin.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">Mysql命令行</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-04T00:00:00+08:00" pubdate data-updated="true">2013年04月04日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">mysql命令行</a>
+<ul>
+<li><a href="#sec-1-1">mysql</a>
+<ul>
+<li><a href="#sec-1-1-1">命令行登录MySQL数据库服务器</a></li>
+<li><a href="#sec-1-1-2">数据库操作SQL语句</a></li>
+<li><a href="#sec-1-1-3">表操作SQL语句（登录之后必须用以上的USE命令选择一个数据库，再进行表操作）</a></li>
+<li><a href="#sec-1-1-4">数据库权限操作SQL语句</a></li>
+<li><a href="#sec-1-1-5">mysqldump备份数据库</a></li>
+<li><a href="#sec-1-1-6">mysql配置文件</a></li>
+<li><a href="#sec-1-1-7">mysql_install_db</a></li>
+<li><a href="#sec-1-1-8">设置密码</a></li>
+<li><a href="#sec-1-1-9">MySQL 远程连接配置</a>
+<ul>
+<li><a href="#sec-1-1-9-1">方法一：改表法</a></li>
+<li><a href="#sec-1-1-9-2">方法二：授权法 (推荐使用)</a></li>
+<li><a href="#sec-1-1-9-3">实际测试</a></li>
+<li><a href="#sec-1-1-9-4">参考</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><a href="http://emmoblin.github.com/blog/2013/04/04/mysql-cmd/">mysql命令行</a></h2>
+<div class="outline-text-2" id="text-1">
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">mysql</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p><br/>
+<pre class="src src-sh">yum install mysql mysql-server
+service mysqld start
+</pre>
+
+
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">命令行登录MySQL数据库服务器</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>1、登录使用默认3306端口的MySQL<br/>
+<code>mysql -u root -p</code><br/>
+</p>
+<p><br/>
+2、通过TCP连接管理不同端口的多个MySQL（注意：MySQL4.1以上版本才有此项功能）<br/>
+<code>mysql -u root -p --protocol=tcp --host=localhost --port=3307</code><br/>
+</p>
+<p><br/>
+3、通过socket套接字管理不同端口的多个MySQL<br/>
+<code>mysql -u root -p --socket=/tmp/mysql3307.sock</code><br/>
+</p>
+<p><br/>
+4、通过端口和IP管理不同端口的多个MySQL<br/>
+<code>mysql -u root -p -P 3306 -h 127.0.0.1</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">数据库操作SQL语句</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+<p>小写也可以<br/>
+</p>
+<p><br/>
+1、显示服务器上当前存在什么数据库<br/>
+<code>SHOW DATABASES;</code><br/>
+</p>
+<p><br/>
+2、创建名称为rewin的数据库<br/>
+<code>CREATE DATABASE rewin;</code><br/>
+</p>
+<p><br/>
+3、删除名称为rewin的数据库<br/>
+<code>DROP DATABASE rewin;</code><br/>
+</p>
+<p><br/>
+4、选择rewin数据库<br/>
+<code>USE rewin;</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">表操作SQL语句（登录之后必须用以上的USE命令选择一个数据库，再进行表操作）</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+<p>1、显示当前数据库中存在什么表<br/>
+<code>SHOW TABLES;</code><br/>
+</p>
+<p><br/>
+2、创建数据库表zhangyan：在mysql&gt;后粘贴以下SQL语句，存储引擎为MYISAM，字段id为主键、唯一索引。<br/>
+</p>
+<p><br/>
+<pre class="example">CREATE TABLE `zhangyan` (
+`id` INT( 5 ) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`username` VARCHAR( 20 ) NOT NULL ,
+`password` CHAR( 32 ) NOT NULL ,
+`time` DATETIME NOT NULL ,
+`number` FLOAT( 10 ) NOT NULL ,
+`content` TEXT NOT NULL ,
+PRIMARY KEY ( `id` ) 
+) ENGINE = MYISAM ;
+</pre>
+
+
+3、查看zhangyan表结构<br/>
+<code>DESCRIBE zhangyan;</code><br/>
+</p>
+<p><br/>
+4、从表中检索信息<br/>
+4.1、从zhangyan表中检索所有记录<br/>
+<code>SELECT * FROM zhangyan;</code><br/>
+</p>
+<p><br/>
+4.2、从zhangyan表中检索特定的行：字段username等于abc，字段number等于1，按字段id降序排列<br/>
+</p>
+<p><br/>
+<pre class="example">SELECT * FROM zhangyan WHERE username = 'abc' AND number='1' ORDER BY id DESC;
+</pre>
+
+
+4.3、从zhangyan表中检索指定的字段：username和password<br/>
+<code>SELECT username, password FROM zhangyan;</code><br/>
+</p>
+<p><br/>
+4.4、从zhangyan表中检索出唯一的不重复记录：<br/>
+<code>SELECT DISTINCT username FROM zhangyan;</code><br/>
+</p>
+<p><br/>
+5、插入信息到zhangyan表<br/>
+</p>
+<p><br/>
+<pre class="example">INSERT INTO zhangyan (id, username, password, time, number, content) VALUES ('', 'abc', '123456', '2007-08-06 14:32:12', '23.41', 'hello world');
+</pre>
+
+
+6、更新zhangyan表中的指定信息<br/>
+<code>UPDATE zhangyan SET content = 'hello china' WHERE username = 'abc';</code><br/>
+</p>
+<p><br/>
+7、删除zhangyan表中的指定信息<br/>
+<code>DELETE FROM zhangyan WHERE id = 1;</code><br/>
+</p>
+<p><br/>
+8、清空zhangyan表<br/>
+<code>DELETE FROM zhangyan;</code><br/>
+</p>
+<p><br/>
+9、删除zhangyan表<br/>
+<code>DROP TABLE zhangyan;</code><br/>
+</p>
+<p><br/>
+10、更改表结构，将zhangyan表username字段的字段类型改为CHAR(25)<br/>
+<code>ALTER TABLE zhangyan CHANGE username username CHAR(25);</code><br/>
+</p>
+<p><br/>
+11、将当前目录下的mysql.sql导入数据库<br/>
+<code>SOURCE ./mysql.sql;</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4">数据库权限操作SQL语句</h4>
+<div class="outline-text-4" id="text-1-1-4">
+
+<p>1、创建一个具有root权限，可从任何IP登录的用户sina，密码为zhangyan<br/>
+</p>
+<p><br/>
+<pre class="example">GRANT ALL PRIVILEGES ON *.* TO 'sina'@'%' IDENTIFIED BY 'zhangyan' WITH GRANT OPTION;
+FLUSH   PRIVILEGES;
+</pre>
+
+
+2、创建一个具有“数据操作”、“结构操作”权限，只能从192.168.1.***登录的用户sina，密码为zhangyan<br/>
+</p>
+<p><br/>
+<pre class="example">GRANT SELECT , INSERT , UPDATE , DELETE , FILE , CREATE , DROP , INDEX , ALTER , CREATE TEMPORARY TABLES , CREATE VIEW , SHOW VIEW , CREATE ROUTINE, ALTER ROUTINE, EXECUTE ON *.* TO 'sina'@'192.168.1.%' IDENTIFIED BY 'zhangyan';
+</pre>
+
+
+3、创建一个只拥有“数据操作”权限，只能从192.168.1.24登录，只能操作rewin数据库的zhangyan表的用户sina，密码为zhangyan<br/>
+</p>
+<p><br/>
+<pre class="example">GRANT SELECT , INSERT , UPDATE , DELETE ON  rewin.zhangyan TO 'sina'@'192.168.1.24' IDENTIFIED BY 'zhangyan';
+</pre>
+
+
+4、创建一个拥有“数据操作”、“结构操作”权限，可从任何IP登录，只能操作rewin数据库的用户sina，密码为zhangyan<br/>
+</p>
+<p><br/>
+<pre class="example">GRANT SELECT , INSERT , UPDATE , DELETE , CREATE , DROP , INDEX , ALTER , CREATE TEMPORARY TABLES , CREATE VIEW , SHOW VIEW , CREATE ROUTINE, ALTER ROUTINE, EXECUTE ON rewin.* TO 'sina'@'%' IDENTIFIED BY 'zhangyan';
+</pre>
+
+
+5、删除用户<br/>
+<code>DROP USER 'sina'@'%';</code><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+PS：如果想了解更多的MySQL操作资料，请参考<a href="http://dev.mysql.com/doc/refman/5.1/zh/">MySQL官方的中文参考手册</a><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-5" class="outline-4">
+<h4 id="sec-1-1-5">mysqldump备份数据库</h4>
+<div class="outline-text-4" id="text-1-1-5">
+
+<p><code>mysqldump -u root -p bugs | gzip &gt; bugzilla_20121206.sql.gz</code><br/>
+但是这个发现在小内存机子上把内存占满了。<br/>
+需要添加&ndash;opt参数<br/>
+mysqldump &ndash;opt <br/>
+这样就会使用一些默认选项，可以正常导出了。<br/>
+</p>
+<p><br/>
+导入数据库<br/>
+创建新的数据库用于导入备份的数据库，命令如下：<br/>
+<code>mysql –u root –p</code><br/>
+输入密码后进入mysql操作界面<br/>
+输入：<br/>
+<code>create database bugzilla_new</code><br/>
+使用如下命令导入备份的Bugzilla 4.0.1的mysql数据库，从新命名数据库名<br/>
+<code>gunzip &lt; bugzilla_20121206.sql.gz | mysql –u root –p bugzilla_new</code><br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-6" class="outline-4">
+<h4 id="sec-1-1-6">mysql配置文件</h4>
+<div class="outline-text-4" id="text-1-1-6">
+
+<p>一般/etc/my.ini<br/>
+</p>
+<p><br/>
+而一般参考配置在：<br/>
+<i>usr/share/mysql</i><br/>
+config.huge.ini    config.medium.ini  config.small.ini<br/>
+不同的流量的网站和不同配制的服务器环境，当然需要有不同的配制文件了。<br/>
+一般的情况下，my-medium.cnf这个配制文件就能满足我们的大多需要。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-7" class="outline-4">
+<h4 id="sec-1-1-7">mysql_install_db</h4>
+<div class="outline-text-4" id="text-1-1-7">
+
+<p>创造MySQL授权表，否则数据库也是启动不了。<br/>
+mysql_install_db，这个命令的用途就是做这个的。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-8" class="outline-4">
+<h4 id="sec-1-1-8">设置密码</h4>
+<div class="outline-text-4" id="text-1-1-8">
+
+<p><code>mysqladmin -u root password 123456</code><br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-9" class="outline-4">
+<h4 id="sec-1-1-9">MySQL 远程连接配置</h4>
+<div class="outline-text-4" id="text-1-1-9">
+
+
+</div>
+
+<div id="outline-container-1-1-9-1" class="outline-5">
+<h5 id="sec-1-1-9-1">方法一：改表法</h5>
+<div class="outline-text-5" id="text-1-1-9-1">
+
+<p>默认mysql帐号不允许从远程登陆，只允许localhost访问。登入mysql后，更改 &#8220;mysql&#8221; 数据库 里的 &#8220;user&#8221;（远程数据库的名称） 表里的 &#8220;host&#8221; 项，把&#8221;localhost&#8221;改称&#8221;%&#8221; 。这样你的mysql就可以远程操作了。<br/>
+update user set host = &#8216;%&#8217; where user = &#8216;root&#8217;;<br/>
+注意：这样方法只是把本机localhost访问改为了&#8221;%&#8221;所有地址IP都可以访问mysql服务器，这样很不安全。默认localhost访问的时候有所有操作权限。所以不安全！推荐用第二个方法。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-9-2" class="outline-5">
+<h5 id="sec-1-1-9-2">方法二：授权法 (推荐使用)</h5>
+<div class="outline-text-5" id="text-1-1-9-2">
+
+<p>(1)<br/>
+</p>
+<p><br/>
+<pre class="example">grant select,insert,update,delete on *.* to root@"%" Identified by "password";
+</pre>
+
+允许地址IP上root用户，密码dboomysql来连接mysql的所有数据库，只付给select,insert,update,delete权限。 这样比较安全。<br/>
+</p>
+<p><br/>
+(2)<br/>
+</p>
+<p><br/>
+<pre class="example">grant select,insert,update,delete on *.* to root@"192.168.1.1" Identified by "password";
+</pre>
+
+只允许地址IP（192.168.1.1）上root用户访问更安全了。<br/>
+</p>
+<p><br/>
+(3)<br/>
+</p>
+<p><br/>
+<pre class="example">grant all on *.* to root@"192.168.1.1" Identified by "password"
+</pre>
+
+
+允许地址192.168.1.1上用root用户，密码password来连接mysql的所有数据库，付给所有权限。不太安全。<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="example">GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'your paaaword';
+</pre>
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-9-3" class="outline-5">
+<h5 id="sec-1-1-9-3">实际测试</h5>
+<div class="outline-text-5" id="text-1-1-9-3">
+
+<p>使用第一种方法没成功，没有找到user数据库，而且也没有host项。<br/>
+使用<br/>
+</p>
+<p><br/>
+<pre class="example">GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'your paaaword';
+</pre>
+
+成功。<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1-1-9-4" class="outline-5">
+<h5 id="sec-1-1-9-4">参考</h5>
+<div class="outline-text-5" id="text-1-1-9-4">
+
+<p><a href="http://database.51cto.com/art/201006/204537.htm">http://database.51cto.com/art/201006/204537.htm</a><br/>
+</p>
+<p><br/>
+</p></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">emmoblin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-04T00:00:00+08:00" pubdate data-updated="true">2013年04月04日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/service/'>service</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2013/03/27/distcc-dmucs/" title="Previous Post:
+        distcc和dmucs分布式编译环境的负载均衡">&laquo; distcc和dmucs分布式编译环境的负载均衡</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+      <li class="next"><a class="basic-alignment right" href="/blog/2013/06/08/10/"
+        title="Next Post: 提升软件开发者生产力的10个提示">提升软件开发者生产力的10个提示
+        &raquo;</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><img src="/images/my_avatar.jpg"></p>
+  <p>网络工程师，喜欢折腾linux，emacs。</p>
+  <p>坚持理想，相信一定会实现。</p>
+  <p><a href="mailto:emmoblin@gmail.com"><img src="/images/my_email.png" alt="emmoblin@gmail.com"></a></p>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/efficiency'>efficiency (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/libvirt'>libvirt (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/network'>network (2)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (4)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (13)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+</section>
+
+<section>
+<h1>新浪微博</h1>
+<ul id="weibo">
+<li>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" 
+src="http://widget.weibo.com/weiboshow/index.php?
+language=&
+width=0&
+height=550&
+fansRow=2&
+ptype=1&
+speed=0&
+skin=5&
+isTitle=1&
+noborder=1&
+isWeibo=1&
+isFans=0&
+uid=1905507693&
+verifier=e659651a&
+dpc=1"></iframe>
+</li>
+</ul>
+</section>
+
+<section>
+  <h1>近期评论</h1>
+<script type="text/javascript" src="http://emmoblin.disqus.com/combination_widget.js?num_items=5&hide_mods=0&color=blue&default_tab=recent&excerpt_length=200"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+<section class="well">
+  <ul id="recent_posts" class="nav nav-list">
+    <li class="nav-header">Recent Posts</li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/05/bond-mode/">bond的几种mode</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/25/tmux/">tmux</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/16/virsh-note/">virsh使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/11/nic-offload/">网卡offload</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/08/10/">提升软件开发者生产力的10个提示</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><hr>
+<p>
+  Copyright &copy; 2013 - emmoblin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+  <br> <script src="http://s25.cnzz.com/stat.php?id=5063649&web_id=5063649&online=1&show=line" language="JavaScript"></script>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'emmoblin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://emmoblin.github.com/blog/2013/04/04/mysql-cmd/';
+        var disqus_url = 'http://emmoblin.github.com/blog/2013/04/04/mysql-cmd/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

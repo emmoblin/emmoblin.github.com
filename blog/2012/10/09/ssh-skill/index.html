@@ -146,6 +146,7 @@
 <li><a href="#sec-1-8">使用本地App连接远程服务器</a></li>
 <li><a href="#sec-1-9">减少延迟</a></li>
 <li><a href="#sec-1-10">ssh-agent</a></li>
+<li><a href="#sec-1-11">保持链接不断</a></li>
 </ul>
 </li>
 </ul>
@@ -337,6 +338,25 @@ service sshd restart<br/>
 </p>
 <p><br/>
 </p></div>
+
+</div>
+
+<div id="outline-container-1-11" class="outline-3">
+<h3 id="sec-1-11">保持链接不断</h3>
+<div class="outline-text-3" id="text-1-11">
+
+<p>有的时候中间有防火墙，防火墙的session很短时间就会超时，导致ssh登录中断。需要在客户端这边配置。<br/>
+</p>
+<p><br/>
+只需要在sshd的配置文件上（/etc/ssh/sshd_config）加上两个选项就<br/>
+行：ClientAliveInterval 10和ClientAliveCountMax 100000000。其中<br/>
+ClientAliveInterval是保活数据包发送的时间间隔，这个数字可以自己选定，单<br/>
+位是 秒；ClientAliveCountMax是保活数据包发送的次数上限，这里的设置应该是<br/>
+无敌的。<br/>
+TCPKeepAlive yes<br/>
+</p>
+<p><br/>
+</p></div>
 </div>
 </div>
 </div>
@@ -414,7 +434,7 @@ service sshd restart<br/>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (3)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (11)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bodybuilding'>bodybuilding (1)</a></li><li><a href='/blog/categories/efficiency'>efficiency (1)</a></li><li><a href='/blog/categories/emacs'>emacs (3)</a></li><li><a href='/blog/categories/git'>git (2)</a></li><li><a href='/blog/categories/ipv6'>ipv6 (1)</a></li><li><a href='/blog/categories/kernel'>kernel (1)</a></li><li><a href='/blog/categories/ksplice'>ksplice (1)</a></li><li><a href='/blog/categories/libvirt'>libvirt (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/linuxcmd'>linuxcmd (1)</a></li><li><a href='/blog/categories/lisp'>lisp (2)</a></li><li><a href='/blog/categories/lua'>lua (4)</a></li><li><a href='/blog/categories/markdown'>markdown (3)</a></li><li><a href='/blog/categories/nat'>nat (1)</a></li><li><a href='/blog/categories/netfilter'>netfilter (1)</a></li><li><a href='/blog/categories/network'>network (2)</a></li><li><a href='/blog/categories/octopress'>octopress (3)</a></li><li><a href='/blog/categories/open-sources'>open sources (1)</a></li><li><a href='/blog/categories/orgmode'>orgmode (1)</a></li><li><a href='/blog/categories/scm'>scm (2)</a></li><li><a href='/blog/categories/service'>service (4)</a></li><li><a href='/blog/categories/shell'>shell (4)</a></li><li><a href='/blog/categories/skill'>skill (1)</a></li><li><a href='/blog/categories/ssh'>ssh (2)</a></li><li><a href='/blog/categories/storage'>storage (3)</a></li><li><a href='/blog/categories/svn'>svn (2)</a></li><li><a href='/blog/categories/test'>test (1)</a></li><li><a href='/blog/categories/testunit'>testunit (3)</a></li><li><a href='/blog/categories/tools'>tools (13)</a></li><li><a href='/blog/categories/ubuntu'>ubuntu (4)</a></li><li><a href='/blog/categories/unittest'>unittest (3)</a></li></ul>
 </section>
 
 <section>
@@ -450,23 +470,23 @@ dpc=1"></iframe>
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
-        <a href="/blog/2013/03/19/emacs-desktop/">emacs的desktop保存</a>
+        <a href="/blog/2013/08/05/bond-mode/">bond的几种mode</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/17/expect/">expect自动ssh登录</a>
+        <a href="/blog/2013/07/25/tmux/">tmux</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/12/nfs-server/">NFS server</a>
+        <a href="/blog/2013/06/16/virsh-note/">virsh使用</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/11/xclip/">xlicp在命令行下使用剪切板</a>
+        <a href="/blog/2013/06/11/nic-offload/">网卡offload</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/10/zsh/">zsh</a>
+        <a href="/blog/2013/06/08/10/">提升软件开发者生产力的10个提示</a>
       </li>
     
   </ul>
